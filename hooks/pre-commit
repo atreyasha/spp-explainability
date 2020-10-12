@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# check if develop.org has been staged for commit
+develop_change=$(
+  git diff --cached --exit-code ./docs/develop.org \
+    &>/dev/null
+  echo $?
+)
+
+# update develop.md given conditions
+if [ -f "./docs/develop.org" ] && [ "$develop_change" -eq "1" ]; then
+  printf "%s\n" "Syncing develop.md with develop.org"
+  # convert todos.org to todos.md
+  pandoc -f org -t markdown -o ./docs/develop.md ./docs/develop.org
+  # replace TODOs cleanly
+  sed -i 's/\[TODO\]{.*}/**TODO**/g' ./docs/develop.md
+  sed -i 's/\[DONE\]{.*}/**DONE**/g' ./docs/develop.md
+  # add requirements.txt to stage for commit
+  git add ./docs/develop.md
+fi
