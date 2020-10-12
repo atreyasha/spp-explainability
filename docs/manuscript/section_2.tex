@@ -1,0 +1,39 @@
+\section{Literature review}
+
+\subsection{Explainable artificial intelligence}
+
+\paragraph{\citealt{doran2017does}:} This study conducts a review of Explainable Artificial Intelligence (XAI) based on corpus-level analyses of NIPS, ACL, COGSCI and ICCV/ECCV papers. Based on their analysis, they characterize existing XAI into three mutually exclusive categories; namely \textit{opaque systems} that offer no insight into internal model mechanisms, \textit{interpretable systems} where users can mathematically analyze internal model mechanisms and \textit{comprehensible systems} that emit symbols explaining user-driven explanations of how conclusions are reached. The study then culminates in the introduction of truly \textit{explainable systems}, whereby automated reasoning is central to output crafted explanations without additional post-processing as a final step. This study expresses optimism that neural-symbolic learning would bridge the gap between connectionist and symbolic learning techniques and pave the way towards truly explainable AI systems.
+
+\paragraph{\citealt{arrieta2020explainable}:} This study offers an extensive review of existing XAI techniques for all kinds of machine-learning methods including deep learning. We consider this study as an extremely useful review that provides both machine-learning users and practitioners a better idea of existing XAI methodologies. Similar to the aforementioned study, this study expresses an interest in neural-symbolic paradigms for interpretable high-performance machine-learning systems.
+
+\subsubsection{Projected state of affairs}
+
+Given the current state of machine learning in NLP, it appears that deep learning models with millions of parameters dominate the field in terms of generalizable performance. Artificial Neural Networks (ANNs) are indeed powerful universal approximators and literature has shown that they can approximate arbitrary functions and logic programs. Approximation and generalization can be considered to be largely solved problems because of ANN learning and cross-validation.
+
+\begin{gather}
+  \overbrace{\text{Approximation} \Rightarrow \text{Generalization}}^{\text{ANN learning + Cross-validation}} \Rightarrow \overbrace{\text{Semanticity and compositionality}}^{\text{Human interpretation}}
+\end{gather}
+
+Recent research has shown the existence of multiple possible high-performance generalizable solutions to the ANN learning problem \citep{kepner2018sparse}. Given the existence of multiple solutions, the next frontier appears to be the process of selecting semantically relevant models; or otherwise models that actually reflect meaningful considerations which humans could easily pick out and which are not dependent on statistical artefacts.
+
+\subsection{Neural-symbolic paradigms}
+
+\paragraph{\citealt{li2018generalize}:} This study is an example of using a neural-symbolic paradigm to solve NLU entailment tasks. Here, the authors use neural networks to approximate symbolic functions such as the ``find'' function over sub-strings. Subsequently, they map together these neural modules through a logical framework which produces regular expressions as output rules.
+
+\paragraph{General outlook:} Based on literature review, it appears that much of research in this field requires the construction of features based on human input. While useful, this does not coincide strongly with the intent of this research; which is to achieve arbitrary explainable performance on NLP tasks without significant feature engineering.
+
+\subsection{Neural-backed decision trees}
+
+\paragraph{\citealt{wan2020nbdt}:} This is a powerful study which attempts to bridge the explainability of white-box decision trees with the universal approximation capabilities of neural networks. One limitation of this research appears to be the induced hierarchy in weight space. While this lends itself to high performance, this framework allows many of the ``black-box'' limitations of the ANN to persist; albeit in a hierarchical form. As a result, a probe into explainability would require careful analysis of the induced hierarchy and how adversarial samples would traverse such a hierarchy. Additionally, this framework would be difficult to implement for binary NLP tasks such as sentiment polarity detection where trees would be very short.
+
+\subsection{Extraction of state-based automata from RNNs}
+
+Based on the previous sections, it appears that neural-backed decision trees are able to provide meaningful and quasi-explainable hierarchies for multi-label classifiers. Extending this into the textual domain with sequence classification tasks seems difficult and perhaps inappropriate, since usually output classifications are binary and final features tend to be sequential and token-dependent. An interesting analog to decision trees in the realm of time-series or sequences could be finite-state automata (FSA). \citet{hou2018learning} implies the effectivity of extracting such FSAs directly from RNN models, which would be an interesting avenue for our research.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
+
+% LocalWords:  XAI ACL COGSCI ICCV ECCV interpretable connectionist NLP ANNs et
+% LocalWords:  generalizable approximators NLU explainability al automata

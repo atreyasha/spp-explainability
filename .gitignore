@@ -1,0 +1,12 @@
+auto/
+*.aux
+*.bbl
+*.blg
+*.bst
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.gz
+*.toc
+*.anthology.bib

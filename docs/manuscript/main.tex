@@ -1,0 +1,37 @@
+% import packages
+\documentclass[12pt,a4paper]{article}
+\usepackage[round]{natbib}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=black]{hyperref}  
+\usepackage{amsmath}
+\usepackage{geometry}
+% \geometry{top=3.5cm,bottom=3.5cm}
+% \renewcommand{\contentsname}{Table of Contents}
+
+% define admin variables
+\title{Explainable Natural Language Processing (NLP)}
+\author{Atreya Shankar\\
+\texttt{atreya.shankar@\{uni-potsdam.de,uzh.ch\}} \\
+Department of Linguistics, University of Potsdam \\
+Department of Computational Linguistics, University of Zürich}
+\date{\today}
+
+\begin{document}
+\newgeometry{}
+\maketitle
+\thispagestyle{empty}
+\begin{abstract}
+  Recent advancements in Natural Language Processing (NLP) have been largely driven by developments in Deep Learning techniques. While powerful, these methods pose a serious limitation of being ``black-box'' or opaque. This has led to problems such as adversarial attacks and inherent biases leading to downstream ethical issues. The objective of this research is to explore white-box and grey-box machine learning methods in NLP which offer explainability, while still providing competitive performance compared to their deep learning counterparts.
+\end{abstract}
+\tableofcontents
+\newpage
+\restoregeometry
+\setcounter{page}{1}
+\thispagestyle{plain}
+\input{section_2}
+\newpage
+\addcontentsline{toc}{section}{References}
+\bibliography{bibtex}
+\bibliographystyle{abbrvnat}
+\nocite{*}
+\end{document}
