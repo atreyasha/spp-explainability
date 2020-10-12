@@ -1,0 +1,134 @@
+Development
+===========
+
+-   Probing networks/tasks, NLU (object-verb agreement), chris manning
+    attention model introspection (analysis of bert\'s attention), what
+    does bert look at?, NLU tasks potentially, Ellie pafflick (brown),
+    contact Sharid with exact semanticy tasks chosen, choose
+    peer-reviewed papers as main ones, keep Sharid updated, consider
+    working on paraphrase detection task, mention idea behind WFAs and
+    relationships to HMMs/state-machines
+
+-   Get back to Sharid with more specific task after research -\> think
+    deeper about this
+
+-   Think about bottom up inductive logic but keep things simple and
+    near the final model, look into nbdt details and source code and
+    forks
+
+-   What advantages can this decision-tree weight-space hierarchy bring?
+
+-   How easily can it be extended into NLP?
+
+-   Can it help us prevent adversarial attacks and to what extent?
+
+-   Is the neural component here still a liability?
+
+-   TODO how do we explore weight space given tokens -\> or perhaps we
+    can start by looking into output space
+
+\% TODO could prove very interesting to explore, this might be an analog
+for decision trees given a dimension of time % TODO how would this work
+for nested or layered RNNs -\> this would be hard to investigate % TODO
+look through github implementations and corresponding papers, think of
+how this could be extended to irregular languages -\> NLP, L star
+algorithm for FSA extraction % TODO look into Tokyo paper and extract
+related articles on DFA/WFA extractions, eg. with DeepStellar % TODO
+provides new view of interpretability where human is able to simulate a
+model\'s decision and thereby understand its causes % Watch videos on
+generic automata, then go to weighted and probabilistic automata, look
+into papers for finite state transducers for seq2seq tasks, CFG and
+probabilistic grammars -\> how to learn from them, topic seems very
+complicated, if we learn WFA -\> can we extrapolate this to
+explainability in DL settings? Or would this still be considered too
+opaque? % This topic seems very interesting from a mathematical and CS
+perspective and might help with future prospects -\> need to find
+relation to NLP/explainability/DL with resurgence given today\'s methods
+
+-   read more about turing machines and (weighted) FSAs to get
+    theoretical background, limit main experiments on sequence
+    classification but mention transducer extension to seq2seq, base
+    main ideas off peer-reviewed articles, add sufficient mathematics
+    into manuscript with hankel matrices
+-   test
+
+Tasks
+-----
+
+narrow scope -\> interpret existing SOTA ANNs and extract linguistic
+knowledge
+
+narrow scope -\> focus most importantly on seq2class, then possible
+seq2seq
+
+ANNs historical literature find all -\> especially focusing on how ANNs
+approximate symbolic representations which would motivate overall topic
+
+Convergence, universal approximation and generalization are satisfied by
+ANNs to a high degree, semantic relevance in the final model is not
+guaranteed and this needs to be an additional task that where symbolic
+frameworks are needed
+
+Current research direction
+
+1.  **TODO** look into fuzzy logic and implementations in
+    NLP, consider making pilot test of NLP task with inductive logic and
+    power sets -\> perhaps this might elucidate how this problem can be
+    approached
+
+Admin
+
+1.  **TODO** add timeline here
+
+2.  start planning timelines; spend longer on writing proposal with
+    focus on feasbility
+
+3.  keep good communication with supervisors and set up regular meetings
+    to update
+
+Brainstorming
+-------------
+
+Neuro-symbolic paradigms
+
+1.  Research questions:
+
+    1.  Can we train use a neuro-symbolic paradigm to attain high
+        performance (similar to NNs) for NLP task(s)?
+
+    2.  If so, can this paradigm provide us with greater explainability
+        about the inner workings of the model?
+
+Neural decision trees
+
+1.  Decision trees are the same as logic programs -\> the objective
+    should be to learn logic programs
+
+2.  Research questions:
+
+    1.  Can we achieve similar high performance using decision tree
+        distillation techniques (by imitating NNs)?
+
+    2.  Can this decision tree improve interpretability/explainability?
+
+    3.  Can this decision tree distillation technique outperform simple
+        decision tree learning from training data?
+
+Inductive logic on NLP search spaces
+
+1.  consider using differentiable ILP from DeepMind
+
+2.  can potentially use existing IM models such as paraphrase detector
+    for introspection purposes in thesis
+
+3.  N-gram power sets to explore for statistical artefacts -\> ANNs can
+    only access the search space of N-gram power sets -\> solution to
+    NLP tasks must be a statistical solution within the power sets which
+    links back to symbolism
+
+4.  Propositional logic only contains atoms while predicate/first-order
+    logic contain variables
+
+5.  This will be costly and difficult to implement
+
+6.  Can be potentially rewarding to learn clear rules
