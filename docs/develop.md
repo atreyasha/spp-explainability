@@ -50,7 +50,6 @@ relation to NLP/explainability/DL with resurgence given today\'s methods
     classification but mention transducer extension to seq2seq, base
     main ideas off peer-reviewed articles, add sufficient mathematics
     into manuscript with hankel matrices
--   test
 
 Tasks
 -----

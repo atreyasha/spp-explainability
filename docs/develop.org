@@ -17,7 +17,6 @@
 % Watch videos on generic automata, then go to weighted and probabilistic automata, look into papers for finite state transducers for seq2seq tasks, CFG and probabilistic grammars -> how to learn from them, topic seems very complicated, if we learn WFA -> can we extrapolate this to explainability in DL settings? Or would this still be considered too opaque?
 % This topic seems very interesting from a mathematical and CS perspective and might help with future prospects -> need to find relation to NLP/explainability/DL with resurgence given today's methods
 - read more about turing machines and (weighted) FSAs to get theoretical background, limit main experiments on sequence classification but mention transducer extension to seq2seq, base main ideas off peer-reviewed articles, add sufficient mathematics into manuscript with hankel matrices
-- test
   
 ** Tasks
    
