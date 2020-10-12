@@ -1,5 +1,3 @@
-* Development
-  
 ** Tasks
    
 *** Main research direction
@@ -18,18 +16,14 @@
 ***** keep probing networks/tasks as a backup option
 
 *** Admin    
-**** General timeline:
-      
-    | Task                    | Deadline | Details                             |
-    |-------------------------+----------+-------------------------------------|
-    | Initial thesis document | ~15.09.20~ | -                                   |
-    | Topic proposal draft    | 06.11.20 | Finalize general task and algorithm |
-    | Topic proposal final    | 15.11.20 | -                                   |
-    | Topic registration      | 01.02.20 | -                                   |
-    | Manuscript submission   | 18.03.20 | Consider applying for extension     |
+***** keep good communication with supervisors -> every 3 weeks for Sharid and more regularly with Mathias 
+**** General timeline
+***** Initial thesis document: +15.09.20+
+***** Topic proposal draft: 06.11.20
+***** Topic proposal final: 15.11.20
+***** Topic registration: 01.02.20  
+***** Manuscript submission: 18.03.20, try to extend if possible  
 
-***** keep good communication with supervisors -> every 3 weeks for Sharid and more regularly with Mathias
- 
 *** Manuscript-specifics
 ***** ANNs historical literature find all -> especially focusing on how ANNs approximate symbolic representations which would motivate overall topic
 ***** convergence, universal approximation and generalization are satisfied by ANNs to a high degree, semantic relevance in the final model is not guaranteed and this needs to be an additional task that where symbolic frameworks are needed    

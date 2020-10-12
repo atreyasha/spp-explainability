@@ -1,6 +1,3 @@
-Development
-===========
-
 Tasks
 -----
 
@@ -40,18 +37,20 @@ Tasks
 
 ### Admin
 
-1.  General timeline:
+1.  keep good communication with supervisors -\> every 3 weeks for
+    Sharid and more regularly with Mathias
 
-      Task                      Deadline     Details
-      ------------------------- ------------ -------------------------------------
-      Initial thesis document   `15.09.20`   \-
-      Topic proposal draft      06.11.20     Finalize general task and algorithm
-      Topic proposal final      15.11.20     \-
-      Topic registration        01.02.20     \-
-      Manuscript submission     18.03.20     Consider applying for extension
+2.  General timeline
 
-    1.  keep good communication with supervisors -\> every 3 weeks for
-        Sharid and more regularly with Mathias
+    1.  Initial thesis document: ~~15.09.20~~
+
+    2.  Topic proposal draft: 06.11.20
+
+    3.  Topic proposal final: 15.11.20
+
+    4.  Topic registration: 01.02.20
+
+    5.  Manuscript submission: 18.03.20, try to extend if possible
 
 ### Manuscript-specifics
 
