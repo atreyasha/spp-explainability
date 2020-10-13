@@ -5,26 +5,39 @@ Tasks
 
 1.  Day-to-day
 
-    1.  **TODO** find applications of FSA/WFAs in NLP -\>
+    1.  **TODO** delete old articles and keep relevant ones
+        to focus on
+
+    2.  **TODO** find applications of FSA/WFAs in NLP -\>
         decipher if they are generally performant and/or explainable
 
-    2.  **TODO** look into algorithms to extract FSA/WFAs
+        1.  SoPa is a very close idea which links WFSAs and ANNs -\> but
+            this is proposed as a new architecture altogether -\> this
+            might be the best way to start off
+
+        2.  alternatively, we can try to learn directly from trained
+            models -\> worth considering whether black-box or white-box
+            techniques are better for this
+
+    3.  **TODO** look into algorithms to extract FSA/WFAs
         from RNNs
 
-    3.  **TODO** if all works, finalize seq2cls tasks -\> eg.
+    4.  **TODO** if all works, finalize seq2cls tasks -\> eg.
         verb-object agreement, NLU, paraphrase detection, or otherwise
         semantics-oriented tasks
 
-    4.  **TODO** read more about turing machines and FSA/WFAs
+    5.  **TODO** read more about turing machines and FSA/WFAs
         to get theoretical background
 
-    5.  constraints: work with RNNs, focus on NLU/semantic seq2cls task
+    6.  constraints: work with RNNs, focus on NLU/semantic seq2cls task
 
-    6.  constraints: base main ideas off peer-reviewed articles
+    7.  constraints: base main ideas off peer-reviewed articles
 
 2.  Big-picture
 
-    1.  think about what this research adds that is not present
+    1.  think about what this research adds that is not present -\>
+        possible to look at next steps in existing articles or possibly
+        extension to new sequence classification tasks
 
     2.  high-performance -\> show it is better than basic learning
         method from data -\> implies we would have to use some negative
@@ -102,15 +115,15 @@ Brainstorming
 
 ### Inductive logic on NLP search spaces
 
-1.  consider using differentiable ILP from DeepMind
-
-2.  can potentially use existing IM models such as paraphrase detector
+1.  can potentially use existing IM models such as paraphrase detector
     for introspection purposes in thesis
 
-3.  n-gram power sets to explore for statistical artefacts -\> ANNs can
+2.  n-gram power sets to explore for statistical artefacts -\> ANNs can
     only access the search space of N-gram power sets -\> solution to
     NLP tasks must be a statistical solution within the power sets which
     links back to symbolism
+
+3.  eg. differentiable ILP from DeepMind
 
 4.  propositional logic only contains atoms while predicate/first-order
     logic contain variables
