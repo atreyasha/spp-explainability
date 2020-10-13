@@ -55,7 +55,7 @@ Tasks
 
 2.  General timeline
 
-    1.  Initial thesis document: ~~15.09.20~~
+    1.  ~~Initial thesis document: 15.09.20~~
 
     2.  Topic proposal draft: 06.11.20
 
