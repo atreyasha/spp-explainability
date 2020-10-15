@@ -32,7 +32,7 @@
 ***** limit main experiments on sequence classification but mention transducer extension to seq2seq
 ***** if possible, bring in theoretical CS and mathematics into paper
       
-** Brainstorming 
+** Legacy 
 
 *** Neuro-symbolic paradigms
 ***** research questions:

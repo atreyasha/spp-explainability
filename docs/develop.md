@@ -81,8 +81,8 @@ Tasks
 
 5.  if possible, bring in theoretical CS and mathematics into paper
 
-Brainstorming
--------------
+Legacy
+------
 
 ### Neuro-symbolic paradigms
 
