@@ -3,7 +3,7 @@ Tasks
 
 ### Main research direction
 
-1.  Day-to-day
+1.  Current
 
     1.  **TODO** rank articles on relevance to XAI,
         feasibility, presence of source code or pseudcode, etc.
@@ -27,7 +27,7 @@ Tasks
 
     4.  constraint: base main ideas off peer-reviewed articles
 
-2.  Big-picture
+2.  Long-term
 
     1.  develop a feasible, practical and interesting research question,
         writing will be easy when everything else is well defined

@@ -1,7 +1,7 @@
 ** Tasks 
 
 *** Main research direction
-**** Day-to-day
+**** Current
 ***** TODO rank articles on relevance to XAI, feasibility, presence of source code or pseudcode, etc.
 ****** methods with new architectures -> eg. SoPa, state-regularized RNNs, FA-RNNs -> more direct learning where interpretability is built into main model -> might make sense to take an existing framework and extend it to interesting tasks and probe this for the extent of explainability
 ****** methods for FSA/WFSA extraction -> eg. spectral learning, clustering -> less direct interpretability and more proof of performance needed -> need to show it is better than simple data learning, might be more costly
@@ -9,7 +9,7 @@
 ***** constraint: seq2cls tasks -> eg. NLU/semantic, paraphrase detection
 ***** constraint: base main ideas off peer-reviewed articles 
 
-**** Big-picture
+**** Long-term
 ***** develop a feasible, practical and interesting research question, writing will be easy when everything else is well defined
 ***** think about what this research adds that is not present -> possible to look at next steps in existing articles or possibly extension to new sequence classification tasks
 ***** high-performance -> show it is better than basic learning method from data -> implies we would have to use some negative examples from the oracle as well
