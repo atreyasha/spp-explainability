@@ -5,48 +5,45 @@ Tasks
 
 1.  Day-to-day
 
-    1.  **TODO** delete old articles and keep relevant ones
-        to focus on
+    1.  **TODO** rank articles on relevance to XAI,
+        feasibility, presence of source code or pseudcode, etc.
 
-    2.  **TODO** find applications of FSA/WFAs in NLP -\>
-        decipher if they are generally performant and/or explainable
+        1.  methods with new architectures -\> eg. SoPa,
+            state-regularized RNNs, FA-RNNs -\> more direct learning
+            where interpretability is built into main model -\> might
+            make sense to take an existing framework and extend it to
+            interesting tasks and probe this for the extent of
+            explainability
 
-        1.  SoPa is a very close idea which links WFSAs and ANNs -\> but
-            this is proposed as a new architecture altogether -\> this
-            might be the best way to start off
+        2.  methods for FSA/WFSA extraction -\> eg. spectral learning,
+            clustering -\> less direct interpretability and more proof
+            of performance needed -\> need to show it is better than
+            simple data learning, might be more costly
 
-        2.  alternatively, we can try to learn directly from trained
-            models -\> worth considering whether black-box or white-box
-            techniques are better for this
+    2.  constraint: work with RNNs only
 
-    3.  **TODO** look into algorithms to extract FSA/WFAs
-        from RNNs
+    3.  constraint: seq2cls tasks -\> eg. NLU/semantic, paraphrase
+        detection
 
-    4.  **TODO** if all works, finalize seq2cls tasks -\> eg.
-        verb-object agreement, NLU, paraphrase detection, or otherwise
-        semantics-oriented tasks
-
-    5.  **TODO** read more about turing machines and FSA/WFAs
-        to get theoretical background
-
-    6.  constraints: work with RNNs, focus on NLU/semantic seq2cls task
-
-    7.  constraints: base main ideas off peer-reviewed articles
+    4.  constraint: base main ideas off peer-reviewed articles
 
 2.  Big-picture
 
-    1.  think about what this research adds that is not present -\>
+    1.  develop a feasible, practical and interesting research question,
+        writing will be easy when everything else is well defined
+
+    2.  think about what this research adds that is not present -\>
         possible to look at next steps in existing articles or possibly
         extension to new sequence classification tasks
 
-    2.  high-performance -\> show it is better than basic learning
+    3.  high-performance -\> show it is better than basic learning
         method from data -\> implies we would have to use some negative
         examples from the oracle as well
 
-    3.  explainable -\> could potentially expose global bias for ethical
+    4.  explainable -\> could potentially expose global bias for ethical
         and adversarial problem detections
 
-    4.  keep probing networks/tasks as a backup option
+    5.  keep probing networks/tasks as a backup option
 
 ### Admin
 
@@ -67,19 +64,22 @@ Tasks
 
 ### Manuscript-specifics
 
-1.  ANNs historical literature find all -\> especially focusing on how
+1.  read more about turing machines and FSA/WFAs to get theoretical
+    background
+
+2.  ann\'s historical literature find all -\> especially focusing on how
     ANNs approximate symbolic representations which would motivate
     overall topic
 
-2.  convergence, universal approximation and generalization are
+3.  convergence, universal approximation and generalization are
     satisfied by ANNs to a high degree, semantic relevance in the final
     model is not guaranteed and this needs to be an additional task that
     where symbolic frameworks are needed
 
-3.  limit main experiments on sequence classification but mention
+4.  limit main experiments on sequence classification but mention
     transducer extension to seq2seq
 
-4.  if possible, bring in theoretical CS and mathematics into paper
+5.  if possible, bring in theoretical CS and mathematics into paper
 
 Brainstorming
 -------------

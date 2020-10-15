@@ -16,19 +16,29 @@ Given the current state of machine learning in NLP, it appears that deep learnin
 
 Recent research has shown the existence of multiple possible high-performance generalizable solutions to the ANN learning problem \citep{kepner2018sparse}. Given the existence of multiple solutions, the next frontier appears to be the process of selecting semantically relevant models; or otherwise models that actually reflect meaningful considerations which humans could easily pick out and which are not dependent on statistical artefacts.
 
+\subsection{Neural-backed decision trees}
+
+\paragraph{\citealt{wan2020nbdt}:} This is a powerful study which attempts to bridge the explainability of white-box decision trees with the universal approximation capabilities of neural networks. One limitation of this research appears to be the induced hierarchy in weight space. While this lends itself to high performance, this framework allows many of the ``black-box'' limitations of the ANN to persist; albeit in a hierarchical form. As a result, a probe into explainability would require careful analysis of the induced hierarchy and how adversarial samples would traverse such a hierarchy. Additionally, this framework would be difficult to implement for binary NLP tasks such as sentiment polarity detection where trees would be very short.
+
+\subsection{Inductive logic paradigms}
+
+Inductive learning of answer set programs proves to be a very useful machine learning technique since it is as explainable as can possibly be. \citet{law2015ilasp} develop an inductive logic learning framework that can even handle noisy data sets. A limitation of this technique is the reliance on human-engineered search spaces along with atoms and variables. Conversely, a lack of human-driven feature engineering results in exponentially complex search spaces; thereby diminishing its utility as a general-purpose machine learning tool.
+
+\citet{evans2018learning} and \citet{DBLP:journals/corr/abs-1906-03523} both focus on reducing the reliance on human-driven feature engineering by integrating differentiable neural network components into their workflows. This has proven to be very useful and performant for relational classification tasks.
+
 \subsection{Neural-symbolic paradigms}
 
 \paragraph{\citealt{li2018generalize}:} This study is an example of using a neural-symbolic paradigm to solve NLU entailment tasks. Here, the authors use neural networks to approximate symbolic functions such as the ``find'' function over sub-strings. Subsequently, they map together these neural modules through a logical framework which produces regular expressions as output rules.
 
 \paragraph{General outlook:} Based on literature review, it appears that much of research in this field requires the construction of features based on human input. While useful, this does not coincide strongly with the intent of this research; which is to achieve arbitrary explainable performance on NLP tasks without significant feature engineering.
 
-\subsection{Neural-backed decision trees}
-
-\paragraph{\citealt{wan2020nbdt}:} This is a powerful study which attempts to bridge the explainability of white-box decision trees with the universal approximation capabilities of neural networks. One limitation of this research appears to be the induced hierarchy in weight space. While this lends itself to high performance, this framework allows many of the ``black-box'' limitations of the ANN to persist; albeit in a hierarchical form. As a result, a probe into explainability would require careful analysis of the induced hierarchy and how adversarial samples would traverse such a hierarchy. Additionally, this framework would be difficult to implement for binary NLP tasks such as sentiment polarity detection where trees would be very short.
-
 \subsection{Extraction of state-based automata from RNNs}
 
 Based on the previous sections, it appears that neural-backed decision trees are able to provide meaningful and quasi-explainable hierarchies for multi-label classifiers. Extending this into the textual domain with sequence classification tasks seems difficult and perhaps inappropriate, since usually output classifications are binary and final features tend to be sequential and token-dependent. An interesting analog to decision trees in the realm of time-series or sequences could be finite-state automata (FSA). \citet{hou2018learning} implies the effectivity of extracting such FSAs directly from RNN models, which would be an interesting avenue for our research. From the outset, it appears that FSA and weighted finite automata (WFA) are both interpretable. Their state-based approach to modelling reflects some degree of explainability. The open question would be whether these models are robust to natural language.
+
+\subsection{Interpretable neural architectures}
+
+Instead of developing student-teacher algorithms which extract an interpretable surrogate model from an oracle, it could be seen as more efficient to work directly with an interpretable neural architecture. \citet{schwartz2018sopa} attempts to create a hybrid between RNN, CNN and weighed finite automata by analyzing surface-level string patterns. \citet{wang2019state} focus on modifying common RNN architectures to include centroids which can be easily modeled as finite automata. 
 
 %%% Local Variables:
 %%% mode: latex

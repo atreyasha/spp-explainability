@@ -1,18 +1,16 @@
-** Tasks
-   
+** Tasks 
+
 *** Main research direction
 **** Day-to-day
-***** TODO delete old articles and keep relevant ones to focus on 
-***** TODO find applications of FSA/WFAs in NLP -> decipher if they are generally performant and/or explainable
-****** SoPa is a very close idea which links WFSAs and ANNs -> but this is proposed as a new architecture altogether -> this might be the best way to start off
-****** alternatively, we can try to learn directly from trained models -> worth considering whether black-box or white-box techniques are better for this 
-***** TODO look into algorithms to extract FSA/WFAs from RNNs
-***** TODO if all works, finalize seq2cls tasks -> eg. verb-object agreement, NLU, paraphrase detection, or otherwise semantics-oriented tasks
-***** TODO read more about turing machines and FSA/WFAs to get theoretical background
-***** constraints: work with RNNs, focus on NLU/semantic seq2cls task
-***** constraints: base main ideas off peer-reviewed articles 
+***** TODO rank articles on relevance to XAI, feasibility, presence of source code or pseudcode, etc.
+****** methods with new architectures -> eg. SoPa, state-regularized RNNs, FA-RNNs -> more direct learning where interpretability is built into main model -> might make sense to take an existing framework and extend it to interesting tasks and probe this for the extent of explainability
+****** methods for FSA/WFSA extraction -> eg. spectral learning, clustering -> less direct interpretability and more proof of performance needed -> need to show it is better than simple data learning, might be more costly
+***** constraint: work with RNNs only
+***** constraint: seq2cls tasks -> eg. NLU/semantic, paraphrase detection
+***** constraint: base main ideas off peer-reviewed articles 
 
 **** Big-picture
+***** develop a feasible, practical and interesting research question, writing will be easy when everything else is well defined
 ***** think about what this research adds that is not present -> possible to look at next steps in existing articles or possibly extension to new sequence classification tasks
 ***** high-performance -> show it is better than basic learning method from data -> implies we would have to use some negative examples from the oracle as well
 ***** explainable -> could potentially expose global bias for ethical and adversarial problem detections
@@ -28,7 +26,8 @@
 ***** Manuscript submission: 18.03.20, try to extend if possible  
 
 *** Manuscript-specifics
-***** ANNs historical literature find all -> especially focusing on how ANNs approximate symbolic representations which would motivate overall topic
+***** read more about turing machines and FSA/WFAs to get theoretical background
+***** ann's historical literature find all -> especially focusing on how ANNs approximate symbolic representations which would motivate overall topic
 ***** convergence, universal approximation and generalization are satisfied by ANNs to a high degree, semantic relevance in the final model is not guaranteed and this needs to be an additional task that where symbolic frameworks are needed    
 ***** limit main experiments on sequence classification but mention transducer extension to seq2seq
 ***** if possible, bring in theoretical CS and mathematics into paper
