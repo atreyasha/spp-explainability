@@ -20,6 +20,17 @@ Tasks
             of performance needed -\> need to show it is better than
             simple data learning, might be more costly
 
+        3.  SR-RNNs and FA-RNNs: both are very practical and relatively
+            simpler than the next two studies -\> one possibility could
+            be extending state-regularized RNNs (and pytorch/cuda
+            porting) to include conversion to REs at the end for best
+            interpretability -\> as a bridge between both studies,
+            downside is the code is not very well developed
+
+        4.  SoPA and rational recurrences: first is a practical approach
+            while second is highly theoretical. Both have good code
+            quality
+
     2.  constraint: work with RNNs only
 
     3.  constraint: seq2cls tasks -\> eg. NLU/semantic, paraphrase
