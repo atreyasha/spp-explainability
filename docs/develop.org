@@ -32,7 +32,7 @@
 ****** less direct interpretability
 ****** more proof of performance needed -> need to show it is better than simple data learning
 
-**** Contraints
+**** Constraints
 ***** work with RNNs only
 ***** seq2cls tasks -> eg. NLU/semantic, paraphrase detection
 ***** base main ideas off peer-reviewed articles 

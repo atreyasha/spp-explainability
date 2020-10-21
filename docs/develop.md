@@ -73,7 +73,7 @@ Tasks
         3.  more proof of performance needed -\> need to show it is
             better than simple data learning
 
-5.  Contraints
+5.  Constraints
 
     1.  work with RNNs only
 
