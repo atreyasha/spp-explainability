@@ -27,7 +27,11 @@ Tasks
             interpretability -\> as a bridge between both studies,
             downside is the code is not very well developed
 
-        4.  SoPA and rational recurrences: first is a practical approach
+        4.  FA-RNNs involving REs and substitutions could be useful
+            extensions as finite state transducers for interpretable
+            neural machine translation
+
+        5.  SoPA and rational recurrences: first is a practical approach
             while second is highly theoretical. Both have good code
             quality
 
@@ -54,8 +58,6 @@ Tasks
     4.  explainable -\> could potentially expose global bias for ethical
         and adversarial problem detections
 
-    5.  keep probing networks/tasks as a backup option
-
 ### Admin
 
 1.  keep good communication with supervisors -\> every 3 weeks for
@@ -75,22 +77,26 @@ Tasks
 
 ### Manuscript-specifics
 
-1.  read more about turing machines and FSA/WFAs to get theoretical
+1.  show that new rnn performs competitively with others on same task
+    but is interpretable and explainable, show the explainability in
+    best way possible as a slice, emphasize global nature of model
+
+2.  read more about turing machines and FSA/WFAs to get theoretical
     background
 
-2.  ann\'s historical literature find all -\> especially focusing on how
+3.  ann\'s historical literature find all -\> especially focusing on how
     ANNs approximate symbolic representations which would motivate
     overall topic
 
-3.  convergence, universal approximation and generalization are
+4.  convergence, universal approximation and generalization are
     satisfied by ANNs to a high degree, semantic relevance in the final
     model is not guaranteed and this needs to be an additional task that
     where symbolic frameworks are needed
 
-4.  limit main experiments on sequence classification but mention
+5.  limit main experiments on sequence classification but mention
     transducer extension to seq2seq
 
-5.  if possible, bring in theoretical CS and mathematics into paper
+6.  if possible, bring in theoretical CS and mathematics into paper
 
 Legacy
 ------
