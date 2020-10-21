@@ -1,9 +1,4 @@
-#+STARTUP: overview
-
 ** Tasks 
-   :PROPERTIES:
-   :VISIBILITY: all
-   :END:
 *** Research
 
 **** Data sets
@@ -66,9 +61,6 @@
 ***** if possible, bring in theoretical CS and mathematics into paper
      
 ** Legacy
-   :PROPERTIES:
-   :VISIBILITY: children
-   :END:
 *** Neuro-symbolic paradigms
 ***** research questions:
 ****** can we train use a neuro-symbolic paradigm to attain high performance (similar to NNs) for NLP task(s)?

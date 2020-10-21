@@ -1,7 +1,4 @@
-```{=org}
-#+STARTUP: overview
-```
-Tasks {#tasks visibility="all"}
+Tasks
 -----
 
 ### Research
@@ -140,7 +137,7 @@ Tasks {#tasks visibility="all"}
 
 6.  if possible, bring in theoretical CS and mathematics into paper
 
-Legacy {#legacy visibility="children"}
+Legacy
 ------
 
 ### Neuro-symbolic paradigms
