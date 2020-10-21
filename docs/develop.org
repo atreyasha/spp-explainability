@@ -1,22 +1,52 @@
+#+STARTUP: overview
+
 ** Tasks 
+   :PROPERTIES:
+   :VISIBILITY: all
+   :END:
+*** Research
 
-*** Main research direction
-**** Current
-***** TODO rank articles on relevance to XAI, feasibility, presence of source code or pseudcode, etc.
-****** methods with new architectures -> eg. SoPa, state-regularized RNNs, FA-RNNs -> more direct learning where interpretability is built into main model -> might make sense to take an existing framework and extend it to interesting tasks and probe this for the extent of explainability
-****** methods for FSA/WFSA extraction -> eg. spectral learning, clustering -> less direct interpretability and more proof of performance needed -> need to show it is better than simple data learning, might be more costly
-****** SR-RNNs and FA-RNNs: both are very practical and relatively simpler than the next two studies -> one possibility could be extending state-regularized RNNs (and pytorch/cuda porting) to include conversion to REs at the end for best interpretability -> as a bridge between both studies, downside is the code is not very well developed
+**** Data sets
+***** TODO search for popular NLU datasets which have existing RNN models as (almost) SOTAs
+***** TODO read more into these tasks and find one that has potential for interpretability -> likely reduce task to binary case for easier processing
+      
+**** Code and documentation
+***** TODO start populating repository with hooks, data downloads, documentation and models
+***** TODO populate manuscript and repository with key research questions which can be answered
+
+**** Interpretable architectures
+***** TODO explore below frameworks (by preference) and find most feasible one
+***** **overall:** likely higher performance due to direct inference and less costly
+***** SoPA and rational recurrences
+****** first is a practical approach while second is highly theoretical
+****** provide interpretable architectures which need to be further explored
+****** both implementations have decent code quality
+***** State-regularized-RNNs
+****** practical and offers direct interpretability from architecture
+****** code is outdated and written in Theano, TensorFlow version likely to be out by end of year*
+****** possible work: port state-regularized RNNs to PyTorch with CUDA headers
+****** final conversion to REs for interpretability
+***** Finite-automation-RNNs
+****** source code likely released by November, but still requires initial REs which may not be present
 ****** FA-RNNs involving REs and substitutions could be useful extensions as finite state transducers for interpretable neural machine translation
-****** SoPA and rational recurrences: first is a practical approach while second is highly theoretical. Both have good code quality
-***** constraint: work with RNNs only
-***** constraint: seq2cls tasks -> eg. NLU/semantic, paraphrase detection
-***** constraint: base main ideas off peer-reviewed articles 
+       
+**** Interpretable surrogate extraction
+***** **overall:** more costly and less chance of high performance       
+***** FSA/WFSA extraction
+****** spectral learning, clustering
+****** less direct interpretability
+****** more proof of performance needed -> need to show it is better than simple data learning
 
-**** Long-term
-***** develop a feasible, practical and interesting research question, writing will be easy when everything else is well defined
+**** Contraints
+***** work with RNNs only
+***** seq2cls tasks -> eg. NLU/semantic, paraphrase detection
+***** base main ideas off peer-reviewed articles 
+
+**** High-level
+***** **globally explainable** -> exposes inner mechanisms and global biases which could help for ethical and adversarial problem detections
+***** **high-performance** -> competitive with similar non-explainable learnint techniques
 ***** think about what this research adds that is not present -> possible to look at next steps in existing articles or possibly extension to new sequence classification tasks
-***** high-performance -> show it is better than basic learning method from data -> implies we would have to use some negative examples from the oracle as well
-***** explainable -> could potentially expose global bias for ethical and adversarial problem detections
+***** develop feasible and interesting research questions, writing will be easy when everything else is well defined
 
 *** Admin    
 ***** keep good communication with supervisors -> every 3 weeks for Sharid and more regularly with Mathias 
@@ -27,15 +57,18 @@
 ***** Topic registration: 01.02.20  
 ***** Manuscript submission: 18.03.20, try to extend if possible  
 
-*** Manuscript-specifics
-***** show that new rnn performs competitively with others on same task but is interpretable  and explainable, show the explainability in best way possible as a slice, emphasize global nature of model
+*** Manuscript-extras
 ***** read more about turing machines and FSA/WFAs to get theoretical background
 ***** ann's historical literature find all -> especially focusing on how ANNs approximate symbolic representations which would motivate overall topic
 ***** convergence, universal approximation and generalization are satisfied by ANNs to a high degree, semantic relevance in the final model is not guaranteed and this needs to be an additional task that where symbolic frameworks are needed    
 ***** limit main experiments on sequence classification but mention transducer extension to seq2seq
+***** show that new rnn performs competitively with others on same task but is interpretable  and explainable, show the explainability in best way possible as a slice, emphasize global nature of model
 ***** if possible, bring in theoretical CS and mathematics into paper
-      
-** Legacy 
+     
+** Legacy
+   :PROPERTIES:
+   :VISIBILITY: children
+   :END:
 *** Neuro-symbolic paradigms
 ***** research questions:
 ****** can we train use a neuro-symbolic paradigm to attain high performance (similar to NNs) for NLP task(s)?

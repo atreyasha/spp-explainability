@@ -1,62 +1,104 @@
-Tasks
+```{=org}
+#+STARTUP: overview
+```
+Tasks {#tasks visibility="all"}
 -----
 
-### Main research direction
+### Research
 
-1.  Current
+1.  Data sets
 
-    1.  **TODO** rank articles on relevance to XAI,
-        feasibility, presence of source code or pseudcode, etc.
+    1.  **TODO** search for popular NLU datasets which have
+        existing RNN models as (almost) SOTAs
 
-        1.  methods with new architectures -\> eg. SoPa,
-            state-regularized RNNs, FA-RNNs -\> more direct learning
-            where interpretability is built into main model -\> might
-            make sense to take an existing framework and extend it to
-            interesting tasks and probe this for the extent of
-            explainability
+    2.  **TODO** read more into these tasks and find one that
+        has potential for interpretability -\> likely reduce task to
+        binary case for easier processing
 
-        2.  methods for FSA/WFSA extraction -\> eg. spectral learning,
-            clustering -\> less direct interpretability and more proof
-            of performance needed -\> need to show it is better than
-            simple data learning, might be more costly
+2.  Code and documentation
 
-        3.  SR-RNNs and FA-RNNs: both are very practical and relatively
-            simpler than the next two studies -\> one possibility could
-            be extending state-regularized RNNs (and pytorch/cuda
-            porting) to include conversion to REs at the end for best
-            interpretability -\> as a bridge between both studies,
-            downside is the code is not very well developed
+    1.  **TODO** start populating repository with hooks, data
+        downloads, documentation and models
 
-        4.  FA-RNNs involving REs and substitutions could be useful
+    2.  **TODO** populate manuscript and repository with key
+        research questions which can be answered
+
+3.  Interpretable architectures
+
+    1.  **TODO** explore below frameworks (by preference) and
+        find most feasible one
+
+    2.  ****overall:**** likely higher performance due to direct
+        inference and less costly
+
+    3.  SoPA and rational recurrences
+
+        1.  first is a practical approach while second is highly
+            theoretical
+
+        2.  provide interpretable architectures which need to be further
+            explored
+
+        3.  both implementations have decent code quality
+
+    4.  State-regularized-RNNs
+
+        1.  practical and offers direct interpretability from
+            architecture
+
+        2.  code is outdated and written in Theano, TensorFlow version
+            likely to be out by end of year\*
+
+        3.  possible work: port state-regularized RNNs to PyTorch with
+            CUDA headers
+
+        4.  final conversion to REs for interpretability
+
+    5.  Finite-automation-RNNs
+
+        1.  source code likely released by November, but still requires
+            initial REs which may not be present
+
+        2.  FA-RNNs involving REs and substitutions could be useful
             extensions as finite state transducers for interpretable
             neural machine translation
 
-        5.  SoPA and rational recurrences: first is a practical approach
-            while second is highly theoretical. Both have good code
-            quality
+4.  Interpretable surrogate extraction
 
-    2.  constraint: work with RNNs only
+    1.  ****overall:**** more costly and less chance of high performance
 
-    3.  constraint: seq2cls tasks -\> eg. NLU/semantic, paraphrase
-        detection
+    2.  FSA/WFSA extraction
 
-    4.  constraint: base main ideas off peer-reviewed articles
+        1.  spectral learning, clustering
 
-2.  Long-term
+        2.  less direct interpretability
 
-    1.  develop a feasible, practical and interesting research question,
-        writing will be easy when everything else is well defined
+        3.  more proof of performance needed -\> need to show it is
+            better than simple data learning
 
-    2.  think about what this research adds that is not present -\>
+5.  Contraints
+
+    1.  work with RNNs only
+
+    2.  seq2cls tasks -\> eg. NLU/semantic, paraphrase detection
+
+    3.  base main ideas off peer-reviewed articles
+
+6.  High-level
+
+    1.  ****globally explainable**** -\> exposes inner mechanisms and
+        global biases which could help for ethical and adversarial
+        problem detections
+
+    2.  ****high-performance**** -\> competitive with similar
+        non-explainable learnint techniques
+
+    3.  think about what this research adds that is not present -\>
         possible to look at next steps in existing articles or possibly
         extension to new sequence classification tasks
 
-    3.  high-performance -\> show it is better than basic learning
-        method from data -\> implies we would have to use some negative
-        examples from the oracle as well
-
-    4.  explainable -\> could potentially expose global bias for ethical
-        and adversarial problem detections
+    4.  develop feasible and interesting research questions, writing
+        will be easy when everything else is well defined
 
 ### Admin
 
@@ -75,30 +117,30 @@ Tasks
 
     5.  Manuscript submission: 18.03.20, try to extend if possible
 
-### Manuscript-specifics
+### Manuscript-extras
 
-1.  show that new rnn performs competitively with others on same task
-    but is interpretable and explainable, show the explainability in
-    best way possible as a slice, emphasize global nature of model
-
-2.  read more about turing machines and FSA/WFAs to get theoretical
+1.  read more about turing machines and FSA/WFAs to get theoretical
     background
 
-3.  ann\'s historical literature find all -\> especially focusing on how
+2.  ann\'s historical literature find all -\> especially focusing on how
     ANNs approximate symbolic representations which would motivate
     overall topic
 
-4.  convergence, universal approximation and generalization are
+3.  convergence, universal approximation and generalization are
     satisfied by ANNs to a high degree, semantic relevance in the final
     model is not guaranteed and this needs to be an additional task that
     where symbolic frameworks are needed
 
-5.  limit main experiments on sequence classification but mention
+4.  limit main experiments on sequence classification but mention
     transducer extension to seq2seq
+
+5.  show that new rnn performs competitively with others on same task
+    but is interpretable and explainable, show the explainability in
+    best way possible as a slice, emphasize global nature of model
 
 6.  if possible, bring in theoretical CS and mathematics into paper
 
-Legacy
+Legacy {#legacy visibility="children"}
 ------
 
 ### Neuro-symbolic paradigms
