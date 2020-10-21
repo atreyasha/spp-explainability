@@ -22,11 +22,11 @@ Tasks
 
 3.  Interpretable architectures
 
-    1.  **TODO** explore below frameworks (by preference) and
-        find most feasible one
-
-    2.  ****overall:**** likely higher performance due to direct
+    1.  ****Overall:**** likely higher performance due to direct
         inference and less costly
+
+    2.  **TODO** explore below frameworks (by preference) and
+        find most feasible one
 
     3.  SoPA and rational recurrences
 
@@ -62,7 +62,7 @@ Tasks
 
 4.  Interpretable surrogate extraction
 
-    1.  ****overall:**** more costly and less chance of high performance
+    1.  ****Overall:**** more costly and less chance of high performance
 
     2.  FSA/WFSA extraction
 
