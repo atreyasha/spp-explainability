@@ -7,10 +7,10 @@
 ***** SoPA and rational recurrences
 ****** first is a practical approach while second is highly theoretical
 ****** provide interpretable architectures which need to be further explored
-****** both implementations have decent code quality
+****** both implementations have decent code quality -> could be extended
 ***** State-regularized-RNNs
 ****** practical and offers direct interpretability from architecture
-****** code is outdated and written in Theano, TensorFlow version likely to be out by end of year*
+****** code is outdated and written in Theano, TensorFlow version likely to be out by end of year
 ****** possible work: port state-regularized RNNs to PyTorch with CUDA headers
 ****** final conversion to REs for interpretability
 ***** Finite-automation-RNNs
@@ -37,6 +37,7 @@
 ***** **contributions** -> should add insights which are new and not commonly found in research so far
 
 *** Admin
+**** General timeline
 ***** +Initial thesis document: 15.09.20+
 ***** Topic proposal draft: 06.11.20
 ***** Topic proposal final: 15.11.20
@@ -44,7 +45,7 @@
 ***** Manuscript submission: 18.03.20, try to extend if possible  
 ***** **Note:** meeting every 3 weeks with Sharid and more regularly with Mathias 
 
-*** Manuscript notes
+**** Manuscript notes
 ***** FSA/WFAs -> input theoretical CS, mathematics background to describe these
 ***** ann's historical literature -> describe how ANNs approximate symbolic representations
 ***** extension/recommendations -> transducer for seq2seq tasks

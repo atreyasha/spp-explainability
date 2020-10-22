@@ -10,7 +10,7 @@ check_staged() {
 
 org2md() {
   local input="$1"
-  local output="$(sed -e "s/\.org$/\.md/g" <<<"$input")"
+  local output="$(sed -e 's/\.org$/\.md/g' <<<"$input")"
   local staged=$(check_staged "$input")
   # update given conditions
   if [ -f "$input" ] && [ "$staged" -eq "1" ]; then
@@ -24,7 +24,7 @@ org2md() {
     # stage new markdown for commit
     git add "$output"
   fi
-  }
+}
 
 main() {
   # execute overall workflow
@@ -32,5 +32,5 @@ main() {
   org2md "$develop_org"
 }
 
-develop_org="./docs/develop.org"
+develop_org="./doc/develop.org"
 main "$develop_org"

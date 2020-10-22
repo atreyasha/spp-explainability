@@ -16,7 +16,8 @@ Tasks
         2.  provide interpretable architectures which need to be further
             explored
 
-        3.  both implementations have decent code quality
+        3.  both implementations have decent code quality -\> could be
+            extended
 
     3.  State-regularized-RNNs
 
@@ -24,7 +25,7 @@ Tasks
             architecture
 
         2.  code is outdated and written in Theano, TensorFlow version
-            likely to be out by end of year\*
+            likely to be out by end of year
 
         3.  possible work: port state-regularized RNNs to PyTorch with
             CUDA headers
@@ -82,28 +83,30 @@ Tasks
 
 ### Admin
 
-1.  ~~Initial thesis document: 15.09.20~~
+1.  General timeline
 
-2.  Topic proposal draft: 06.11.20
+    1.  ~~Initial thesis document: 15.09.20~~
 
-3.  Topic proposal final: 15.11.20
+    2.  Topic proposal draft: 06.11.20
 
-4.  Topic registration: 01.02.20
+    3.  Topic proposal final: 15.11.20
 
-5.  Manuscript submission: 18.03.20, try to extend if possible
+    4.  Topic registration: 01.02.20
 
-6.  ****Note:**** meeting every 3 weeks with Sharid and more regularly
-    with Mathias
+    5.  Manuscript submission: 18.03.20, try to extend if possible
 
-### Manuscript notes
+    6.  ****Note:**** meeting every 3 weeks with Sharid and more
+        regularly with Mathias
 
-1.  FSA/WFAs -\> input theoretical CS, mathematics background to
-    describe these
+2.  Manuscript notes
 
-2.  ann\'s historical literature -\> describe how ANNs approximate
-    symbolic representations
+    1.  FSA/WFAs -\> input theoretical CS, mathematics background to
+        describe these
 
-3.  extension/recommendations -\> transducer for seq2seq tasks
+    2.  ann\'s historical literature -\> describe how ANNs approximate
+        symbolic representations
+
+    3.  extension/recommendations -\> transducer for seq2seq tasks
 
 Completed
 ---------
