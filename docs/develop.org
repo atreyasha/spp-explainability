@@ -1,16 +1,17 @@
-** Tasks 
-*** Research
+#+STARTUP: overview
 
+** Tasks
+*** Research
 **** Data sets
 ***** TODO search for popular NLU datasets which have existing RNN models as (almost) SOTAs
-***** TODO read more into these tasks and find one that has potential for interpretability -> likely reduce task to binary case for easier processing
-      
-**** Code and documentation
+***** TODO read more into these tasks and find one that has potential for interpretability -> likely reduce task to binary case for easier processing (eg. entailment)
+ 
+**** Clean-code and documentation
 ***** TODO start populating repository with hooks, data downloads, documentation and models
 ***** TODO populate manuscript and repository with key research questions which can be answered
+***** TODO add org-mode hook to remove startup visibility headers in org-mode to markdown conversion
 
-**** Interpretable architectures
-***** **Overall:** likely higher performance due to direct inference and less costly
+**** Interpretable neural architectures
 ***** TODO explore below frameworks (by preference) and find most feasible one
 ***** SoPA and rational recurrences
 ****** first is a practical approach while second is highly theoretical
@@ -24,13 +25,14 @@
 ***** Finite-automation-RNNs
 ****** source code likely released by November, but still requires initial REs which may not be present
 ****** FA-RNNs involving REs and substitutions could be useful extensions as finite state transducers for interpretable neural machine translation
+***** **GIST:** likely higher performance due to direct inference and less costly
        
 **** Interpretable surrogate extraction
-***** **Overall:** more costly and less chance of high performance       
 ***** FSA/WFSA extraction
 ****** spectral learning, clustering
 ****** less direct interpretability
 ****** more proof of performance needed -> need to show it is better than simple data learning
+***** **GIST:** more costly and less chance of high performance       
 
 **** Constraints
 ***** work with RNNs only
@@ -40,26 +42,25 @@
 **** High-level
 ***** **globally explainable** -> exposes inner mechanisms and global biases which could help for ethical and adversarial problem detections
 ***** **high-performance** -> competitive with similar non-explainable learnint techniques
-***** think about what this research adds that is not present -> possible to look at next steps in existing articles or possibly extension to new sequence classification tasks
-***** develop feasible and interesting research questions, writing will be easy when everything else is well defined
+***** **contributions** -> should add insights which are new and not commonly found in research so far
 
-*** Admin    
-***** keep good communication with supervisors -> every 3 weeks for Sharid and more regularly with Mathias 
-**** General timeline
+*** Admin
 ***** +Initial thesis document: 15.09.20+
 ***** Topic proposal draft: 06.11.20
 ***** Topic proposal final: 15.11.20
 ***** Topic registration: 01.02.20  
 ***** Manuscript submission: 18.03.20, try to extend if possible  
+***** **Note:** meeting every 3 weeks with Sharid and more regularly with Mathias 
 
-*** Manuscript-extras
-***** read more about turing machines and FSA/WFAs to get theoretical background
-***** ann's historical literature find all -> especially focusing on how ANNs approximate symbolic representations which would motivate overall topic
-***** convergence, universal approximation and generalization are satisfied by ANNs to a high degree, semantic relevance in the final model is not guaranteed and this needs to be an additional task that where symbolic frameworks are needed    
-***** limit main experiments on sequence classification but mention transducer extension to seq2seq
-***** show that new rnn performs competitively with others on same task but is interpretable  and explainable, show the explainability in best way possible as a slice, emphasize global nature of model
-***** if possible, bring in theoretical CS and mathematics into paper
-     
+*** Manuscript notes
+***** FSA/WFAs -> input theoretical CS, mathematics background to describe these
+***** ann's historical literature -> describe how ANNs approximate symbolic representations
+***** extension/recommendations -> transducer for seq2seq tasks
+
+** Completed
+***** DONE Set up repo, manuscript and develop log
+      CLOSED: [2020-10-22 Thu 12:36]
+      
 ** Legacy
 *** Neuro-symbolic paradigms
 ***** research questions:

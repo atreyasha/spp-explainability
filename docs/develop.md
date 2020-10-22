@@ -10,9 +10,9 @@ Tasks
 
     2.  **TODO** read more into these tasks and find one that
         has potential for interpretability -\> likely reduce task to
-        binary case for easier processing
+        binary case for easier processing (eg. entailment)
 
-2.  Code and documentation
+2.  Clean-code and documentation
 
     1.  **TODO** start populating repository with hooks, data
         downloads, documentation and models
@@ -20,15 +20,15 @@ Tasks
     2.  **TODO** populate manuscript and repository with key
         research questions which can be answered
 
-3.  Interpretable architectures
+    3.  **TODO** add org-mode hook to remove startup
+        visibility headers in org-mode to markdown conversion
 
-    1.  ****Overall:**** likely higher performance due to direct
-        inference and less costly
+3.  Interpretable neural architectures
 
-    2.  **TODO** explore below frameworks (by preference) and
+    1.  **TODO** explore below frameworks (by preference) and
         find most feasible one
 
-    3.  SoPA and rational recurrences
+    2.  SoPA and rational recurrences
 
         1.  first is a practical approach while second is highly
             theoretical
@@ -38,7 +38,7 @@ Tasks
 
         3.  both implementations have decent code quality
 
-    4.  State-regularized-RNNs
+    3.  State-regularized-RNNs
 
         1.  practical and offers direct interpretability from
             architecture
@@ -51,7 +51,7 @@ Tasks
 
         4.  final conversion to REs for interpretability
 
-    5.  Finite-automation-RNNs
+    4.  Finite-automation-RNNs
 
         1.  source code likely released by November, but still requires
             initial REs which may not be present
@@ -60,11 +60,12 @@ Tasks
             extensions as finite state transducers for interpretable
             neural machine translation
 
+    5.  ****GIST:**** likely higher performance due to direct inference
+        and less costly
+
 4.  Interpretable surrogate extraction
 
-    1.  ****Overall:**** more costly and less chance of high performance
-
-    2.  FSA/WFSA extraction
+    1.  FSA/WFSA extraction
 
         1.  spectral learning, clustering
 
@@ -72,6 +73,8 @@ Tasks
 
         3.  more proof of performance needed -\> need to show it is
             better than simple data learning
+
+    2.  ****GIST:**** more costly and less chance of high performance
 
 5.  Constraints
 
@@ -90,52 +93,38 @@ Tasks
     2.  ****high-performance**** -\> competitive with similar
         non-explainable learnint techniques
 
-    3.  think about what this research adds that is not present -\>
-        possible to look at next steps in existing articles or possibly
-        extension to new sequence classification tasks
-
-    4.  develop feasible and interesting research questions, writing
-        will be easy when everything else is well defined
+    3.  ****contributions**** -\> should add insights which are new and
+        not commonly found in research so far
 
 ### Admin
 
-1.  keep good communication with supervisors -\> every 3 weeks for
-    Sharid and more regularly with Mathias
+1.  ~~Initial thesis document: 15.09.20~~
 
-2.  General timeline
+2.  Topic proposal draft: 06.11.20
 
-    1.  ~~Initial thesis document: 15.09.20~~
+3.  Topic proposal final: 15.11.20
 
-    2.  Topic proposal draft: 06.11.20
+4.  Topic registration: 01.02.20
 
-    3.  Topic proposal final: 15.11.20
+5.  Manuscript submission: 18.03.20, try to extend if possible
 
-    4.  Topic registration: 01.02.20
+6.  ****Note:**** meeting every 3 weeks with Sharid and more regularly
+    with Mathias
 
-    5.  Manuscript submission: 18.03.20, try to extend if possible
+### Manuscript notes
 
-### Manuscript-extras
+1.  FSA/WFAs -\> input theoretical CS, mathematics background to
+    describe these
 
-1.  read more about turing machines and FSA/WFAs to get theoretical
-    background
+2.  ann\'s historical literature -\> describe how ANNs approximate
+    symbolic representations
 
-2.  ann\'s historical literature find all -\> especially focusing on how
-    ANNs approximate symbolic representations which would motivate
-    overall topic
+3.  extension/recommendations -\> transducer for seq2seq tasks
 
-3.  convergence, universal approximation and generalization are
-    satisfied by ANNs to a high degree, semantic relevance in the final
-    model is not guaranteed and this needs to be an additional task that
-    where symbolic frameworks are needed
+Completed
+---------
 
-4.  limit main experiments on sequence classification but mention
-    transducer extension to seq2seq
-
-5.  show that new rnn performs competitively with others on same task
-    but is interpretable and explainable, show the explainability in
-    best way possible as a slice, emphasize global nature of model
-
-6.  if possible, bring in theoretical CS and mathematics into paper
+**DONE** Set up repo, manuscript and develop log
 
 Legacy
 ------
