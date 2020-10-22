@@ -3,27 +3,15 @@ Tasks
 
 ### Research
 
-1.  Data sets
-
-    1.  **TODO** search for popular NLU datasets which have
-        existing RNN models as (almost) SOTAs
-
-    2.  **TODO** read more into these tasks and find one that
-        has potential for interpretability -\> likely reduce task to
-        binary case for easier processing (eg. entailment)
-
-2.  Clean-code and documentation
+1.  Clean-code and documentation
 
     1.  **TODO** start populating repository with hooks, data
         downloads, documentation and models
 
-    2.  **TODO** populate manuscript and repository with key
-        research questions which can be answered
+    2.  populate manuscript and repository with key research questions
+        which can be answered
 
-    3.  **TODO** add org-mode hook to remove startup
-        visibility headers in org-mode to markdown conversion
-
-3.  Interpretable neural architectures
+2.  Interpretable neural architectures
 
     1.  **TODO** explore below frameworks (by preference) and
         find most feasible one
@@ -62,6 +50,15 @@ Tasks
 
     5.  ****GIST:**** likely higher performance due to direct inference
         and less costly
+
+3.  Data sets
+
+    1.  **TODO** search for popular NLU datasets which have
+        existing RNN models as (almost) SOTAs
+
+    2.  **TODO** read more into these tasks and find one that
+        has potential for interpretability -\> likely reduce task to
+        binary case for easier processing (eg. entailment)
 
 4.  Interpretable surrogate extraction
 
@@ -123,6 +120,9 @@ Tasks
 
 Completed
 ---------
+
+**DONE** add org-mode hook to remove startup visibility
+headers in org-mode to markdown conversion
 
 **DONE** Set up repo, manuscript and develop log
 
