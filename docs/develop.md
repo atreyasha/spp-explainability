@@ -3,17 +3,7 @@ Tasks
 
 ### Research
 
-1.  Clean-code and documentation
-
-    1.  **TODO** start populating repository with hooks, data
-        downloads, documentation and models -\> attempt first with
-        Makefile, otherwise migrate to shell scripts if things get too
-        complicated
-
-    2.  populate manuscript and repository with key research questions
-        which can be answered
-
-2.  Interpretable neural architectures
+1.  Interpretable neural architectures
 
     1.  **TODO** explore below frameworks (by preference) and
         find most feasible one
@@ -53,6 +43,14 @@ Tasks
     5.  ****GIST:**** likely higher performance due to direct inference
         and less costly
 
+2.  Clean-code and documentation
+
+    1.  **TODO** start populating repository with hooks, data
+        downloads, documentation and models
+
+    2.  populate manuscript and repository with key research questions
+        which can be answered
+
 3.  Data sets
 
     1.  **TODO** search for popular NLU datasets which have
@@ -62,20 +60,7 @@ Tasks
         has potential for interpretability -\> likely reduce task to
         binary case for easier processing (eg. entailment)
 
-4.  Interpretable surrogate extraction
-
-    1.  FSA/WFSA extraction
-
-        1.  spectral learning, clustering
-
-        2.  less direct interpretability
-
-        3.  more proof of performance needed -\> need to show it is
-            better than simple data learning
-
-    2.  ****GIST:**** more costly and less chance of high performance
-
-5.  Constraints
+4.  Constraints
 
     1.  work with RNNs only
 
@@ -83,7 +68,7 @@ Tasks
 
     3.  base main ideas off peer-reviewed articles
 
-6.  High-level
+5.  High-level
 
     1.  ****globally explainable**** -\> exposes inner mechanisms and
         global biases which could help for ethical and adversarial
@@ -130,6 +115,19 @@ headers in org-mode to markdown conversion
 
 Legacy
 ------
+
+### Interpretable surrogate extraction
+
+1.  overall more costly and less chance of high performance
+
+2.  FSA/WFSA extraction
+
+    1.  spectral learning, clustering
+
+    2.  less direct interpretability
+
+    3.  more proof of performance needed -\> need to show it is better
+        than simple data learning
 
 ### Neuro-symbolic paradigms
 

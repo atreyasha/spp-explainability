@@ -22,7 +22,7 @@ org2md() {
     # replace startup visibility cleanly
     sed -i '/```{=org}/,/```/d' "$output"
     # stage new markdown for commit
-    git add "$input"
+    git add "$output"
   fi
   }
 
@@ -34,4 +34,3 @@ main() {
 
 develop_org="./docs/develop.org"
 main "$develop_org"
-
