@@ -1,4 +1,4 @@
-auto/
+*.el
 *.aux
 *.bbl
 *.blg

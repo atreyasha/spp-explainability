@@ -6,7 +6,9 @@ Tasks
 1.  Clean-code and documentation
 
     1.  **TODO** start populating repository with hooks, data
-        downloads, documentation and models
+        downloads, documentation and models -\> attempt first with
+        Makefile, otherwise migrate to shell scripts if things get too
+        complicated
 
     2.  populate manuscript and repository with key research questions
         which can be answered

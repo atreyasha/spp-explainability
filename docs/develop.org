@@ -2,10 +2,6 @@
 
 ** Tasks
 *** Research
-**** Clean-code and documentation
-***** TODO start populating repository with hooks, data downloads, documentation and models -> attempt first with Makefile, otherwise migrate to shell scripts if things get too complicated
-***** populate manuscript and repository with key research questions which can be answered
-
 **** Interpretable neural architectures
 ***** TODO explore below frameworks (by preference) and find most feasible one
 ***** SoPA and rational recurrences
@@ -22,17 +18,14 @@
 ****** FA-RNNs involving REs and substitutions could be useful extensions as finite state transducers for interpretable neural machine translation
 ***** **GIST:** likely higher performance due to direct inference and less costly
 
+**** Clean-code and documentation
+***** TODO start populating repository with hooks, data downloads, documentation and models
+***** populate manuscript and repository with key research questions which can be answered
+
 **** Data sets
 ***** TODO search for popular NLU datasets which have existing RNN models as (almost) SOTAs
 ***** TODO read more into these tasks and find one that has potential for interpretability -> likely reduce task to binary case for easier processing (eg. entailment)
  
-**** Interpretable surrogate extraction
-***** FSA/WFSA extraction
-****** spectral learning, clustering
-****** less direct interpretability
-****** more proof of performance needed -> need to show it is better than simple data learning
-***** **GIST:** more costly and less chance of high performance       
-
 **** Constraints
 ***** work with RNNs only
 ***** seq2cls tasks -> eg. NLU/semantic, paraphrase detection
@@ -63,6 +56,13 @@
       CLOSED: [2020-10-22 Thu 12:36]
       
 ** Legacy
+*** Interpretable surrogate extraction
+***** overall more costly and less chance of high performance       
+***** FSA/WFSA extraction
+****** spectral learning, clustering
+****** less direct interpretability
+****** more proof of performance needed -> need to show it is better than simple data learning
+
 *** Neuro-symbolic paradigms
 ***** research questions:
 ****** can we train use a neuro-symbolic paradigm to attain high performance (similar to NNs) for NLP task(s)?
