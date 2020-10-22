@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Pre-commit hook for converting development log from org to markdown
 
 check_staged() {
   # check if develop.org has been staged for commit
@@ -9,27 +10,28 @@ check_staged() {
 
 org2md() {
   local input="$1"
-  local output="$2"
-  # basic conversion to markdown
-  pandoc -f org -t markdown -o "$output" "$input"
-  # replace org-agenda markers cleanly
-  sed -i 's/\[TODO\]{.*}/**TODO**/g; s/\[DONE\]{.*}/**DONE**/g' "$output"
-  # replace startup visibility cleanly
-  sed -i '/```{=org}/,/```/d' "$output"
-}
-
-main() {
-  local input="$1"
   local output="$(sed -e "s/\.org$/\.md/g" <<<"$input")"
   local staged=$(check_staged "$input")
   # update given conditions
   if [ -f "$input" ] && [ "$staged" -eq "1" ]; then
     printf "%s\n" "Syncing develop.md with develop.org"
-    org2md "$input" "$output"
+    # basic conversion to markdown
+    pandoc -f org -t markdown -o "$output" "$input"
+    # replace org-agenda markers cleanly
+    sed -i 's/\[TODO\]{.*}/**TODO**/g; s/\[DONE\]{.*}/**DONE**/g' "$output"
+    # replace startup visibility cleanly
+    sed -i '/```{=org}/,/```/d' "$output"
+    # stage new markdown for commit
     git add "$input"
   fi
+  }
+
+main() {
+  # execute overall workflow
+  local develop_org="$1"
+  org2md "$develop_org"
 }
 
-# execute overall workflow
-source="./docs/develop.org"
-main "$source"
+develop_org="./docs/develop.org"
+main "$develop_org"
+

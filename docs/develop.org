@@ -2,14 +2,9 @@
 
 ** Tasks
 *** Research
-**** Data sets
-***** TODO search for popular NLU datasets which have existing RNN models as (almost) SOTAs
-***** TODO read more into these tasks and find one that has potential for interpretability -> likely reduce task to binary case for easier processing (eg. entailment)
- 
 **** Clean-code and documentation
 ***** TODO start populating repository with hooks, data downloads, documentation and models
-***** TODO populate manuscript and repository with key research questions which can be answered
-***** TODO add org-mode hook to remove startup visibility headers in org-mode to markdown conversion
+***** populate manuscript and repository with key research questions which can be answered
 
 **** Interpretable neural architectures
 ***** TODO explore below frameworks (by preference) and find most feasible one
@@ -26,7 +21,11 @@
 ****** source code likely released by November, but still requires initial REs which may not be present
 ****** FA-RNNs involving REs and substitutions could be useful extensions as finite state transducers for interpretable neural machine translation
 ***** **GIST:** likely higher performance due to direct inference and less costly
-       
+
+**** Data sets
+***** TODO search for popular NLU datasets which have existing RNN models as (almost) SOTAs
+***** TODO read more into these tasks and find one that has potential for interpretability -> likely reduce task to binary case for easier processing (eg. entailment)
+ 
 **** Interpretable surrogate extraction
 ***** FSA/WFSA extraction
 ****** spectral learning, clustering
@@ -58,6 +57,8 @@
 ***** extension/recommendations -> transducer for seq2seq tasks
 
 ** Completed
+***** DONE add org-mode hook to remove startup visibility headers in org-mode to markdown conversion
+      CLOSED: [2020-10-22 Thu 13:28]
 ***** DONE Set up repo, manuscript and develop log
       CLOSED: [2020-10-22 Thu 12:36]
       
