@@ -14,7 +14,7 @@
 ****** code is outdated and written in Theano, TensorFlow version likely to be out by end of year
 ****** possible work: port state-regularized RNNs to PyTorch with CUDA headers
 ****** final conversion to REs for interpretability
-***** **GIST:** likely higher performance due to direct inference and less costly
+***** *GIST:* liely higher performance due to direct inference and less costly
 
 **** Data sets
 ***** TODO search for popular NLU datasets which have existing RNN models as (almost) SOTAs
@@ -33,9 +33,9 @@
 ***** base main ideas off peer-reviewed articles 
 
 **** High-level
-***** **globally explainable** -> exposes inner mechanisms and global biases which could help for ethical and adversarial problem detections
-***** **high-performance** -> competitive with similar non-explainable learnint techniques
-***** **contributions** -> should add insights which are new and not commonly found in research so far
+***** *globally explainable* -> exposes inner mechanisms and global biases which could help for ethical and adversarial problem detections
+***** *high-performance* -> competitive with similar non-explainable learnint techniques
+***** *contributions* -> should add insights which are new and not commonly found in research so far
 
 *** Admin
 **** General timeline
@@ -44,7 +44,7 @@
 ***** Topic proposal final: 15.11.20
 ***** Topic registration: 01.02.20  
 ***** Manuscript submission: 18.03.20, try to extend if possible  
-***** **Note:** meeting every 3 weeks with Sharid and more regularly with Mathias 
+***** *Note:* meeting every 3 weeks with Sharid and more regularly with Mathias 
 
 **** Manuscript notes
 ***** FSA/WFAs -> input theoretical CS, mathematics background to describe these

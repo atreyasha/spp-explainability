@@ -32,8 +32,8 @@ Tasks
 
         4.  final conversion to REs for interpretability
 
-    4.  ****GIST:**** likely higher performance due to direct inference
-        and less costly
+    4.  **GIST:** liely higher performance due to direct inference and
+        less costly
 
 2.  Data sets
 
@@ -62,15 +62,15 @@ Tasks
 
 5.  High-level
 
-    1.  ****globally explainable**** -\> exposes inner mechanisms and
-        global biases which could help for ethical and adversarial
-        problem detections
+    1.  **globally explainable** -\> exposes inner mechanisms and global
+        biases which could help for ethical and adversarial problem
+        detections
 
-    2.  ****high-performance**** -\> competitive with similar
+    2.  **high-performance** -\> competitive with similar
         non-explainable learnint techniques
 
-    3.  ****contributions**** -\> should add insights which are new and
-        not commonly found in research so far
+    3.  **contributions** -\> should add insights which are new and not
+        commonly found in research so far
 
 ### Admin
 
@@ -86,8 +86,8 @@ Tasks
 
     5.  Manuscript submission: 18.03.20, try to extend if possible
 
-    6.  ****Note:**** meeting every 3 weeks with Sharid and more
-        regularly with Mathias
+    6.  **Note:** meeting every 3 weeks with Sharid and more regularly
+        with Mathias
 
 2.  Manuscript notes
 
