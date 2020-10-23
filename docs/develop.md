@@ -32,27 +32,10 @@ Tasks
 
         4.  final conversion to REs for interpretability
 
-    4.  Finite-automation-RNNs
-
-        1.  source code likely released by November, but still requires
-            initial REs which may not be present
-
-        2.  FA-RNNs involving REs and substitutions could be useful
-            extensions as finite state transducers for interpretable
-            neural machine translation
-
-    5.  ****GIST:**** likely higher performance due to direct inference
+    4.  ****GIST:**** likely higher performance due to direct inference
         and less costly
 
-2.  Clean-code and documentation
-
-    1.  **TODO** start populating repository with hooks, data
-        downloads, documentation and models
-
-    2.  populate manuscript and repository with key research questions
-        which can be answered
-
-3.  Data sets
+2.  Data sets
 
     1.  **TODO** search for popular NLU datasets which have
         existing RNN models as (almost) SOTAs
@@ -60,6 +43,14 @@ Tasks
     2.  **TODO** read more into these tasks and find one that
         has potential for interpretability -\> likely reduce task to
         binary case for easier processing (eg. entailment)
+
+3.  Clean-code and documentation
+
+    1.  **TODO** write proposal and manuscript with key
+        research questions which can be answered
+
+    2.  start populating repository with hooks, data downloads,
+        documentation and models
 
 4.  Constraints
 
@@ -118,6 +109,15 @@ headers in org-mode to markdown conversion
 
 Legacy
 ------
+
+### Finite-automation-RNNs -\> interpretable neural architecture
+
+1.  source code likely released by November, but still requires initial
+    REs which may not be present -\> might not be the best fit
+
+2.  FA-RNNs involving REs and substitutions could be useful extensions
+    as finite state transducers for interpretable neural machine
+    translation
 
 ### Interpretable surrogate extraction
 

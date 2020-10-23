@@ -1,9 +1,10 @@
 #+STARTUP: overview
-
+ 
 ** Tasks
 *** Research
 **** Interpretable neural architectures
 ***** TODO explore below frameworks (by preference) and find most feasible one
+      DEADLINE: <2020-10-26 Mon>
 ***** SoPA and rational recurrences
 ****** first is a practical approach while second is highly theoretical
 ****** provide interpretable architectures which need to be further explored
@@ -13,18 +14,18 @@
 ****** code is outdated and written in Theano, TensorFlow version likely to be out by end of year
 ****** possible work: port state-regularized RNNs to PyTorch with CUDA headers
 ****** final conversion to REs for interpretability
-***** Finite-automation-RNNs
-****** source code likely released by November, but still requires initial REs which may not be present
-****** FA-RNNs involving REs and substitutions could be useful extensions as finite state transducers for interpretable neural machine translation
 ***** **GIST:** likely higher performance due to direct inference and less costly
-
-**** Clean-code and documentation
-***** TODO start populating repository with hooks, data downloads, documentation and models
-***** populate manuscript and repository with key research questions which can be answered
 
 **** Data sets
 ***** TODO search for popular NLU datasets which have existing RNN models as (almost) SOTAs
+      DEADLINE: <2020-10-30 Fri>
 ***** TODO read more into these tasks and find one that has potential for interpretability -> likely reduce task to binary case for easier processing (eg. entailment)
+      DEADLINE: <2020-11-06 Fri>
+
+**** Clean-code and documentation
+***** TODO write proposal and manuscript with key research questions which can be answered
+      DEADLINE: <2020-11-06 Fri>
+***** start populating repository with hooks, data downloads, documentation and models
  
 **** Constraints
 ***** work with RNNs only
@@ -57,6 +58,10 @@
       CLOSED: [2020-10-22 Thu 12:36]
       
 ** Legacy
+*** Finite-automation-RNNs -> interpretable neural architecture
+***** source code likely released by November, but still requires initial REs which may not be present -> might not be the best fit
+***** FA-RNNs involving REs and substitutions could be useful extensions as finite state transducers for interpretable neural machine translation
+
 *** Interpretable surrogate extraction
 ***** overall more costly and less chance of high performance       
 ***** FSA/WFSA extraction
