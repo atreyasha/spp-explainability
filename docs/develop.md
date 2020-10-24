@@ -1,3 +1,31 @@
+-   [Tasks](#tasks)
+    -   [Research](#research)
+    -   [Admin](#admin)
+-   [Completed](#completed)
+-   [Legacy](#legacy)
+    -   [Finite-automation-RNNs -\> interpretable neural
+        architecture](#finite-automation-rnns---interpretable-neural-architecture)
+    -   [Interpretable surrogate
+        extraction](#interpretable-surrogate-extraction)
+    -   [Neuro-symbolic paradigms](#neuro-symbolic-paradigms)
+    -   [Neural decision trees](#neural-decision-trees)
+    -   [Inductive logic on NLP search
+        spaces](#inductive-logic-on-nlp-search-spaces)
+
+-   [Tasks](#tasks)
+    -   [Research](#research)
+    -   [Admin](#admin)
+-   [Completed](#completed)
+-   [Legacy](#legacy)
+    -   [Finite-automation-RNNs -\> interpretable neural
+        architecture](#finite-automation-rnns---interpretable-neural-architecture)
+    -   [Interpretable surrogate
+        extraction](#interpretable-surrogate-extraction)
+    -   [Neuro-symbolic paradigms](#neuro-symbolic-paradigms)
+    -   [Neural decision trees](#neural-decision-trees)
+    -   [Inductive logic on NLP search
+        spaces](#inductive-logic-on-nlp-search-spaces)
+
 Tasks
 -----
 
@@ -5,8 +33,8 @@ Tasks
 
 1.  Interpretable neural architectures
 
-    1.  **TODO** explore below frameworks (by preference) and
-        find most feasible one
+    1.  **TODO** explore below frameworks (by preference) and find most
+        feasible one
 
     2.  SoPA and rational recurrences
 
@@ -37,17 +65,17 @@ Tasks
 
 2.  Data sets
 
-    1.  **TODO** search for popular NLU datasets which have
-        existing RNN models as (almost) SOTAs
+    1.  **TODO** search for popular NLU datasets which have existing RNN
+        models as (almost) SOTAs
 
-    2.  **TODO** read more into these tasks and find one that
-        has potential for interpretability -\> likely reduce task to
-        binary case for easier processing (eg. entailment)
+    2.  **TODO** read more into these tasks and find one that has
+        potential for interpretability -\> likely reduce task to binary
+        case for easier processing (eg. entailment)
 
 3.  Clean-code and documentation
 
-    1.  **TODO** write proposal and manuscript with key
-        research questions which can be answered
+    1.  **TODO** write proposal and manuscript with key research
+        questions which can be answered
 
     2.  start populating repository with hooks, data downloads,
         documentation and models
@@ -102,8 +130,8 @@ Tasks
 Completed
 ---------
 
-**DONE** add org-mode hook to remove startup visibility
-headers in org-mode to markdown conversion
+**DONE** add org-mode hook to remove startup visibility headers in
+org-mode to markdown conversion
 
 **DONE** Set up repo, manuscript and develop log
 
