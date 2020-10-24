@@ -2,7 +2,6 @@
  
 ** Tasks
 *** Research
-
 **** Interpretable neural architectures
 ***** TODO explore below frameworks (by preference) and find most feasible one
       DEADLINE: <2020-10-26 Mon>

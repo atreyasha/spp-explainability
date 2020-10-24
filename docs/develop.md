@@ -12,20 +12,6 @@
     -   [Inductive logic on NLP search
         spaces](#inductive-logic-on-nlp-search-spaces)
 
--   [Tasks](#tasks)
-    -   [Research](#research)
-    -   [Admin](#admin)
--   [Completed](#completed)
--   [Legacy](#legacy)
-    -   [Finite-automation-RNNs -\> interpretable neural
-        architecture](#finite-automation-rnns---interpretable-neural-architecture)
-    -   [Interpretable surrogate
-        extraction](#interpretable-surrogate-extraction)
-    -   [Neuro-symbolic paradigms](#neuro-symbolic-paradigms)
-    -   [Neural decision trees](#neural-decision-trees)
-    -   [Inductive logic on NLP search
-        spaces](#inductive-logic-on-nlp-search-spaces)
-
 Tasks
 -----
 
@@ -33,49 +19,73 @@ Tasks
 
 1.  Interpretable neural architectures
 
-    1.  **TODO** explore below frameworks (by preference) and find most
-        feasible one
+    1.  **TODO** explore below frameworks (by preference) and
+        find most feasible one
 
-    2.  SoPA and rational recurrences
+    2.  Rational recurences (RRNNs)
 
-        1.  first is a practical approach while second is highly
-            theoretical
+        1.  **TODO** read and consider writing to RRNN author
+            on interpretability analyses
 
-        2.  provide interpretable architectures which need to be further
-            explored
+        2.  good: code quality in PyTorch, succinct and short
 
-        3.  both implementations have decent code quality -\> could be
-            extended
+        3.  good: heavy mathematical background which could lend to more
+            interesting mathematical analyses
 
-    3.  State-regularized-RNNs
+        4.  problematic: seemingly missing interpretability section in
+            paper
 
-        1.  practical and offers direct interpretability from
-            architecture
+    3.  State-regularized-RNNs (SR-RNNs)
 
-        2.  code is outdated and written in Theano, TensorFlow version
-            likely to be out by end of year
+        1.  **TODO** read through again to form more concrete
+            opinions
 
-        3.  possible work: port state-regularized RNNs to PyTorch with
-            CUDA headers
+        2.  good: very powerful and easily interpretable architecture
+            with extensions to NLP and CV
 
-        4.  final conversion to REs for interpretability
+        3.  problematic: code is outdated and written in Theano,
+            TensorFlow version likely to be out by end of year
 
-    4.  **GIST:** liely higher performance due to direct inference and
+        4.  possible extensions: port state-regularized RNNs to PyTorch
+            with CUDA headers (might be simple since code-base is
+            generally simple), final conversion to REs for
+            interpretability, global explainability for natural language
+
+    4.  Soft patterns (SoPa)
+
+        1.  good: practical new architecture which maps to RNN-CNN mix
+            via WFSAs
+
+        2.  good: code quality in PyTorch, lengthy code
+
+        3.  problematic: global explainability might be a far shot,
+            occlusion is still used for documents
+
+        4.  problematic: not clear how this could be linked to a final
+            WFSA
+
+        5.  possible extensions: improve on larger data, learnable word
+            embeddings, sub-word pre-processing to leverage morphology,
+            increase generalization with wildcards, improve
+            interpretability via in-built method instead of occlusion in
+            document analysis setting
+
+    5.  **GIST:** likely higher performance due to direct inference and
         less costly
 
 2.  Data sets
 
-    1.  **TODO** search for popular NLU datasets which have existing RNN
-        models as (almost) SOTAs
+    1.  **TODO** search for popular NLU datasets which have
+        existing RNN models as (almost) SOTAs
 
-    2.  **TODO** read more into these tasks and find one that has
-        potential for interpretability -\> likely reduce task to binary
-        case for easier processing (eg. entailment)
+    2.  **TODO** read more into these tasks and find one that
+        has potential for interpretability -\> likely reduce task to
+        binary case for easier processing (eg. entailment)
 
 3.  Clean-code and documentation
 
-    1.  **TODO** write proposal and manuscript with key research
-        questions which can be answered
+    1.  **TODO** write proposal and manuscript with key
+        research questions which can be answered
 
     2.  start populating repository with hooks, data downloads,
         documentation and models
@@ -119,7 +129,7 @@ Tasks
 
 2.  Manuscript notes
 
-    1.  FSA/WFAs -\> input theoretical CS, mathematics background to
+    1.  FSA/WFSAs -\> input theoretical CS, mathematics background to
         describe these
 
     2.  ann\'s historical literature -\> describe how ANNs approximate
@@ -130,8 +140,8 @@ Tasks
 Completed
 ---------
 
-**DONE** add org-mode hook to remove startup visibility headers in
-org-mode to markdown conversion
+**DONE** add org-mode hook to remove startup visibility
+headers in org-mode to markdown conversion
 
 **DONE** Set up repo, manuscript and develop log
 
