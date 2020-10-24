@@ -20,7 +20,7 @@ org2md() {
     # add TOC to markdown
     pandoc -s -t markdown --toc -o "$output" "$output"
     # add TOC title
-    sed -i '1s/^/Table of Contents/' "$output"
+    sed -i '1 i\Table of Contents' "$output"
     # replace org-agenda markers cleanly
     sed -i 's/\[TODO\]{.*}/**TODO**/g; s/\[DONE\]{.*}/**DONE**/g' "$output"
     # replace startup visibility cleanly
