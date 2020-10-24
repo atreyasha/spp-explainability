@@ -18,7 +18,7 @@ org2md() {
     # basic conversion to markdown
     pandoc -f org -t markdown -o "$output" "$input"
     # add TOC to markdown
-    pandoc -s -t markdown --toc -o "$output" "$output"
+    pandoc -s -t markdown --toc -V toc-title:"Table of Contents" -o "$output" "$output"
     # replace org-agenda markers cleanly
     sed -i 's/\[TODO\]{.*}/**TODO**/g; s/\[DONE\]{.*}/**DONE**/g' "$output"
     # replace startup visibility cleanly
