@@ -5,22 +5,29 @@
 **** Interpretable neural architectures
 ***** TODO explore below frameworks (by preference) and find most feasible one
       DEADLINE: <2020-10-26 Mon>
-***** SoPA and rational recurrences
-****** first is a practical approach while second is highly theoretical
-****** provide interpretable architectures which need to be further explored
-****** both implementations have decent code quality -> could be extended
-***** State-regularized-RNNs
-****** practical and offers direct interpretability from architecture
-****** code is outdated and written in Theano, TensorFlow version likely to be out by end of year
-****** possible work: port state-regularized RNNs to PyTorch with CUDA headers
-****** final conversion to REs for interpretability
-***** *GIST:* liely higher performance due to direct inference and less costly
+***** Rational recurences (RRNNs)
+****** TODO read and consider writing to RRNN author on interpretability analyses
+****** good: code quality in PyTorch, succinct and short
+****** good: heavy mathematical background which could lend to more interesting mathematical analyses
+****** problematic: seemingly missing interpretability section in paper
+***** State-regularized-RNNs (SR-RNNs)
+****** TODO read through again to form more concrete opinions
+****** good: very powerful and easily interpretable architecture with extensions to NLP and CV
+****** problematic: code is outdated and written in Theano, TensorFlow version likely to be out by end of year
+****** possible extensions: port state-regularized RNNs to PyTorch with CUDA headers (might be simple since code-base is generally simple), final conversion to REs for interpretability, global explainability for natural language
+***** Soft patterns (SoPa)
+****** good: practical new architecture which maps to RNN-CNN mix via WFSAs
+****** good: code quality in PyTorch, lengthy code
+****** problematic: global explainability might be a far shot, occlusion is still used for documents
+****** problematic: not clear how this could be linked to a final WFSA
+****** possible extensions: improve on larger data, learnable word embeddings, sub-word pre-processing to leverage morphology, increase generalization with wildcards, improve interpretability via in-built method instead of occlusion in document analysis setting
+***** *GIST:* likely higher performance due to direct inference and less costly
 
 **** Data sets
 ***** TODO search for popular NLU datasets which have existing RNN models as (almost) SOTAs
-      DEADLINE: <2020-10-30 Fri>
+      DEADLINE: <2020-10-28 Wed>
 ***** TODO read more into these tasks and find one that has potential for interpretability -> likely reduce task to binary case for easier processing (eg. entailment)
-      DEADLINE: <2020-11-06 Fri>
+      DEADLINE: <2020-10-28 Wed>
 
 **** Clean-code and documentation
 ***** TODO write proposal and manuscript with key research questions which can be answered
@@ -47,7 +54,7 @@
 ***** *Note:* meeting every 3 weeks with Sharid and more regularly with Mathias 
 
 **** Manuscript notes
-***** FSA/WFAs -> input theoretical CS, mathematics background to describe these
+***** FSA/WFSAs -> input theoretical CS, mathematics background to describe these
 ***** ann's historical literature -> describe how ANNs approximate symbolic representations
 ***** extension/recommendations -> transducer for seq2seq tasks
 
