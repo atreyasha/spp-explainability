@@ -3,7 +3,7 @@
 ** Tasks
 *** Research
 **** Interpretable neural architectures
-***** TODO explore below frameworks (by preference) and find most feas
+***** TODO explore below frameworks (by preference) and find most feasible one
       DEADLINE: <2020-10-26 Mon>
 ***** Rational recurences (RRNNs)
 ****** TODO read and consider writing to RRNN author on interpretability analyses
