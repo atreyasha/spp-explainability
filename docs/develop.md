@@ -1,4 +1,4 @@
--   [Tasks](#tasks)
+Table of Contents-   [Tasks](#tasks)
     -   [Research](#research)
     -   [Admin](#admin)
 -   [Completed](#completed)
@@ -20,7 +20,7 @@ Tasks
 1.  Interpretable neural architectures
 
     1.  **TODO** explore below frameworks (by preference) and
-        find most feasible
+        find most feasible one
 
     2.  Rational recurences (RRNNs)
 
