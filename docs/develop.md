@@ -30,26 +30,18 @@ Tasks
     3.  **contributions** -\> should add insights which are new and not
         commonly found in research so far
 
-2.  Data sets
+2.  Clean-code and documentation
 
-    1.  **TODO** search for popular NLU datasets which have
-        existing RNN models as (almost) SOTAs, possibly use ones that
-        were already tested for eg. RTC or ones used in papers that may
-        have semantic element
+    1.  **TODO** start testing SoPa on intent classification
+        data sets to see baseline results
 
-    2.  **TODO** read more into these tasks and find one that
-        has potential for interpretability -\> likely reduce task to
-        binary case for easier processing (eg. entailment)
+    2.  **TODO** write proposal and manuscript with key
+        research questions
 
-3.  Clean-code and documentation
-
-    1.  **TODO** write proposal and manuscript with key
-        research questions which can be answered
-
-    2.  start populating repository with hooks, data downloads,
+    3.  start populating repository with hooks, data downloads,
         documentation and models
 
-4.  Interpretable neural architectures
+3.  Interpretable neural architectures
 
     1.  Soft patterns (SoPa)
 
@@ -65,51 +57,42 @@ Tasks
             occlusion is still used for documents
 
         5.  problematic: not clear how this could be linked to a final
-            WFSA -\> perhaps it is ultimately not
+            WFSA -\> perhaps it is ultimately not but it is still
+            interpretable and explainable
 
         6.  possible extensions: improve on larger data, learnable word
             embeddings, sub-word pre-processing to leverage morphology,
             increase generalization with wildcards, improve
             interpretability via in-built method instead of occlusion in
             document analysis setting, final additive layer for finding
-            relevance of patterns
+            relevance of patterns, many possibilities here
 
-    2.  State-regularized-RNNs (SR-RNNs)
-
-        1.  good: very powerful and easily interpretable architecture
-            with extensions to NLP and CV
-
-        2.  good: simple code which can probably be ported to PyTorch
-            relatively quickly
-
-        3.  good: contact made with author and could get advice for
-            possible extensions
-
-        4.  problematic: code is outdated and written in Theano,
-            TensorFlow version likely to be out by end of year
-
-        5.  problematic: DFA extraction from SR-RNNs is clear, but DPDA
-            extraction/visualization from SR-LSTMs is not clear probably
-            because of no analog for discrete stack symbols from
-            continuous cell (memory) states
-
-        6.  possible extensions: port state-regularized RNNs to PyTorch
-            (might be simple since code-base is generally simple), final
-            conversion to REs for interpretability, global
-            explainability for natural language, adding different loss
-            to ensure words cluster to same centroid as much as possible
-            -\> or construct large automata, perhaps pursue sentiment
-            analysis from SR-RNNs perspective instead and derive DFAs to
-            model these
-
-    3.  **GIST:** likely higher performance due to direct inference and
+    2.  **GIST:** likely higher performance due to direct inference and
         less costly
+
+4.  Data sets
+
+    1.  NLI data sets -\> two sequences for predicting entailment,
+        contradiction, neutral -\> eg. SNLI, MNLI, XNLI
+
+    2.  NLU data sets -\> intent classification, typically many classes
+        involved -\> eg. ATIS, Snips, AskUbunutCorpus, FB task oriented
+        dataset (mostly intent classifications)
+
+    3.  SOTA scores for NLI can be found on
+        <https://nlp.stanford.edu/projects/snli/>
+
+    4.  SOTA scores for NLU can be found on
+        <https://github.com/nghuyong/rasa-nlu-benchmark#result>
+
+    5.  **GIST:** easier to work with NLU data sets since these only
+        involve one data set to start off with
 
 5.  Constraints
 
     1.  work with RNNs only
 
-    2.  seq2cls tasks -\> eg. NLU/semantic, paraphrase detection
+    2.  seq2cls tasks -\> eg. NLU/NLI/semantic, paraphrase detection
 
     3.  base main ideas off peer-reviewed articles
 
@@ -132,16 +115,33 @@ Tasks
 
 2.  Manuscript notes
 
-    1.  FSA/WFSAs -\> input theoretical CS, mathematics background to
+    1.  semirings, abstract algebra and how they are used for
+        finite-state machines in Forward and Viterbi algorithms -\> go
+        deeper into this to get some background
+
+    2.  Chomsky hierarchy of languages -\> might be relevant especially
+        relating to CFGs
+
+    3.  FSA/WFSAs -\> input theoretical CS, mathematics background to
         describe these
 
-    2.  ANN\'s historical literature -\> describe how ANNs approximate
+    4.  ANN\'s historical literature -\> describe how ANNs approximate
         symbolic representations
 
-    3.  extension/recommendations -\> transducer for seq2seq tasks
+    5.  extension/recommendations -\> transducer for seq2seq tasks
 
 Completed
 ---------
+
+**DONE** read more into these tasks and find one that has
+potential for interpretability -\> likely reduce task to binary case for
+easier processing (eg. entailment)
+
+CLOSED: \[2020-10-26 Mon 17:57\] DEADLINE: \<2020-10-28 Wed\>
+
+**DONE** search for popular NLI datasets which have existing
+RNN models as (almost) SOTAs, possibly use ones that were already tested
+for eg. RTC or ones used in papers that may have semantic element
 
 **DONE** explore below frameworks (by preference) and find
 most feasible one
@@ -156,7 +156,34 @@ Legacy
 
 ### Interpretable RNN architectures
 
-1.  Rational recurences (RRNNs)
+1.  State-regularized-RNNs (SR-RNNs)
+
+    1.  good: very powerful and easily interpretable architecture with
+        extensions to NLP and CV
+
+    2.  good: simple code which can probably be ported to PyTorch
+        relatively quickly
+
+    3.  good: contact made with author and could get advice for possible
+        extensions
+
+    4.  problematic: code is outdated and written in Theano, TensorFlow
+        version likely to be out by end of year
+
+    5.  problematic: DFA extraction from SR-RNNs is clear, but DPDA
+        extraction/visualization from SR-LSTMs is not clear probably
+        because of no analog for discrete stack symbols from continuous
+        cell (memory) states
+
+    6.  possible extensions: port state-regularized RNNs to PyTorch
+        (might be simple since code-base is generally simple), final
+        conversion to REs for interpretability, global explainability
+        for natural language, adding different loss to ensure words
+        cluster to same centroid as much as possible -\> or construct
+        large automata, perhaps pursue sentiment analysis from SR-RNNs
+        perspective instead and derive DFAs to model these
+
+2.  Rational recurences (RRNNs)
 
     1.  good: code quality in PyTorch, succinct and short
 
@@ -170,7 +197,7 @@ Legacy
     4.  problematic: hard to draw exact connection to interpretability,
         might take too long to understand everything
 
-2.  Finite-automation-RNNs (FA-RNNs)
+3.  Finite-automation-RNNs (FA-RNNs)
 
     1.  source code likely released by November, but still requires
         initial REs which may not be present -\> might not be the best
