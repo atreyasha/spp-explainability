@@ -4,7 +4,7 @@
 *** Research
 **** High-level
 ***** *globally explainable* -> exposes inner mechanisms and global biases which could help for ethical and adversarial problem detections
-***** *high-performance* -> competitive with similar non-explainable learnint techniques
+***** *high-performance* -> competitive with similar non-explainable learning techniques
 ***** *contributions* -> should add insights which are new and not commonly found in research so far
 
 **** Data sets
@@ -51,7 +51,7 @@
 
 **** Manuscript notes
 ***** FSA/WFSAs -> input theoretical CS, mathematics background to describe these
-***** ann's historical literature -> describe how ANNs approximate symbolic representations
+***** ANN's historical literature -> describe how ANNs approximate symbolic representations
 ***** extension/recommendations -> transducer for seq2seq tasks
 
 ** Completed

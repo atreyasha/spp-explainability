@@ -25,7 +25,7 @@ Tasks
         detections
 
     2.  **high-performance** -\> competitive with similar
-        non-explainable learnint techniques
+        non-explainable learning techniques
 
     3.  **contributions** -\> should add insights which are new and not
         commonly found in research so far
@@ -135,7 +135,7 @@ Tasks
     1.  FSA/WFSAs -\> input theoretical CS, mathematics background to
         describe these
 
-    2.  ann\'s historical literature -\> describe how ANNs approximate
+    2.  ANN\'s historical literature -\> describe how ANNs approximate
         symbolic representations
 
     3.  extension/recommendations -\> transducer for seq2seq tasks
