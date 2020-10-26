@@ -4,8 +4,8 @@
     -   [Admin](#admin)
 -   [Completed](#completed)
 -   [Legacy](#legacy)
-    -   [Finite-automation-RNNs -\> interpretable neural
-        architecture](#finite-automation-rnns---interpretable-neural-architecture)
+    -   [Interpretable neural
+        architectures](#interpretable-neural-architectures-1)
     -   [Interpretable surrogate
         extraction](#interpretable-surrogate-extraction)
     -   [Neuro-symbolic paradigms](#neuro-symbolic-paradigms)
@@ -18,66 +18,24 @@ Tasks
 
 ### Research
 
-1.  Interpretable neural architectures
+1.  High-level
 
-    1.  **TODO** explore below frameworks (by preference) and
-        find most feasible one
+    1.  **globally explainable** -\> exposes inner mechanisms and global
+        biases which could help for ethical and adversarial problem
+        detections
 
-    2.  Rational recurences (RRNNs)
+    2.  **high-performance** -\> competitive with similar
+        non-explainable learnint techniques
 
-        1.  **TODO** read and consider writing to RRNN author
-            on interpretability analyses
-
-        2.  good: code quality in PyTorch, succinct and short
-
-        3.  good: heavy mathematical background which could lend to more
-            interesting mathematical analyses
-
-        4.  problematic: seemingly missing interpretability section in
-            paper
-
-    3.  State-regularized-RNNs (SR-RNNs)
-
-        1.  **TODO** read through again to form more concrete
-            opinions
-
-        2.  good: very powerful and easily interpretable architecture
-            with extensions to NLP and CV
-
-        3.  problematic: code is outdated and written in Theano,
-            TensorFlow version likely to be out by end of year
-
-        4.  possible extensions: port state-regularized RNNs to PyTorch
-            with CUDA headers (might be simple since code-base is
-            generally simple), final conversion to REs for
-            interpretability, global explainability for natural language
-
-    4.  Soft patterns (SoPa)
-
-        1.  good: practical new architecture which maps to RNN-CNN mix
-            via WFSAs
-
-        2.  good: code quality in PyTorch, lengthy code
-
-        3.  problematic: global explainability might be a far shot,
-            occlusion is still used for documents
-
-        4.  problematic: not clear how this could be linked to a final
-            WFSA
-
-        5.  possible extensions: improve on larger data, learnable word
-            embeddings, sub-word pre-processing to leverage morphology,
-            increase generalization with wildcards, improve
-            interpretability via in-built method instead of occlusion in
-            document analysis setting
-
-    5.  **GIST:** likely higher performance due to direct inference and
-        less costly
+    3.  **contributions** -\> should add insights which are new and not
+        commonly found in research so far
 
 2.  Data sets
 
     1.  **TODO** search for popular NLU datasets which have
-        existing RNN models as (almost) SOTAs
+        existing RNN models as (almost) SOTAs, possibly use ones that
+        were already tested for eg. RTC or ones used in papers that may
+        have semantic element
 
     2.  **TODO** read more into these tasks and find one that
         has potential for interpretability -\> likely reduce task to
@@ -91,25 +49,69 @@ Tasks
     2.  start populating repository with hooks, data downloads,
         documentation and models
 
-4.  Constraints
+4.  Interpretable neural architectures
+
+    1.  Soft patterns (SoPa)
+
+        1.  good: practical new architecture which maps to RNN-CNN mix
+            via WFSAs
+
+        2.  good: code quality in PyTorch, lengthy code
+
+        3.  good: contact made with author and could get advice for
+            possible extensions
+
+        4.  problematic: global explainability might be a far shot,
+            occlusion is still used for documents
+
+        5.  problematic: not clear how this could be linked to a final
+            WFSA -\> perhaps it is ultimately not
+
+        6.  possible extensions: improve on larger data, learnable word
+            embeddings, sub-word pre-processing to leverage morphology,
+            increase generalization with wildcards, improve
+            interpretability via in-built method instead of occlusion in
+            document analysis setting, final additive layer for finding
+            relevance of patterns
+
+    2.  State-regularized-RNNs (SR-RNNs)
+
+        1.  good: very powerful and easily interpretable architecture
+            with extensions to NLP and CV
+
+        2.  good: simple code which can probably be ported to PyTorch
+            relatively quickly
+
+        3.  good: contact made with author and could get advice for
+            possible extensions
+
+        4.  problematic: code is outdated and written in Theano,
+            TensorFlow version likely to be out by end of year
+
+        5.  problematic: DFA extraction from SR-RNNs is clear, but DPDA
+            extraction/visualization from SR-LSTMs is not clear probably
+            because of no analog for discrete stack symbols from
+            continuous cell (memory) states
+
+        6.  possible extensions: port state-regularized RNNs to PyTorch
+            (might be simple since code-base is generally simple), final
+            conversion to REs for interpretability, global
+            explainability for natural language, adding differnet loss
+            to ensure words cluster to same centroid as much as possible
+            -\> or construct large automata, perhaps pursue sentiment
+            analysis from SR-RNNs perspective instead and derive DFAs to
+            model these
+
+    3.  **GIST:** likely higher performance due to direct inference and
+        less costly
+
+5.  Constraints
 
     1.  work with RNNs only
 
     2.  seq2cls tasks -\> eg. NLU/semantic, paraphrase detection
 
     3.  base main ideas off peer-reviewed articles
-
-5.  High-level
-
-    1.  **globally explainable** -\> exposes inner mechanisms and global
-        biases which could help for ethical and adversarial problem
-        detections
-
-    2.  **high-performance** -\> competitive with similar
-        non-explainable learnint techniques
-
-    3.  **contributions** -\> should add insights which are new and not
-        commonly found in research so far
 
 ### Admin
 
@@ -141,6 +143,9 @@ Tasks
 Completed
 ---------
 
+**DONE** explore below frameworks (by preference) and find
+most feasible one
+
 **DONE** add org-mode hook to remove startup visibility
 headers in org-mode to markdown conversion
 
@@ -149,14 +154,31 @@ headers in org-mode to markdown conversion
 Legacy
 ------
 
-### Finite-automation-RNNs -\> interpretable neural architecture
+### Interpretable neural architectures {#interpretable-neural-architectures-1}
 
-1.  source code likely released by November, but still requires initial
-    REs which may not be present -\> might not be the best fit
+1.  Rational recurences (RRNNs)
 
-2.  FA-RNNs involving REs and substitutions could be useful extensions
-    as finite state transducers for interpretable neural machine
-    translation
+    1.  good: code quality in PyTorch, succinct and short
+
+    2.  good: heavy mathematical background which could lend to more
+        interesting mathematical analyses
+
+    3.  problematic: seemingly missing interpretability section in paper
+        -\> theoretical and mathematical, which is good for
+        understanding
+
+    4.  problematic: hard to draw exact connection to interpretability,
+        might take too long to understand everything
+
+2.  Finite-automation-RNNs (FA-RNNs)
+
+    1.  source code likely released by November, but still requires
+        initial REs which may not be present -\> might not be the best
+        fit
+
+    2.  FA-RNNs involving REs and substitutions could be useful
+        extensions as finite state transducers for interpretable neural
+        machine translation
 
 ### Interpretable surrogate extraction
 
