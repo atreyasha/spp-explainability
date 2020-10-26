@@ -4,8 +4,8 @@
     -   [Admin](#admin)
 -   [Completed](#completed)
 -   [Legacy](#legacy)
-    -   [Interpretable neural
-        architectures](#interpretable-neural-architectures-1)
+    -   [Interpretable RNN
+        architectures](#interpretable-rnn-architectures)
     -   [Interpretable surrogate
         extraction](#interpretable-surrogate-extraction)
     -   [Neuro-symbolic paradigms](#neuro-symbolic-paradigms)
@@ -96,7 +96,7 @@ Tasks
         6.  possible extensions: port state-regularized RNNs to PyTorch
             (might be simple since code-base is generally simple), final
             conversion to REs for interpretability, global
-            explainability for natural language, adding differnet loss
+            explainability for natural language, adding different loss
             to ensure words cluster to same centroid as much as possible
             -\> or construct large automata, perhaps pursue sentiment
             analysis from SR-RNNs perspective instead and derive DFAs to
@@ -154,7 +154,7 @@ headers in org-mode to markdown conversion
 Legacy
 ------
 
-### Interpretable neural architectures {#interpretable-neural-architectures-1}
+### Interpretable RNN architectures
 
 1.  Rational recurences (RRNNs)
 

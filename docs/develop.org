@@ -26,14 +26,13 @@
 ****** problematic: global explainability might be a far shot, occlusion is still used for documents
 ****** problematic: not clear how this could be linked to a final WFSA -> perhaps it is ultimately not
 ****** possible extensions: improve on larger data, learnable word embeddings, sub-word pre-processing to leverage morphology, increase generalization with wildcards, improve interpretability via in-built method instead of occlusion in document analysis setting, final additive layer for finding relevance of patterns
-
 ***** State-regularized-RNNs (SR-RNNs) 
 ****** good: very powerful and easily interpretable architecture with extensions to NLP and CV
 ****** good: simple code which can probably be ported to PyTorch relatively quickly
 ****** good: contact made with author and could get advice for possible extensions
 ****** problematic: code is outdated and written in Theano, TensorFlow version likely to be out by end of year
 ****** problematic: DFA extraction from SR-RNNs is clear, but DPDA extraction/visualization from SR-LSTMs is not clear probably because of no analog for discrete stack symbols from continuous cell (memory) states
-****** possible extensions: port state-regularized RNNs to PyTorch (might be simple since code-base is generally simple), final conversion to REs for interpretability, global explainability for natural language, adding differnet loss to ensure words cluster to same centroid as much as possible -> or construct large automata, perhaps pursue sentiment analysis from SR-RNNs perspective instead and derive DFAs to model these
+****** possible extensions: port state-regularized RNNs to PyTorch (might be simple since code-base is generally simple), final conversion to REs for interpretability, global explainability for natural language, adding different loss to ensure words cluster to same centroid as much as possible -> or construct large automata, perhaps pursue sentiment analysis from SR-RNNs perspective instead and derive DFAs to model these
 ***** *GIST:* likely higher performance due to direct inference and less costly
 
 **** Constraints
@@ -64,7 +63,7 @@
       CLOSED: [2020-10-22 Thu 12:36]
       
 ** Legacy
-*** Interpretable neural architectures 
+*** Interpretable RNN architectures
 **** Rational recurences (RRNNs)
 ***** good: code quality in PyTorch, succinct and short
 ***** good: heavy mathematical background which could lend to more interesting mathematical analyses
