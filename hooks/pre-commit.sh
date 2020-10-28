@@ -55,26 +55,29 @@ format_R_scripts() {
 
 convert_org_to_md() {
   # function to convert org doc to markdown
-  local input output org_staged
+  local input output org_staged input_file
   input="$1"
-  output="${input//.org/.md}"
   # conduct checks and convert
   if command -v pandoc &>/dev/null; then
     mapfile -t org_staged < <(find_non_deleted_staged "$input")
-    if [ "${#org_staged[@]}" -eq "1" ]; then
-      printf "%s\n" "Converting relevant org files to markdown"
-      # basic conversion to markdown
-      pandoc -f org -t markdown -o "$output" "$input"
-      # add TOC to markdown
-      pandoc -s -t markdown --toc -o "$output" "$output"
-      # add TOC title
-      sed -i '1 i\## Table of Contents' "$output"
-      # replace org-agenda markers cleanly
-      sed -i 's/\[TODO\]{.*}/**TODO**/g; s/\[DONE\]{.*}/**DONE**/g' "$output"
-      # replace startup visibility cleanly
-      sed -i '/```{=org}/,/```/d' "$output"
-      # stage new markdown for commit
-      git add "$output"
+    if [ "${#org_staged[@]}" -ne "0" ]; then
+      for input_file in "${org_staged[@]}"; do
+        [[ "$input_file" =~ .*\.org$ ]] || continue
+        output="${input_file//.org/.md}"
+        printf "%s\n" "Converting relevant org files to markdown"
+        # basic conversion to markdown
+        pandoc -f org -t markdown -o "$output" "$input_file"
+        # add TOC to markdown
+        pandoc -s -t markdown --toc -o "$output" "$output"
+        # add TOC title
+        sed -i '1 i\## Table of Contents' "$output"
+        # replace org-agenda markers cleanly
+        sed -i 's/\[TODO\]{.*}/**TODO**/g; s/\[DONE\]{.*}/**DONE**/g' "$output"
+        # replace startup visibility cleanly
+        sed -i '/```{=org}/,/```/d' "$output"
+        # stage new markdown for commit
+        git add "$output"
+      done
     fi
   fi
 }
@@ -85,7 +88,7 @@ main() {
   update_python_dependencies
   format_shell_scripts
   format_R_scripts
-  convert_org_to_md "./docs/develop.org"
+  convert_org_to_md "*.org"
 }
 
 main
