@@ -79,9 +79,13 @@ convert_org_to_md() {
   fi
 }
 
-# main call to functions
-# NOTE: user edit(s) go here
-update_python_dependencies
-format_shell_scripts
-format_R_scripts
-convert_org_to_md "./docs/develop.org"
+main() {
+  # main call to functions
+  # NOTE: user edit(s) go here
+  update_python_dependencies
+  format_shell_scripts
+  format_R_scripts
+  convert_org_to_md "./docs/develop.org"
+}
+
+main

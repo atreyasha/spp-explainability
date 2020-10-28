@@ -7,9 +7,9 @@ mirror_branch() {
   main="$1"
   mirror="$2"
   # exit if main and mirror are undefined
-  [[ -z "$main" || -z "$mirror" ]] && exit 1
+  [[ -z "$main" || -z "$mirror" ]] && exit 0
   # check existence of mirror branch
-  git show-ref --verify --quiet "refs/heads/$mirror" || exit 1
+  git show-ref --verify --quiet "refs/heads/$mirror" || exit 0
   # check current branch
   current_branch="$(git rev-parse --abbrev-ref HEAD)"
   # start mirroring
@@ -32,6 +32,10 @@ mirror_branch() {
   fi
 }
 
-# main call to function
-# NOTE: user edits go here
-mirror_branch "main" "mirror"
+main() {
+  # main call to function
+  # NOTE: user edits go here
+  mirror_branch "main" "mirror"
+}
+
+main
