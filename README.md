@@ -4,7 +4,7 @@ This repository documents research into explainable and high-performance techniq
 
 ### Repository initialization :fire:
 
-To initialize a git pre-commit hook which keeps the development log updated, execute the following:
+To initialize a git hooks which maintain administrative workflows in this repository, execute the following:
 
 ```shell
 bash scripts/setup_git_hooks.sh
