@@ -1,5 +1,5 @@
 #+STARTUP: overview
- 
+
 ** Tasks
 *** Research
 **** High-level
@@ -8,8 +8,9 @@
 ***** *contributions* -> should add insights which are new and not commonly found in research so far
 
 **** Clean-code and documentation
-***** TODO start testing SoPa on intent classification data sets to see baseline results
-***** TODO write proposal and manuscript with key research questions
+***** TODO start testing SoPa on intent classification data sets to see baseline results -> clone repo and format data to be used directly in soft patterns code base for now
+***** TODO recreate virtual environment cleanly, remove boilerplate code and try to create simple models + performance for simple NLU tasks
+***** TODO write proposal and manuscript with key research questions -> address points directly from step 3 document requirements
       DEADLINE: <2020-11-06 Fri>
 ***** start populating repository with hooks, data downloads, documentation and models 
 

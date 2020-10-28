@@ -25,7 +25,9 @@ check_help() {
 
 # define function
 setup_git_hooks() {
-  cp --force ./hooks/pre-commit ./.git/hooks/pre-commit
+  for input in ./hooks/*.sh; do
+    cp "$input" "./.git/hooks/$(basename ${input%%.sh})"
+  done
 }
 
 # execute function
