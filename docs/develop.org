@@ -54,7 +54,7 @@
 
 ** Completed
 ***** DONE read more into these tasks and find one that has potential for interpretability -> likely reduce task to binary case for easier processing (eg. entailment)
-      CLOSED: [2020-10-26 Mon 17:57] DEADLINE: <2020-10-28 Wed>      
+      CLOSED: [2020-10-28 Wed 15:32] DEADLINE: <2020-10-28 Wed>
 ***** DONE search for popular NLI datasets which have existing RNN models as (almost) SOTAs, possibly use ones that were already tested for eg. RTC or ones used in papers that may have semantic element
       CLOSED: [2020-10-26 Mon 17:57] DEADLINE: <2020-10-28 Wed>
 ***** DONE explore below frameworks (by preference) and find most feasible one
