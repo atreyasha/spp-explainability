@@ -25,10 +25,11 @@ update_python_dependencies() {
 
 format_shell_scripts() {
   # function to format all shell files
-  local shell_staged
+  local input shell_staged
+  input="$1"
   # format staged shell scripts
   if command -v shfmt &>/dev/null; then
-    mapfile -t shell_staged < <(find_non_deleted_staged "*.sh")
+    mapfile -t shell_staged < <(find_non_deleted_staged "$input")
     if [ "${#shell_staged[@]}" -ne "0" ]; then
       printf "%s\n" "Formatting shell scripts with shfmt"
       shfmt -w -i 2 "${shell_staged[@]}"
@@ -39,10 +40,11 @@ format_shell_scripts() {
 
 format_R_scripts() {
   # function to format all R files
-  local R_staged
+  local input R_staged
+  input="$1"
   # format staged R files
   if Rscript -e 'styler::style_file' &>/dev/null; then
-    mapfile -t R_staged < <(find_non_deleted_staged "*.R")
+    mapfile -t R_staged < <(find_non_deleted_staged "$input")
     if [ "${#R_staged[@]}" -ne "0" ]; then
       printf "%s\n" "Formatting R scripts"
       for R_file in "${R_staged[@]}"; do
@@ -86,8 +88,8 @@ main() {
   # main call to functions
   # NOTE: user edit(s) go here
   update_python_dependencies
-  format_shell_scripts
-  format_R_scripts
+  format_shell_scripts "*.sh"
+  format_R_scripts "*.R"
   convert_org_to_md "*.org"
 }
 
