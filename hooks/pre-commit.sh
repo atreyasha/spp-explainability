@@ -40,7 +40,7 @@ format_shell_scripts() {
 
 format_R_scripts() {
   # function to format all R files
-  local input R_staged
+  local input R_staged R_file
   input="$1"
   # format staged R files
   if Rscript -e 'styler::style_file' &>/dev/null; then
