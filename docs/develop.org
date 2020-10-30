@@ -8,11 +8,12 @@
 ***** *contributions* -> should add insights which are new and not commonly found in research so far
 
 **** Clean-code and documentation
-***** TODO start testing SoPa on intent classification data sets to see baseline results -> clone repo and format data to be used directly in soft patterns code base for now
-***** TODO recreate virtual environment cleanly, remove boilerplate code and try to create simple models + performance for simple NLU tasks
+***** TODO make workflow to download simple but high-quality NLU dataset
+***** TODO reproduce virtual environment cleanly via poetry
+***** TODO format data to be processed via SoPa and run simple experiments with results -> no need to focus on refactoring now
 ***** TODO write proposal and manuscript with key research questions -> address points directly from step 3 document requirements
       DEADLINE: <2020-11-06 Fri>
-***** start populating repository with hooks, data downloads, documentation and models 
+***** populate repository with hooks, data downloads, documentation and models 
 
 **** Interpretable neural architectures
 ***** Soft patterns (SoPa)

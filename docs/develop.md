@@ -32,20 +32,22 @@ Tasks
 
 2.  Clean-code and documentation
 
-    1.  **TODO** start testing SoPa on intent classification
-        data sets to see baseline results -\> clone repo and format data
-        to be used directly in soft patterns code base for now
+    1.  **TODO** make workflow to download simple but
+        high-quality NLU dataset
 
-    2.  **TODO** recreate virtual environment cleanly, remove
-        boilerplate code and try to create simple models + performance
-        for simple NLU tasks
+    2.  **TODO** reproduce virtual environment cleanly via
+        poetry
 
-    3.  **TODO** write proposal and manuscript with key
+    3.  **TODO** format data to be processed via SoPa and run
+        simple experiments with results -\> no need to focus on
+        refactoring now
+
+    4.  **TODO** write proposal and manuscript with key
         research questions -\> address points directly from step 3
         document requirements
 
-    4.  start populating repository with hooks, data downloads,
-        documentation and models
+    5.  populate repository with hooks, data downloads, documentation
+        and models
 
 3.  Interpretable neural architectures
 
