@@ -1,0 +1,3 @@
+[submodule "git-hooks"]
+	path = submodules/git-hooks
+	url = https://github.com/atreyasha/git-hooks.git
