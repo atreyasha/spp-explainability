@@ -6,10 +6,13 @@
 ***** TODO make workflow to download simple but high-quality NLU dataset and reproduce virtual environment cleanly via poetry
       DEADLINE: <2020-11-01 Sun>
 ***** TODO either run baseline SoPa on new NLU data or run baseline SoPa on old data to get familiarity
+****** activate intel-mkl-2019.3, cuda-8.0 in sbatch scripts
       DEADLINE: <2020-11-05 Thu>
 ***** TODO write proposal and manuscript with key research questions -> address points directly from step 3 document requirements
       DEADLINE: <2020-11-06 Fri>
-***** populate repository with hooks, data downloads, documentation and models -> update metadata in scripts when possible
+***** use existing defaults for dependencies for now, experiment and update them later on
+***** update metadata in scripts later with new workflows
+***** add MIT license when made public
 
 **** Interpretable neural architectures
 ***** Soft patterns (SoPa)

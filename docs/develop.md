@@ -27,12 +27,18 @@ Tasks
     2.  **TODO** either run baseline SoPa on new NLU data or
         run baseline SoPa on old data to get familiarity
 
+        1.  activate intel-mkl-2019.3, cuda-8.0 in sbatch scripts
+
     3.  **TODO** write proposal and manuscript with key
         research questions -\> address points directly from step 3
         document requirements
 
-    4.  populate repository with hooks, data downloads, documentation
-        and models -\> update metadata in scripts when possible
+    4.  use existing defaults for dependencies for now, experiment and
+        update them later on
+
+    5.  update metadata in scripts later with new workflows
+
+    6.  add MIT license when made public
 
 2.  Interpretable neural architectures
 

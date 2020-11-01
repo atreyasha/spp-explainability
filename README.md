@@ -1,6 +1,6 @@
 ## Explainable Natural Language Processing
 
-This repository documents research into explainable and high-performance techniques in NLP. An interim manuscript can be seen [here](./docs/manuscript/main.pdf).
+This repository documents research into explainable and high-performance techniques in NLP. An interim manuscript can be found [here](./docs/manuscript/main.pdf).
 
 ### Dependencies :neckbeard:
 
