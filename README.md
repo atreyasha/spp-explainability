@@ -6,9 +6,9 @@ This repository documents research into explainable and high-performance techniq
 
 This repository's code was tested with Python versions `3.6+`. To sync dependencies, we recommend creating a virtual environment and installing the relevant packages via `pip`:
 
-    ```shell
-    pip install -r requirements.txt
-    ```
+```shell
+pip install -r requirements.txt
+```
 
 ### Repository initialization :fire:
 
