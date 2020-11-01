@@ -18,38 +18,23 @@ Tasks
 
 ### Research
 
-1.  High-level
-
-    1.  **globally explainable** -\> exposes inner mechanisms and global
-        biases which could help for ethical and adversarial problem
-        detections
-
-    2.  **high-performance** -\> competitive with similar
-        non-explainable learning techniques
-
-    3.  **contributions** -\> should add insights which are new and not
-        commonly found in research so far
-
-2.  Clean-code and documentation
+1.  Clean-code and documentation
 
     1.  **TODO** make workflow to download simple but
-        high-quality NLU dataset
+        high-quality NLU dataset and reproduce virtual environment
+        cleanly via poetry
 
-    2.  **TODO** reproduce virtual environment cleanly via
-        poetry
+    2.  **TODO** either run baseline SoPa on new NLU data or
+        run baseline SoPa on old data to get familiarity
 
-    3.  **TODO** format data to be processed via SoPa and run
-        simple experiments with results -\> no need to focus on
-        refactoring now
-
-    4.  **TODO** write proposal and manuscript with key
+    3.  **TODO** write proposal and manuscript with key
         research questions -\> address points directly from step 3
         document requirements
 
-    5.  populate repository with hooks, data downloads, documentation
-        and models
+    4.  populate repository with hooks, data downloads, documentation
+        and models -\> update metadata in scripts when possible
 
-3.  Interpretable neural architectures
+2.  Interpretable neural architectures
 
     1.  Soft patterns (SoPa)
 
@@ -73,36 +58,54 @@ Tasks
             increase generalization with wildcards, improve
             interpretability via in-built method instead of occlusion in
             document analysis setting, final additive layer for finding
-            relevance of patterns, many possibilities here
+            relevance of patterns
 
     2.  **GIST:** likely higher performance due to direct inference and
         less costly
 
-4.  Data sets
+3.  Data sets
 
-    1.  NLI data sets -\> two sequences for predicting entailment,
+    1.  NLU data sets -\> single sequence intent classification,
+        typically many classes involved -\> eg. ATIS, Snips,
+        AskUbunutCorpus, FB task oriented dataset (mostly intent
+        classifications)
+
+    2.  NLI data sets -\> two sequences for predicting entailment,
         contradiction, neutral -\> eg. SNLI, MNLI, XNLI
 
-    2.  NLU data sets -\> intent classification, typically many classes
-        involved -\> eg. ATIS, Snips, AskUbunutCorpus, FB task oriented
-        dataset (mostly intent classifications)
-
-    3.  SOTA scores for NLI can be found on
-        <https://nlp.stanford.edu/projects/snli/>
-
-    4.  SOTA scores for NLU can be found on
+    3.  SOTA scores for NLU can be found on
         <https://github.com/nghuyong/rasa-nlu-benchmark#result>
 
-    5.  **GIST:** easier to work with NLU data sets since these only
+    4.  SOTA scores for NLI can be found on
+        <https://nlp.stanford.edu/projects/snli/>
+
+    5.  **consideration:** use both small and large data sets to get an
+        idea of performance/explainabilityPrepare WMT19, WMT19-AR, WMT16
+        and PAWS-X data,
+
+    6.  **GIST:** easier to work with NLU data sets since these only
         involve one data set to start off with
 
-5.  Constraints
+4.  Constraints
 
     1.  work with RNNs only
 
-    2.  seq2cls tasks -\> eg. NLU/NLI/semantic, paraphrase detection
+    2.  seq2cls tasks -\> eg. NLU/NLI/semantic tasks, try to work with
+        simpler single (vs. double) sequence classification task
 
     3.  base main ideas off peer-reviewed articles
+
+5.  High-level
+
+    1.  **globally explainable** -\> exposes inner mechanisms and global
+        biases which could help for ethical and adversarial problem
+        detections
+
+    2.  **high-performance** -\> competitive with similar
+        non-explainable learning techniques
+
+    3.  **contributions** -\> should add insights which are new and not
+        commonly found in research so far
 
 ### Admin
 

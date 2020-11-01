@@ -2,18 +2,14 @@
 
 ** Tasks
 *** Research
-**** High-level
-***** *globally explainable* -> exposes inner mechanisms and global biases which could help for ethical and adversarial problem detections
-***** *high-performance* -> competitive with similar non-explainable learning techniques
-***** *contributions* -> should add insights which are new and not commonly found in research so far
-
 **** Clean-code and documentation
-***** TODO make workflow to download simple but high-quality NLU dataset
-***** TODO reproduce virtual environment cleanly via poetry
-***** TODO format data to be processed via SoPa and run simple experiments with results -> no need to focus on refactoring now
+***** TODO make workflow to download simple but high-quality NLU dataset and reproduce virtual environment cleanly via poetry
+      DEADLINE: <2020-11-01 Sun>
+***** TODO either run baseline SoPa on new NLU data or run baseline SoPa on old data to get familiarity
+      DEADLINE: <2020-11-05 Thu>
 ***** TODO write proposal and manuscript with key research questions -> address points directly from step 3 document requirements
       DEADLINE: <2020-11-06 Fri>
-***** populate repository with hooks, data downloads, documentation and models 
+***** populate repository with hooks, data downloads, documentation and models -> update metadata in scripts when possible
 
 **** Interpretable neural architectures
 ***** Soft patterns (SoPa)
@@ -22,21 +18,27 @@
 ****** good: contact made with author and could get advice for possible extensions
 ****** problematic: global explainability might be a far shot, occlusion is still used for documents
 ****** problematic: not clear how this could be linked to a final WFSA -> perhaps it is ultimately not but it is still interpretable and explainable
-****** possible extensions: improve on larger data, learnable word embeddings, sub-word pre-processing to leverage morphology, increase generalization with wildcards, improve interpretability via in-built method instead of occlusion in document analysis setting, final additive layer for finding relevance of patterns, many possibilities here
+****** possible extensions: improve on larger data, learnable word embeddings, sub-word pre-processing to leverage morphology, increase generalization with wildcards, improve interpretability via in-built method instead of occlusion in document analysis setting, final additive layer for finding relevance of patterns
 ***** *GIST:* likely higher performance due to direct inference and less costly
       
 **** Data sets
+***** NLU data sets -> single sequence intent classification, typically many classes involved -> eg. ATIS, Snips, AskUbunutCorpus, FB task oriented dataset (mostly intent classifications)
 ***** NLI data sets -> two sequences for predicting entailment, contradiction, neutral -> eg. SNLI, MNLI, XNLI
-***** NLU data sets -> intent classification, typically many classes involved -> eg. ATIS, Snips, AskUbunutCorpus, FB task oriented dataset (mostly intent classifications)
-***** SOTA scores for NLI can be found on https://nlp.stanford.edu/projects/snli/
 ***** SOTA scores for NLU can be found on https://github.com/nghuyong/rasa-nlu-benchmark#result
+***** SOTA scores for NLI can be found on https://nlp.stanford.edu/projects/snli/
+***** *consideration:* use both small and large data sets to get an idea of performance/explainabilityPrepare WMT19, WMT19-AR, WMT16 and PAWS-X data,
 ***** *GIST:* easier to work with NLU data sets since these only involve one data set to start off with
  
 **** Constraints
 ***** work with RNNs only
-***** seq2cls tasks -> eg. NLU/NLI/semantic, paraphrase detection
+***** seq2cls tasks -> eg. NLU/NLI/semantic tasks, try to work with simpler single (vs. double) sequence classification task
 ***** base main ideas off peer-reviewed articles 
 
+**** High-level
+***** *globally explainable* -> exposes inner mechanisms and global biases which could help for ethical and adversarial problem detections
+***** *high-performance* -> competitive with similar non-explainable learning techniques
+***** *contributions* -> should add insights which are new and not commonly found in research so far
+      
 *** Admin
 **** General timeline
 ***** +Initial thesis document: 15.09.20+

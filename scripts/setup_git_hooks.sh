@@ -27,7 +27,7 @@ check_help() {
 setup_git_hooks() {
   local input
   for input in ./hooks/*.sh; do
-    cp "$input" "./.git/hooks/$(basename ${input%%.sh})"
+    cp "$input" "./.git/hooks/$(basename "${input%%.sh}")"
   done
 }
 
