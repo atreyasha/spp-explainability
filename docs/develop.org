@@ -3,10 +3,11 @@
 ** Tasks
 *** Research
 **** Clean-code and documentation
-***** TODO make workflow to download simple but high-quality NLU dataset and reproduce virtual environment cleanly via poetry
-      DEADLINE: <2020-11-01 Sun>
-***** TODO either run baseline SoPa on new NLU data or run baseline SoPa on old data to get familiarity
-****** activate intel-mkl-2019.3, cuda-8.0 in sbatch scripts
+***** TODO run baseline SoPa on sample data for prototyping
+****** make workflow to download glove embeddings and place them in correct location
+****** activate intel-mkl-2019.3, cuda-8.0 in sbatch scripts 
+****** test SoPa on sample data in repository to ensure it works out-of-the-box -> debug dependencies here where necessary
+****** attempt to run baseline SoPa on new NLU data given enough time
       DEADLINE: <2020-11-05 Thu>
 ***** TODO write proposal and manuscript with key research questions -> address points directly from step 3 document requirements
       DEADLINE: <2020-11-06 Fri>
@@ -29,7 +30,7 @@
 ***** NLI data sets -> two sequences for predicting entailment, contradiction, neutral -> eg. SNLI, MNLI, XNLI
 ***** SOTA scores for NLU can be found on https://github.com/nghuyong/rasa-nlu-benchmark#result
 ***** SOTA scores for NLI can be found on https://nlp.stanford.edu/projects/snli/
-***** *consideration:* use both small and large data sets to get an idea of performance/explainabilityPrepare WMT19, WMT19-AR, WMT16 and PAWS-X data,
+***** *consideration:* use both small and large data sets to get an idea of performance
 ***** *GIST:* easier to work with NLU data sets since these only involve one data set to start off with
  
 **** Constraints
@@ -59,6 +60,8 @@
 ***** extension/recommendations -> transducer for seq2seq tasks
 
 ** Completed
+***** DONE make workflow to download simple but high-quality NLU dataset and reproduce virtual environment cleanly via poetry
+      CLOSED: [2020-11-01 Sun 20:15] DEADLINE: <2020-11-01 Sun>
 ***** DONE read more into these tasks and find one that has potential for interpretability -> likely reduce task to binary case for easier processing (eg. entailment)
       CLOSED: [2020-10-28 Wed 15:32] DEADLINE: <2020-10-28 Wed>
 ***** DONE search for popular NLI datasets which have existing RNN models as (almost) SOTAs, possibly use ones that were already tested for eg. RTC or ones used in papers that may have semantic element

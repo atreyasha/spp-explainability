@@ -20,25 +20,30 @@ Tasks
 
 1.  Clean-code and documentation
 
-    1.  **TODO** make workflow to download simple but
-        high-quality NLU dataset and reproduce virtual environment
-        cleanly via poetry
+    1.  **TODO** run baseline SoPa on sample data for
+        prototyping
 
-    2.  **TODO** either run baseline SoPa on new NLU data or
-        run baseline SoPa on old data to get familiarity
+        1.  make workflow to download glove embeddings and place them in
+            correct location
 
-        1.  activate intel-mkl-2019.3, cuda-8.0 in sbatch scripts
+        2.  activate intel-mkl-2019.3, cuda-8.0 in sbatch scripts
 
-    3.  **TODO** write proposal and manuscript with key
+        3.  test SoPa on sample data in repository to ensure it works
+            out-of-the-box -\> debug dependencies here where necessary
+
+        4.  attempt to run baseline SoPa on new NLU data given enough
+            time
+
+    2.  **TODO** write proposal and manuscript with key
         research questions -\> address points directly from step 3
         document requirements
 
-    4.  use existing defaults for dependencies for now, experiment and
+    3.  use existing defaults for dependencies for now, experiment and
         update them later on
 
-    5.  update metadata in scripts later with new workflows
+    4.  update metadata in scripts later with new workflows
 
-    6.  add MIT license when made public
+    5.  add MIT license when made public
 
 2.  Interpretable neural architectures
 
@@ -86,8 +91,7 @@ Tasks
         <https://nlp.stanford.edu/projects/snli/>
 
     5.  **consideration:** use both small and large data sets to get an
-        idea of performance/explainabilityPrepare WMT19, WMT19-AR, WMT16
-        and PAWS-X data,
+        idea of performance
 
     6.  **GIST:** easier to work with NLU data sets since these only
         involve one data set to start off with
@@ -149,6 +153,9 @@ Tasks
 
 Completed
 ---------
+
+**DONE** make workflow to download simple but high-quality
+NLU dataset and reproduce virtual environment cleanly via poetry
 
 **DONE** read more into these tasks and find one that has
 potential for interpretability -\> likely reduce task to binary case for
