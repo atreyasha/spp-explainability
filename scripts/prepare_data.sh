@@ -32,6 +32,14 @@ nlu_intent_small() {
   wget -N -P "$directory" "https://raw.githubusercontent.com/sebischair/NLU-Evaluation-Corpora/master/WebApplicationsCorpus.json"
 }
 
+glove_6B() {
+  local directory="./data/glove_6B"
+  mkdir -p "$directory"
+  wget -N -P "$directory" "http://nlp.stanford.edu/data/glove.6B.zip"
+  unzip "$directory/glove.6B.zip" -d "$directory"
+}
+
 # execute all functions
 check_help "$@"
 nlu_intent_small
+glove_6B

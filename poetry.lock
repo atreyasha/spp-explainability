@@ -33,6 +33,14 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*"
 version = "4.4.2"
 
 [[package]]
+category = "main"
+description = "OpenMP runtime for Intel and compatible processors"
+name = "intel-openmp"
+optional = false
+python-versions = "*"
+version = "2018.0.0"
+
+[[package]]
 category = "dev"
 description = "IPython: Productive Interactive Computing"
 name = "ipython"
@@ -86,6 +94,17 @@ parso = ">=0.7.0,<0.8.0"
 [package.extras]
 qa = ["flake8 (3.7.9)"]
 testing = ["Django (<3.1)", "colorama", "docopt", "pytest (>=3.9.0,<5.0.0)"]
+
+[[package]]
+category = "main"
+description = "Math library for Intel and compatible processors"
+name = "mkl"
+optional = false
+python-versions = "*"
+version = "2018.0.0"
+
+[package.dependencies]
+intel-openmp = "2018.0.0"
 
 [[package]]
 category = "main"
@@ -242,7 +261,7 @@ python-versions = "*"
 version = "0.2.5"
 
 [metadata]
-content-hash = "34f676801f98474418e772330061b9df3779560921e9e4b06dd0f79a3ded91c1"
+content-hash = "6d18a33aa1213e2b91f3e805a1758e4a08c39f0452bdee333ac83a5cf83632f9"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -262,6 +281,11 @@ decorator = [
     {file = "decorator-4.4.2-py2.py3-none-any.whl", hash = "sha256:41fa54c2a0cc4ba648be4fd43cff00aedf5b9465c9bf18d64325bc225f08f760"},
     {file = "decorator-4.4.2.tar.gz", hash = "sha256:e3a62f0520172440ca0dcc823749319382e377f37f140a0b99ef45fecb84bfe7"},
 ]
+intel-openmp = [
+    {file = "intel_openmp-2018.0.0-py2.py3-none-macosx_10_12_intel.macosx_10_12_x86_64.whl", hash = "sha256:92923c928e64d162bcb6be8ae58fc799214d509d2cdc7c5d4c432cde6aff55bd"},
+    {file = "intel_openmp-2018.0.0-py2.py3-none-manylinux1_x86_64.whl", hash = "sha256:2b0baf1ccd3e266e0470261763ab05323180bb4a8e4fbf3d2fa34eebd68b9eec"},
+    {file = "intel_openmp-2018.0.0-py2.py3-none-win_amd64.whl", hash = "sha256:085a7b58573e027219827471ef279b38d4147ef837bd210dc5442eaca16b01b6"},
+]
 ipython = [
     {file = "ipython-7.11.0-py3-none-any.whl", hash = "sha256:cc70e2111d1629e31ef9ff445529f8bb2b4fc4f93bfe140c33fe18cf36fde072"},
     {file = "ipython-7.11.0.tar.gz", hash = "sha256:0b67031a659fd7046cbf8c4efc2a0d514ee050434dfede76f540cfa6f806f65e"},
@@ -273,6 +297,11 @@ ipython-genutils = [
 jedi = [
     {file = "jedi-0.17.2-py2.py3-none-any.whl", hash = "sha256:98cc583fa0f2f8304968199b01b6b4b94f469a1f4a74c1560506ca2a211378b5"},
     {file = "jedi-0.17.2.tar.gz", hash = "sha256:86ed7d9b750603e4ba582ea8edc678657fb4007894a12bcf6f4bb97892f31d20"},
+]
+mkl = [
+    {file = "mkl-2018.0.0-py2.py3-none-macosx_10_12_intel.macosx_10_12_x86_64.whl", hash = "sha256:584eaee4d492dcb1a41bb453809eee647e576add453ad2ef304bdf7807ba5f16"},
+    {file = "mkl-2018.0.0-py2.py3-none-manylinux1_x86_64.whl", hash = "sha256:168a0aff44d3ae0314d658149d23f20dc533604f7f2df741d7695c052679b6cb"},
+    {file = "mkl-2018.0.0-py2.py3-none-win_amd64.whl", hash = "sha256:bb7a05d34134fa2d59a91ca405b0051282e6c9ba04c842fad098d69213a451d0"},
 ]
 numpy = [
     {file = "numpy-1.13.1-cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", hash = "sha256:91a4f5c6594a61b57b0ab6031a084fa3686b1e847cc2215983e444583594b529"},

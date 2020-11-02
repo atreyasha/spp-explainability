@@ -4,10 +4,11 @@
 *** Research
 **** Clean-code and documentation
 ***** TODO run baseline SoPa on sample data for prototyping
-****** make workflow to download glove embeddings and place them in correct location
-****** activate intel-mkl-2019.3, cuda-8.0 in sbatch scripts 
-****** test SoPa on sample data in repository to ensure it works out-of-the-box -> debug dependencies here where necessary
+****** test SoPa on sample data in repository to ensure it works out-of-the-box -> debug dependencies here where necessary -> use cpu and gpu directly on s3it if possible
 ****** attempt to run baseline SoPa on new NLU data given enough time
+****** activate cuda-8.0 in sbatch scripts, possibly intel-mkl if it does not work via python scripts
+****** use debug mode and low runtime for quick slurm runs
+****** make list of all useful commands for slurm
       DEADLINE: <2020-11-05 Thu>
 ***** TODO write proposal and manuscript with key research questions -> address points directly from step 3 document requirements
       DEADLINE: <2020-11-06 Fri>

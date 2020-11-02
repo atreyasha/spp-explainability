@@ -23,16 +23,19 @@ Tasks
     1.  **TODO** run baseline SoPa on sample data for
         prototyping
 
-        1.  make workflow to download glove embeddings and place them in
-            correct location
-
-        2.  activate intel-mkl-2019.3, cuda-8.0 in sbatch scripts
-
-        3.  test SoPa on sample data in repository to ensure it works
+        1.  test SoPa on sample data in repository to ensure it works
             out-of-the-box -\> debug dependencies here where necessary
+            -\> use cpu and gpu directly on s3it if possible
 
-        4.  attempt to run baseline SoPa on new NLU data given enough
+        2.  attempt to run baseline SoPa on new NLU data given enough
             time
+
+        3.  activate cuda-8.0 in sbatch scripts, possibly intel-mkl if
+            it does not work via python scripts
+
+        4.  use debug mode and low runtime for quick slurm runs
+
+        5.  make list of all useful commands for slurm
 
     2.  **TODO** write proposal and manuscript with key
         research questions -\> address points directly from step 3
