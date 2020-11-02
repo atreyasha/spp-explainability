@@ -18,7 +18,7 @@ $ pip install -r requirements.txt
     $ bash scripts/prepare_data.sh
     ```
 
-2. **Optional:** Set up git hooks to keep `requirements.txt` up-to-date, format shell and `R` files and keep the development log synced:
+2. **Optional:** Set up git hooks to manage administrative workflows:
 
     ```shell
     $ bash scripts/setup_git_hooks.sh
