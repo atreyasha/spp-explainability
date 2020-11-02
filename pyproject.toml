@@ -9,9 +9,9 @@ license = "MIT"
 python = "^3.6"
 numpy = "1.13.1"
 tensorboardx = "0.8"
-torch = "1.0.0"
 torchvision = "0.2.1"
 mkl = "2018.0.0"
+torch = {url = "http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp36-cp36m-manylinux1_x86_64.whl"}
 
 [tool.poetry.dev-dependencies]
 ipython = "7.11.0"

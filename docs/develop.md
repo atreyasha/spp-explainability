@@ -25,7 +25,6 @@ Tasks
 
         1.  test SoPa on sample data in repository to ensure it works
             out-of-the-box -\> debug dependencies here where necessary
-            -\> use cpu and gpu directly on s3it if possible
 
         2.  attempt to run baseline SoPa on new NLU data given enough
             time

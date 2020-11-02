@@ -4,7 +4,8 @@
 *** Research
 **** Clean-code and documentation
 ***** TODO run baseline SoPa on sample data for prototyping
-****** test SoPa on sample data in repository to ensure it works out-of-the-box -> debug dependencies here where necessary -> use cpu and gpu directly on s3it if possible
+****** test SoPa on sample data in repository to ensure it works out-of-the-box -> debug dependencies here where necessary
+       CLOSED: [2020-11-02 Mon 16:13]
 ****** attempt to run baseline SoPa on new NLU data given enough time
 ****** activate cuda-8.0 in sbatch scripts, possibly intel-mkl if it does not work via python scripts
 ****** use debug mode and low runtime for quick slurm runs
