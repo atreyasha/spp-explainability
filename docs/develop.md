@@ -20,30 +20,32 @@ Tasks
 
 1.  Clean-code and documentation
 
-    1.  **TODO** run baseline SoPa on sample data for
-        prototyping
+    1.  work on prototyping basic results from SoPa
 
-        1.  test SoPa on sample data in repository to ensure it works
-            out-of-the-box -\> debug dependencies here where necessary
+        1.  **TODO** download a decent performing model and
+            start to interpret model with patterns and document matches
+            -\> see what the results are and what they could imply
 
-        2.  attempt to run baseline SoPa on new NLU data given enough
-            time
+        2.  **TODO** write proposal with key research
+            questions -\> address points directly from step 3 document
+            requirements -\> prepare some basic accuracy metrics and
+            interpretations from best model
 
-        3.  activate cuda-8.0 in sbatch scripts, possibly intel-mkl if
-            it does not work via python scripts
+    2.  work on refactoring code and upgrading/porting dependencies to
+        more recent versions
 
-        4.  use debug mode and low runtime for quick slurm runs
+        1.  incoporate useful SOPs such as namespace saving and printing
 
-        5.  make list of all useful commands for slurm
+    3.  run tests on s3it with slurm
 
-    2.  **TODO** write proposal and manuscript with key
-        research questions -\> address points directly from step 3
-        document requirements
+        1.  activate cuda-8.0 in sbatch scripts explicitly
 
-    3.  use existing defaults for dependencies for now, experiment and
-        update them later on
+        2.  use debug mode and low runtime for quick slurm runs
 
-    4.  update metadata in scripts later with new workflows
+        3.  make list of all useful commands for slurm
+
+    4.  update metadata in scripts later with new workflows, eg. with
+        help scripts and comments describing functionality
 
     5.  add MIT license when made public
 
@@ -71,7 +73,8 @@ Tasks
             increase generalization with wildcards, improve
             interpretability via in-built method instead of occlusion in
             document analysis setting, final additive layer for finding
-            relevance of patterns
+            relevance of patterns, multi-class tasks instead of only
+            binary
 
     2.  **GIST:** likely higher performance due to direct inference and
         less costly
@@ -80,7 +83,7 @@ Tasks
 
     1.  NLU data sets -\> single sequence intent classification,
         typically many classes involved -\> eg. ATIS, Snips,
-        AskUbunutCorpus, FB task oriented dataset (mostly intent
+        AskUbuntuCorpus, FB task oriented dataset (mostly intent
         classifications)
 
     2.  NLI data sets -\> two sequences for predicting entailment,
@@ -156,8 +159,22 @@ Tasks
 Completed
 ---------
 
+**DONE** add large amounts of binary data for testing with
+CPU/GPU -\> requires pre-processing
+
+**DONE** find re-usable code for running grid search -\>
+otherwise construct makeshift quick code
+
+CLOSED: \[2020-11-03 Tue 21:07\]
+
+**DONE** test SoPa on sample data in repository to ensure it
+works out-of-the-box -\> try this on laptop and s3it
+
+**DONE** make workflow to reproduce virtual environment
+cleanly via poetry
+
 **DONE** make workflow to download simple but high-quality
-NLU dataset and reproduce virtual environment cleanly via poetry
+NLU dataset and glove data sets
 
 **DONE** read more into these tasks and find one that has
 potential for interpretability -\> likely reduce task to binary case for

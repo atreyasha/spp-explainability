@@ -2,19 +2,19 @@
 
 ** Tasks
 *** Research
-**** Clean-code and documentation
-***** TODO run baseline SoPa on sample data for prototyping
-****** test SoPa on sample data in repository to ensure it works out-of-the-box -> debug dependencies here where necessary
-       CLOSED: [2020-11-02 Mon 16:13]
-****** attempt to run baseline SoPa on new NLU data given enough time
-****** activate cuda-8.0 in sbatch scripts, possibly intel-mkl if it does not work via python scripts
+**** Clean-code and documentation  
+***** work on prototyping basic results from SoPa
+****** TODO download a decent performing model and start to interpret model with patterns and document matches -> see what the results are and what they could imply
+       DEADLINE: <2020-11-05 Thu>
+****** TODO write proposal with key research questions -> address points directly from step 3 document requirements -> prepare some basic accuracy metrics and interpretations from best model
+       DEADLINE: <2020-11-06 Fri>
+***** work on refactoring code and upgrading/porting dependencies to more recent versions
+****** incoporate useful SOPs such as namespace saving and printing
+***** run tests on s3it with slurm
+****** activate cuda-8.0 in sbatch scripts explicitly
 ****** use debug mode and low runtime for quick slurm runs
 ****** make list of all useful commands for slurm
-      DEADLINE: <2020-11-05 Thu>
-***** TODO write proposal and manuscript with key research questions -> address points directly from step 3 document requirements
-      DEADLINE: <2020-11-06 Fri>
-***** use existing defaults for dependencies for now, experiment and update them later on
-***** update metadata in scripts later with new workflows
+***** update metadata in scripts later with new workflows, eg. with help scripts and comments describing functionality
 ***** add MIT license when made public
 
 **** Interpretable neural architectures
@@ -24,11 +24,11 @@
 ****** good: contact made with author and could get advice for possible extensions
 ****** problematic: global explainability might be a far shot, occlusion is still used for documents
 ****** problematic: not clear how this could be linked to a final WFSA -> perhaps it is ultimately not but it is still interpretable and explainable
-****** possible extensions: improve on larger data, learnable word embeddings, sub-word pre-processing to leverage morphology, increase generalization with wildcards, improve interpretability via in-built method instead of occlusion in document analysis setting, final additive layer for finding relevance of patterns
+****** possible extensions: improve on larger data, learnable word embeddings, sub-word pre-processing to leverage morphology, increase generalization with wildcards, improve interpretability via in-built method instead of occlusion in document analysis setting, final additive layer for finding relevance of patterns, multi-class tasks instead of only binary
 ***** *GIST:* likely higher performance due to direct inference and less costly
       
 **** Data sets
-***** NLU data sets -> single sequence intent classification, typically many classes involved -> eg. ATIS, Snips, AskUbunutCorpus, FB task oriented dataset (mostly intent classifications)
+***** NLU data sets -> single sequence intent classification, typically many classes involved -> eg. ATIS, Snips, AskUbuntuCorpus, FB task oriented dataset (mostly intent classifications)
 ***** NLI data sets -> two sequences for predicting entailment, contradiction, neutral -> eg. SNLI, MNLI, XNLI
 ***** SOTA scores for NLU can be found on https://github.com/nghuyong/rasa-nlu-benchmark#result
 ***** SOTA scores for NLI can be found on https://nlp.stanford.edu/projects/snli/
@@ -60,9 +60,17 @@
 ***** FSA/WFSAs -> input theoretical CS, mathematics background to describe these
 ***** ANN's historical literature -> describe how ANNs approximate symbolic representations
 ***** extension/recommendations -> transducer for seq2seq tasks
-
+      
 ** Completed
-***** DONE make workflow to download simple but high-quality NLU dataset and reproduce virtual environment cleanly via poetry
+***** DONE add large amounts of binary data for testing with CPU/GPU -> requires pre-processing
+      CLOSED: [2020-11-03 Tue 21:07]
+***** DONE find re-usable code for running grid search -> otherwise construct makeshift quick code
+      CLOSED: [2020-11-03 Tue 21:07] 
+***** DONE test SoPa on sample data in repository to ensure it works out-of-the-box -> try this on laptop and s3it 
+      CLOSED: [2020-11-02 Mon 16:40]
+***** DONE make workflow to reproduce virtual environment cleanly via poetry
+      CLOSED: [2020-11-02 Mon 16:34]
+***** DONE make workflow to download simple but high-quality NLU dataset and glove data sets
       CLOSED: [2020-11-01 Sun 20:15] DEADLINE: <2020-11-01 Sun>
 ***** DONE read more into these tasks and find one that has potential for interpretability -> likely reduce task to binary case for easier processing (eg. entailment)
       CLOSED: [2020-10-28 Wed 15:32] DEADLINE: <2020-10-28 Wed>
@@ -117,4 +125,4 @@
 ***** can potentially use existing IM models such as paraphrase detector for introspection purposes in thesis
 ***** n-gram power sets to explore for statistical artefacts -> ANNs can only access the search space of N-gram power sets -> solution to NLP tasks must be a statistical solution within the power sets which links back to symbolism
 ***** eg. differentiable ILP from DeepMind
-***** propositional logic only contains atoms while predicate/first-order logic contain variables
+***** propositional logic only contains atoms while predicate/first-order logic contain variables      
