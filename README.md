@@ -1,6 +1,6 @@
 ## SoPa++
 
-This repository documents "SoPa++: Leveraging performance and explainability from hybridized RNN, CNN and weighted finite-state neural architectures". An interim manuscript can be found [here](./docs/manuscript/main.pdf).
+This repository documents thesis research with the working title "SoPa++: Leveraging performance and explainability from hybridized RNN, CNN and weighted finite-state neural architectures". An interim manuscript can be found [here](./docs/manuscript/main.pdf).
 
 ### Dependencies :neckbeard:
 
