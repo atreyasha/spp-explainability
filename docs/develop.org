@@ -4,12 +4,16 @@
 *** Research
 **** Clean-code and documentation  
 ***** work on prototyping basic results from SoPa
-****** TODO download a decent performing model and start to interpret model with patterns and document matches -> see what the results are and what they could imply
+****** unsure what self-loops and fwd-1s mean in patterns.log -> make GitHub issue to ask regarding this
+****** TODO analyze pattern log more closely with code on the side to understand what it means -> can start writing early when things start to make sense
        DEADLINE: <2020-11-05 Thu>
+****** research question could be whether SoPa could extend towards global explainability
+****** think more about local vs. global explainability and how SoPa could help achieve this -> might have issues wrt. convergence as mentioned in paper
 ****** TODO write proposal with key research questions -> address points directly from step 3 document requirements -> prepare some basic accuracy metrics and interpretations from best model
        DEADLINE: <2020-11-06 Fri>
 ***** work on refactoring code and upgrading/porting dependencies to more recent versions
 ****** incoporate useful SOPs such as namespace saving and printing
+****** issue of strange numbers of start and end tokens -> should be replaced with pad tokens
 ***** run tests on s3it with slurm
 ****** activate cuda-8.0 in sbatch scripts explicitly
 ****** use debug mode and low runtime for quick slurm runs

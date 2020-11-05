@@ -1,6 +1,6 @@
-## Explainable Natural Language Processing
+## SoPa++
 
-This repository documents research into explainable and high-performance techniques in NLP. An interim manuscript can be found [here](./docs/manuscript/main.pdf).
+This repository documents "SoPa++: Leveraging performance and explainability from hybridized RNN, CNN and weighted finite-state neural architectures". An interim manuscript can be found [here](./docs/manuscript/main.pdf).
 
 ### Dependencies :neckbeard:
 

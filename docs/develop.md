@@ -22,11 +22,21 @@ Tasks
 
     1.  work on prototyping basic results from SoPa
 
-        1.  **TODO** download a decent performing model and
-            start to interpret model with patterns and document matches
-            -\> see what the results are and what they could imply
+        1.  unsure what self-loops and fwd-1s mean in patterns.log -\>
+            make GitHub issue to ask regarding this
 
-        2.  **TODO** write proposal with key research
+        2.  **TODO** analyze pattern log more closely with
+            code on the side to understand what it means -\> can start
+            writing early when things start to make sense
+
+        3.  research question could be whether SoPa could extend towards
+            global explainability
+
+        4.  think more about local vs. global explainability and how
+            SoPa could help achieve this -\> might have issues wrt.
+            convergence as mentioned in paper
+
+        5.  **TODO** write proposal with key research
             questions -\> address points directly from step 3 document
             requirements -\> prepare some basic accuracy metrics and
             interpretations from best model
@@ -35,6 +45,9 @@ Tasks
         more recent versions
 
         1.  incoporate useful SOPs such as namespace saving and printing
+
+        2.  issue of strange numbers of start and end tokens -\> should
+            be replaced with pad tokens
 
     3.  run tests on s3it with slurm
 
