@@ -178,8 +178,6 @@ CPU/GPU -\> requires pre-processing
 **DONE** find re-usable code for running grid search -\>
 otherwise construct makeshift quick code
 
-CLOSED: \[2020-11-03 Tue 21:07\]
-
 **DONE** test SoPa on sample data in repository to ensure it
 works out-of-the-box -\> try this on laptop and s3it
 
