@@ -20,7 +20,7 @@ Tasks
 
 1.  Clean-code and documentation
 
-    1.  work on prototyping basic results from SoPa
+    1.  work on prototyping results from SoPa
 
         1.  unsure what self-loops and fwd-1s mean in patterns.log -\>
             make GitHub issue to ask regarding this
