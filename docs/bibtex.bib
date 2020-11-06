@@ -1,8 +1,18 @@
 @article{doran2017does,
-  title={What does explainable AI really mean? A new conceptualization of perspectives},
-  author={Doran, Derek and Schulz, Sarah and Besold, Tarek R},
-  journal={arXiv preprint arXiv:1710.00794},
-  year={2017}
+  author    = {Derek Doran and
+               Sarah Schulz and
+               Tarek R. Besold},
+  title     = {What Does Explainable {AI} Really Mean? {A} New Conceptualization
+               of Perspectives},
+  journal   = {CoRR},
+  volume    = {abs/1710.00794},
+  year      = {2017},
+  url       = {http://arxiv.org/abs/1710.00794},
+  archivePrefix = {arXiv},
+  eprint    = {1710.00794},
+  timestamp = {Mon, 13 Aug 2018 16:48:14 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1710-00794.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @article{arrieta2020explainable,
@@ -51,10 +61,18 @@
 }
 
 @article{hou2018learning,
-  title={Learning with interpretable structure from rnn},
-  author={Hou, Bo-Jian and Zhou, Zhi-Hua},
-  journal={arXiv preprint arXiv:1810.10708},
-  year={2018}
+  author    = {Bo{-}Jian Hou and
+               Zhi{-}Hua Zhou},
+  title     = {Learning with Interpretable Structure from {RNN}},
+  journal   = {CoRR},
+  volume    = {abs/1810.10708},
+  year      = {2018},
+  url       = {http://arxiv.org/abs/1810.10708},
+  archivePrefix = {arXiv},
+  eprint    = {1810.10708},
+  timestamp = {Wed, 31 Oct 2018 14:24:29 +0100},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1810-10708.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @misc{law2015ilasp,
@@ -87,19 +105,23 @@
   year={2018}
 }
 
-@article{schwartz2018sopa,
-  title={SoPa: Bridging CNNs, RNNs, and weighted finite-state machines},
-  author={Schwartz, Roy and Thomson, Sam and Smith, Noah A},
-  journal={arXiv preprint arXiv:1805.06061},
-  year={2018}
+@inproceedings{schwartz2018sopa,
+    title = "Bridging {CNN}s, {RNN}s, and Weighted Finite-State Machines",
+    author = "Schwartz, Roy  and
+      Thomson, Sam  and
+      Smith, Noah A.",
+    booktitle = "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    month = jul,
+    year = "2018",
+    address = "Melbourne, Australia",
+    publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/P18-1028",
+    doi = "10.18653/v1/P18-1028",
+    pages = "295--305",
+    abstract = "Recurrent and convolutional neural networks comprise two distinct families of models that have proven to be useful for encoding natural language utterances. In this paper we present SoPa, a new model that aims to bridge these two approaches. SoPa combines neural representation learning with weighted finite-state automata (WFSAs) to learn a soft version of traditional surface patterns. We show that SoPa is an extension of a one-layer CNN, and that such CNNs are equivalent to a restricted version of SoPa, and accordingly, to a restricted form of WFSA. Empirically, on three text classification tasks, SoPa is comparable or better than both a BiLSTM (RNN) baseline and a CNN baseline, and is particularly useful in small data settings.",
 }
 
-@article{wang2019state,
-  title={State-regularized recurrent neural networks},
-  author={Wang, Cheng and Niepert, Mathias},
-  journal={arXiv preprint arXiv:1901.08817},
-  year={2019}
-}
+@InProceedings{wang2019state, title = {State-Regularized Recurrent Neural Networks}, author = {Wang, Cheng and Niepert, Mathias}, pages = {6596--6606}, year = {2019}, editor = {Kamalika Chaudhuri and Ruslan Salakhutdinov}, volume = {97}, series = {Proceedings of Machine Learning Research}, address = {Long Beach, California, USA}, month = {09--15 Jun}, publisher = {PMLR}, pdf = {http://proceedings.mlr.press/v97/wang19j/wang19j.pdf}, url = {http://proceedings.mlr.press/v97/wang19j.html}, abstract = {Recurrent neural networks are a widely used class of neural architectures with two shortcomings. First, it is difficult to understand what exactly they learn. Second, they tend to work poorly on sequences requiring long-term memorization, despite having this capacity in principle. We aim to address both shortcomings with a class of recurrent networks that use a stochastic state transition mechanism between cell applications. This mechanism, which we term state-regularization, makes RNNs transition between a finite set of learnable states. We evaluate state-regularized RNNs on (1) regular languages for the purpose of automata extraction; (2) nonregular languages such as balanced parentheses, palindromes, and the copy task where external memory is required; and (3) real-word sequence learning tasks for sentiment analysis, visual object recognition, and language modeling. We show that state-regularization simplifies the extraction of finite state automata from the RNN’s state transition dynamics; forces RNNs to operate more like automata with external memory and less like finite state machines; and makes RNNs more interpretable.} }
 
 @article{jiangcold,
   title={Cold-Start and Interpretability: Turning Regular Expressions into Trainable Recurrent Neural Networks},
@@ -107,9 +129,80 @@
   year={2020}
 }
 
-@article{peng2018rational,
-  title={Rational recurrences},
-  author={Peng, Hao and Schwartz, Roy and Thomson, Sam and Smith, Noah A},
-  journal={arXiv preprint arXiv:1808.09357},
-  year={2018}
+@inproceedings{peng2018rational,
+    title = "Rational Recurrences",
+    author = "Peng, Hao  and
+      Schwartz, Roy  and
+      Thomson, Sam  and
+      Smith, Noah A.",
+    booktitle = "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing",
+    month = oct # "-" # nov,
+    year = "2018",
+    address = "Brussels, Belgium",
+    publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/D18-1152",
+    doi = "10.18653/v1/D18-1152",
+    pages = "1203--1214",
+    abstract = "Despite the tremendous empirical success of neural models in natural language processing, many of them lack the strong intuitions that accompany classical machine learning approaches. Recently, connections have been shown between convolutional neural networks (CNNs) and weighted finite state automata (WFSAs), leading to new interpretations and insights. In this work, we show that some recurrent neural networks also share this connection to WFSAs. We characterize this connection formally, defining rational recurrences to be recurrent hidden state update functions that can be written as the Forward calculation of a finite set of WFSAs. We show that several recent neural models use rational recurrences. Our analysis provides a fresh view of these models and facilitates devising new neural architectures that draw inspiration from WFSAs. We present one such model, which performs better than two recent baselines on language modeling and text classification. Our results demonstrate that transferring intuitions from classical models like WFSAs can be an effective approach to designing and understanding neural models.",
+}
+
+@article{DBLP:journals/corr/RibeiroSG16,
+  author    = {Marco T{\'{u}}lio Ribeiro and
+               Sameer Singh and
+               Carlos Guestrin},
+  title     = {"Why Should {I} Trust You?": Explaining the Predictions of Any Classifier},
+  journal   = {CoRR},
+  volume    = {abs/1602.04938},
+  year      = {2016},
+  url       = {http://arxiv.org/abs/1602.04938},
+  archivePrefix = {arXiv},
+  eprint    = {1602.04938},
+  timestamp = {Mon, 13 Aug 2018 16:49:09 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/RibeiroSG16.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{DBLP:journals/corr/abs-1905-08701,
+  author    = {Ananda Theertha Suresh and
+               Brian Roark and
+               Michael Riley and
+               Vlad Schogol},
+  title     = {Approximating probabilistic models as weighted finite automata},
+  journal   = {CoRR},
+  volume    = {abs/1905.08701},
+  year      = {2019},
+  url       = {http://arxiv.org/abs/1905.08701},
+  archivePrefix = {arXiv},
+  eprint    = {1905.08701},
+  timestamp = {Wed, 29 May 2019 11:27:50 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1905-08701.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{hornik1989multilayer,
+  title={Multilayer feedforward networks are universal approximators.},
+  author={Hornik, Kurt and Stinchcombe, Maxwell and White, Halbert and others},
+  journal={Neural networks},
+  volume={2},
+  number={5},
+  pages={359--366},
+  year={1989}
+}
+
+@article{cybenko1989approximation,
+  title={Approximation by superpositions of a sigmoidal function},
+  author={Cybenko, George},
+  journal={Mathematics of control, signals and systems},
+  volume={2},
+  number={4},
+  pages={303--314},
+  year={1989},
+  publisher={Springer}
+}
+
+@article{bocklisch2017rasa,
+  title={Rasa: Open source language understanding and dialogue management},
+  author={Bocklisch, Tom and Faulkner, Joey and Pawlowski, Nick and Nichol, Alan},
+  journal={arXiv preprint arXiv:1712.05181},
+  year={2017}
 }

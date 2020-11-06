@@ -47,7 +47,7 @@ Tasks
         1.  incoporate useful SOPs such as namespace saving and printing
 
         2.  issue of strange numbers of start and end tokens -\> should
-            be replaced with pad tokens
+            be replaced with pad tokens which are ignored in model
 
     3.  run tests on s3it with slurm
 
@@ -87,7 +87,7 @@ Tasks
             interpretability via in-built method instead of occlusion in
             document analysis setting, final additive layer for finding
             relevance of patterns, multi-class tasks instead of only
-            binary
+            binary, high and low resource + convergence testing
 
     2.  **GIST:** likely higher performance due to direct inference and
         less costly

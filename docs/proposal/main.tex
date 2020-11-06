@@ -1,13 +1,30 @@
 % import packages
 \documentclass[12pt,a4paper]{article}
 \usepackage[round]{natbib}
+\usepackage{ascii}
 \usepackage{graphicx}
 \usepackage[colorlinks=true,citecolor=blue,linkcolor=black,urlcolor=black]{hyperref}  
 \usepackage[bottom]{footmisc}
 \usepackage{amsmath}
 \usepackage{geometry}
+\usepackage{pgfgantt}
+\usepackage[titles]{tocloft}
+\usepackage[font=small]{caption}
+% \usepackage{lineno}
+
+% define variables
+\graphicspath{{../../img/}}
 \geometry{top=3.5cm,bottom=3.5cm}
+\setlength{\cftbeforesecskip}{5pt}
 % \renewcommand{\contentsname}{Table of Contents}
+% \renewcommand\linenumberfont{\normalfont\scriptsize}
+% \renewcommand{\makeLineNumber}{\llap{\linenumberfont\rlap{\LineNumber}\hspace{0.6cm}}}
+\ganttset{calendar week text = {\currentweek}}
+\newganttlinktype{return}{
+  \ganttsetstartanchor{north}
+  \ganttsetendanchor{east}
+  \draw[/pgfgantt/link] (\xLeft-40,\yUpper) |- (\xRight,\yLower+7);
+}
 
 % define admin variables
 \title{SoPa++: Leveraging performance and explainability from hybridized RNN, CNN and weighted finite-state neural architectures$^\dagger$\footnotetext{$^\dagger$SoPa abbreviates \textbf{So}ft \textbf{Pa}tterns; \texttt{++} indicates an expansion or improvement; working title to be fine-tuned with final evaluation}}
@@ -21,7 +38,7 @@ Department of Computational Linguistics, University of Zurich}
 \maketitle
 \thispagestyle{empty}
 \begin{abstract}
-  Recent advancements in Natural Language Processing (NLP) have been largely driven by developments in Deep Learning techniques. While powerful, these methods pose a serious limitation of being ``black-box'' or opaque. This has led to problems such as adversarial attacks and inherent biases leading to downstream ethical issues. The objective of this research is to explore white-box and grey-box machine learning methods in NLP which offer explainability, while still providing competitive performance compared to their deep learning counterparts.
+  In the last half decade, advancements in Natural Language Processing (NLP) have been predominantly driven by Deep Learning (DL) models. While powerful and highly performant, DL models pose a major limitation of being less explainable compared to their classical machine-learning counterparts. This study explores SoPa++; an extension of the hybridized RNN, CNN and weighted finite-state SoPa architecture released by \citet{schwartz2018sopa}.
 \end{abstract}
 \renewcommand{\baselinestretch}{0.9}\normalsize
 \tableofcontents
@@ -29,13 +46,13 @@ Department of Computational Linguistics, University of Zurich}
 \newpage
 \setcounter{page}{1}
 \thispagestyle{plain}
-\input{section_1}
-\input{section_2}
+\input{proposal}
 \newpage
+\input{timeline}
 \addcontentsline{toc}{section}{References}
 \bibliography{../bibtex}
 \bibliographystyle{abbrvnat}
 \end{document}
 
-% Tasks:
-% TODO improve abstract as much as possible
+% LocalWords:  pgfgantt SoPa explainability RNN Atreya Shankar NLP DL toc
+% LocalWords:  performant abbrvnat
