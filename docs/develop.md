@@ -144,7 +144,7 @@ Tasks
 
     3.  Topic proposal final: **15.11.20**
 
-    4.  Topic registration: \*01.02.20
+    4.  Topic registration: **01.02.20**
 
     5.  Manuscript submission: **18.03.20**
 
