@@ -1,62 +1,64 @@
 #+STARTUP: overview
+#+OPTIONS: ^:nil
+#+OPTIONS: p:t
+#+OPTIONS: |:t
 
 ** Tasks
 *** Research
-**** Clean-code and documentation  
-***** work on prototyping results from SoPa
-****** unsure what self-loops and fwd-1s mean in patterns.log -> make GitHub issue to ask regarding this
-****** TODO analyze pattern log more closely with code on the side to understand what it means -> can start writing early when things start to make sense
-       DEADLINE: <2020-11-05 Thu>
-****** research question could be whether SoPa could extend towards global explainability
-****** think more about local vs. global explainability and how SoPa could help achieve this -> might have issues wrt. convergence as mentioned in paper
-****** TODO write proposal with key research questions -> address points directly from step 3 document requirements -> prepare some basic accuracy metrics and interpretations from best model
-       DEADLINE: <2020-11-06 Fri>
-***** work on refactoring code and upgrading/porting dependencies to more recent versions
+**** Clean code and documentation
+***** TODO major code refactoring with conversion to latest PyTorch and CUDA versions
+****** remove all boilerplate code and keep simplest version -> consider forking to retain license
 ****** incoporate useful SOPs such as namespace saving and printing
-****** issue of strange numbers of start and end tokens -> should be replaced with pad tokens which are ignored in model
-***** run tests on s3it with slurm
+****** replace start and end pad token proxies with real =[PAD]= tokens which should be ignored by the RNN
+***** TODO choose exact data set and set up workflow to download and pro-process it
+***** current slurm considerations:
 ****** activate cuda-8.0 in sbatch scripts explicitly
 ****** use debug mode and low runtime for quick slurm runs
 ****** make list of all useful commands for slurm
-***** update metadata in scripts later with new workflows, eg. with help scripts and comments describing functionality
+***** update metadata in scripts later with new workflows, eg. with help scripts, comments describing functionality and readme descriptions for git hooks
 ***** add MIT license when made public
 
-**** Interpretable neural architectures
-***** Soft patterns (SoPa)
-****** good: practical new architecture which maps to RNN-CNN mix via WFSAs
-****** good: code quality in PyTorch, lengthy code
-****** good: contact made with author and could get advice for possible extensions
-****** problematic: global explainability might be a far shot, occlusion is still used for documents
-****** problematic: not clear how this could be linked to a final WFSA -> perhaps it is ultimately not but it is still interpretable and explainable
-****** possible extensions: improve on larger data, learnable word embeddings, sub-word pre-processing to leverage morphology, increase generalization with wildcards, improve interpretability via in-built method instead of occlusion in document analysis setting, final additive layer for finding relevance of patterns, multi-class tasks instead of only binary, high and low resource + convergence testing
-***** *GIST:* likely higher performance due to direct inference and less costly
+**** SoPa++
+***** extensions:
+****** leverage dynamic sub-word-level embeddings from recent advancements in Transformer-based language modeling.
+****** modify the architecture and hyperparameters to use more wildcards or self-loops, and verify the usefulness of these in the mimic WFSA models.
+****** modify the output multi-layer perceptron layer to a general additive layer, such as a linear regression layer, with various basis functions. This would allow for easier interpretation of the importance of patterns without the use of occlusion.
+****** test SoPa++ on multi-class text classification tasks 
+      
+**** SoPa
+***** goods: practical new architecture which maps to RNN-CNN mix via WFSAs, decent code quality in PyTorch (still functional), contact made with author and could get advice for possible extensions
+***** limitations:
+****** SoPa utilizes static word-level token embeddings which might contribute to less dynamic learning and more overfitting towards particular tokens
+****** SoPa encourages minimal learning of wildcards/self-loops and $\epsilon$-transitions, which leads to increased overfitting on rare words such as proper nouns
+****** while SoPa provides an interpretable architecture to learn discrete word-level patterns, it is also utilizes occlusion to determine the importance of various patterns. Occlusion is usually a technique reserved for uninterpretable model architectures and contributes little to global explainability
+****** SoPa was only tested empirically on binary text classification tasks
+***** issues:
+****** unsure what self-loops and fwd-1s mean in output of =visualize.py= -> GitHub issue made to request for more information: https://github.com/Noahs-ARK/soft_patterns/issues/8 
+***** general: likely higher performance due to direct inference and less costly conversion methods
       
 **** Data sets
 ***** NLU data sets -> single sequence intent classification, typically many classes involved -> eg. ATIS, Snips, AskUbuntuCorpus, FB task oriented dataset (mostly intent classifications)
-***** NLI data sets -> two sequences for predicting entailment, contradiction, neutral -> eg. SNLI, MNLI, XNLI
 ***** SOTA scores for NLU can be found on https://github.com/nghuyong/rasa-nlu-benchmark#result
-***** SOTA scores for NLI can be found on https://nlp.stanford.edu/projects/snli/
-***** *consideration:* use both small and large data sets to get an idea of performance
-***** *GIST:* easier to work with NLU data sets since these only involve one data set to start off with
- 
+***** vary training data sizes from 10% to 70% for perspective on data settings
+
 **** Constraints
 ***** work with RNNs only
 ***** seq2cls tasks -> eg. NLU/NLI/semantic tasks, try to work with simpler single (vs. double) sequence classification task
 ***** base main ideas off peer-reviewed articles 
 
-**** High-level
-***** *globally explainable* -> exposes inner mechanisms and global biases which could help for ethical and adversarial problem detections
-***** *high-performance* -> competitive with similar non-explainable learning techniques
-***** *contributions* -> should add insights which are new and not commonly found in research so far
-      
+**** Research questions
+***** Does the improved SoPa++ implementation contribute to competitive performance on NLU tasks? 
+***** Does the improved SoPa++ implementation contribute to improved explainability by simplification?
+
 *** Admin
-**** General timeline
-***** +Initial thesis document: 15.09.20+
-***** Topic proposal draft: 06.11.20
-***** Topic proposal final: 15.11.20
-***** Topic registration: 01.02.20  
-***** Manuscript submission: 18.03.20, try to extend if possible  
-***** *Note:* meeting every 3 weeks with Sharid and more regularly with Mathias 
+**** Timeline
+| Milestone                   | Deadline | Checklist | Description                                  |
+|-----------------------------+----------+-----------+----------------------------------------------|
+| Initial thesis descriptions | 15.09.20 | [X]       | Comleted FCL step 2 document                 |
+| Topic proposal draft        | 06.11.20 | [X]       | Submit FCL step 3 document                   |
+| Internal topic confirmation | 15.11.20 | [ ]       | Topic proposal and research questions agreed |
+| Official topic registration | 01.02.21 | [ ]       | UP examination office registration           |
+| Manuscript submission       | 18.03.21 | [ ]       | Final submission of manuscript               |
 
 **** Manuscript notes
 ***** semirings, abstract algebra and how they are used for finite-state machines in Forward and Viterbi algorithms -> go deeper into this to get some background
@@ -66,8 +68,12 @@
 ***** extension/recommendations -> transducer for seq2seq tasks
       
 ** Completed
+***** DONE write proposal with key research questions -> address points directly from step 3 document requirements -> prepare some basic accuracy metrics and interpretations from best model   
+      CLOSED: [2020-11-10 Tue 18:45] DEADLINE: <2020-11-06 Fri>
+***** DONE analyze pattern log more closely with code on the side to understand what it means -> can start writing early when things start to make sense
+      CLOSED: [2020-11-10 Tue 18:44] DEADLINE: <2020-11-05 Thu>
 ***** DONE add large amounts of binary data for testing with CPU/GPU -> requires pre-processing
-      CLOSED: [2020-11-03 Tue 21:07]
+      CLOSED: [2020-11-10 Tue 18:21]
 ***** DONE find re-usable code for running grid search -> otherwise construct makeshift quick code
       CLOSED: [2020-11-05 Thu 20:38]
 ***** DONE test SoPa on sample data in repository to ensure it works out-of-the-box -> try this on laptop and s3it 

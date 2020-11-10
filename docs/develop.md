@@ -18,38 +18,23 @@ Tasks
 
 ### Research
 
-1.  Clean-code and documentation
+1.  Clean code and documentation
 
-    1.  work on prototyping results from SoPa
+    1.  **TODO** major code refactoring with conversion to
+        latest PyTorch and CUDA versions
 
-        1.  unsure what self-loops and fwd-1s mean in patterns.log -\>
-            make GitHub issue to ask regarding this
+        1.  remove all boilerplate code and keep simplest version -\>
+            consider forking to retain license
 
-        2.  **TODO** analyze pattern log more closely with
-            code on the side to understand what it means -\> can start
-            writing early when things start to make sense
+        2.  incoporate useful SOPs such as namespace saving and printing
 
-        3.  research question could be whether SoPa could extend towards
-            global explainability
+        3.  replace start and end pad token proxies with real `[PAD]`
+            tokens which should be ignored by the RNN
 
-        4.  think more about local vs. global explainability and how
-            SoPa could help achieve this -\> might have issues wrt.
-            convergence as mentioned in paper
+    2.  **TODO** choose exact data set and set up workflow to
+        download and pro-process it
 
-        5.  **TODO** write proposal with key research
-            questions -\> address points directly from step 3 document
-            requirements -\> prepare some basic accuracy metrics and
-            interpretations from best model
-
-    2.  work on refactoring code and upgrading/porting dependencies to
-        more recent versions
-
-        1.  incoporate useful SOPs such as namespace saving and printing
-
-        2.  issue of strange numbers of start and end tokens -\> should
-            be replaced with pad tokens which are ignored in model
-
-    3.  run tests on s3it with slurm
+    3.  current slurm considerations:
 
         1.  activate cuda-8.0 in sbatch scripts explicitly
 
@@ -58,63 +43,81 @@ Tasks
         3.  make list of all useful commands for slurm
 
     4.  update metadata in scripts later with new workflows, eg. with
-        help scripts and comments describing functionality
+        help scripts, comments describing functionality and readme
+        descriptions for git hooks
 
     5.  add MIT license when made public
 
-2.  Interpretable neural architectures
+2.  SoPa++
 
-    1.  Soft patterns (SoPa)
+    1.  extensions:
 
-        1.  good: practical new architecture which maps to RNN-CNN mix
-            via WFSAs
+        1.  leverage dynamic sub-word-level embeddings from recent
+            advancements in Transformer-based language modeling.
 
-        2.  good: code quality in PyTorch, lengthy code
+        2.  modify the architecture and hyperparameters to use more
+            wildcards or self-loops, and verify the usefulness of these
+            in the mimic WFSA models.
 
-        3.  good: contact made with author and could get advice for
-            possible extensions
+        3.  modify the output multi-layer perceptron layer to a general
+            additive layer, such as a linear regression layer, with
+            various basis functions. This would allow for easier
+            interpretation of the importance of patterns without the use
+            of occlusion.
 
-        4.  problematic: global explainability might be a far shot,
-            occlusion is still used for documents
+        4.  test SoPa++ on multi-class text classification tasks
 
-        5.  problematic: not clear how this could be linked to a final
-            WFSA -\> perhaps it is ultimately not but it is still
-            interpretable and explainable
+3.  SoPa
 
-        6.  possible extensions: improve on larger data, learnable word
-            embeddings, sub-word pre-processing to leverage morphology,
-            increase generalization with wildcards, improve
-            interpretability via in-built method instead of occlusion in
-            document analysis setting, final additive layer for finding
-            relevance of patterns, multi-class tasks instead of only
-            binary, high and low resource + convergence testing
+    1.  goods: practical new architecture which maps to RNN-CNN mix via
+        WFSAs, decent code quality in PyTorch (still functional),
+        contact made with author and could get advice for possible
+        extensions
 
-    2.  **GIST:** likely higher performance due to direct inference and
-        less costly
+    2.  limitations:
 
-3.  Data sets
+        1.  SoPa utilizes static word-level token embeddings which might
+            contribute to less dynamic learning and more overfitting
+            towards particular tokens
+
+        2.  SoPa encourages minimal learning of wildcards/self-loops and
+            $\epsilon$-transitions, which leads to increased overfitting
+            on rare words such as proper nouns
+
+        3.  while SoPa provides an interpretable architecture to learn
+            discrete word-level patterns, it is also utilizes occlusion
+            to determine the importance of various patterns. Occlusion
+            is usually a technique reserved for uninterpretable model
+            architectures and contributes little to global
+            explainability
+
+        4.  SoPa was only tested empirically on binary text
+            classification tasks
+
+    3.  issues:
+
+        1.  unsure what self-loops and fwd-1s mean in output of
+            `visualize.py` -\> GitHub issue made to request for more
+            information:
+            <https://github.com/Noahs-ARK/soft_patterns/issues/8>
+
+    4.  general: likely higher performance due to direct inference and
+        less costly conversion methods
+
+4.  Data sets
 
     1.  NLU data sets -\> single sequence intent classification,
         typically many classes involved -\> eg. ATIS, Snips,
         AskUbuntuCorpus, FB task oriented dataset (mostly intent
         classifications)
 
-    2.  NLI data sets -\> two sequences for predicting entailment,
-        contradiction, neutral -\> eg. SNLI, MNLI, XNLI
-
-    3.  SOTA scores for NLU can be found on
+    2.  SOTA scores for NLU can be found on
         <https://github.com/nghuyong/rasa-nlu-benchmark#result>
 
-    4.  SOTA scores for NLI can be found on
-        <https://nlp.stanford.edu/projects/snli/>
+    3.  vary training data sizes from 10% to 70% for perspective on data
+        settings
 
-    5.  **consideration:** use both small and large data sets to get an
-        idea of performance
-
-    6.  **GIST:** easier to work with NLU data sets since these only
-        involve one data set to start off with
-
-4.  Constraints
+5.  Constraints
 
     1.  work with RNNs only
 
@@ -123,34 +126,25 @@ Tasks
 
     3.  base main ideas off peer-reviewed articles
 
-5.  High-level
+6.  Research questions
 
-    1.  **globally explainable** -\> exposes inner mechanisms and global
-        biases which could help for ethical and adversarial problem
-        detections
+    1.  Does the improved SoPa++ implementation contribute to
+        competitive performance on NLU tasks?
 
-    2.  **high-performance** -\> competitive with similar
-        non-explainable learning techniques
-
-    3.  **contributions** -\> should add insights which are new and not
-        commonly found in research so far
+    2.  Does the improved SoPa++ implementation contribute to improved
+        explainability by simplification?
 
 ### Admin
 
-1.  General timeline
+1.  Timeline
 
-    1.  ~~Initial thesis document: 15.09.20~~
-
-    2.  Topic proposal draft: 06.11.20
-
-    3.  Topic proposal final: 15.11.20
-
-    4.  Topic registration: 01.02.20
-
-    5.  Manuscript submission: 18.03.20, try to extend if possible
-
-    6.  **Note:** meeting every 3 weeks with Sharid and more regularly
-        with Mathias
+      Milestone                     Deadline   Checklist   Description
+      ----------------------------- ---------- ----------- ----------------------------------------------
+      Initial thesis descriptions   15.09.20   \[X\]       Comleted FCL step 2 document
+      Topic proposal draft          06.11.20   \[X\]       Submit FCL step 3 document
+      Internal topic confirmation   15.11.20   \[ \]       Topic proposal and research questions agreed
+      Official topic registration   01.02.21   \[ \]       UP examination office registration
+      Manuscript submission         18.03.21   \[ \]       Final submission of manuscript
 
 2.  Manuscript notes
 
@@ -172,36 +166,74 @@ Tasks
 Completed
 ---------
 
+**DONE** write proposal with key research questions -\>
+address points directly from step 3 document requirements -\> prepare
+some basic accuracy metrics and interpretations from best model
+
+**CLOSED:** *\[2020-11-10 Tue 18:45\]* **DEADLINE:** *\<2020-11-06
+Fri\>*
+
+**DONE** analyze pattern log more closely with code on the
+side to understand what it means -\> can start writing early when things
+start to make sense
+
+**CLOSED:** *\[2020-11-10 Tue 18:44\]* **DEADLINE:** *\<2020-11-05
+Thu\>*
+
 **DONE** add large amounts of binary data for testing with
 CPU/GPU -\> requires pre-processing
+
+**CLOSED:** *\[2020-11-10 Tue 18:21\]*
 
 **DONE** find re-usable code for running grid search -\>
 otherwise construct makeshift quick code
 
+**CLOSED:** *\[2020-11-05 Thu 20:38\]*
+
 **DONE** test SoPa on sample data in repository to ensure it
 works out-of-the-box -\> try this on laptop and s3it
+
+**CLOSED:** *\[2020-11-02 Mon 16:40\]*
 
 **DONE** make workflow to reproduce virtual environment
 cleanly via poetry
 
+**CLOSED:** *\[2020-11-02 Mon 16:34\]*
+
 **DONE** make workflow to download simple but high-quality
 NLU dataset and glove data sets
+
+**CLOSED:** *\[2020-11-01 Sun 20:15\]* **DEADLINE:** *\<2020-11-01
+Sun\>*
 
 **DONE** read more into these tasks and find one that has
 potential for interpretability -\> likely reduce task to binary case for
 easier processing (eg. entailment)
 
+**CLOSED:** *\[2020-10-28 Wed 15:32\]* **DEADLINE:** *\<2020-10-28
+Wed\>*
+
 **DONE** search for popular NLI datasets which have existing
 RNN models as (almost) SOTAs, possibly use ones that were already tested
 for eg. RTC or ones used in papers that may have semantic element
 
+**CLOSED:** *\[2020-10-26 Mon 17:57\]* **DEADLINE:** *\<2020-10-28
+Wed\>*
+
 **DONE** explore below frameworks (by preference) and find
 most feasible one
+
+**CLOSED:** *\[2020-10-26 Mon 14:28\]* **DEADLINE:** *\<2020-10-26
+Mon\>*
 
 **DONE** add org-mode hook to remove startup visibility
 headers in org-mode to markdown conversion
 
+**CLOSED:** *\[2020-10-22 Thu 13:28\]*
+
 **DONE** Set up repo, manuscript and develop log
+
+**CLOSED:** *\[2020-10-22 Thu 12:36\]*
 
 Legacy
 ------
