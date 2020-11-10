@@ -138,14 +138,15 @@ Tasks
 
 1.  Timeline
 
-      Milestone                     Deadline   Checklist   Description
-      ----------------------------- ---------- ----------- ----------------------------------------------
-      /                             \<\>       \<\>        \<\>
-      Initial thesis descriptions   15.09.20   \[X\]       Completed FCL step 2 document
-      Topic proposal draft          06.11.20   \[X\]       Submit FCL step 3 document
-      Internal topic confirmation   15.11.20   \[ \]       Topic proposal and research questions agreed
-      Official topic registration   01.02.21   \[ \]       UP examination office registration
-      Manuscript submission         18.03.21   \[ \]       Final submission of manuscript
+    1.  ~~Initial thesis document: **15.09.20**~~
+
+    2.  ~~Topic proposal draft: **06.11.20**~~
+
+    3.  Topic proposal final: **15.11.20**
+
+    4.  Topic registration: \*01.02.20
+
+    5.  Manuscript submission: **18.03.20**
 
 2.  Manuscript notes
 
