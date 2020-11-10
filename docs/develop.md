@@ -140,7 +140,8 @@ Tasks
 
       Milestone                     Deadline   Checklist   Description
       ----------------------------- ---------- ----------- ----------------------------------------------
-      Initial thesis descriptions   15.09.20   \[X\]       Comleted FCL step 2 document
+      /                             \<\>       \<\>        \<\>
+      Initial thesis descriptions   15.09.20   \[X\]       Completed FCL step 2 document
       Topic proposal draft          06.11.20   \[X\]       Submit FCL step 3 document
       Internal topic confirmation   15.11.20   \[ \]       Topic proposal and research questions agreed
       Official topic registration   01.02.21   \[ \]       UP examination office registration
