@@ -32,7 +32,8 @@ Tasks
             tokens which should be ignored by the RNN
 
     2.  **TODO** choose exact data set and set up workflow to
-        download and pro-process it
+        download and pro-process it -\> prefer to find a nice benchmark
+        which can be used for extensive comparisons (like RASA NLU)
 
     3.  current slurm considerations:
 
@@ -128,11 +129,14 @@ Tasks
 
 6.  Research questions
 
-    1.  Does the improved SoPa++ implementation contribute to
-        competitive performance on NLU tasks?
+    1.  To what extent does SoPa++ contribute to competitive performance
+        on NLU tasks?
 
-    2.  Does the improved SoPa++ implementation contribute to improved
-        explainability by simplification?
+    2.  To what extent does SoPa++ contribute to improved explainability
+        by simplification?
+
+    3.  What interesting and relevant explanations does SoPa++ provide
+        on NLU task(s)?
 
 ### Admin
 
@@ -142,7 +146,7 @@ Tasks
 
     2.  ~~Topic proposal draft: **06.11.20**~~
 
-    3.  Topic proposal final: **15.11.20**
+    3.  ~~Topic proposal final: **15.11.20**~~
 
     4.  Topic registration: **01.02.20**
 
@@ -150,23 +154,64 @@ Tasks
 
 2.  Manuscript notes
 
-    1.  semirings, abstract algebra and how they are used for
-        finite-state machines in Forward and Viterbi algorithms -\> go
-        deeper into this to get some background
+    1.  Text-related feedback
 
-    2.  Chomsky hierarchy of languages -\> might be relevant especially
-        relating to CFGs
+        1.  make abstract more specific in terms of \"highly
+            performant\"
 
-    3.  FSA/WFSAs -\> input theoretical CS, mathematics background to
-        describe these
+        2.  fix absolute terms such as \"automated reasoning\", or quote
+            directly from paper
 
-    4.  ANN\'s historical literature -\> describe how ANNs approximate
-        symbolic representations
+        3.  re-consider reference to Transformers for dynamic sub-word
+            level word-embeddings
 
-    5.  extension/recommendations -\> transducer for seq2seq tasks
+        4.  improve capitalization with braces in bibtex file
+
+    2.  Concept-related feedback
+
+        1.  clarify meaning and concept of \"occlusion\" as
+            leave-one-out perturbation analysis
+
+        2.  improve arbitrary vs. contrained oracle phrasing -\> perhaps
+            black-box vs. white-box but more specific
+
+        3.  expound on trade-off between performance and explainability
+            and process of mimic extraction
+
+        4.  add more information on what competitive performance means
+            (eg. within few F_1 points)
+
+        5.  how to evaluate improved explainability -\> make hierarchy
+            for local vs. global explainability -\> also explainability
+            is only relevant if the oracle and mimic models both
+            **perform competitively and have similar confusion matrix
+            profiles** (both conditions must be satisfied)
+
+    3.  Self-thoughts
+
+        1.  semirings, abstract algebra and how they are used for
+            finite-state machines in Forward and Viterbi algorithms -\>
+            go deeper into this to get some background
+
+        2.  Chomsky hierarchy of languages -\> might be relevant
+            especially relating to CFGs
+
+        3.  FSA/WFSAs -\> input theoretical CS, mathematics background
+            to describe these
+
+        4.  ANN\'s historical literature -\> describe how ANNs
+            approximate symbolic representations
+
+        5.  extension/recommendations -\> transducer for seq2seq tasks
 
 Completed
 ---------
+
+**DONE** update proposal with comments from supervisors -\>
+update same information here
+
+**CLOSED:** *\[2020-11-17 Tue 14:52\]* **DEADLINE:** *\<2020-11-17
+Tue\>*
 
 **DONE** write proposal with key research questions -\>
 address points directly from step 3 document requirements -\> prepare

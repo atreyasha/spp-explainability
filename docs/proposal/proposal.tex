@@ -76,10 +76,10 @@ The trained SoPa model consists of a transition matrix (or tensor) populated alo
 There are several limitations to the current SoPa architecture which were verified through contact with the author(s):
 
 \begin{enumerate}
-\item SoPa utilizes static word-level token embeddings which might contribute to less dynamic learning and more overfitting towards particular tokens.
-\item SoPa encourages minimal learning of wildcards/self-loops and $\epsilon$-transitions, which leads to increased overfitting on rare words such as proper nouns.
-\item While SoPa provides an interpretable architecture to learn discrete word-level patterns, it is also utilizes occlusion to determine the importance of various patterns. Occlusion is usually a technique reserved for uninterpretable model architectures and contributes little to global explainability.
-\item SoPa was only tested empirically on binary text classification tasks.  
+  \item SoPa utilizes static word-level token embeddings which might contribute to less dynamic learning and more overfitting towards particular tokens.
+  \item SoPa encourages minimal learning of wildcards/self-loops and $\epsilon$-transitions, which leads to increased overfitting on rare words such as proper nouns.
+  \item While SoPa provides an interpretable architecture to learn discrete word-level patterns, it is also utilizes occlusion to determine the importance of various patterns. Occlusion is usually a technique reserved for uninterpretable model architectures and contributes little to global explainability.
+  \item SoPa was only tested empirically on binary text classification tasks.  
 \end{enumerate}
 
 \subsection{SoPa++}
@@ -87,19 +87,20 @@ There are several limitations to the current SoPa architecture which were verifi
 In response to the above limitations, we propose an extension to the SoPa architecture: SoPa++. The exact details of the extension might vary slightly based on time and resources. However a list of open tasks corresponding one-to-one with the limitations listed in section \ref{sopa-limitations} is provided below:
 
 \begin{enumerate}
-\item Leverage dynamic sub-word-level embeddings from recent advancements in Transformer-based language modeling.
-\item Modify the architecture and hyperparameters to use more wildcards or self-loops, and verify the usefulness of these in the mimic WFSA models.
-\item Modify the output multi-layer perceptron layer to a general additive layer, such as a linear regression layer, with various basis functions. This would allow for easier interpretation of the importance of patterns without the use of occlusion.
-\item Test SoPa++ on multi-class text classification tasks, focusing particularly on Natural Language Understanding (NLU) tasks with existing benchmarks. One example is the RASA NLU benchmark \citep{bocklisch2017rasa} which contains numerous English language tasks for single-sequence multi-class intent classification. 
+  \item Leverage dynamic sub-word-level embeddings from recent advancements in Transformer-based language modeling.
+  \item Modify the architecture and hyperparameters to use more wildcards or self-loops, and verify the usefulness of these in the mimic WFSA models.
+  \item Modify the output multi-layer perceptron layer to a general additive layer, such as a linear regression layer, with various basis functions. This would allow for easier interpretation of the importance of patterns without the use ofocclusion.
+  \item Test SoPa++ on multi-class text classification tasks, focusing particularly on Natural Language Understanding (NLU) tasks with existing benchmarks. One example is the RASA NLU benchmark \citep{bocklisch2017rasa} which contains numerous English language tasks for single-sequence multi-class intent classification. 
 \end{enumerate}
 
 \subsubsection{Research questions}
 
-Based on the aforementioned tasks, we formulate two research questions:
+Based on the aforementioned tasks, we formulate three research questions:
 
 \begin{enumerate}
-\item Does the improved SoPa++ implementation contribute to competitive performance on NLU tasks? Competitive here does not necessarily mean better performance than current SOTA models, but instead refers to performance within a few F$_1$ percentage points. 
-\item Does the improved SoPa++ implementation contribute to improved explainability by simplification? This could be answered by evaluating the performance and quality of the global mimic WFSA extracted from the oracle SoPa++.
+  \item To what extent does SoPa++ contribute to competitive performance on NLU tasks?
+  \item To what extent does SoPa++ contribute to improved explainability by simplification?
+  \item What interesting and relevant explanations does SoPa++ provide on NLU task(s)?
 \end{enumerate}
 
 % LocalWords:  XAI ACL COGSCI ICCV ECCV interpretable connectionist NLP ANNs et

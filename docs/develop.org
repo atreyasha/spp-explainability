@@ -1,7 +1,6 @@
 #+STARTUP: overview
 #+OPTIONS: ^:nil
 #+OPTIONS: p:t
-#+OPTIONS: |:t
 
 ** Tasks
 *** Research
@@ -10,7 +9,7 @@
 ****** remove all boilerplate code and keep simplest version -> consider forking to retain license
 ****** incoporate useful SOPs such as namespace saving and printing
 ****** replace start and end pad token proxies with real =[PAD]= tokens which should be ignored by the RNN
-***** TODO choose exact data set and set up workflow to download and pro-process it
+***** TODO choose exact data set and set up workflow to download and pro-process it -> prefer to find a nice benchmark which can be used for extensive comparisons (like RASA NLU)
 ***** current slurm considerations:
 ****** activate cuda-8.0 in sbatch scripts explicitly
 ****** use debug mode and low runtime for quick slurm runs
@@ -35,7 +34,7 @@
 ***** issues:
 ****** unsure what self-loops and fwd-1s mean in output of =visualize.py= -> GitHub issue made to request for more information: https://github.com/Noahs-ARK/soft_patterns/issues/8 
 ***** general: likely higher performance due to direct inference and less costly conversion methods
-      
+
 **** Data sets
 ***** NLU data sets -> single sequence intent classification, typically many classes involved -> eg. ATIS, Snips, AskUbuntuCorpus, FB task oriented dataset (mostly intent classifications)
 ***** SOTA scores for NLU can be found on https://github.com/nghuyong/rasa-nlu-benchmark#result
@@ -47,25 +46,40 @@
 ***** base main ideas off peer-reviewed articles 
 
 **** Research questions
-***** Does the improved SoPa++ implementation contribute to competitive performance on NLU tasks? 
-***** Does the improved SoPa++ implementation contribute to improved explainability by simplification?
+***** To what extent does SoPa++ contribute to competitive performance on NLU tasks?
+***** To what extent does SoPa++ contribute to improved explainability by simplification?
+***** What interesting and relevant explanations does SoPa++ provide on NLU task(s)?
 
 *** Admin
 **** Timeline
 ***** +Initial thesis document: *15.09.20*+
 ***** +Topic proposal draft: *06.11.20*+
-***** Topic proposal final: *15.11.20*
+***** +Topic proposal final: *15.11.20*+
 ***** Topic registration: *01.02.20* 
-***** Manuscript submission: *18.03.20*  
+***** Manuscript submission: *18.03.20* 
 
 **** Manuscript notes
-***** semirings, abstract algebra and how they are used for finite-state machines in Forward and Viterbi algorithms -> go deeper into this to get some background
-***** Chomsky hierarchy of languages -> might be relevant especially relating to CFGs
-***** FSA/WFSAs -> input theoretical CS, mathematics background to describe these
-***** ANN's historical literature -> describe how ANNs approximate symbolic representations
-***** extension/recommendations -> transducer for seq2seq tasks
-      
+***** Text-related feedback
+****** make abstract more specific in terms of "highly performant"
+****** fix absolute terms such as "automated reasoning", or quote directly from paper
+****** re-consider reference to Transformers for dynamic sub-word level word-embeddings
+****** improve capitalization with braces in bibtex file
+***** Concept-related feedback
+****** clarify meaning and concept of "occlusion" as leave-one-out perturbation analysis
+****** improve arbitrary vs. contrained oracle phrasing -> perhaps black-box vs. white-box but more specific
+****** expound on trade-off between performance and explainability and process of mimic extraction
+****** add more information on what competitive performance means (eg. within few F_1 points)
+****** how to evaluate improved explainability -> make hierarchy for local vs. global explainability -> also explainability is only relevant if the oracle and mimic models both *perform competitively and have similar confusion matrix profiles* (both conditions must be satisfied)
+***** Self-thoughts
+****** semirings, abstract algebra and how they are used for finite-state machines in Forward and Viterbi algorithms -> go deeper into this to get some background
+****** Chomsky hierarchy of languages -> might be relevant especially relating to CFGs
+****** FSA/WFSAs -> input theoretical CS, mathematics background to describe these
+****** ANN's historical literature -> describe how ANNs approximate symbolic representations
+****** extension/recommendations -> transducer for seq2seq tasks
+       
 ** Completed
+***** DONE update proposal with comments from supervisors -> update same information here
+      CLOSED: [2020-11-17 Tue 14:52] DEADLINE: <2020-11-17 Tue>
 ***** DONE write proposal with key research questions -> address points directly from step 3 document requirements -> prepare some basic accuracy metrics and interpretations from best model   
       CLOSED: [2020-11-10 Tue 18:45] DEADLINE: <2020-11-06 Fri>
 ***** DONE analyze pattern log more closely with code on the side to understand what it means -> can start writing early when things start to make sense
