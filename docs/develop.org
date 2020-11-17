@@ -5,33 +5,47 @@
 ** Tasks
 *** Research
 **** Clean code and documentation
-***** TODO major code refactoring with conversion to latest PyTorch and CUDA versions
-****** remove all boilerplate code and keep simplest version -> consider forking to retain license
-****** incoporate useful SOPs such as namespace saving and printing
-****** replace start and end pad token proxies with real =[PAD]= tokens which should be ignored by the RNN
-***** TODO choose exact data set and set up workflow to download and pro-process it -> prefer to find a nice benchmark which can be used for extensive comparisons (like RASA NLU)
-***** current slurm considerations:
-****** activate cuda-8.0 in sbatch scripts explicitly
-****** use debug mode and low runtime for quick slurm runs
-****** make list of all useful commands for slurm
-***** update metadata in scripts later with new workflows, eg. with help scripts, comments describing functionality and readme descriptions for git hooks
-***** add MIT license when made public
+***** Step-by-step
+****** TODO major code refactoring for main model (ignore visualization and interpretation) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
+       DEADLINE: <2020-11-30 Mon>
+******* branch off and remove all boilerplate code and keep simplest SoPa variants
+******* incoporate useful SOPs such as namespace saving and printing
+******* replace start and end pad token proxies with real =[PAD]= tokens which should be ignored by the RNN 
+******* improve code quality with model logging and tensorboard workflows
+****** choose exact data set and set up workflow to download and pro-process it -> prefer to find a nice benchmark which can be used for extensive comparisons (like RASA NLU)
+       DEADLINE: <2020-12-03 Thu>
+****** work on changes to architecture
+       DEADLINE: <2020-12-24 Thu>
+******* dynamic word embeddings and experimenting with more gracious self-loops and epsilon transitions -> perform this incrementally for comparison
+******* modify final layer to a general additive layer with tree structure or soft logic where possible -> perform this incrementally for comparison 
+****** run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with grid-search to get plenty of candidates
+       DEADLINE: <2021-02-01 Mon>
+****** with decent model performance, branch off to improve explainability with weighting of patterns -> do this and the previous task simultaneously
+       DEADLINE: <2021-02-01 Mon>
+
+***** KIV
+****** current slurm considerations
+******* activate cuda-8.0 in sbatch scripts explicitly
+******* use debug mode and low runtime for quick slurm runs
+******* make list of all useful commands for slurm
+****** update metadata in scripts later with new workflows, eg. with help scripts, comments describing functionality and readme descriptions for git hooks
+****** add MIT license when made public
 
 **** SoPa++
-***** extensions:
+***** extensions
 ****** leverage dynamic sub-word-level embeddings from recent advancements in Transformer-based language modeling.
 ****** modify the architecture and hyperparameters to use more wildcards or self-loops, and verify the usefulness of these in the mimic WFSA models.
-****** modify the output multi-layer perceptron layer to a general additive layer, such as a linear regression layer, with various basis functions. This would allow for easier interpretation of the importance of patterns without the use of occlusion.
+****** modify the output multi-layer perceptron layer to a general additive layer, such as a linear regression layer, with various basis functions. This would allow for easier interpretation of the importance of patterns without the use of occlusion -> perhaps consider adding soft logic functions which could emulate negation/inclusion of rules, or possibly a soft decision tree at the top layer
 ****** test SoPa++ on multi-class text classification tasks 
       
 **** SoPa
 ***** goods: practical new architecture which maps to RNN-CNN mix via WFSAs, decent code quality in PyTorch (still functional), contact made with author and could get advice for possible extensions
-***** limitations:
+***** limitations
 ****** SoPa utilizes static word-level token embeddings which might contribute to less dynamic learning and more overfitting towards particular tokens
 ****** SoPa encourages minimal learning of wildcards/self-loops and $\epsilon$-transitions, which leads to increased overfitting on rare words such as proper nouns
 ****** while SoPa provides an interpretable architecture to learn discrete word-level patterns, it is also utilizes occlusion to determine the importance of various patterns. Occlusion is usually a technique reserved for uninterpretable model architectures and contributes little to global explainability
 ****** SoPa was only tested empirically on binary text classification tasks
-***** issues:
+***** issues
 ****** unsure what self-loops and fwd-1s mean in output of =visualize.py= -> GitHub issue made to request for more information: https://github.com/Noahs-ARK/soft_patterns/issues/8 
 ***** general: likely higher performance due to direct inference and less costly conversion methods
 
@@ -131,14 +145,14 @@
 ****** more proof of performance needed -> need to show it is better than simple data learning
 
 *** Neuro-symbolic paradigms
-***** research questions:
+***** research questions
 ****** can we train use a neuro-symbolic paradigm to attain high performance (similar to NNs) for NLP task(s)?
 ****** if so, can this paradigm provide us with greater explainability about the inner workings of the model?
 
 *** Neural decision trees
 ***** decision trees are the same as logic programs -> the objective should be to learn logic programs
 ***** hierarchies are constructed in weight-space which lends itself to non-sequential models very well -> but problematic for token-level hierarchies
-***** research questions:
+***** research questions
 ****** can we achieve similar high performance using decision tree distillation techniques (by imitating NNs)?
 ****** can this decision tree improve interpretability/explainability?
 ****** can this decision tree distillation technique outperform simple decision tree learning from training data?

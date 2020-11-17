@@ -20,38 +20,75 @@ Tasks
 
 1.  Clean code and documentation
 
-    1.  **TODO** major code refactoring with conversion to
-        latest PyTorch and CUDA versions
+    1.  Step-by-step
 
-        1.  remove all boilerplate code and keep simplest version -\>
-            consider forking to retain license
+        1.  **TODO** major code refactoring for main model
+            (ignore visualization and interpretation) with conversion to
+            recent PyTorch (eg. 1.\*) and CUDA versions (eg. 10.\*)
 
-        2.  incoporate useful SOPs such as namespace saving and printing
+            **DEADLINE:** *\<2020-11-30 Mon\>*
 
-        3.  replace start and end pad token proxies with real `[PAD]`
-            tokens which should be ignored by the RNN
+            1.  branch off and remove all boilerplate code and keep
+                simplest SoPa variants
 
-    2.  **TODO** choose exact data set and set up workflow to
-        download and pro-process it -\> prefer to find a nice benchmark
-        which can be used for extensive comparisons (like RASA NLU)
+            2.  incoporate useful SOPs such as namespace saving and
+                printing
 
-    3.  current slurm considerations:
+            3.  replace start and end pad token proxies with real
+                `[PAD]` tokens which should be ignored by the RNN
 
-        1.  activate cuda-8.0 in sbatch scripts explicitly
+            4.  improve code quality with model logging and tensorboard
+                workflows
 
-        2.  use debug mode and low runtime for quick slurm runs
+        2.  choose exact data set and set up workflow to download and
+            pro-process it -\> prefer to find a nice benchmark which can
+            be used for extensive comparisons (like RASA NLU)
 
-        3.  make list of all useful commands for slurm
+            **DEADLINE:** *\<2020-12-03 Thu\>*
 
-    4.  update metadata in scripts later with new workflows, eg. with
-        help scripts, comments describing functionality and readme
-        descriptions for git hooks
+        3.  work on changes to architecture
 
-    5.  add MIT license when made public
+            **DEADLINE:** *\<2020-12-24 Thu\>*
+
+            1.  dynamic word embeddings and experimenting with more
+                gracious self-loops and epsilon transitions -\> perform
+                this incrementally for comparison
+
+            2.  modify final layer to a general additive layer with tree
+                structure or soft logic where possible -\> perform this
+                incrementally for comparison
+
+        4.  run SoPa++ for multiple runs to survey performance -\> run
+            on all variants and data-set portions with grid-search to
+            get plenty of candidates
+
+            **DEADLINE:** *\<2021-02-01 Mon\>*
+
+        5.  with decent model performance, branch off to improve
+            explainability with weighting of patterns -\> do this and
+            the previous task simultaneously
+
+            **DEADLINE:** *\<2021-02-01 Mon\>*
+
+    2.  KIV
+
+        1.  current slurm considerations
+
+            1.  activate cuda-8.0 in sbatch scripts explicitly
+
+            2.  use debug mode and low runtime for quick slurm runs
+
+            3.  make list of all useful commands for slurm
+
+        2.  update metadata in scripts later with new workflows, eg.
+            with help scripts, comments describing functionality and
+            readme descriptions for git hooks
+
+        3.  add MIT license when made public
 
 2.  SoPa++
 
-    1.  extensions:
+    1.  extensions
 
         1.  leverage dynamic sub-word-level embeddings from recent
             advancements in Transformer-based language modeling.
@@ -64,7 +101,9 @@ Tasks
             additive layer, such as a linear regression layer, with
             various basis functions. This would allow for easier
             interpretation of the importance of patterns without the use
-            of occlusion.
+            of occlusion -\> perhaps consider adding soft logic
+            functions which could emulate negation/inclusion of rules,
+            or possibly a soft decision tree at the top layer
 
         4.  test SoPa++ on multi-class text classification tasks
 
@@ -75,7 +114,7 @@ Tasks
         contact made with author and could get advice for possible
         extensions
 
-    2.  limitations:
+    2.  limitations
 
         1.  SoPa utilizes static word-level token embeddings which might
             contribute to less dynamic learning and more overfitting
@@ -95,7 +134,7 @@ Tasks
         4.  SoPa was only tested empirically on binary text
             classification tasks
 
-    3.  issues:
+    3.  issues
 
         1.  unsure what self-loops and fwd-1s mean in output of
             `visualize.py` -\> GitHub issue made to request for more
@@ -353,7 +392,7 @@ Legacy
 
 ### Neuro-symbolic paradigms
 
-1.  research questions:
+1.  research questions
 
     1.  can we train use a neuro-symbolic paradigm to attain high
         performance (similar to NNs) for NLP task(s)?
@@ -370,7 +409,7 @@ Legacy
     non-sequential models very well -\> but problematic for token-level
     hierarchies
 
-3.  research questions:
+3.  research questions
 
     1.  can we achieve similar high performance using decision tree
         distillation techniques (by imitating NNs)?
