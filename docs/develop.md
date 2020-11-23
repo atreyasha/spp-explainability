@@ -29,16 +29,17 @@ Tasks
             **DEADLINE:** *\<2020-11-30 Mon\>*
 
             1.  branch off and remove all boilerplate code and keep
-                simplest SoPa variants
+                simplest SoPa variants -\> convert all files which
+                require torch
 
             2.  incoporate useful SOPs such as namespace saving and
                 printing
 
-            3.  replace start and end pad token proxies with real
-                `[PAD]` tokens which should be ignored by the RNN
-
-            4.  improve code quality with model logging and tensorboard
+            3.  improve code quality with model logging and tensorboard
                 workflows
+
+            4.  replace start and end pad token proxies with real
+                `[PAD]` tokens which should be ignored by the RNN
 
         2.  choose exact data set and set up workflow to download and
             pro-process it -\> prefer to find a nice benchmark which can

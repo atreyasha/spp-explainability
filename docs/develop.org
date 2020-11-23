@@ -8,10 +8,10 @@
 ***** Step-by-step
 ****** TODO major code refactoring for main model (ignore visualization and interpretation) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
        DEADLINE: <2020-11-30 Mon>
-******* branch off and remove all boilerplate code and keep simplest SoPa variants
+******* branch off and remove all boilerplate code and keep simplest SoPa variants -> convert all files which require torch
 ******* incoporate useful SOPs such as namespace saving and printing
-******* replace start and end pad token proxies with real =[PAD]= tokens which should be ignored by the RNN 
 ******* improve code quality with model logging and tensorboard workflows
+******* replace start and end pad token proxies with real =[PAD]= tokens which should be ignored by the RNN 
 ****** choose exact data set and set up workflow to download and pro-process it -> prefer to find a nice benchmark which can be used for extensive comparisons (like RASA NLU)
        DEADLINE: <2020-12-03 Thu>
 ****** work on changes to architecture
