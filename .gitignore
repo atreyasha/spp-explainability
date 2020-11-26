@@ -1,3 +1,7 @@
+# python-related
+*.pyc
+
+# latex-related
 *.el
 *.aux
 *.bbl

@@ -21,6 +21,7 @@
        DEADLINE: <2020-12-03 Thu>
 ****** work on changes to architecture
        DEADLINE: <2020-12-24 Thu>
+******* check if tokenizer could be replaced from Transformers library for upstream consistency
 ******* incoporate useful SOPs such as namespace saving and printing
 ******* improve code quality with unique model logging and tensorboard workflows
 ******* dynamic word embeddings and experimenting with more gracious self-loops and epsilon transitions -> perform this incrementally for comparison

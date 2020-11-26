@@ -73,21 +73,24 @@ Tasks
 
             **DEADLINE:** *\<2020-12-24 Thu\>*
 
-            1.  incoporate useful SOPs such as namespace saving and
+            1.  check if tokenizer could be replaced from Transformers
+                library for upstream consistency
+
+            2.  incoporate useful SOPs such as namespace saving and
                 printing
 
-            2.  improve code quality with unique model logging and
+            3.  improve code quality with unique model logging and
                 tensorboard workflows
 
-            3.  dynamic word embeddings and experimenting with more
+            4.  dynamic word embeddings and experimenting with more
                 gracious self-loops and epsilon transitions -\> perform
                 this incrementally for comparison
 
-            4.  modify final layer to a general additive layer with tree
+            5.  modify final layer to a general additive layer with tree
                 structure or soft logic where possible -\> perform this
                 incrementally for comparison
 
-            5.  design new and improved test cases using pytest after
+            6.  design new and improved test cases using pytest after
                 understanding code completely
 
         4.  run SoPa++ for multiple runs to survey performance -\> run
