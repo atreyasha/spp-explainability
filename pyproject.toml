@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "explainable-nlp"
+name = "soft-patterns-pp"
 version = "0.1.0"
 description = ""
 authors = ["Atreya Shankar <35427332+atreyasha@users.noreply.github.com>"]

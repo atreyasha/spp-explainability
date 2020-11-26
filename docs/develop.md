@@ -28,18 +28,40 @@ Tasks
 
             **DEADLINE:** *\<2020-11-30 Mon\>*
 
-            1.  branch off and remove all boilerplate code and keep
-                simplest SoPa variants -\> convert all files which
-                require torch
+            1.  use brute-force method of running code with newer
+                libraries and fix errors on the fly -\> replace outdated
+                functions on the fly and make everything clean/modern
+                -\> migrate to soft-patterns-pp and clean from there
 
-            2.  incoporate useful SOPs such as namespace saving and
-                printing
+            2.  find out whether use_rnn is passed by default and what
+                its purpose generally is -\> need to understand all
+                facets of code to master it
 
-            3.  improve code quality with model logging and tensorboard
-                workflows
+            3.  code works well with latest CUDA and torch, now through
+                code chunk by chunk and execute it to test on data,
+                understand everything and clean errors on the fly -\>
+                worry about performance in later steps -\> for now focus
+                on understanding everything
 
             4.  replace start and end pad token proxies with real
                 `[PAD]` tokens which should be ignored by the RNN
+
+                1.  no need to declare variables with autograd
+                    explicitly: see
+                    <https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable>
+
+                2.  UserWarning: size_average and reduce args will be
+                    deprecated, please use reduction=\'sum\' instead
+
+                3.  UserWarning: nn.functional.sigmoid is deprecated.
+                    Use torch.sigmoid instead
+
+                4.  UserWarning: Implicit dimension choice for
+                    log_softmax has been deprecated. Change the call to
+                    include dim=X as an argument
+
+            5.  take note that patterns of length one are not allowed,
+                ignore `visualize_efficiently.py` for now
 
         2.  choose exact data set and set up workflow to download and
             pro-process it -\> prefer to find a nice benchmark which can
@@ -51,13 +73,22 @@ Tasks
 
             **DEADLINE:** *\<2020-12-24 Thu\>*
 
-            1.  dynamic word embeddings and experimenting with more
+            1.  incoporate useful SOPs such as namespace saving and
+                printing
+
+            2.  improve code quality with unique model logging and
+                tensorboard workflows
+
+            3.  dynamic word embeddings and experimenting with more
                 gracious self-loops and epsilon transitions -\> perform
                 this incrementally for comparison
 
-            2.  modify final layer to a general additive layer with tree
+            4.  modify final layer to a general additive layer with tree
                 structure or soft logic where possible -\> perform this
                 incrementally for comparison
+
+            5.  design new and improved test cases using pytest after
+                understanding code completely
 
         4.  run SoPa++ for multiple runs to survey performance -\> run
             on all variants and data-set portions with grid-search to
