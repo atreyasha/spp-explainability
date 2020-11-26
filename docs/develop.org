@@ -6,23 +6,22 @@
 *** Research
 **** Clean code and documentation
 ***** Step-by-step
-****** TODO major code refactoring for main model (ignore visualization and interpretation) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
+****** TODO major code refactoring for main model (ignore visualization, interpretation and testing) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
        DEADLINE: <2020-11-30 Mon>
-******* make arg parser file, preprocessing clean script -> keep things simple for now and lay framework
-******* use brute-force method of running code with newer libraries and fix errors on the fly -> replace outdated functions on the fly and make everything clean/modern -> migrate to soft-patterns-pp and clean from there
-******* find out whether use_rnn is passed by default and what its purpose generally is -> need to understand all facets of code to master it
-******* code works well with latest CUDA and torch, now through code chunk by chunk and execute it to test on data, understand everything and clean errors on the fly -> worry about performance in later steps -> for now focus on understanding everything
-******* replace start and end pad token proxies with real =[PAD]= tokens which should be ignored by the RNN 
+******* extract all arg parser chunks and place in dedicated file
+******* make clean preprocessing script with GloVe vectors
+******* run code chunk by chunk and remove outdated torch code + replace with clean workflows
 ******** no need to declare variables with autograd explicitly: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable
 ******** UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead
 ******** UserWarning: nn.functional.sigmoid is deprecated. Use torch.sigmoid instead
 ******** UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument
-******* take note that patterns of length one are not allowed, ignore =visualize_efficiently.py= for now
+******* find out whether use_rnn is passed by default and what its purpose generally is
+******* replace start and end pad token proxies with real =[PAD]= tokens which should be ignored by the RNN 
 ****** choose exact data set and set up workflow to download and pro-process it -> prefer to find a nice benchmark which can be used for extensive comparisons (like RASA NLU)
        DEADLINE: <2020-12-03 Thu>
 ****** work on changes to architecture
        DEADLINE: <2020-12-24 Thu>
-******* check if tokenizer could be replaced from Transformers library for upstream consistency
+******* check if tokenizer could be replaced from Transformers library for upstream consistency + add nltk if necessary for punkt tokenization before sentencepiece
 ******* incoporate useful SOPs such as namespace saving and printing
 ******* improve code quality with unique model logging and tensorboard workflows
 ******* dynamic word embeddings and experimenting with more gracious self-loops and epsilon transitions -> perform this incrementally for comparison
@@ -102,6 +101,8 @@
 ****** extension/recommendations -> transducer for seq2seq tasks
        
 ** Completed
+***** DONE migrate to soft-patterns-pp and clean from there
+      CLOSED: [2020-11-26 Thu 20:11]
 ***** DONE update proposal with comments from supervisors -> update same information here
       CLOSED: [2020-11-17 Tue 14:52] DEADLINE: <2020-11-17 Tue>
 ***** DONE write proposal with key research questions -> address points directly from step 3 document requirements -> prepare some basic accuracy metrics and interpretations from best model   

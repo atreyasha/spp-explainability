@@ -23,31 +23,19 @@ Tasks
     1.  Step-by-step
 
         1.  **TODO** major code refactoring for main model
-            (ignore visualization and interpretation) with conversion to
-            recent PyTorch (eg. 1.\*) and CUDA versions (eg. 10.\*)
+            (ignore visualization, interpretation and testing) with
+            conversion to recent PyTorch (eg. 1.\*) and CUDA versions
+            (eg. 10.\*)
 
             **DEADLINE:** *\<2020-11-30 Mon\>*
 
-            1.  make arg parser file, preprocessing clean script -\>
-                keep things simple for now and lay framework
+            1.  extract all arg parser chunks and place in dedicated
+                file
 
-            2.  use brute-force method of running code with newer
-                libraries and fix errors on the fly -\> replace outdated
-                functions on the fly and make everything clean/modern
-                -\> migrate to soft-patterns-pp and clean from there
+            2.  make clean preprocessing script with GloVe vectors
 
-            3.  find out whether use_rnn is passed by default and what
-                its purpose generally is -\> need to understand all
-                facets of code to master it
-
-            4.  code works well with latest CUDA and torch, now through
-                code chunk by chunk and execute it to test on data,
-                understand everything and clean errors on the fly -\>
-                worry about performance in later steps -\> for now focus
-                on understanding everything
-
-            5.  replace start and end pad token proxies with real
-                `[PAD]` tokens which should be ignored by the RNN
+            3.  run code chunk by chunk and remove outdated torch code +
+                replace with clean workflows
 
                 1.  no need to declare variables with autograd
                     explicitly: see
@@ -63,8 +51,11 @@ Tasks
                     log_softmax has been deprecated. Change the call to
                     include dim=X as an argument
 
-            6.  take note that patterns of length one are not allowed,
-                ignore `visualize_efficiently.py` for now
+            4.  find out whether use_rnn is passed by default and what
+                its purpose generally is
+
+            5.  replace start and end pad token proxies with real
+                `[PAD]` tokens which should be ignored by the RNN
 
         2.  choose exact data set and set up workflow to download and
             pro-process it -\> prefer to find a nice benchmark which can
@@ -77,7 +68,8 @@ Tasks
             **DEADLINE:** *\<2020-12-24 Thu\>*
 
             1.  check if tokenizer could be replaced from Transformers
-                library for upstream consistency
+                library for upstream consistency + add nltk if necessary
+                for punkt tokenization before sentencepiece
 
             2.  incoporate useful SOPs such as namespace saving and
                 printing
@@ -93,7 +85,11 @@ Tasks
                 structure or soft logic where possible -\> perform this
                 incrementally for comparison
 
-            6.  design new and improved test cases using pytest after
+            6.  revert back visualization, interpretation and testing
+                scripts into repository for refactoring -\> files are
+                currently under git backup
+
+            7.  design new and improved test cases using pytest after
                 understanding code completely
 
         4.  run SoPa++ for multiple runs to survey performance -\> run
@@ -283,6 +279,10 @@ Tasks
 
 Completed
 ---------
+
+**DONE** migrate to soft-patterns-pp and clean from there
+
+**CLOSED:** *\[2020-11-26 Thu 20:11\]*
 
 **DONE** update proposal with comments from supervisors -\>
 update same information here
