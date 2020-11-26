@@ -8,9 +8,10 @@
 ***** Step-by-step
 ****** TODO major code refactoring for main model (ignore visualization, interpretation and testing) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
        DEADLINE: <2020-11-30 Mon>
+******* find better location to place code from =util.py=
+******* make clean preprocessing script with GloVe vectors and explicit name to differentiate from future dynamic sub-word tokenization
 ******* extract all arg parser chunks and place in dedicated file
-******* make clean preprocessing script with GloVe vectors
-******* run code chunk by chunk and remove outdated torch code + replace with clean workflows
+******* run code chunk by chunk and remove outdated torch code + understand segments -> file with ~700 sloc 
 ******** no need to declare variables with autograd explicitly: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable
 ******** UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead
 ******** UserWarning: nn.functional.sigmoid is deprecated. Use torch.sigmoid instead
@@ -26,6 +27,7 @@
 ******* improve code quality with unique model logging and tensorboard workflows
 ******* dynamic word embeddings and experimenting with more gracious self-loops and epsilon transitions -> perform this incrementally for comparison
 ******* modify final layer to a general additive layer with tree structure or soft logic where possible -> perform this incrementally for comparison
+******* revert back visualization, interpretation and testing scripts into repository for refactoring -> files are currently under local git backup
 ******* design new and improved test cases using pytest after understanding code completely
 ****** run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with grid-search to get plenty of candidates
        DEADLINE: <2021-02-01 Mon>

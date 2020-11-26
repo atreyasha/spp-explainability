@@ -29,13 +29,17 @@ Tasks
 
             **DEADLINE:** *\<2020-11-30 Mon\>*
 
-            1.  extract all arg parser chunks and place in dedicated
+            1.  find better location to place code from `util.py`
+
+            2.  make clean preprocessing script with GloVe vectors and
+                explicit name to differentiate from future dynamic
+                sub-word tokenization
+
+            3.  extract all arg parser chunks and place in dedicated
                 file
 
-            2.  make clean preprocessing script with GloVe vectors
-
-            3.  run code chunk by chunk and remove outdated torch code +
-                replace with clean workflows
+            4.  run code chunk by chunk and remove outdated torch code +
+                understand segments -\> file with \~700 sloc
 
                 1.  no need to declare variables with autograd
                     explicitly: see
@@ -51,10 +55,10 @@ Tasks
                     log_softmax has been deprecated. Change the call to
                     include dim=X as an argument
 
-            4.  find out whether use_rnn is passed by default and what
+            5.  find out whether use_rnn is passed by default and what
                 its purpose generally is
 
-            5.  replace start and end pad token proxies with real
+            6.  replace start and end pad token proxies with real
                 `[PAD]` tokens which should be ignored by the RNN
 
         2.  choose exact data set and set up workflow to download and
@@ -87,7 +91,7 @@ Tasks
 
             6.  revert back visualization, interpretation and testing
                 scripts into repository for refactoring -\> files are
-                currently under git backup
+                currently under local git backup
 
             7.  design new and improved test cases using pytest after
                 understanding code completely
