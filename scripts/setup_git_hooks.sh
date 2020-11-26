@@ -26,8 +26,8 @@ check_help() {
 # define function
 setup_git_hooks() {
   local input
-  for input in ./hooks/*.sh; do
-    cp "$input" "./.git/hooks/$(basename "${input%%.sh}")"
+  for input in ./hooks/*; do
+    cp "$input" "./.git/hooks/"
   done
 }
 
