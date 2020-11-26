@@ -8,6 +8,7 @@
 ***** Step-by-step
 ****** TODO major code refactoring for main model (ignore visualization and interpretation) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
        DEADLINE: <2020-11-30 Mon>
+******* make arg parser file, preprocessing clean script -> keep things simple for now and lay framework
 ******* use brute-force method of running code with newer libraries and fix errors on the fly -> replace outdated functions on the fly and make everything clean/modern -> migrate to soft-patterns-pp and clean from there
 ******* find out whether use_rnn is passed by default and what its purpose generally is -> need to understand all facets of code to master it
 ******* code works well with latest CUDA and torch, now through code chunk by chunk and execute it to test on data, understand everything and clean errors on the fly -> worry about performance in later steps -> for now focus on understanding everything
@@ -78,8 +79,8 @@
 ***** +Initial thesis document: *15.09.20*+
 ***** +Topic proposal draft: *06.11.20*+
 ***** +Topic proposal final: *15.11.20*+
-***** Topic registration: *01.02.20* 
-***** Manuscript submission: *18.03.20* 
+***** Topic registration: *01.02.21* 
+***** Manuscript submission: *18.03.21* 
 
 **** Manuscript notes
 ***** Text-related feedback

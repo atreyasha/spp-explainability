@@ -28,22 +28,25 @@ Tasks
 
             **DEADLINE:** *\<2020-11-30 Mon\>*
 
-            1.  use brute-force method of running code with newer
+            1.  make arg parser file, preprocessing clean script -\>
+                keep things simple for now and lay framework
+
+            2.  use brute-force method of running code with newer
                 libraries and fix errors on the fly -\> replace outdated
                 functions on the fly and make everything clean/modern
                 -\> migrate to soft-patterns-pp and clean from there
 
-            2.  find out whether use_rnn is passed by default and what
+            3.  find out whether use_rnn is passed by default and what
                 its purpose generally is -\> need to understand all
                 facets of code to master it
 
-            3.  code works well with latest CUDA and torch, now through
+            4.  code works well with latest CUDA and torch, now through
                 code chunk by chunk and execute it to test on data,
                 understand everything and clean errors on the fly -\>
                 worry about performance in later steps -\> for now focus
                 on understanding everything
 
-            4.  replace start and end pad token proxies with real
+            5.  replace start and end pad token proxies with real
                 `[PAD]` tokens which should be ignored by the RNN
 
                 1.  no need to declare variables with autograd
@@ -60,7 +63,7 @@ Tasks
                     log_softmax has been deprecated. Change the call to
                     include dim=X as an argument
 
-            5.  take note that patterns of length one are not allowed,
+            6.  take note that patterns of length one are not allowed,
                 ignore `visualize_efficiently.py` for now
 
         2.  choose exact data set and set up workflow to download and
@@ -222,9 +225,9 @@ Tasks
 
     3.  ~~Topic proposal final: **15.11.20**~~
 
-    4.  Topic registration: **01.02.20**
+    4.  Topic registration: **01.02.21**
 
-    5.  Manuscript submission: **18.03.20**
+    5.  Manuscript submission: **18.03.21**
 
 2.  Manuscript notes
 
