@@ -5,19 +5,19 @@
 ** Tasks
 *** Research
 **** Clean code and documentation
-***** Step-by-step
+***** Current
 ****** TODO major code refactoring for main model (ignore visualization, interpretation and testing) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
        DEADLINE: <2020-11-30 Mon>
 ******* find better location to place code from =util.py=
 ******* make clean preprocessing script with GloVe vectors and explicit name to differentiate from future dynamic sub-word tokenization
+******* replace start and end pad token proxies with real =[PAD]= tokens which should be ignored by the RNN 
 ******* extract all arg parser chunks and place in dedicated file
+******* find out whether use_rnn is passed by default and what its purpose generally is
 ******* run code chunk by chunk and remove outdated torch code + understand segments -> file with ~700 sloc 
 ******** no need to declare variables with autograd explicitly: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable
 ******** UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead
 ******** UserWarning: nn.functional.sigmoid is deprecated. Use torch.sigmoid instead
 ******** UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument
-******* find out whether use_rnn is passed by default and what its purpose generally is
-******* replace start and end pad token proxies with real =[PAD]= tokens which should be ignored by the RNN 
 ****** choose exact data set and set up workflow to download and pro-process it -> prefer to find a nice benchmark which can be used for extensive comparisons (like RASA NLU)
        DEADLINE: <2020-12-03 Thu>
 ****** work on changes to architecture
@@ -28,18 +28,20 @@
 ******* dynamic word embeddings and experimenting with more gracious self-loops and epsilon transitions -> perform this incrementally for comparison
 ******* modify final layer to a general additive layer with tree structure or soft logic where possible -> perform this incrementally for comparison
 ******* revert back visualization, interpretation and testing scripts into repository for refactoring -> files are currently under local git backup
+******* use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
 ******* design new and improved test cases using pytest after understanding code completely
 ****** run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with grid-search to get plenty of candidates
        DEADLINE: <2021-02-01 Mon>
 ****** with decent model performance, branch off to improve explainability with weighting of patterns -> do this and the previous task simultaneously
        DEADLINE: <2021-02-01 Mon>
 
-***** KIV
+***** Long-term
 ****** current slurm considerations
 ******* activate cuda-8.0 in sbatch scripts explicitly
 ******* use debug mode and low runtime for quick slurm runs
 ******* make list of all useful commands for slurm
 ****** update metadata in scripts later with new workflows, eg. with help scripts, comments describing functionality and readme descriptions for git hooks
+****** add pydocstrings to all functions for improved documentation
 ****** add MIT license when made public
 
 **** SoPa++
@@ -77,11 +79,11 @@
 
 *** Admin
 **** Timeline
-***** +Initial thesis document: *15.09.20*+
-***** +Topic proposal draft: *06.11.20*+
-***** +Topic proposal final: *15.11.20*+
-***** Topic registration: *01.02.21* 
-***** Manuscript submission: *18.03.21* 
+***** +Initial thesis document: *15.09.2020*+
+***** +Topic proposal draft: *06.11.2020*+
+***** +Topic proposal final: *15.11.2020*+
+***** Topic registration: *01.02.2021* 
+***** Manuscript submission: *18.03.2021* 
 
 **** Manuscript notes
 ***** Text-related feedback

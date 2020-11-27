@@ -20,7 +20,7 @@ Tasks
 
 1.  Clean code and documentation
 
-    1.  Step-by-step
+    1.  Current
 
         1.  **TODO** major code refactoring for main model
             (ignore visualization, interpretation and testing) with
@@ -35,10 +35,16 @@ Tasks
                 explicit name to differentiate from future dynamic
                 sub-word tokenization
 
-            3.  extract all arg parser chunks and place in dedicated
+            3.  replace start and end pad token proxies with real
+                `[PAD]` tokens which should be ignored by the RNN
+
+            4.  extract all arg parser chunks and place in dedicated
                 file
 
-            4.  run code chunk by chunk and remove outdated torch code +
+            5.  find out whether use_rnn is passed by default and what
+                its purpose generally is
+
+            6.  run code chunk by chunk and remove outdated torch code +
                 understand segments -\> file with \~700 sloc
 
                 1.  no need to declare variables with autograd
@@ -54,12 +60,6 @@ Tasks
                 4.  UserWarning: Implicit dimension choice for
                     log_softmax has been deprecated. Change the call to
                     include dim=X as an argument
-
-            5.  find out whether use_rnn is passed by default and what
-                its purpose generally is
-
-            6.  replace start and end pad token proxies with real
-                `[PAD]` tokens which should be ignored by the RNN
 
         2.  choose exact data set and set up workflow to download and
             pro-process it -\> prefer to find a nice benchmark which can
@@ -93,7 +93,11 @@ Tasks
                 scripts into repository for refactoring -\> files are
                 currently under local git backup
 
-            7.  design new and improved test cases using pytest after
+            7.  use `renv` for managing and shipping R dependencies -\>
+                keep just `renv.lock` for easier shipping and ignore
+                other files
+
+            8.  design new and improved test cases using pytest after
                 understanding code completely
 
         4.  run SoPa++ for multiple runs to survey performance -\> run
@@ -108,7 +112,7 @@ Tasks
 
             **DEADLINE:** *\<2021-02-01 Mon\>*
 
-    2.  KIV
+    2.  Long-term
 
         1.  current slurm considerations
 
@@ -122,7 +126,9 @@ Tasks
             with help scripts, comments describing functionality and
             readme descriptions for git hooks
 
-        3.  add MIT license when made public
+        3.  add pydocstrings to all functions for improved documentation
+
+        4.  add MIT license when made public
 
 2.  SoPa++
 
@@ -219,15 +225,15 @@ Tasks
 
 1.  Timeline
 
-    1.  ~~Initial thesis document: **15.09.20**~~
+    1.  ~~Initial thesis document: **15.09.2020**~~
 
-    2.  ~~Topic proposal draft: **06.11.20**~~
+    2.  ~~Topic proposal draft: **06.11.2020**~~
 
-    3.  ~~Topic proposal final: **15.11.20**~~
+    3.  ~~Topic proposal final: **15.11.2020**~~
 
-    4.  Topic registration: **01.02.21**
+    4.  Topic registration: **01.02.2021**
 
-    5.  Manuscript submission: **18.03.21**
+    5.  Manuscript submission: **18.03.2021**
 
 2.  Manuscript notes
 
