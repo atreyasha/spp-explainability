@@ -1,67 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import List, Iterable, Tuple, Union
-from utils import nub
-from itertools import chain, islice
+from typing import List, Tuple
+from itertools import islice
+from .utils.data_utils import (START_TOKEN_IDX, END_TOKEN_IDX, START_TOKEN,
+                               END_TOKEN, Vocab, is_printable, pad)
 import numpy as np
-import string
-
-# define global variables
-PRINTABLE = set(string.printable)
-UNK_TOKEN = "*UNK*"
-START_TOKEN = "*START*"
-END_TOKEN = "*END*"
-UNK_IDX = 0
-START_TOKEN_IDX = 1
-END_TOKEN_IDX = 2
-
-
-def is_printable(word: str) -> bool:
-    return all(c in PRINTABLE for c in word)
-
-
-class Vocab:
-    def __init__(self,
-                 names: Iterable,
-                 default: str = UNK_TOKEN,
-                 start: int = START_TOKEN,
-                 end: int = END_TOKEN) -> None:
-        self.default = default
-        self.names = list(nub(chain([default, start, end], names)))
-        self.index = {name: i for i, name in enumerate(self.names)}
-
-    def __getitem__(self, index: int) -> str:
-        return self.names[index] if 0 < index < len(
-            self.names) else self.default
-
-    def __call__(self, name: str) -> int:
-        return self.index.get(name, UNK_IDX)
-
-    def __contains__(self, item: str) -> bool:
-        return item in self.index
-
-    def __len__(self) -> int:
-        return len(self.names)
-
-    def __or__(self, other: 'Vocab') -> 'Vocab':
-        return Vocab(self.names + other.names)
-
-    def numberize(self, doc: List[str]) -> List[int]:
-        return [self(token) for token in doc]
-
-    def denumberize(self, doc: List[int]) -> List[str]:
-        return [self[idx] for idx in doc]
-
-    @staticmethod
-    def from_docs(docs: List[List[str]],
-                  default: str = UNK_TOKEN,
-                  start: str = START_TOKEN,
-                  end: str = END_TOKEN) -> 'Vocab':
-        return Vocab((i for doc in docs for i in doc),
-                     default=default,
-                     start=start,
-                     end=end)
 
 
 def read_embeddings(filename: str,
@@ -104,7 +48,7 @@ def check_dim_and_header(filename: str) -> Tuple[int, bool]:
 def read_docs(filename: str,
               vocab: Vocab,
               num_padding_tokens: int = 1) -> Tuple[List[int], List[str]]:
-    with open(filename, encoding='utf-8') as input_file:
+    with open(filename, encoding='ISO-8859-1') as input_file:
         docs = [line.rstrip().split() for line in input_file]
     return ([
         pad(vocab.numberize(doc),
@@ -122,15 +66,3 @@ def read_docs(filename: str,
 def read_labels(filename: str) -> List[int]:
     with open(filename) as input_file:
         return [int(line.rstrip()) for line in input_file]
-
-
-def vocab_from_text(filename: str) -> Vocab:
-    with open(filename, encoding='utf-8') as input_file:
-        return Vocab.from_docs(line.rstrip().split() for line in input_file)
-
-
-def pad(doc: List[Union[int, str]],
-        num_padding_tokens: int = 1,
-        START: Union[int, str] = START_TOKEN_IDX,
-        END: Union[int, str] = END_TOKEN_IDX) -> List[Union[int, str]]:
-    return ([START] * num_padding_tokens) + doc + ([END] * num_padding_tokens)

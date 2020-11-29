@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from operator import attrgetter
 import argparse
+
+
+class SortingHelpFormatter(argparse.HelpFormatter):
+    def add_arguments(self, actions):
+        actions = sorted(actions, key=attrgetter('option_strings'))
+        super(SortingHelpFormatter, self).add_arguments(actions)
 
 
 class Metavar_Circum_Symbols(argparse.HelpFormatter):
@@ -38,7 +45,7 @@ class Metavar_Indenter(argparse.HelpFormatter):
         """
         # determine the required width and the entry label
         help_position = min(self._action_max_length + 2,
-                            self._max_help_position)
+                            self._max_help_position + 3)
         help_width = max(self._width - help_position, 11)
         action_width = help_position - self._current_indent - 2
         action_header = self._format_action_invocation(action)
@@ -103,7 +110,8 @@ class Metavar_Indenter(argparse.HelpFormatter):
 
 
 class argparse_formatter(argparse.ArgumentDefaultsHelpFormatter,
-                          Metavar_Circum_Symbols, Metavar_Indenter):
+                         Metavar_Circum_Symbols, Metavar_Indenter,
+                         SortingHelpFormatter):
     """
     Class to combine argument parsers in order to display meta-variables
     and defaults for arguments
