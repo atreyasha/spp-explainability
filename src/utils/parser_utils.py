@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from typing import Iterable
 from operator import attrgetter
 import argparse
 
 
-class SortingHelpFormatter(argparse.HelpFormatter):
-    def add_arguments(self, actions):
+class Sorting_Help_Formatter(argparse.HelpFormatter):
+    # source: https://stackoverflow.com/a/12269143
+    def add_arguments(self, actions: Iterable[argparse.Action]) -> None:
         actions = sorted(actions, key=attrgetter('option_strings'))
-        super(SortingHelpFormatter, self).add_arguments(actions)
+        super(Sorting_Help_Formatter, self).add_arguments(actions)
 
 
 class Metavar_Circum_Symbols(argparse.HelpFormatter):
@@ -19,13 +21,15 @@ class Metavar_Circum_Symbols(argparse.HelpFormatter):
     Only the name of this class is considered a public API. All the methods
     provided by the class are considered an implementation detail.
     """
-    def _get_default_metavar_for_optional(self, action):
+    def _get_default_metavar_for_optional(self,
+                                          action: argparse.Action) -> str:
         """
         Function to return option metavariable type with circum-symbols
         """
         return "<" + action.type.__name__ + ">"
 
-    def _get_default_metavar_for_positional(self, action):
+    def _get_default_metavar_for_positional(self,
+                                            action: argparse.Action) -> str:
         """
         Function to return positional metavariable type with circum-symbols
         """
@@ -39,7 +43,7 @@ class Metavar_Indenter(argparse.HelpFormatter):
     Only the name of this class is considered a public API. All the methods
     provided by the class are considered an implementation detail.
     """
-    def _format_action(self, action):
+    def _format_action(self, action: argparse.Action) -> str:
         """
         Function to define how actions are printed in help message
         """
@@ -95,7 +99,7 @@ class Metavar_Indenter(argparse.HelpFormatter):
         # return a single string
         return self._join_parts(parts)
 
-    def _format_action_invocation(self, action):
+    def _format_action_invocation(self, action: argparse.Action) -> str:
         """
         Lower function to define how actions are printed in help message
         """
@@ -111,7 +115,7 @@ class Metavar_Indenter(argparse.HelpFormatter):
 
 class argparse_formatter(argparse.ArgumentDefaultsHelpFormatter,
                          Metavar_Circum_Symbols, Metavar_Indenter,
-                         SortingHelpFormatter):
+                         Sorting_Help_Formatter):
     """
     Class to combine argument parsers in order to display meta-variables
     and defaults for arguments
