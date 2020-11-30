@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-from .soft_patterns import (SHARED_SL_PARAM_PER_STATE_PER_PATTERN,
-                            SHARED_SL_SINGLE_PARAM)
+from .soft_patterns_pp import (SHARED_SL_PARAM_PER_STATE_PER_PATTERN,
+                               SHARED_SL_SINGLE_PARAM)
 
 
-def soft_patterns_arg_parser() -> argparse.Namespace:
+def soft_patterns_pp_arg_parser() -> argparse.Namespace:
     parser = argparse.ArgumentParser(add_help=False)
     # add sopa group
     sopa = parser.add_argument_group('optional sopa-architecture arguments')

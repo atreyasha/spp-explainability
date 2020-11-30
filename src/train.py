@@ -16,9 +16,9 @@ from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 enable_gradient_clipping,
                                 LogSpaceMaxTimesSemiring, MaxPlusSemiring,
                                 fixed_var)
-from .soft_patterns import SoftPatternClassifier
+from .soft_patterns_pp import SoftPatternClassifier
 from .preprocess_glove import read_labels, read_docs, read_embeddings
-from .arg_parser import soft_patterns_arg_parser, training_arg_parser
+from .arg_parser import soft_patterns_pp_arg_parser, training_arg_parser
 import numpy as np
 import argparse
 import torch
@@ -361,7 +361,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse_formatter,
                                      parents=[
                                          training_arg_parser(),
-                                         soft_patterns_arg_parser()
+                                         soft_patterns_pp_arg_parser()
                                      ])
     args = parser.parse_args()
     main(args)
