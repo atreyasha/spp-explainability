@@ -24,12 +24,11 @@ check_help() {
 }
 
 # download and prepare small NLU intent data sets
-nlu_intent_small() {
-  local directory="./data/nlu_intent_small"
+facebook_multi_task_nlu() {
+  local directory="./data/facebook_multi_task_nlu/multilingual_task_oriented_dialog_slotfilling"
   mkdir -p "$directory"
-  wget -N -P "$directory" "https://raw.githubusercontent.com/sebischair/NLU-Evaluation-Corpora/master/AskUbuntuCorpus.json"
-  wget -N -P "$directory" "https://raw.githubusercontent.com/sebischair/NLU-Evaluation-Corpora/master/ChatbotCorpus.json"
-  wget -N -P "$directory" "https://raw.githubusercontent.com/sebischair/NLU-Evaluation-Corpora/master/WebApplicationsCorpus.json"
+  wget -N -P "$directory" "https://download.pytorch.org/data/multilingual_task_oriented_dialog_slotfilling.zip"
+  unzip "$directory/multilingual_task_oriented_dialog_slotfilling.zip" -d "$directory"
 }
 
 glove_6B() {
@@ -41,5 +40,5 @@ glove_6B() {
 
 # execute all functions
 check_help "$@"
-nlu_intent_small
+facebook_multi_task_nlu
 glove_6B

@@ -27,25 +27,16 @@ Tasks
             conversion to recent PyTorch (eg. 1.\*) and CUDA versions
             (eg. 10.\*)
 
-            **DEADLINE:** *\<2020-11-30 Mon\>*
+            **DEADLINE:** *\<2020-12-03 Thu\>*
 
-            1.  find better location to place code from `util.py`
+            1.  why are `*START*` and `*END*` tokens repeated before and
+                after, and why is `*UNK*` used for padding when a
+                separate `*PAD*` token could be used?
 
-            2.  make clean preprocessing script with GloVe vectors and
-                explicit name to differentiate from future dynamic
-                sub-word tokenization
+                1.  review and opine whether this needs to be changed
 
-            3.  replace start and end pad token proxies with real
-                `[PAD]` tokens which should be ignored by the RNN
-
-            4.  extract all arg parser chunks and place in dedicated
-                file
-
-            5.  find out whether use_rnn is passed by default and what
-                its purpose generally is
-
-            6.  run code chunk by chunk and remove outdated torch code +
-                understand segments -\> file with \~700 sloc
+            2.  run code chunk by chunk and replace outdated torch
+                code + understand segments
 
                 1.  no need to declare variables with autograd
                     explicitly: see
@@ -54,51 +45,91 @@ Tasks
                 2.  UserWarning: size_average and reduce args will be
                     deprecated, please use reduction=\'sum\' instead
 
-                3.  UserWarning: nn.functional.sigmoid is deprecated.
-                    Use torch.sigmoid instead
-
-                4.  UserWarning: Implicit dimension choice for
+                3.  UserWarning: Implicit dimension choice for
                     log_softmax has been deprecated. Change the call to
                     include dim=X as an argument
 
-        2.  choose exact data set and set up workflow to download and
-            pro-process it -\> prefer to find a nice benchmark which can
-            be used for extensive comparisons (like RASA NLU)
+        2.  make workflow to download Facebook Multilingual Task
+            Oriented Dataset and pre-process to sopa-ready format
 
             **DEADLINE:** *\<2020-12-03 Thu\>*
 
-        3.  work on changes to architecture
+        3.  work on major changes to architecture
 
             **DEADLINE:** *\<2020-12-24 Thu\>*
 
-            1.  check if tokenizer could be replaced from Transformers
-                library for upstream consistency + add nltk if necessary
-                for punkt tokenization before sentencepiece
+            1.  initial issues
 
-            2.  incoporate useful SOPs such as namespace saving and
-                printing
+                1.  rename unsemantic functions such as `read_docs` to
+                    `read_doc(ument)`
 
-            3.  improve code quality with unique model logging and
-                tensorboard workflows
+                2.  look into ISO hard encoding when reading files -\>
+                    perhaps this can be modified
 
-            4.  dynamic word embeddings and experimenting with more
-                gracious self-loops and epsilon transitions -\> perform
-                this incrementally for comparison
+                3.  replace current status bars with tqdm and
+                    torch-infused bar which could help to understand
+                    more parameters
 
-            5.  modify final layer to a general additive layer with tree
-                structure or soft logic where possible -\> perform this
-                incrementally for comparison
+                4.  make separate script to pre-processing raw data into
+                    readable format for sopa++ -\> consider renaming
+                    `preprocess_glove.py` to more appropriate name later
+                    -\> add nltk where needed for pre-processing
 
-            6.  revert back visualization, interpretation and testing
-                scripts into repository for refactoring -\> files are
-                currently under local git backup
+                5.  change argument names later on as this might break
+                    things in actual script for testing
 
-            7.  use `renv` for managing and shipping R dependencies -\>
-                keep just `renv.lock` for easier shipping and ignore
-                other files
+                6.  improve code quality with unique model logging and
+                    tensorboard workflows
 
-            8.  design new and improved test cases using pytest after
-                understanding code completely
+            2.  core model changes
+
+                1.  use separate tokenizers such as nltk or
+                    sentencepiece tokenizer from Transformers library
+
+                2.  dynamic OR static word/sub-word embeddings
+
+                    1.  unknown, start and end GloVe vector should be
+                        learned, not set to zero
+
+                    2.  perhaps there is merit in keeping input vectors
+                        fixed to prevent overfitting in small subset of
+                        them
+
+                    3.  perhaps modify such that the `*UNK*` token can
+                        be used for learning over the dataset, while
+                        `*START*`, `*END*` and `*PAD*` tokens stay as
+                        zeroes to complement overall model
+
+                3.  experiment more gracious self-loops and epsilon
+                    transitions for improved generalization
+
+                4.  modify final layer to a general additive layer with
+                    tree structure or soft logic where possible -\>
+                    perform this incrementally for comparison
+
+            3.  fine-tuning
+
+                1.  possible to make separate argparse Namespace which
+                    can be passed to main, this could help with
+                    portability
+
+                2.  revert/refactor soft_patterns_rnn, visualization,
+                    interpretation and testing scripts from git backlog
+                    to repository
+
+                3.  use `renv` for managing and shipping R dependencies
+                    -\> keep just `renv.lock` for easier shipping and
+                    ignore other files
+
+                4.  design new and improved test cases using pytest
+                    after understanding code completely
+
+                5.  add proper type checking later to flymake, use data
+                    processor class from torch later on
+
+                6.  extend workflow to other RASA NLU data sets given
+                    time and resources -\> would require new
+                    pre-processing scripts
 
         4.  run SoPa++ for multiple runs to survey performance -\> run
             on all variants and data-set portions with grid-search to
@@ -114,21 +145,15 @@ Tasks
 
     2.  Long-term
 
-        1.  current slurm considerations
-
-            1.  activate cuda-8.0 in sbatch scripts explicitly
-
-            2.  use debug mode and low runtime for quick slurm runs
-
-            3.  make list of all useful commands for slurm
-
-        2.  update metadata in scripts later with new workflows, eg.
+        1.  update metadata in scripts later with new workflows, eg.
             with help scripts, comments describing functionality and
             readme descriptions for git hooks
 
-        3.  add pydocstrings to all functions for improved documentation
+        2.  add pydocstrings to all functions for improved documentation
 
-        4.  add MIT license when made public
+        3.  add MIT license when made public
+
+        4.  make list of all useful commands for slurm
 
 2.  SoPa++
 
@@ -289,6 +314,48 @@ Tasks
 
 Completed
 ---------
+
+**DONE** fixed: UserWarning: nn.functional.sigmoid is
+deprecated. Use torch.sigmoid instead
+
+**CLOSED:** *\[2020-11-30 Mon 18:16\]*
+
+**DONE** sort CLI arguments into proper groups, sort them
+alphabetically for easier reading
+
+**CLOSED:** *\[2020-11-30 Mon 18:07\]*
+
+**DONE** add types to `parser_utils.py` script internals
+
+**CLOSED:** *\[2020-11-30 Mon 18:07\]*
+
+**DONE** separate extras in `soft_patterns.py` into
+`utils.py` -\> test out how batch is utilized -\> fix batch issue, then
+move on to other steps -\> batch mini-vocab appears to be a hack to
+create a meta-vocabulary for indices -\> try to push with this again
+another time -\> consider reverting Vocab index/token defaults in case
+this was wrong
+
+**CLOSED:** *\[2020-11-30 Mon 18:07\]*
+
+**DONE** appears to be major bug in Batch class, try to
+verify if it is indeed a bug and how it can be fixed
+
+**CLOSED:** *\[2020-11-30 Mon 18:07\]*
+
+**DONE** extract all arg parser chunks and place in dedicated
+file
+
+**CLOSED:** *\[2020-11-30 Mon 18:07\]*
+
+**DONE** clean preprocessing script for GloVe vectors and
+understand inner mechanisms
+
+**CLOSED:** *\[2020-11-28 Sat 17:02\]*
+
+**DONE** find better location to place code from `util.py`
+
+**CLOSED:** *\[2020-11-27 Fri 19:38\]*
 
 **DONE** migrate to soft-patterns-pp and clean from there
 
