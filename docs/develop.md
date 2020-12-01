@@ -22,37 +22,37 @@ Tasks
 
     1.  Current
 
-        1.  **TODO** major code refactoring for main model
+        1.  **TODO** make workflow to download Facebook
+            Multilingual Task Oriented Dataset and pre-process to
+            sopa-ready format -\> text data and labels with dictionary
+            mapping as to what the labels mean
+
+            **DEADLINE:** *\<2020-12-03 Thu\>*
+
+        2.  **TODO** major code refactoring for main model
             (ignore visualization, interpretation and testing) with
             conversion to recent PyTorch (eg. 1.\*) and CUDA versions
             (eg. 10.\*)
 
             **DEADLINE:** *\<2020-12-03 Thu\>*
 
-            1.  why are `*START*` and `*END*` tokens repeated before and
-                after, and why is `*UNK*` used for padding when a
-                separate `*PAD*` token could be used?
+            1.  understand code chunk by chunk in `soft_patterns.py` and
+                `train.py` and replace outdated torch code
 
-                1.  review and opine whether this needs to be changed
+                1.  execute code on low batch level with preset arg
+                    namespace -\> use this to understand batch level
+                    processes and understand limitations
 
-            2.  run code chunk by chunk and replace outdated torch
-                code + understand segments
-
-                1.  no need to declare variables with autograd
+                2.  no need to declare variables with autograd
                     explicitly: see
                     <https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable>
 
-                2.  UserWarning: size_average and reduce args will be
+                3.  UserWarning: size_average and reduce args will be
                     deprecated, please use reduction=\'sum\' instead
 
-                3.  UserWarning: Implicit dimension choice for
+                4.  UserWarning: Implicit dimension choice for
                     log_softmax has been deprecated. Change the call to
                     include dim=X as an argument
-
-        2.  make workflow to download Facebook Multilingual Task
-            Oriented Dataset and pre-process to sopa-ready format
-
-            **DEADLINE:** *\<2020-12-03 Thu\>*
 
         3.  work on major changes to architecture
 
@@ -60,25 +60,34 @@ Tasks
 
             1.  initial issues
 
-                1.  rename unsemantic functions such as `read_docs` to
+                1.  why are `*START*` and `*END*` tokens repeated before
+                    and after, and why is `*UNK*` used for padding when
+                    a separate `*PAD*` token could be used?
+
+                    1.  review and opine whether this needs to be
+                        changed -\> perhaps there is a reason but this
+                        needs to be taken into account in the
+                        interpretation/visualization phase
+
+                2.  rename unsemantic functions such as `read_docs` to
                     `read_doc(ument)`
 
-                2.  look into ISO hard encoding when reading files -\>
+                3.  look into ISO hard encoding when reading files -\>
                     perhaps this can be modified
 
-                3.  replace current status bars with tqdm and
+                4.  replace current status bars with tqdm and
                     torch-infused bar which could help to understand
                     more parameters
 
-                4.  make separate script to pre-processing raw data into
+                5.  make separate script to pre-processing raw data into
                     readable format for sopa++ -\> consider renaming
                     `preprocess_glove.py` to more appropriate name later
                     -\> add nltk where needed for pre-processing
 
-                5.  change argument names later on as this might break
+                6.  change argument names later on as this might break
                     things in actual script for testing
 
-                6.  improve code quality with unique model logging and
+                7.  improve code quality with unique model logging and
                     tensorboard workflows
 
             2.  core model changes

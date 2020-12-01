@@ -10,14 +10,14 @@ from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tensorboardX import SummaryWriter
 from .utils.parser_utils import argparse_formatter
-from .utils.data_utils import vocab_from_text
+from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
+                               read_embeddings)
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 to_cuda, Batch, ProbSemiring,
                                 enable_gradient_clipping,
                                 LogSpaceMaxTimesSemiring, MaxPlusSemiring,
                                 fixed_var)
 from .soft_patterns_pp import SoftPatternClassifier
-from .preprocess_glove import read_labels, read_docs, read_embeddings
 from .arg_parser import soft_patterns_pp_arg_parser, training_arg_parser
 import numpy as np
 import argparse
@@ -358,10 +358,9 @@ def read_patterns(ifile, pattern_specs):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(formatter_class=argparse_formatter,
-                                     parents=[
-                                         training_arg_parser(),
-                                         soft_patterns_pp_arg_parser()
-                                     ])
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse_formatter,
+        parents=[training_arg_parser(),
+                 soft_patterns_pp_arg_parser()])
     args = parser.parse_args()
     main(args)

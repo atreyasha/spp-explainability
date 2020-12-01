@@ -6,19 +6,21 @@
 *** Research
 **** Clean code and documentation
 ***** Current
+****** TODO make workflow to download Facebook Multilingual Task Oriented Dataset and pre-process to sopa-ready format -> text data and labels with dictionary mapping as to what the labels mean
+       DEADLINE: <2020-12-03 Thu>
 ****** TODO major code refactoring for main model (ignore visualization, interpretation and testing) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
        DEADLINE: <2020-12-03 Thu>
-******* why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
-******** review and opine whether this needs to be changed
-******* run code chunk by chunk and replace outdated torch code + understand segments 
+******* understand code chunk by chunk in =soft_patterns.py= and =train.py= and replace outdated torch code
+******** execute code on low batch level with preset arg namespace -> use this to understand batch level processes and understand limitations
 ******** no need to declare variables with autograd explicitly: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable
 ******** UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead
 ******** UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument
-****** make workflow to download Facebook Multilingual Task Oriented Dataset and pre-process to sopa-ready format
-       DEADLINE: <2020-12-03 Thu>
+
 ****** work on major changes to architecture
        DEADLINE: <2020-12-24 Thu>
 ******* initial issues
+******** why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
+********* review and opine whether this needs to be changed -> perhaps there is a reason but this needs to be taken into account in the interpretation/visualization phase
 ******** rename unsemantic functions such as =read_docs= to =read_doc(ument)=
 ******** look into ISO hard encoding when reading files -> perhaps this can be modified
 ******** replace current status bars with tqdm and torch-infused bar which could help to understand more parameters
