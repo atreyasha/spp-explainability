@@ -19,23 +19,25 @@
 ****** work on major changes to architecture
        DEADLINE: <2020-12-24 Thu>
 ******* initial issues
-******** why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
-********* review and opine whether this needs to be changed -> perhaps there is a reason but this needs to be taken into account in the interpretation/visualization phase
+******** replace input arg namespace with explicit arguments
 ******** rename unsemantic functions such as =read_docs= to =read_doc(ument)=
 ******** look into ISO hard encoding when reading files -> perhaps this can be modified
 ******** replace current status bars with tqdm and torch-infused bar which could help to understand more parameters
 ******** make separate script to pre-processing raw data into readable format for sopa++ -> consider renaming =preprocess_glove.py= to more appropriate name later -> add nltk where needed for pre-processing
 ******** change argument names later on as this might break things in actual script for testing
-******** improve code quality with unique model logging and tensorboard workflows        
+******** improve code quality with unique model logging and tensorboard workflows 
 ******* core model changes
 ******** use separate tokenizers such as nltk or sentencepiece tokenizer from Transformers library 
+******** why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
+********* review and opine whether this needs to be changed -> perhaps there is a reason but this needs to be taken into account in the interpretation/visualization phase
 ******** dynamic OR static word/sub-word embeddings
 ********* unknown, start and end GloVe vector should be learned, not set to zero
-********* perhaps there is merit in keeping input vectors fixed to prevent overfitting in small subset of them
-********* perhaps modify such that the =*UNK*= token can be used for learning over the dataset, while =*START*=, =*END*= and =*PAD*= tokens stay as zeroes to complement overall model
+********* OR perhaps there is merit in keeping input vectors fixed to prevent overfitting in small subset of them
+********* OR perhaps modify such that the =*UNK*= token can be used for learning over the dataset, while =*START*=, =*END*= and =*PAD*= tokens stay as zeroes to complement overall model
 ******** experiment more gracious self-loops and epsilon transitions for improved generalization 
 ******** modify final layer to a general additive layer with tree structure or soft logic where possible -> perform this incrementally for comparison
 ******* fine-tuning
+******** fix up python logging verbosity and pass tqdm directly to logger instead of purely to stdout -> integrate this well with debug argument as per legacy sopa: see https://github.com/tqdm/tqdm/issues/313
 ******** possible to make separate argparse Namespace which can be passed to main, this could help with portability
 ******** revert/refactor soft_patterns_rnn, visualization, interpretation and testing scripts from git backlog to repository
 ******** use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files

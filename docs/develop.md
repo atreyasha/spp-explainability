@@ -60,14 +60,7 @@ Tasks
 
             1.  initial issues
 
-                1.  why are `*START*` and `*END*` tokens repeated before
-                    and after, and why is `*UNK*` used for padding when
-                    a separate `*PAD*` token could be used?
-
-                    1.  review and opine whether this needs to be
-                        changed -\> perhaps there is a reason but this
-                        needs to be taken into account in the
-                        interpretation/visualization phase
+                1.  replace input arg namespace with explicit arguments
 
                 2.  rename unsemantic functions such as `read_docs` to
                     `read_doc(ument)`
@@ -95,48 +88,63 @@ Tasks
                 1.  use separate tokenizers such as nltk or
                     sentencepiece tokenizer from Transformers library
 
-                2.  dynamic OR static word/sub-word embeddings
+                2.  why are `*START*` and `*END*` tokens repeated before
+                    and after, and why is `*UNK*` used for padding when
+                    a separate `*PAD*` token could be used?
+
+                    1.  review and opine whether this needs to be
+                        changed -\> perhaps there is a reason but this
+                        needs to be taken into account in the
+                        interpretation/visualization phase
+
+                3.  dynamic OR static word/sub-word embeddings
 
                     1.  unknown, start and end GloVe vector should be
                         learned, not set to zero
 
-                    2.  perhaps there is merit in keeping input vectors
-                        fixed to prevent overfitting in small subset of
-                        them
+                    2.  OR perhaps there is merit in keeping input
+                        vectors fixed to prevent overfitting in small
+                        subset of them
 
-                    3.  perhaps modify such that the `*UNK*` token can
-                        be used for learning over the dataset, while
+                    3.  OR perhaps modify such that the `*UNK*` token
+                        can be used for learning over the dataset, while
                         `*START*`, `*END*` and `*PAD*` tokens stay as
                         zeroes to complement overall model
 
-                3.  experiment more gracious self-loops and epsilon
+                4.  experiment more gracious self-loops and epsilon
                     transitions for improved generalization
 
-                4.  modify final layer to a general additive layer with
+                5.  modify final layer to a general additive layer with
                     tree structure or soft logic where possible -\>
                     perform this incrementally for comparison
 
             3.  fine-tuning
 
-                1.  possible to make separate argparse Namespace which
+                1.  fix up python logging verbosity and pass tqdm
+                    directly to logger instead of purely to stdout -\>
+                    integrate this well with debug argument as per
+                    legacy sopa: see
+                    <https://github.com/tqdm/tqdm/issues/313>
+
+                2.  possible to make separate argparse Namespace which
                     can be passed to main, this could help with
                     portability
 
-                2.  revert/refactor soft_patterns_rnn, visualization,
+                3.  revert/refactor soft_patterns_rnn, visualization,
                     interpretation and testing scripts from git backlog
                     to repository
 
-                3.  use `renv` for managing and shipping R dependencies
+                4.  use `renv` for managing and shipping R dependencies
                     -\> keep just `renv.lock` for easier shipping and
                     ignore other files
 
-                4.  design new and improved test cases using pytest
+                5.  design new and improved test cases using pytest
                     after understanding code completely
 
-                5.  add proper type checking later to flymake, use data
+                6.  add proper type checking later to flymake, use data
                     processor class from torch later on
 
-                6.  extend workflow to other RASA NLU data sets given
+                7.  extend workflow to other RASA NLU data sets given
                     time and resources -\> would require new
                     pre-processing scripts
 

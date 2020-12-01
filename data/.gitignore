@@ -4,3 +4,4 @@
 *.md
 *.tsv
 *.conllu
+facebook_multitask_nlu/clean/*

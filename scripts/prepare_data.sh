@@ -25,7 +25,7 @@ check_help() {
 
 # download and prepare small NLU intent data sets
 facebook_multi_task_nlu() {
-  local directory="./data/facebook_multi_task_nlu/multilingual_task_oriented_dialog_slotfilling"
+  local directory="./data/facebook_multitask_nlu/raw"
   mkdir -p "$directory"
   wget -N -P "$directory" "https://download.pytorch.org/data/multilingual_task_oriented_dialog_slotfilling.zip"
   unzip "$directory/multilingual_task_oriented_dialog_slotfilling.zip" -d "$directory"

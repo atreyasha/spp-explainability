@@ -136,3 +136,28 @@ def training_arg_parser() -> argparse.Namespace:
                        action='store_true')
     train.add_argument("--gpu", help="Use GPU", action='store_true')
     return parser
+
+
+def preprocess_arg_parser() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(add_help=False)
+    # add preprocess group
+    preprocess = parser.add_argument_group('optional preprocessing arguments')
+    preprocess.add_argument(
+        "--data-directory",
+        help="Root directory containing facebook multi-task NLU data",
+        default="./data/facebook_multitask_nlu/",
+        type=str)
+    return parser
+
+
+def logging_arg_parser() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(add_help=False)
+    # add preprocess group
+    logging = parser.add_argument_group('optional logging arguments')
+    logging.add_argument(
+        "--logging-level",
+        help="Set logging level",
+        default="info",
+        choices=["debug", "info", "warning", "error", "critical"],
+        type=str)
+    return parser
