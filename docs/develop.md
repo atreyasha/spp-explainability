@@ -22,14 +22,7 @@ Tasks
 
     1.  Current
 
-        1.  **TODO** make workflow to download Facebook
-            Multilingual Task Oriented Dataset and pre-process to
-            sopa-ready format -\> text data and labels with dictionary
-            mapping as to what the labels mean
-
-            **DEADLINE:** *\<2020-12-03 Thu\>*
-
-        2.  **TODO** major code refactoring for main model
+        1.  **TODO** major code refactoring for main model
             (ignore visualization, interpretation and testing) with
             conversion to recent PyTorch (eg. 1.\*) and CUDA versions
             (eg. 10.\*)
@@ -54,7 +47,7 @@ Tasks
                     log_softmax has been deprecated. Change the call to
                     include dim=X as an argument
 
-        3.  work on major changes to architecture
+        2.  work on major changes to architecture
 
             **DEADLINE:** *\<2020-12-24 Thu\>*
 
@@ -148,13 +141,13 @@ Tasks
                     time and resources -\> would require new
                     pre-processing scripts
 
-        4.  run SoPa++ for multiple runs to survey performance -\> run
+        3.  run SoPa++ for multiple runs to survey performance -\> run
             on all variants and data-set portions with grid-search to
             get plenty of candidates
 
             **DEADLINE:** *\<2021-02-01 Mon\>*
 
-        5.  with decent model performance, branch off to improve
+        4.  with decent model performance, branch off to improve
             explainability with weighting of patterns -\> do this and
             the previous task simultaneously
 
@@ -331,6 +324,13 @@ Tasks
 
 Completed
 ---------
+
+**DONE** make workflow to download Facebook Multilingual Task
+Oriented Dataset and pre-process to sopa-ready format -\> text data and
+labels with dictionary mapping as to what the labels mean
+
+**CLOSED:** *\[2020-12-01 Tue 20:29\]* **DEADLINE:** *\<2020-12-03
+Thu\>*
 
 **DONE** fixed: UserWarning: nn.functional.sigmoid is
 deprecated. Use torch.sigmoid instead

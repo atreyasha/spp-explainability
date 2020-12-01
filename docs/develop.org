@@ -6,8 +6,6 @@
 *** Research
 **** Clean code and documentation
 ***** Current
-****** TODO make workflow to download Facebook Multilingual Task Oriented Dataset and pre-process to sopa-ready format -> text data and labels with dictionary mapping as to what the labels mean
-       DEADLINE: <2020-12-03 Thu>
 ****** TODO major code refactoring for main model (ignore visualization, interpretation and testing) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
        DEADLINE: <2020-12-03 Thu>
 ******* understand code chunk by chunk in =soft_patterns.py= and =train.py= and replace outdated torch code
@@ -15,7 +13,6 @@
 ******** no need to declare variables with autograd explicitly: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable
 ******** UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead
 ******** UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument
-
 ****** work on major changes to architecture
        DEADLINE: <2020-12-24 Thu>
 ******* initial issues
@@ -116,6 +113,8 @@
 ****** extension/recommendations -> transducer for seq2seq tasks
        
 ** Completed
+***** DONE make workflow to download Facebook Multilingual Task Oriented Dataset and pre-process to sopa-ready format -> text data and labels with dictionary mapping as to what the labels mean
+      CLOSED: [2020-12-01 Tue 20:29] DEADLINE: <2020-12-03 Thu>
 ***** DONE fixed: UserWarning: nn.functional.sigmoid is deprecated. Use torch.sigmoid instead
       CLOSED: [2020-11-30 Mon 18:16]
 ***** DONE sort CLI arguments into proper groups, sort them alphabetically for easier reading

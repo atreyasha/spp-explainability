@@ -105,6 +105,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
     logger = provide_logger(args.logging_level)
     main(args.data_directory)
-
-# Tasks:
-# TODO perhaps rename file to make it clear what the function is -> eg. preprocess_data_name.py
