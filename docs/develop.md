@@ -141,6 +141,9 @@ Tasks
                     time and resources -\> would require new
                     pre-processing scripts
 
+                8.  remove sample data when unnecessary and provide only
+                    description of data structures required
+
         3.  run SoPa++ for multiple runs to survey performance -\> run
             on all variants and data-set portions with grid-search to
             get plenty of candidates
