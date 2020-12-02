@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# This function downloads key data sets for extending SoPa
+# Download key data sets for SoPa++
 set -e
 
 # usage function
 usage() {
   cat <<EOF
 Usage: prepare_data.sh [-h|--help]
-Prepare data sets for extending SoPa
+Prepare data sets for SoPa++
 
 Optional arguments:
   -h, --help         Show this help message and exit
