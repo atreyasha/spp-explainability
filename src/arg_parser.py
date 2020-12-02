@@ -144,8 +144,8 @@ def preprocess_arg_parser() -> argparse.Namespace:
     preprocess = parser.add_argument_group('optional preprocessing arguments')
     preprocess.add_argument(
         "--data-directory",
-        help="Root directory containing facebook multi-task NLU data",
-        default="./data/facebook_multitask_nlu/",
+        help="Root directory containing facebook multi-class NLU data",
+        default="./data/facebook_multiclass_nlu/",
         type=str)
     return parser
 
