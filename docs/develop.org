@@ -5,39 +5,52 @@
 ** Tasks
 *** Research
 **** Clean code and documentation
-***** Step-by-step
-****** TODO major code refactoring for main model (ignore visualization and interpretation) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
-       DEADLINE: <2020-11-30 Mon>
-******* use brute-force method of running code with newer libraries and fix errors on the fly -> replace outdated functions on the fly and make everything clean/modern -> migrate to soft-patterns-pp and clean from there
-******* find out whether use_rnn is passed by default and what its purpose generally is -> need to understand all facets of code to master it
-******* code works well with latest CUDA and torch, now through code chunk by chunk and execute it to test on data, understand everything and clean errors on the fly -> worry about performance in later steps -> for now focus on understanding everything
-******* replace start and end pad token proxies with real =[PAD]= tokens which should be ignored by the RNN 
+***** Current
+****** TODO major code refactoring for main model (ignore visualization, interpretation and testing) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
+       DEADLINE: <2020-12-03 Thu>
+******* understand code chunk by chunk in =soft_patterns.py= and =train.py= and replace outdated torch code
+******** execute code on low batch level with preset arg namespace -> use this to understand batch level processes and understand limitations
 ******** no need to declare variables with autograd explicitly: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable
 ******** UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead
-******** UserWarning: nn.functional.sigmoid is deprecated. Use torch.sigmoid instead
 ******** UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument
-******* take note that patterns of length one are not allowed, ignore =visualize_efficiently.py= for now
-****** choose exact data set and set up workflow to download and pro-process it -> prefer to find a nice benchmark which can be used for extensive comparisons (like RASA NLU)
-       DEADLINE: <2020-12-03 Thu>
-****** work on changes to architecture
+****** work on major changes to architecture
        DEADLINE: <2020-12-24 Thu>
-******* incoporate useful SOPs such as namespace saving and printing
-******* improve code quality with unique model logging and tensorboard workflows
-******* dynamic word embeddings and experimenting with more gracious self-loops and epsilon transitions -> perform this incrementally for comparison
-******* modify final layer to a general additive layer with tree structure or soft logic where possible -> perform this incrementally for comparison
-******* design new and improved test cases using pytest after understanding code completely
+******* initial issues
+******** replace input arg namespace with explicit arguments
+******** rename unsemantic functions such as =read_docs= to =read_doc(ument)=
+******** look into ISO hard encoding when reading files -> perhaps this can be modified
+******** replace current status bars with tqdm and torch-infused bar which could help to understand more parameters
+******** make separate script to pre-processing raw data into readable format for sopa++ -> consider renaming =preprocess_glove.py= to more appropriate name later -> add nltk where needed for pre-processing
+******** change argument names later on as this might break things in actual script for testing
+******** improve code quality with unique model logging and tensorboard workflows 
+******* core model changes
+******** use separate tokenizers such as nltk or sentencepiece tokenizer from Transformers library 
+******** why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
+********* review and opine whether this needs to be changed -> perhaps there is a reason but this needs to be taken into account in the interpretation/visualization phase
+******** dynamic OR static word/sub-word embeddings
+********* unknown, start and end GloVe vector should be learned, not set to zero
+********* OR perhaps there is merit in keeping input vectors fixed to prevent overfitting in small subset of them
+********* OR perhaps modify such that the =*UNK*= token can be used for learning over the dataset, while =*START*=, =*END*= and =*PAD*= tokens stay as zeroes to complement overall model
+******** experiment more gracious self-loops and epsilon transitions for improved generalization 
+******** modify final layer to a general additive layer with tree structure or soft logic where possible -> perform this incrementally for comparison
+******* fine-tuning
+******** fix up python logging verbosity and pass tqdm directly to logger instead of purely to stdout -> integrate this well with debug argument as per legacy sopa: see https://github.com/tqdm/tqdm/issues/313
+******** possible to make separate argparse Namespace which can be passed to main, this could help with portability
+******** revert/refactor soft_patterns_rnn, visualization, interpretation and testing scripts from git backlog to repository
+******** use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
+******** design new and improved test cases using pytest after understanding code completely
+******** add proper type checking later to flymake, use data processor class from torch later on
+******** extend workflow to other RASA NLU data sets given time and resources -> would require new pre-processing scripts
 ****** run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with grid-search to get plenty of candidates
        DEADLINE: <2021-02-01 Mon>
 ****** with decent model performance, branch off to improve explainability with weighting of patterns -> do this and the previous task simultaneously
        DEADLINE: <2021-02-01 Mon>
 
-***** KIV
-****** current slurm considerations
-******* activate cuda-8.0 in sbatch scripts explicitly
-******* use debug mode and low runtime for quick slurm runs
-******* make list of all useful commands for slurm
+***** Long-term
 ****** update metadata in scripts later with new workflows, eg. with help scripts, comments describing functionality and readme descriptions for git hooks
+****** add pydocstrings to all functions for improved documentation
 ****** add MIT license when made public
+****** make list of all useful commands for slurm
 
 **** SoPa++
 ***** extensions
@@ -74,11 +87,11 @@
 
 *** Admin
 **** Timeline
-***** +Initial thesis document: *15.09.20*+
-***** +Topic proposal draft: *06.11.20*+
-***** +Topic proposal final: *15.11.20*+
-***** Topic registration: *01.02.20* 
-***** Manuscript submission: *18.03.20* 
+***** +Initial thesis document: *15.09.2020*+
+***** +Topic proposal draft: *06.11.2020*+
+***** +Topic proposal final: *15.11.2020*+
+***** Topic registration: *01.02.2021* 
+***** Manuscript submission: *18.03.2021* 
 
 **** Manuscript notes
 ***** Text-related feedback
@@ -100,6 +113,26 @@
 ****** extension/recommendations -> transducer for seq2seq tasks
        
 ** Completed
+***** DONE make workflow to download Facebook Multilingual Task Oriented Dataset and pre-process to sopa-ready format -> text data and labels with dictionary mapping as to what the labels mean
+      CLOSED: [2020-12-01 Tue 20:29] DEADLINE: <2020-12-03 Thu>
+***** DONE fixed: UserWarning: nn.functional.sigmoid is deprecated. Use torch.sigmoid instead
+      CLOSED: [2020-11-30 Mon 18:16]
+***** DONE sort CLI arguments into proper groups, sort them alphabetically for easier reading
+      CLOSED: [2020-11-30 Mon 18:07]
+***** DONE add types to =parser_utils.py= script internals
+      CLOSED: [2020-11-30 Mon 18:07]
+***** DONE separate extras in =soft_patterns.py= into =utils.py= -> test out how batch is utilized -> fix batch issue, then move on to other steps -> batch mini-vocab appears to be a hack to create a meta-vocabulary for indices -> try to push with this again another time -> consider reverting Vocab index/token defaults in case this was wrong
+      CLOSED: [2020-11-30 Mon 18:07]
+***** DONE appears to be major bug in Batch class, try to verify if it is indeed a bug and how it can be fixed
+      CLOSED: [2020-11-30 Mon 18:07]
+***** DONE extract all arg parser chunks and place in dedicated file
+      CLOSED: [2020-11-30 Mon 18:07]
+***** DONE clean preprocessing script for GloVe vectors and understand inner mechanisms
+      CLOSED: [2020-11-28 Sat 17:02]
+***** DONE find better location to place code from =util.py=
+      CLOSED: [2020-11-27 Fri 19:38]
+***** DONE migrate to soft-patterns-pp and clean from there
+      CLOSED: [2020-11-26 Thu 20:11]
 ***** DONE update proposal with comments from supervisors -> update same information here
       CLOSED: [2020-11-17 Tue 14:52] DEADLINE: <2020-11-17 Tue>
 ***** DONE write proposal with key research questions -> address points directly from step 3 document requirements -> prepare some basic accuracy metrics and interpretations from best model   

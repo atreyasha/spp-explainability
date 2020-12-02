@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Set up git hooks
+# Preprocess Facebook multiclass NLU data
 set -e
 
 # usage function
 usage() {
   cat <<EOF
-Usage: setup_git_hooks.sh [-h|--help]
-Force copy git hooks to git repository config
+Usage: preprocess_multiclass_nlu.sh [-h|--help]
+Preprocess Facebook multiclass NLU data
 
 Optional arguments:
   -h, --help         Show this help message and exit
@@ -23,14 +23,10 @@ check_help() {
   done
 }
 
-# define function
-setup_git_hooks() {
-  local input
-  for input in ./hooks/*; do
-    cp "$input" "./.git/hooks/"
-  done
+preprocess_multiclass_nlu() {
+  python3 -m src.preprocess_multiclass_nlu
 }
 
-# execute function
+# execute all functions
 check_help "$@"
-setup_git_hooks
+preprocess_multiclass_nlu

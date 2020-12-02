@@ -1,3 +1,7 @@
 *.json
 *.txt
 *.zip
+*.md
+*.tsv
+*.conllu
+facebook_multiclass_nlu/*
