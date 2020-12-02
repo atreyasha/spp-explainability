@@ -12,7 +12,7 @@ pip install -r requirements.txt
 
 ### Repository initialization :fire:
 
-1. Automatically download relevant data for this repository:
+1. Download [GloVe](https://nlp.stanford.edu/projects/glove/) word embeddings and Facebook's multi-class Natural Language Understanding (NLU) [data set](https://github.com/nghuyong/rasa-nlu-benchmark):
 
     ```shell
     bash scripts/prepare_data.sh
@@ -23,6 +23,26 @@ pip install -r requirements.txt
     ```shell
     bash scripts/setup_git_hooks.sh
     ```
+
+### Usage :snowflake:
+
+#### i. Preprocessing
+
+In order to preprocess Facebook's multi-class NLU data set, use `preprocess_multiclass_nlu.sh`:
+
+```
+Usage: preprocess_multiclass_nlu.sh [-h|--help]
+Preprocess Facebook multiclass NLU data
+
+Optional arguments:
+  -h, --help         Show this help message and exit
+```
+
+This script will format the aforementioned data set and prepare it for downstream use. To run this script using our defaults, simply execute:
+
+```shell
+bash scripts/preprocess_multiclass_nlu.sh
+```
 
 ### Development :snail:
 
