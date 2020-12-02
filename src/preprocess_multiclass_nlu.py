@@ -4,7 +4,7 @@
 from typing import List, Iterable
 from nltk import word_tokenize
 from .utils.parser_utils import argparse_formatter
-from .utils.logging_utils import provide_logger
+from .utils.logging_utils import make_logger
 from .arg_parser import preprocess_arg_parser, logging_arg_parser
 import argparse
 import json
@@ -107,5 +107,5 @@ if __name__ == '__main__':
         parents=[preprocess_arg_parser(),
                  logging_arg_parser()])
     args = parser.parse_args()
-    logger = provide_logger(args.logging_level)
+    logger = make_logger(args.logging_level)
     main(args.data_directory)

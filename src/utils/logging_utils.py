@@ -4,7 +4,7 @@
 import logging
 
 
-def provide_logger(level: str) -> logging.Logger:
+def make_logger(level: str) -> logging.Logger:
     # create logger
     logger = logging.getLogger(level)
     # define logger levels
