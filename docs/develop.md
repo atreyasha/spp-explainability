@@ -29,9 +29,12 @@ Tasks
 
             **DEADLINE:** *\<2020-12-03 Thu\>*
 
-            1.  replace outdated torch code -\>no need to declare
+            1.  replace outdated torch code -\> no need to declare
                 variables with autograd explicitly: see
                 <https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable>
+                -\> replace all Variable calls with simple Tensors and
+                add `requires_grad` argument directly to tensors where
+                this is necessary
 
             2.  execute code on low batch level with preset arg
                 namespace in `soft_patterns.py` and `train.py` -\> use
@@ -134,8 +137,8 @@ Tasks
                     time and resources -\> would require new
                     pre-processing scripts
 
-                8.  remove sample data when unnecessary and provide only
-                    description of data structures required
+                8.  remove sample data set when unnecessary and provide
+                    only description of data structures required
 
                 9.  consider changing default helpers in readme to
                     python helpers instead of those from shell scripts
