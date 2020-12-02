@@ -41,6 +41,8 @@
 ******** design new and improved test cases using pytest after understanding code completely
 ******** add proper type checking later to flymake, use data processor class from torch later on
 ******** extend workflow to other RASA NLU data sets given time and resources -> would require new pre-processing scripts
+******** remove sample data when unnecessary and provide only description of data structures required
+******** consider changing default helpers in readme to python helpers instead of those from shell scripts
 ****** run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with grid-search to get plenty of candidates
        DEADLINE: <2021-02-01 Mon>
 ****** with decent model performance, branch off to improve explainability with weighting of patterns -> do this and the previous task simultaneously

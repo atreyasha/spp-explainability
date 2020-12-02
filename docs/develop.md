@@ -141,6 +141,12 @@ Tasks
                     time and resources -\> would require new
                     pre-processing scripts
 
+                8.  remove sample data when unnecessary and provide only
+                    description of data structures required
+
+                9.  consider changing default helpers in readme to
+                    python helpers instead of those from shell scripts
+
         3.  run SoPa++ for multiple runs to survey performance -\> run
             on all variants and data-set portions with grid-search to
             get plenty of candidates
