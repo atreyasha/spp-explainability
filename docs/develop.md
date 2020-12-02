@@ -29,23 +29,13 @@ Tasks
 
             **DEADLINE:** *\<2020-12-03 Thu\>*
 
-            1.  understand code chunk by chunk in `soft_patterns.py` and
-                `train.py` and replace outdated torch code
+            1.  replace outdated torch code -\>no need to declare
+                variables with autograd explicitly: see
+                <https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable>
 
-                1.  execute code on low batch level with preset arg
-                    namespace -\> use this to understand batch level
-                    processes and understand limitations
-
-                2.  no need to declare variables with autograd
-                    explicitly: see
-                    <https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable>
-
-                3.  UserWarning: size_average and reduce args will be
-                    deprecated, please use reduction=\'sum\' instead
-
-                4.  UserWarning: Implicit dimension choice for
-                    log_softmax has been deprecated. Change the call to
-                    include dim=X as an argument
+            2.  execute code on low batch level with preset arg
+                namespace in `soft_patterns.py` and `train.py` -\> use
+                this to understand batch level processes and limitations
 
         2.  work on major changes to architecture
 
@@ -53,27 +43,30 @@ Tasks
 
             1.  initial issues
 
-                1.  replace input arg namespace with explicit arguments
+                1.  model appears to work out-of-box for multiple
+                    classes -\> investigate further
 
-                2.  rename unsemantic functions such as `read_docs` to
+                2.  replace input arg namespace with explicit arguments
+
+                3.  rename unsemantic functions such as `read_docs` to
                     `read_doc(ument)`
 
-                3.  look into ISO hard encoding when reading files -\>
+                4.  look into ISO hard encoding when reading files -\>
                     perhaps this can be modified
 
-                4.  replace current status bars with tqdm and
+                5.  replace current status bars with tqdm and
                     torch-infused bar which could help to understand
                     more parameters
 
-                5.  make separate script to pre-processing raw data into
+                6.  make separate script to pre-processing raw data into
                     readable format for sopa++ -\> consider renaming
                     `preprocess_glove.py` to more appropriate name later
                     -\> add nltk where needed for pre-processing
 
-                6.  change argument names later on as this might break
+                7.  change argument names later on as this might break
                     things in actual script for testing
 
-                7.  improve code quality with unique model logging and
+                8.  improve code quality with unique model logging and
                     tensorboard workflows
 
             2.  core model changes
@@ -330,6 +323,17 @@ Tasks
 
 Completed
 ---------
+
+**DONE** UserWarning: Implicit dimension choice for
+log_softmax has been deprecated. Change the call to include dim=X as an
+argument
+
+**CLOSED:** *\[2020-12-02 Wed 18:57\]*
+
+**DONE** UserWarning: size_average and reduce args will be
+deprecated, please use reduction=\'sum\' instead
+
+**CLOSED:** *\[2020-12-02 Wed 18:39\]*
 
 **DONE** make workflow to download Facebook Multilingual Task
 Oriented Dataset and pre-process to sopa-ready format -\> text data and

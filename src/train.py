@@ -69,7 +69,7 @@ def compute_loss(model,
         print("Forward total in loss: {}".format(round(time2 - time1, 3)))
 
     return loss_function(
-        log_softmax(output).view(batch.size(), num_classes),
+        log_softmax(output, dim=1).view(batch.size(), num_classes),
         to_cuda(gpu)(fixed_var(LongTensor(gold_output))))
 
 
@@ -112,7 +112,7 @@ def train(train_data,
     """ Train a model on all the given docs """
 
     optimizer = Adam(model.parameters(), lr=learning_rate)
-    loss_function = NLLLoss(None, False)
+    loss_function = NLLLoss(weight=None, reduction="sum")
 
     enable_gradient_clipping(model, clip)
 
