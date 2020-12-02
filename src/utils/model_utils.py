@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Any, Iterable, Callable, List
+from typing import Any, Iterable, Callable, List, Union
 from .data_utils import (UNK_IDX, START_TOKEN_IDX, END_TOKEN_IDX, Vocab,
                          identity)
 import numpy as np
@@ -35,8 +35,11 @@ def to_cuda(gpu: bool) -> Callable:
     return (lambda v: v.cuda()) if gpu else identity
 
 
-def fixed_var(tensor: torch.Tensor) -> torch.Tensor:
-    return torch.autograd.Variable(tensor, requires_grad=False)
+def fixed_var(tensor: Union[np.ndarray, torch.Tensor]) -> torch.Tensor:
+    if isinstance(tensor, torch.Tensor):
+        return tensor.clone().detach().requires_grad_(False)
+    else:
+        return torch.tensor(tensor, requires_grad=False)
 
 
 def argmax(output: torch.Tensor) -> torch.Tensor:

@@ -8,13 +8,15 @@
 ***** Current
 ****** TODO major code refactoring for main model (ignore visualization, interpretation and testing) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
        DEADLINE: <2020-12-03 Thu>
-******* replace outdated torch code -> no need to declare variables with autograd explicitly: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable -> replace all Variable calls with simple Tensors and add =requires_grad= argument directly to tensors where this is necessary
+******* replace all Variable calls with simple Tensors and add =requires_grad= argument directly to tensors where this is necessary: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable
 ******* execute code on low batch level with preset arg namespace in =soft_patterns.py= and =train.py= -> use this to understand batch level processes and limitations
+******* add typing to remaining core python scripts
 
 ****** work on major changes to architecture
        DEADLINE: <2020-12-24 Thu>
 ******* initial issues
 ******** model appears to work out-of-box for multiple classes -> investigate further
+******** investigate whether =fixed_var= function is indeed necessary or can be removed -> left intact for now
 ******** replace input arg namespace with explicit arguments
 ******** rename unsemantic functions such as =read_docs= to =read_doc(ument)=
 ******** look into ISO hard encoding when reading files -> perhaps this can be modified
@@ -40,7 +42,7 @@
 ******** design new and improved test cases using pytest after understanding code completely
 ******** add proper type checking later to flymake, use data processor class from torch later on
 ******** extend workflow to other RASA NLU data sets given time and resources -> would require new pre-processing scripts
-******** remove sample data set when unnecessary and provide only description of data structures required
+******** provide only description of data structures (eg. data, labels) required for training processes
 ******** consider changing default helpers in readme to python helpers instead of those from shell scripts
 ****** run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with grid-search to get plenty of candidates
        DEADLINE: <2021-02-01 Mon>

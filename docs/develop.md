@@ -29,16 +29,16 @@ Tasks
 
             **DEADLINE:** *\<2020-12-03 Thu\>*
 
-            1.  replace outdated torch code -\> no need to declare
-                variables with autograd explicitly: see
+            1.  replace all Variable calls with simple Tensors and add
+                `requires_grad` argument directly to tensors where this
+                is necessary: see
                 <https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable>
-                -\> replace all Variable calls with simple Tensors and
-                add `requires_grad` argument directly to tensors where
-                this is necessary
 
             2.  execute code on low batch level with preset arg
                 namespace in `soft_patterns.py` and `train.py` -\> use
                 this to understand batch level processes and limitations
+
+            3.  add typing to remaining core python scripts
 
         2.  work on major changes to architecture
 
@@ -49,27 +49,30 @@ Tasks
                 1.  model appears to work out-of-box for multiple
                     classes -\> investigate further
 
-                2.  replace input arg namespace with explicit arguments
+                2.  investigate whether `fixed_var` function is indeed
+                    necessary or can be removed -\> left intact for now
 
-                3.  rename unsemantic functions such as `read_docs` to
+                3.  replace input arg namespace with explicit arguments
+
+                4.  rename unsemantic functions such as `read_docs` to
                     `read_doc(ument)`
 
-                4.  look into ISO hard encoding when reading files -\>
+                5.  look into ISO hard encoding when reading files -\>
                     perhaps this can be modified
 
-                5.  replace current status bars with tqdm and
+                6.  replace current status bars with tqdm and
                     torch-infused bar which could help to understand
                     more parameters
 
-                6.  make separate script to pre-processing raw data into
+                7.  make separate script to pre-processing raw data into
                     readable format for sopa++ -\> consider renaming
                     `preprocess_glove.py` to more appropriate name later
                     -\> add nltk where needed for pre-processing
 
-                7.  change argument names later on as this might break
+                8.  change argument names later on as this might break
                     things in actual script for testing
 
-                8.  improve code quality with unique model logging and
+                9.  improve code quality with unique model logging and
                     tensorboard workflows
 
             2.  core model changes
@@ -137,8 +140,8 @@ Tasks
                     time and resources -\> would require new
                     pre-processing scripts
 
-                8.  remove sample data set when unnecessary and provide
-                    only description of data structures required
+                8.  provide only description of data structures (eg.
+                    data, labels) required for training processes
 
                 9.  consider changing default helpers in readme to
                     python helpers instead of those from shell scripts

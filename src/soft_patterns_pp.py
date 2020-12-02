@@ -3,8 +3,7 @@
 
 from time import monotonic
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
-from torch.autograd import Variable
-from torch.nn import (Module, Parameter, ModuleList, Linear)
+from torch.nn import Module, Parameter, ModuleList, Linear
 from torch.nn.utils.rnn import pad_packed_sequence
 from .utils.model_utils import to_cuda, argmax, fixed_var, normalize
 import torch
@@ -287,10 +286,13 @@ class SoftPatternClassifier(Module):
 
         batch_end_state_idxs = self.end_states.expand(batch_size, num_patterns,
                                                       1)
-        hiddens = self.to_cuda(
-            Variable(
-                self.semiring.zero(batch_size, num_patterns,
-                                   self.max_pattern_length)))
+        hiddens = self.semiring.zero(batch_size, num_patterns,
+                                     self.max_pattern_length)
+        if isinstance(hiddens, torch.Tensor):
+            hiddens = self.to_cuda(hiddens)
+        else:
+            hiddens = self.to_cuda(torch.tensor(hiddens))
+
         # set start state (0) to 1 for each pattern in each doc
         hiddens[:, :,
                 0] = self.to_cuda(self.semiring.one(batch_size, num_patterns))

@@ -152,7 +152,7 @@ def preprocess_arg_parser() -> argparse.Namespace:
 
 def logging_arg_parser() -> argparse.Namespace:
     parser = argparse.ArgumentParser(add_help=False)
-    # add preprocess group
+    # add logging group
     logging = parser.add_argument_group('optional logging arguments')
     logging.add_argument(
         "--logging-level",
