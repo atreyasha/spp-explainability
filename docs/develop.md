@@ -26,10 +26,10 @@ Tasks
             with conversion to recent PyTorch (eg. 1.\*) and CUDA
             versions (eg. 10.\*)
 
-            **DEADLINE:** *\<2020-12-03 Thu\>*
+            **DEADLINE:** *\<2020-12-04 Fri\>*
 
-            1.  add typing to remaining core python scripts -\> use this
-                to gain an understanding
+            1.  add typing to `soft_patterns_pp.py` -\> use this to gain
+                an understanding
 
         2.  work on major changes to architecture
 
@@ -114,6 +114,15 @@ Tasks
                         `*START*`, `*END*` and `*PAD*` tokens stay as
                         zeroes to complement overall model
 
+                    4.  consider still using dynamic embeddings versus
+                        static -\> can use a lower learning rate for
+                        embeddings to reduce overfitting as much as
+                        possible
+
+                    5.  sub-word contextual embeddings are available as
+                        well, see: fastText or
+                        <https://nlp.h-its.org/bpemb/#cite>
+
                 4.  experiment more gracious self-loops and epsilon
                     transitions for improved generalization
 
@@ -121,12 +130,25 @@ Tasks
                     tree structure or soft logic where possible -\>
                     perform this incrementally for comparison
 
+                6.  make incremental tree of changes with grid-search
+                    and random-seed-variant repeats -\> do grid search
+                    and multiple runs of each best model with different
+                    random seeds to get standard deviation of
+                    performance
+
             4.  core explainability changes
 
                 1.  revert/refactor soft_patterns_rnn, visualization,
                     interpretation and testing scripts from git backlog
                     to repository -\> understand and improve these
                     significantly
+
+                2.  focus on explainability rather than performance
+                    since the data set is relatively easy to perform on
+                    -\> this part should be well studied and motivated
+                    -\> final ensemble of regular expressions should
+                    give insights and perform similar to main SoPa++
+                    neural model
 
             5.  fine-tuning
 
@@ -293,16 +315,22 @@ Tasks
 
     1.  Text-related feedback
 
-        1.  make abstract more specific in terms of \"highly
+        1.  20-90 pages thesis length -\> try to keep ideas
+            well-motivated yet succinct
+
+        2.  make abstract more specific in terms of \"highly
             performant\"
 
-        2.  fix absolute terms such as \"automated reasoning\", or quote
+        3.  sub-word embeddings are both useful for performance and
+            explainability
+
+        4.  fix absolute terms such as \"automated reasoning\", or quote
             directly from paper
 
-        3.  re-consider reference to Transformers for dynamic sub-word
+        5.  re-consider reference to Transformers for dynamic sub-word
             level word-embeddings
 
-        4.  improve capitalization with braces in bibtex file
+        6.  improve capitalization with braces in bibtex file
 
     2.  Concept-related feedback
 
@@ -323,6 +351,9 @@ Tasks
             is only relevant if the oracle and mimic models both
             **perform competitively and have similar confusion matrix
             profiles** (both conditions must be satisfied)
+
+        6.  further work: porting this technique to a transformer where
+            possible
 
     3.  Self-thoughts
 
