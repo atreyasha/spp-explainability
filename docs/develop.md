@@ -23,59 +23,73 @@ Tasks
     1.  Current
 
         1.  **TODO** major code refactoring for main model
-            (ignore visualization, interpretation and testing) with
-            conversion to recent PyTorch (eg. 1.\*) and CUDA versions
-            (eg. 10.\*)
+            with conversion to recent PyTorch (eg. 1.\*) and CUDA
+            versions (eg. 10.\*)
 
             **DEADLINE:** *\<2020-12-03 Thu\>*
 
-            1.  replace all Variable calls with simple Tensors and add
-                `requires_grad` argument directly to tensors where this
-                is necessary: see
-                <https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable>
-
-            2.  execute code on low batch level with preset arg
-                namespace in `soft_patterns.py` and `train.py` -\> use
-                this to understand batch level processes and limitations
-
-            3.  add typing to remaining core python scripts
+            1.  add typing to remaining core python scripts -\> use this
+                to gain an understanding
 
         2.  work on major changes to architecture
 
             **DEADLINE:** *\<2020-12-24 Thu\>*
 
-            1.  initial issues
+            1.  execute code on low batch level with preset arg
+                namespace in `soft_patterns.py` and `train.py` -\> use
+                this to understand batch level processes and limitations
+                -\> correct typing where necessary -\> confirm whether
+                `Adam` falls under `torch.optim.Optimizer` when running
+                code
 
-                1.  model appears to work out-of-box for multiple
-                    classes -\> investigate further
+            2.  add tensorboard to explicit dependencies to view
+                relevant logs during training
 
-                2.  investigate whether `fixed_var` function is indeed
-                    necessary or can be removed -\> left intact for now
+            3.  initial issues
 
-                3.  replace input arg namespace with explicit arguments
+                1.  need to understand `nn.Module=` functionality before
+                    anything else -\> investigate whether `fixed_var`
+                    function is indeed necessary or can be removed since
+                    `requires_grad` is set to False by default, but
+                    coule be some conflict with `nn.Module` default
+                    parameter construction with `requires_grad = True`
+                    -\> left intact for now and appears to work well
 
-                4.  rename unsemantic functions such as `read_docs` to
+                2.  look into replacing `loss.data` with
+                    `loss.detach()`: see
+                    <https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data>
+
+                3.  model appears to work out-of-box for multiple
+                    classes -\> might not be reliable because it might
+                    only focus on one class
+
+                4.  look into iteration progress snippet with gold and
+                    predicted \"1\'s\" meaning
+
+                5.  replace input arg namespace with explicit arguments
+
+                6.  rename unsemantic functions such as `read_docs` to
                     `read_doc(ument)`
 
-                5.  look into ISO hard encoding when reading files -\>
+                7.  look into ISO hard encoding when reading files -\>
                     perhaps this can be modified
 
-                6.  replace current status bars with tqdm and
+                8.  replace current status bars with tqdm and
                     torch-infused bar which could help to understand
                     more parameters
 
-                7.  make separate script to pre-processing raw data into
+                9.  make separate script to pre-processing raw data into
                     readable format for sopa++ -\> consider renaming
                     `preprocess_glove.py` to more appropriate name later
                     -\> add nltk where needed for pre-processing
 
-                8.  change argument names later on as this might break
+                10. change argument names later on as this might break
                     things in actual script for testing
 
-                9.  improve code quality with unique model logging and
+                11. improve code quality with unique model logging and
                     tensorboard workflows
 
-            2.  core model changes
+            4.  core model changes
 
                 1.  use separate tokenizers such as nltk or
                     sentencepiece tokenizer from Transformers library
@@ -110,7 +124,14 @@ Tasks
                     tree structure or soft logic where possible -\>
                     perform this incrementally for comparison
 
-            3.  fine-tuning
+            5.  core explainability changes
+
+                1.  revert/refactor soft_patterns_rnn, visualization,
+                    interpretation and testing scripts from git backlog
+                    to repository -\> understand and improve these
+                    significantly
+
+            6.  fine-tuning
 
                 1.  fix up python logging verbosity and pass tqdm
                     directly to logger instead of purely to stdout -\>
@@ -122,28 +143,24 @@ Tasks
                     can be passed to main, this could help with
                     portability
 
-                3.  revert/refactor soft_patterns_rnn, visualization,
-                    interpretation and testing scripts from git backlog
-                    to repository
-
-                4.  use `renv` for managing and shipping R dependencies
+                3.  use `renv` for managing and shipping R dependencies
                     -\> keep just `renv.lock` for easier shipping and
                     ignore other files
 
-                5.  design new and improved test cases using pytest
+                4.  design new and improved test cases using pytest
                     after understanding code completely
 
-                6.  add proper type checking later to flymake, use data
+                5.  add proper type checking later to flymake, use data
                     processor class from torch later on
 
-                7.  extend workflow to other RASA NLU data sets given
+                6.  extend workflow to other RASA NLU data sets given
                     time and resources -\> would require new
                     pre-processing scripts
 
-                8.  provide only description of data structures (eg.
+                7.  provide only description of data structures (eg.
                     data, labels) required for training processes
 
-                9.  consider changing default helpers in readme to
+                8.  consider changing default helpers in readme to
                     python helpers instead of those from shell scripts
 
         3.  run SoPa++ for multiple runs to survey performance -\> run
@@ -329,6 +346,13 @@ Tasks
 
 Completed
 ---------
+
+**DONE** replace all Variable calls with simple Tensors and
+add `requires_grad` argument directly to tensors where this is
+necessary: see
+<https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable>
+
+**CLOSED:** *\[2020-12-02 Wed 21:50\]*
 
 **DONE** UserWarning: Implicit dimension choice for
 log_softmax has been deprecated. Change the call to include dim=X as an

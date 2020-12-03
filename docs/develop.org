@@ -6,17 +6,19 @@
 *** Research
 **** Clean code and documentation
 ***** Current
-****** TODO major code refactoring for main model (ignore visualization, interpretation and testing) with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
+****** TODO major code refactoring for main model with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
        DEADLINE: <2020-12-03 Thu>
-******* replace all Variable calls with simple Tensors and add =requires_grad= argument directly to tensors where this is necessary: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable
-******* execute code on low batch level with preset arg namespace in =soft_patterns.py= and =train.py= -> use this to understand batch level processes and limitations
-******* add typing to remaining core python scripts
+******* add typing to remaining core python scripts -> use this to gain an understanding
 
 ****** work on major changes to architecture
        DEADLINE: <2020-12-24 Thu>
+******* execute code on low batch level with preset arg namespace in =soft_patterns.py= and =train.py= -> use this to understand batch level processes and limitations -> correct typing where necessary -> confirm whether =Adam= falls under =torch.optim.Optimizer= when running code
+******* add tensorboard to explicit dependencies to view relevant logs during training
 ******* initial issues
-******** model appears to work out-of-box for multiple classes -> investigate further
-******** investigate whether =fixed_var= function is indeed necessary or can be removed -> left intact for now
+******** need to understand =nn.Module== functionality before anything else -> investigate whether =fixed_var= function is indeed necessary or can be removed since =requires_grad= is set to False by default, but coule be some conflict with =nn.Module= default parameter construction with ~requires_grad = True~ -> left intact for now and appears to work well
+******** look into replacing =loss.data= with =loss.detach()=: see https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data
+******** model appears to work out-of-box for multiple classes -> might not be reliable because it might only focus on one class
+******** look into iteration progress snippet with gold and predicted "1's" meaning
 ******** replace input arg namespace with explicit arguments
 ******** rename unsemantic functions such as =read_docs= to =read_doc(ument)=
 ******** look into ISO hard encoding when reading files -> perhaps this can be modified
@@ -34,10 +36,11 @@
 ********* OR perhaps modify such that the =*UNK*= token can be used for learning over the dataset, while =*START*=, =*END*= and =*PAD*= tokens stay as zeroes to complement overall model
 ******** experiment more gracious self-loops and epsilon transitions for improved generalization 
 ******** modify final layer to a general additive layer with tree structure or soft logic where possible -> perform this incrementally for comparison
+******* core explainability changes
+******** revert/refactor soft_patterns_rnn, visualization, interpretation and testing scripts from git backlog to repository -> understand and improve these significantly
 ******* fine-tuning
 ******** fix up python logging verbosity and pass tqdm directly to logger instead of purely to stdout -> integrate this well with debug argument as per legacy sopa: see https://github.com/tqdm/tqdm/issues/313
 ******** possible to make separate argparse Namespace which can be passed to main, this could help with portability
-******** revert/refactor soft_patterns_rnn, visualization, interpretation and testing scripts from git backlog to repository
 ******** use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
 ******** design new and improved test cases using pytest after understanding code completely
 ******** add proper type checking later to flymake, use data processor class from torch later on
@@ -116,6 +119,8 @@
 ****** extension/recommendations -> transducer for seq2seq tasks
        
 ** Completed
+***** DONE replace all Variable calls with simple Tensors and add =requires_grad= argument directly to tensors where this is necessary: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable
+      CLOSED: [2020-12-02 Wed 21:50]
 ***** DONE UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument
       CLOSED: [2020-12-02 Wed 18:57]
 ***** DONE UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead
