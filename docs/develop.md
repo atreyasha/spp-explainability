@@ -42,12 +42,9 @@ Tasks
                 `Adam` falls under `torch.optim.Optimizer` when running
                 code
 
-            2.  add tensorboard to explicit dependencies to view
-                relevant logs during training
+            2.  initial issues
 
-            3.  initial issues
-
-                1.  need to understand `nn.Module=` functionality before
+                1.  need to understand `nn.Module` functionality before
                     anything else -\> investigate whether `fixed_var`
                     function is indeed necessary or can be removed since
                     `requires_grad` is set to False by default, but
@@ -89,7 +86,7 @@ Tasks
                 11. improve code quality with unique model logging and
                     tensorboard workflows
 
-            4.  core model changes
+            3.  core model changes
 
                 1.  use separate tokenizers such as nltk or
                     sentencepiece tokenizer from Transformers library
@@ -124,14 +121,14 @@ Tasks
                     tree structure or soft logic where possible -\>
                     perform this incrementally for comparison
 
-            5.  core explainability changes
+            4.  core explainability changes
 
                 1.  revert/refactor soft_patterns_rnn, visualization,
                     interpretation and testing scripts from git backlog
                     to repository -\> understand and improve these
                     significantly
 
-            6.  fine-tuning
+            5.  fine-tuning
 
                 1.  fix up python logging verbosity and pass tqdm
                     directly to logger instead of purely to stdout -\>
@@ -346,6 +343,11 @@ Tasks
 
 Completed
 ---------
+
+**DONE** add tensorboard to explicit dependencies to view
+relevant logs during training
+
+**CLOSED:** *\[2020-12-03 Thu 14:40\]*
 
 **DONE** replace all Variable calls with simple Tensors and
 add `requires_grad` argument directly to tensors where this is

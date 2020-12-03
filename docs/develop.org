@@ -13,9 +13,8 @@
 ****** work on major changes to architecture
        DEADLINE: <2020-12-24 Thu>
 ******* execute code on low batch level with preset arg namespace in =soft_patterns.py= and =train.py= -> use this to understand batch level processes and limitations -> correct typing where necessary -> confirm whether =Adam= falls under =torch.optim.Optimizer= when running code
-******* add tensorboard to explicit dependencies to view relevant logs during training
 ******* initial issues
-******** need to understand =nn.Module== functionality before anything else -> investigate whether =fixed_var= function is indeed necessary or can be removed since =requires_grad= is set to False by default, but coule be some conflict with =nn.Module= default parameter construction with ~requires_grad = True~ -> left intact for now and appears to work well
+******** need to understand =nn.Module= functionality before anything else -> investigate whether =fixed_var= function is indeed necessary or can be removed since =requires_grad= is set to False by default, but coule be some conflict with =nn.Module= default parameter construction with ~requires_grad = True~ -> left intact for now and appears to work well
 ******** look into replacing =loss.data= with =loss.detach()=: see https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data
 ******** model appears to work out-of-box for multiple classes -> might not be reliable because it might only focus on one class
 ******** look into iteration progress snippet with gold and predicted "1's" meaning
@@ -119,6 +118,8 @@
 ****** extension/recommendations -> transducer for seq2seq tasks
        
 ** Completed
+***** DONE add tensorboard to explicit dependencies to view relevant logs during training
+      CLOSED: [2020-12-03 Thu 14:40]
 ***** DONE replace all Variable calls with simple Tensors and add =requires_grad= argument directly to tensors where this is necessary: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable
       CLOSED: [2020-12-02 Wed 21:50]
 ***** DONE UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument
