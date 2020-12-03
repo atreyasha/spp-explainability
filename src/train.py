@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from time import monotonic
+from typing import List
 from collections import OrderedDict
 from torch import LongTensor
-from torch.nn import NLLLoss
+from torch.nn import NLLLoss, Module
 from torch.nn.functional import log_softmax
 from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
@@ -25,15 +26,15 @@ import torch
 import os
 
 
-def train_batch(model,
-                batch,
-                num_classes,
-                gold_output,
-                optimizer,
-                loss_function,
-                gpu=False,
-                debug=0,
-                dropout=None):
+def train_batch(model: Module,
+                batch: Batch,
+                num_classes: int,
+                gold_output: List,
+                optimizer: torch.optim.Optimizer,
+                loss_function: torch.nn.modules.loss._Loss,
+                gpu: bool = False,
+                debug: int = 0,
+                dropout: float = None) -> torch.Tensor:
     """Train on one doc. """
     optimizer.zero_grad()
     time0 = monotonic()
@@ -50,17 +51,17 @@ def train_batch(model,
             "Time in loss: {}, time in backward: {}, time in step: {}".format(
                 round(time1 - time0, 3), round(time2 - time1, 3),
                 round(time3 - time2, 3)))
-    return loss.data
+    return loss.detach()
 
 
-def compute_loss(model,
-                 batch,
-                 num_classes,
-                 gold_output,
-                 loss_function,
-                 gpu,
-                 debug=0,
-                 dropout=None):
+def compute_loss(model: Module,
+                 batch: Batch,
+                 num_classes: int,
+                 gold_output: List,
+                 loss_function: torch.nn.modules.loss._Loss,
+                 gpu: bool,
+                 debug: int = 0,
+                 dropout: float = None) -> torch.Tensor:
     time1 = monotonic()
     output = model.forward(batch, debug, dropout)
 
@@ -73,7 +74,11 @@ def compute_loss(model,
         to_cuda(gpu)(fixed_var(LongTensor(gold_output))))
 
 
-def evaluate_accuracy(model, data, batch_size, gpu, debug=0):
+def evaluate_accuracy(model: Module,
+                      data: List,
+                      batch_size: int,
+                      gpu: bool,
+                      debug: int = 0) -> float:
     n = float(len(data))
     correct = 0
     num_1s = 0
@@ -92,23 +97,23 @@ def evaluate_accuracy(model, data, batch_size, gpu, debug=0):
     return correct / n
 
 
-def train(train_data,
-          dev_data,
-          model,
-          num_classes,
-          model_save_dir,
-          num_iterations,
-          model_file_prefix,
-          learning_rate,
-          batch_size,
-          run_scheduler=False,
-          gpu=False,
-          clip=None,
-          max_len=-1,
-          debug=0,
-          dropout=0,
-          word_dropout=0,
-          patience=1000):
+def train(train_data: List,
+          dev_data: List,
+          model: Module,
+          num_classes: int,
+          model_save_dir: str,
+          num_iterations: int,
+          model_file_prefix: str,
+          learning_rate: float,
+          batch_size: int,
+          run_scheduler: bool = False,
+          gpu: bool = False,
+          clip: float = None,
+          max_len: int = -1,
+          debug: int = 0,
+          dropout: float = 0,
+          word_dropout: float = 0,
+          patience: int = 1000) -> Module:
     """ Train a model on all the given docs """
 
     optimizer = Adam(model.parameters(), lr=learning_rate)
@@ -233,7 +238,7 @@ def train(train_data,
     return model
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     print(args)
 
     pattern_specs = OrderedDict(
@@ -340,7 +345,7 @@ def main(args):
           args.patience)
 
 
-def read_patterns(ifile, pattern_specs):
+def read_patterns(ifile: str, pattern_specs: OrderedDict) -> List:
     with open(ifile, encoding='utf-8') as ifh:
         pre_computed_patterns = [
             l.rstrip().split() for l in ifh if len(l.rstrip())
