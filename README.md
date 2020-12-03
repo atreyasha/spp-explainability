@@ -28,17 +28,26 @@ pip install -r requirements.txt
 
 #### i. Preprocessing
 
-In order to preprocess Facebook's multi-class NLU data set, use `preprocess_multiclass_nlu.sh`:
+In order to preprocess Facebook's multi-class NLU data set, use `./src/preprocess_multiclass_nlu.py`:
 
 ```
-Usage: preprocess_multiclass_nlu.sh [-h|--help]
-Preprocess Facebook multiclass NLU data
+usage: preprocess_multiclass_nlu.py [-h] [--data-directory <str>]
+                                    [--logging-level {debug,info,warning,error,critical}]
 
-Optional arguments:
-  -h, --help         Show this help message and exit
+optional arguments:
+  -h, --help        show this help message and exit
+
+optional preprocessing arguments:
+  --data-directory  <str>
+                    Data directory containing facebook multi-class NLU data
+                    (default: ./data/facebook_multiclass_nlu/)
+
+optional logging arguments:
+  --logging-level   {debug,info,warning,error,critical}
+                    Set logging level (default: info)
 ```
 
-This script will format the aforementioned data set and prepare it for downstream use. To run this script using our defaults, simply execute:
+This script will format the aforementioned data set and prepare it for downstream use. To run this script with our defaults, simply execute:
 
 ```shell
 bash scripts/preprocess_multiclass_nlu.sh
