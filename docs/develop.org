@@ -6,18 +6,18 @@
 *** Research
 **** Clean code and documentation
 ***** Current
-****** TODO major code refactoring for main model with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
-       DEADLINE: <2020-12-04 Fri>
-******* add typing to =soft_patterns_pp.py= -> use this to gain an understanding
-
-****** work on major changes to architecture
+****** TODO work on major changes to architecture
        DEADLINE: <2020-12-24 Thu>
-******* execute code on low batch level with preset arg namespace in =soft_patterns.py= and =train.py= -> use this to understand batch level processes and limitations -> correct typing where necessary -> confirm whether =Adam= falls under =torch.optim.Optimizer= when running code
+******* sort out below tasks once more before proceeding
+******* execute code on low batch level with preset arg namespace in =soft_patterns.py= and =train.py= -> use this to understand batch level processes and limitations -> correct typing where necessary
 ******* initial issues
+******** creating tensors inside =torch.nn.Module= keeps them out of autograd, initializing other =torch.nn.Module= subclasses creates =Paramater= classes which learn by default, therefore it is necessary to instantiate learnable parameters in a custom =torch.nn.Module= with the =Paramter= class -> other tensors default to no learning
+******** experiment module with and without =fixed_var= to see if =autograd= gets enabled
 ******** need to understand =nn.Module= functionality before anything else -> investigate whether =fixed_var= function is indeed necessary or can be removed since =requires_grad= is set to False by default, but coule be some conflict with =nn.Module= default parameter construction with ~requires_grad = True~ -> left intact for now and appears to work well
 ******** look into replacing =loss.data= with =loss.detach()=: see https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data
 ******** model appears to work out-of-box for multiple classes -> might not be reliable because it might only focus on one class
 ******** look into iteration progress snippet with gold and predicted "1's" meaning
+******** confirm whether =Adam= falls under =torch.optim.Optimizer= when running code
 ******** replace input arg namespace with explicit arguments
 ******** rename unsemantic functions such as =read_docs= to =read_doc(ument)=
 ******** look into ISO hard encoding when reading files -> perhaps this can be modified
@@ -42,10 +42,15 @@
 ******** revert/refactor soft_patterns_rnn, visualization, interpretation and testing scripts from git backlog to repository -> understand and improve these significantly
 ******** focus on explainability rather than performance since the data set is relatively easy to perform on -> this part should be well studied and motivated -> final ensemble of regular expressions should give insights and perform similar to main SoPa++ neural model
 ******* fine-tuning
+******** consider adding mypy as a test case suite -> but use --ignore-missing-imports and --allow-redefinition
+******** design new and improved test cases using pytest after understanding code completely
+******** fine-tune typing in internal functions of =SoftPatternClassifier= since some of them require batch-level testing to ascertain, eg. =get_transition_matrices=, =load_pattern= -> need to ascertain wither =pre_computed_patterns= is List or List[List[str]] -> consider removing =float= from =self_loop_scale: Union[torch.Tensor, float, None]= in =transition_once=
+******** address debug level issues throughout code -> esp. where it affects clear typing in =forward=
+******** change types where =None= is permitted alongside other type to =Union[Type, None]= -> need to go through all scripts and parse out =None= arguments
 ******** fix up python logging verbosity and pass tqdm directly to logger instead of purely to stdout -> integrate this well with debug argument as per legacy sopa: see https://github.com/tqdm/tqdm/issues/313
+******** add discrete choices in arg_parser for =--shared-sl=
 ******** possible to make separate argparse Namespace which can be passed to main, this could help with portability
 ******** use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
-******** design new and improved test cases using pytest after understanding code completely
 ******** add proper type checking later to flymake, use data processor class from torch later on
 ******** extend workflow to other RASA NLU data sets given time and resources -> would require new pre-processing scripts
 ******** provide only description of data structures (eg. data, labels) required for training processes
@@ -125,6 +130,8 @@
 ****** extension/recommendations -> transducer for seq2seq tasks
        
 ** Completed
+***** DONE major code refactoring for main model with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
+      CLOSED: [2020-12-05 Sat 18:47] DEADLINE: <2020-12-06 Sun>
 ***** DONE add tensorboard to explicit dependencies to view relevant logs during training
       CLOSED: [2020-12-03 Thu 14:40]
 ***** DONE replace all Variable calls with simple Tensors and add =requires_grad= argument directly to tensors where this is necessary: see https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable

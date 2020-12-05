@@ -22,29 +22,31 @@ Tasks
 
     1.  Current
 
-        1.  **TODO** major code refactoring for main model
-            with conversion to recent PyTorch (eg. 1.\*) and CUDA
-            versions (eg. 10.\*)
-
-            **DEADLINE:** *\<2020-12-04 Fri\>*
-
-            1.  add typing to `soft_patterns_pp.py` -\> use this to gain
-                an understanding
-
-        2.  work on major changes to architecture
+        1.  **TODO** work on major changes to architecture
 
             **DEADLINE:** *\<2020-12-24 Thu\>*
 
-            1.  execute code on low batch level with preset arg
+            1.  sort out below tasks once more before proceeding
+
+            2.  execute code on low batch level with preset arg
                 namespace in `soft_patterns.py` and `train.py` -\> use
                 this to understand batch level processes and limitations
-                -\> correct typing where necessary -\> confirm whether
-                `Adam` falls under `torch.optim.Optimizer` when running
-                code
+                -\> correct typing where necessary
 
-            2.  initial issues
+            3.  initial issues
 
-                1.  need to understand `nn.Module` functionality before
+                1.  creating tensors inside `torch.nn.Module` keeps them
+                    out of autograd, initializing other
+                    `torch.nn.Module` subclasses creates `Paramater`
+                    classes which learn by default, therefore it is
+                    necessary to instantiate learnable parameters in a
+                    custom `torch.nn.Module` with the `Paramter` class
+                    -\> other tensors default to no learning
+
+                2.  experiment module with and without `fixed_var` to
+                    see if `autograd` gets enabled
+
+                3.  need to understand `nn.Module` functionality before
                     anything else -\> investigate whether `fixed_var`
                     function is indeed necessary or can be removed since
                     `requires_grad` is set to False by default, but
@@ -52,41 +54,44 @@ Tasks
                     parameter construction with `requires_grad = True`
                     -\> left intact for now and appears to work well
 
-                2.  look into replacing `loss.data` with
+                4.  look into replacing `loss.data` with
                     `loss.detach()`: see
                     <https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data>
 
-                3.  model appears to work out-of-box for multiple
+                5.  model appears to work out-of-box for multiple
                     classes -\> might not be reliable because it might
                     only focus on one class
 
-                4.  look into iteration progress snippet with gold and
+                6.  look into iteration progress snippet with gold and
                     predicted \"1\'s\" meaning
 
-                5.  replace input arg namespace with explicit arguments
+                7.  confirm whether `Adam` falls under
+                    `torch.optim.Optimizer` when running code
 
-                6.  rename unsemantic functions such as `read_docs` to
+                8.  replace input arg namespace with explicit arguments
+
+                9.  rename unsemantic functions such as `read_docs` to
                     `read_doc(ument)`
 
-                7.  look into ISO hard encoding when reading files -\>
+                10. look into ISO hard encoding when reading files -\>
                     perhaps this can be modified
 
-                8.  replace current status bars with tqdm and
+                11. replace current status bars with tqdm and
                     torch-infused bar which could help to understand
                     more parameters
 
-                9.  make separate script to pre-processing raw data into
+                12. make separate script to pre-processing raw data into
                     readable format for sopa++ -\> consider renaming
                     `preprocess_glove.py` to more appropriate name later
                     -\> add nltk where needed for pre-processing
 
-                10. change argument names later on as this might break
+                13. change argument names later on as this might break
                     things in actual script for testing
 
-                11. improve code quality with unique model logging and
+                14. improve code quality with unique model logging and
                     tensorboard workflows
 
-            3.  core model changes
+            4.  core model changes
 
                 1.  use separate tokenizers such as nltk or
                     sentencepiece tokenizer from Transformers library
@@ -136,7 +141,7 @@ Tasks
                     random seeds to get standard deviation of
                     performance
 
-            4.  core explainability changes
+            5.  core explainability changes
 
                 1.  revert/refactor soft_patterns_rnn, visualization,
                     interpretation and testing scripts from git backlog
@@ -150,45 +155,68 @@ Tasks
                     give insights and perform similar to main SoPa++
                     neural model
 
-            5.  fine-tuning
+            6.  fine-tuning
 
-                1.  fix up python logging verbosity and pass tqdm
+                1.  consider adding mypy as a test case suite -\> but
+                    use --ignore-missing-imports and
+                    --allow-redefinition
+
+                2.  design new and improved test cases using pytest
+                    after understanding code completely
+
+                3.  fine-tune typing in internal functions of
+                    `SoftPatternClassifier` since some of them require
+                    batch-level testing to ascertain, eg.
+                    `get_transition_matrices`, `load_pattern` -\> need
+                    to ascertain wither `pre_computed_patterns` is List
+                    or List\[List\[str\]\] -\> consider removing `float`
+                    from
+                    `self_loop_scale: Union[torch.Tensor, float, None]`
+                    in `transition_once`
+
+                4.  address debug level issues throughout code -\> esp.
+                    where it affects clear typing in `forward`
+
+                5.  change types where `None` is permitted alongside
+                    other type to `Union[Type, None]` -\> need to go
+                    through all scripts and parse out `None` arguments
+
+                6.  fix up python logging verbosity and pass tqdm
                     directly to logger instead of purely to stdout -\>
                     integrate this well with debug argument as per
                     legacy sopa: see
                     <https://github.com/tqdm/tqdm/issues/313>
 
-                2.  possible to make separate argparse Namespace which
+                7.  add discrete choices in arg_parser for `--shared-sl`
+
+                8.  possible to make separate argparse Namespace which
                     can be passed to main, this could help with
                     portability
 
-                3.  use `renv` for managing and shipping R dependencies
+                9.  use `renv` for managing and shipping R dependencies
                     -\> keep just `renv.lock` for easier shipping and
                     ignore other files
 
-                4.  design new and improved test cases using pytest
-                    after understanding code completely
-
-                5.  add proper type checking later to flymake, use data
+                10. add proper type checking later to flymake, use data
                     processor class from torch later on
 
-                6.  extend workflow to other RASA NLU data sets given
+                11. extend workflow to other RASA NLU data sets given
                     time and resources -\> would require new
                     pre-processing scripts
 
-                7.  provide only description of data structures (eg.
+                12. provide only description of data structures (eg.
                     data, labels) required for training processes
 
-                8.  consider changing default helpers in readme to
+                13. consider changing default helpers in readme to
                     python helpers instead of those from shell scripts
 
-        3.  run SoPa++ for multiple runs to survey performance -\> run
+        2.  run SoPa++ for multiple runs to survey performance -\> run
             on all variants and data-set portions with grid-search to
             get plenty of candidates
 
             **DEADLINE:** *\<2021-02-01 Mon\>*
 
-        4.  with decent model performance, branch off to improve
+        3.  with decent model performance, branch off to improve
             explainability with weighting of patterns -\> do this and
             the previous task simultaneously
 
@@ -374,6 +402,12 @@ Tasks
 
 Completed
 ---------
+
+**DONE** major code refactoring for main model with
+conversion to recent PyTorch (eg. 1.\*) and CUDA versions (eg. 10.\*)
+
+**CLOSED:** *\[2020-12-05 Sat 18:47\]* **DEADLINE:** *\<2020-12-06
+Sun\>*
 
 **DONE** add tensorboard to explicit dependencies to view
 relevant logs during training
