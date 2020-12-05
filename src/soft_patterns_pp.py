@@ -2,10 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from time import monotonic
+from typing import List, Union, Tuple, cast
+from collections import OrderedDict
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
 from torch.nn import Module, Parameter, ModuleList, Linear
 from torch.nn.utils.rnn import pad_packed_sequence
-from .utils.model_utils import to_cuda, argmax, fixed_var, normalize
+from .utils.model_utils import (to_cuda, argmax, fixed_var, normalize,
+                                Semiring, Batch)
+from .utils.data_utils import Vocab
 import torch
 
 CW_TOKEN = "CW"
@@ -20,7 +24,8 @@ class MLP(Module):
     Expects an input tensor of size (batch_size, input_dim) and returns
     a tensor of size (batch_size, output_dim).
     """
-    def __init__(self, input_dim, hidden_layer_dim, num_layers, num_classes):
+    def __init__(self, input_dim: int, hidden_layer_dim: int, num_layers: int,
+                 num_classes: int) -> None:
         super(MLP, self).__init__()
 
         self.num_layers = num_layers
@@ -35,7 +40,7 @@ class MLP(Module):
 
         self.layers = ModuleList(layers)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         res = self.layers[0](x)
         for i in range(1, len(self.layers)):
             res = self.layers[i](relu(res))
@@ -47,23 +52,24 @@ class SoftPatternClassifier(Module):
     A text classification model that feeds the document scores from a bunch of
     soft patterns into an MLP
     """
-    def __init__(self,
-                 pattern_specs,
-                 mlp_hidden_dim,
-                 num_mlp_layers,
-                 num_classes,
-                 embeddings,
-                 vocab,
-                 semiring,
-                 bias_scale_param,
-                 gpu=False,
-                 rnn=None,
-                 pre_computed_patterns=None,
-                 no_sl=False,
-                 shared_sl=False,
-                 no_eps=False,
-                 eps_scale=None,
-                 self_loop_scale=None):
+    def __init__(
+            self,
+            pattern_specs: OrderedDict,
+            mlp_hidden_dim: int,
+            num_mlp_layers: int,
+            num_classes: int,
+            embeddings: List,
+            vocab: Vocab,
+            semiring: Semiring,
+            bias_scale_param: float,
+            gpu: bool = False,
+            rnn: Union[Module, None] = None,
+            pre_computed_patterns: Union[List, None] = None,
+            no_sl: bool = False,
+            shared_sl: int = 0,
+            no_eps: bool = False,
+            eps_scale: Union[float, None] = None,
+            self_loop_scale: Union[torch.Tensor, float, None] = None) -> None:
         super(SoftPatternClassifier, self).__init__()
         self.semiring = semiring
         self.vocab = vocab
@@ -147,7 +153,10 @@ class SoftPatternClassifier(Module):
 
         print("# params:", sum(p.nelement() for p in self.parameters()))
 
-    def get_transition_matrices(self, batch, dropout=None):
+    def get_transition_matrices(
+            self,
+            batch: Batch,
+            dropout: Union[Module, None] = None) -> List[torch.Tensor]:
         b = batch.size()
         n = batch.max_doc_len
         if self.rnn is None:
@@ -194,8 +203,10 @@ class SoftPatternClassifier(Module):
         ]
         return transition_matrices
 
-    def load_pre_computed_patterns(self, pre_computed_patterns, diag_data,
-                                   bias_data, pattern_spec):
+    def load_pre_computed_patterns(
+            self, pre_computed_patterns: List, diag_data: torch.Tensor,
+            bias_data: torch.Tensor,
+            pattern_spec: OrderedDict) -> Tuple[torch.Tensor, torch.Tensor]:
         """Loading a set of pre-coputed patterns into diagonal and bias arrays"""
         pattern_indices = dict((p, 0) for p in pattern_spec)
 
@@ -234,7 +245,8 @@ class SoftPatternClassifier(Module):
         return diag_data.view(diag_data_size, self.word_dim), bias_data.view(
             diag_data_size, 1)
 
-    def load_pattern(self, patt):
+    def load_pattern(self,
+                     patt: List[str]) -> Tuple[torch.Tensor, torch.Tensor]:
         """Loading diagonal and bias of one pattern"""
         diag = EPSILON * torch.randn(len(patt), self.word_dim)
         bias = torch.zeros(len(patt))
@@ -257,7 +269,10 @@ class SoftPatternClassifier(Module):
 
         return diag, bias
 
-    def forward(self, batch, debug=0, dropout=None):
+    def forward(self,
+                batch: Batch,
+                debug: int = 0,
+                dropout: Union[Module, None] = None) -> torch.Tensor:
         """ Calculate scores for one batch of documents. """
         time1 = monotonic()
         transition_matrices = self.get_transition_matrices(batch, dropout)
@@ -333,12 +348,15 @@ class SoftPatternClassifier(Module):
         else:
             return self.mlp.forward(scores)
 
-    def get_eps_value(self):
+    def get_eps_value(self) -> Union[torch.Tensor, None]:
         return None if self.no_eps else self.semiring.times(
             self.epsilon_scale, self.semiring.from_float(self.epsilon))
 
-    def transition_once(self, eps_value, hiddens, transition_matrix_val,
-                        zero_padding, restart_padding, self_loop_scale):
+    def transition_once(
+            self, eps_value: Union[torch.Tensor, None], hiddens: torch.Tensor,
+            transition_matrix_val: torch.Tensor, zero_padding: torch.Tensor,
+            restart_padding: torch.Tensor,
+            self_loop_scale: Union[torch.Tensor, float, None]) -> torch.Tensor:
         # Adding epsilon transitions (don't consume a token, move forward one state)
         # We do this before self-loops and single-steps.
         # We only allow zero or one epsilon transition in a row.
@@ -365,6 +383,7 @@ class SoftPatternClassifier(Module):
         if self.no_sl:
             return after_main_paths
         else:
+            self_loop_scale = cast(torch.Tensor, self_loop_scale)
             self_loop_scale = self_loop_scale.expand(transition_matrix_val[:, :, 0, :].size()) \
                 if self.shared_sl == SHARED_SL_PARAM_PER_STATE_PER_PATTERN else self_loop_scale
 
@@ -376,6 +395,6 @@ class SoftPatternClassifier(Module):
             # either happy or self-loop, not both
             return self.semiring.plus(after_main_paths, after_self_loops)
 
-    def predict(self, batch, debug=0):
+    def predict(self, batch: Batch, debug: int = 0) -> List[int]:
         output = self.forward(batch, debug).data
         return [int(x) for x in argmax(output)]

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from time import monotonic
-from typing import List
+from typing import List, Union
 from collections import OrderedDict
 from torch import LongTensor
 from torch.nn import NLLLoss, Module
@@ -26,15 +26,16 @@ import torch
 import os
 
 
-def train_batch(model: Module,
-                batch: Batch,
-                num_classes: int,
-                gold_output: List,
-                optimizer: torch.optim.Optimizer,
-                loss_function: torch.nn.modules.loss._Loss,
-                gpu: bool = False,
-                debug: int = 0,
-                dropout: float = None) -> torch.Tensor:
+def train_batch(
+        model: Module,
+        batch: Batch,
+        num_classes: int,
+        gold_output: List,
+        optimizer: torch.optim.Optimizer,
+        loss_function: torch.nn.modules.loss._Loss,
+        gpu: bool = False,
+        debug: int = 0,
+        dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
     """Train on one doc. """
     optimizer.zero_grad()
     time0 = monotonic()
@@ -54,14 +55,15 @@ def train_batch(model: Module,
     return loss.detach()
 
 
-def compute_loss(model: Module,
-                 batch: Batch,
-                 num_classes: int,
-                 gold_output: List,
-                 loss_function: torch.nn.modules.loss._Loss,
-                 gpu: bool,
-                 debug: int = 0,
-                 dropout: float = None) -> torch.Tensor:
+def compute_loss(
+        model: Module,
+        batch: Batch,
+        num_classes: int,
+        gold_output: List,
+        loss_function: torch.nn.modules.loss._Loss,
+        gpu: bool,
+        debug: int = 0,
+        dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
     time1 = monotonic()
     output = model.forward(batch, debug, dropout)
 
@@ -108,10 +110,10 @@ def train(train_data: List,
           batch_size: int,
           run_scheduler: bool = False,
           gpu: bool = False,
-          clip: float = None,
+          clip: Union[float, None] = None,
           max_len: int = -1,
           debug: int = 0,
-          dropout: float = 0,
+          dropout: Union[torch.nn.Module, float, None] = 0,
           word_dropout: float = 0,
           patience: int = 1000) -> Module:
     """ Train a model on all the given docs """
@@ -136,9 +138,9 @@ def train(train_data: List,
     if run_scheduler:
         scheduler = ReduceLROnPlateau(optimizer, 'min', 0.1, 10, True)
 
-    best_dev_loss = 100000000
+    best_dev_loss = 100000000.
     best_dev_loss_index = -1
-    best_dev_acc = -1
+    best_dev_acc = -1.
     start_time = monotonic()
 
     for it in range(num_iterations):
@@ -241,9 +243,11 @@ def train(train_data: List,
 def main(args: argparse.Namespace) -> None:
     print(args)
 
-    pattern_specs = OrderedDict(
+    pattern_specs: OrderedDict[int, int] = OrderedDict(
         sorted(
-            ([int(y) for y in x.split("-")] for x in args.patterns.split("_")),
+            (
+                [int(y) for y in x.split("-")]  # type: ignore
+                for x in args.patterns.split("_")),
             key=lambda t: t[0]))
 
     pre_computed_patterns = None
@@ -345,7 +349,7 @@ def main(args: argparse.Namespace) -> None:
           args.patience)
 
 
-def read_patterns(ifile: str, pattern_specs: OrderedDict) -> List:
+def read_patterns(ifile: str, pattern_specs: OrderedDict[int, int]) -> List:
     with open(ifile, encoding='utf-8') as ifh:
         pre_computed_patterns = [
             l.rstrip().split() for l in ifh if len(l.rstrip())

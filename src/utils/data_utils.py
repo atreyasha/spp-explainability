@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Any, Iterable, Callable, Generator, List, Union, Tuple
+from typing import (Any, Iterable, Callable, Generator, List, Union, Tuple,
+                    Sequence, overload)
 from itertools import chain, islice
 import numpy as np
 import string
@@ -62,15 +63,15 @@ class Vocab:
     def __or__(self, other: 'Vocab') -> 'Vocab':
         return Vocab(self.names + other.names)
 
-    def numberize(self, doc: List[Union[int, str]]) -> List[int]:
+    def numberize(self, doc: Sequence[Union[int, str]]) -> List[int]:
         return [self(token) for token in doc]
 
-    def denumberize(self, doc: List[int]) -> List[Union[int, str]]:
+    def denumberize(self, doc: List[int]) -> Sequence[Union[int, str]]:
         return [self[idx] for idx in doc]
 
     @classmethod
     def from_docs(cls,
-                  docs: List[List[Union[int, str]]],
+                  docs: Sequence[Sequence[Union[int, str]]],
                   default: Union[int, str] = UNK_TOKEN,
                   start: Union[int, str] = START_TOKEN,
                   end: Union[int, str] = END_TOKEN) -> 'Vocab':
@@ -84,9 +85,10 @@ def is_printable(word: str) -> bool:
     return all(c in PRINTABLE for c in word)
 
 
-def read_embeddings(filename: str,
-                    fixed_vocab=None,
-                    max_vocab_size: int = None) -> Tuple[Vocab, List, int]:
+def read_embeddings(
+        filename: str,
+        fixed_vocab: Union[Vocab, None] = None,
+        max_vocab_size: Union[int, None] = None) -> Tuple[Vocab, List, int]:
     print("Reading", filename)
     dim, has_header = check_dim_and_header(filename)
     # assign unknown, start and end tokens to zero vector
@@ -96,11 +98,12 @@ def read_embeddings(filename: str,
     with open(filename, encoding='utf-8') as input_file:
         if has_header:
             input_file.readline()
-        word_vecs = ((word, np.fromstring(vec_str, dtype=float, sep=' '))
-                     for word, vec_str in (line.rstrip().split(" ", 1)
-                                           for line in input_file)
-                     if is_printable(word) and (
-                         fixed_vocab is None or word in fixed_vocab))
+        word_vecs: Iterable[Tuple[str, np.ndarray]] = (
+            (word, np.fromstring(vec_str, dtype=float, sep=' '))
+            for word, vec_str in (line.rstrip().split(" ", 1)
+                                  for line in input_file)
+            if is_printable(word) and (
+                fixed_vocab is None or word in fixed_vocab))
         if max_vocab_size is not None:
             word_vecs = islice(word_vecs, max_vocab_size - 1)
         word_vecs = list(word_vecs)
@@ -121,9 +124,11 @@ def check_dim_and_header(filename: str) -> Tuple[int, bool]:
             return len(first_line) - 1, False
 
 
-def read_docs(filename: str,
-              vocab: Vocab,
-              num_padding_tokens: int = 1) -> Tuple[List[int], List[str]]:
+def read_docs(
+    filename: str,
+    vocab: Vocab,
+    num_padding_tokens: int = 1
+) -> Tuple[Sequence[Sequence[int]], Sequence[Sequence[Union[int, str]]]]:
     with open(filename, encoding='ISO-8859-1') as input_file:
         docs = [line.rstrip().split() for line in input_file]
     return ([
@@ -146,11 +151,24 @@ def read_labels(filename: str) -> List[int]:
 
 def vocab_from_text(filename: str) -> Vocab:
     with open(filename, encoding='ISO-8859-1') as input_file:
-        return Vocab.from_docs(line.rstrip().split() for line in input_file)
+        return Vocab.from_docs([line.rstrip().split() for line in input_file])
 
 
-def pad(doc: List[Union[int, str]],
+@overload
+def pad(doc: Sequence[int], num_padding_tokens: int, START: int,
+        END: int) -> Sequence[int]:
+    ...
+
+
+@overload
+def pad(doc: Sequence[str], num_padding_tokens: int, START: str,
+        END: str) -> Sequence[str]:
+    ...
+
+
+def pad(doc: Sequence[Union[int, str]],
         num_padding_tokens: int = 1,
         START: Union[int, str] = START_TOKEN_IDX,
-        END: Union[int, str] = END_TOKEN_IDX) -> List[Union[int, str]]:
-    return ([START] * num_padding_tokens) + doc + ([END] * num_padding_tokens)
+        END: Union[int, str] = END_TOKEN_IDX) -> Sequence[Union[int, str]]:
+    return ([START] * num_padding_tokens) + list(doc) + ([END] *
+                                                         num_padding_tokens)

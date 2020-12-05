@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Any, Iterable, Callable, List, Union
+from typing import Iterable, Callable, List, Union
 from .data_utils import (UNK_IDX, START_TOKEN_IDX, END_TOKEN_IDX, Vocab,
                          identity)
 import numpy as np
@@ -27,7 +27,7 @@ def shuffled_chunked_sorted(xs: Iterable, chunk_size: int) -> List:
     return chunks
 
 
-def right_pad(xs: Iterable, min_len: int, pad_element: str) -> List:
+def right_pad(xs: List, min_len: int, pad_element: str) -> List:
     return xs + [pad_element] * (min_len - len(xs))
 
 
@@ -105,8 +105,9 @@ class Batch:
 
 
 class Semiring:
-    def __init__(self, zero: Any, one: Any, plus: Any, times: Any,
-                 from_float: Any, to_float: Any) -> None:
+    def __init__(self, zero: Callable, one: Callable, plus: Callable,
+                 times: Callable, from_float: Callable,
+                 to_float: Callable) -> None:
         self.zero = zero
         self.one = one
         self.plus = plus

@@ -6,7 +6,7 @@ from .soft_patterns_pp import (SHARED_SL_PARAM_PER_STATE_PER_PATTERN,
                                SHARED_SL_SINGLE_PARAM)
 
 
-def soft_patterns_pp_arg_parser() -> argparse.Namespace:
+def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add sopa group
     sopa = parser.add_argument_group('optional sopa-architecture arguments')
@@ -63,7 +63,7 @@ def soft_patterns_pp_arg_parser() -> argparse.Namespace:
     return parser
 
 
-def training_arg_parser() -> argparse.Namespace:
+def training_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add required group
     required = parser.add_argument_group('required arguments')
@@ -138,7 +138,7 @@ def training_arg_parser() -> argparse.Namespace:
     return parser
 
 
-def preprocess_arg_parser() -> argparse.Namespace:
+def preprocess_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add preprocess group
     preprocess = parser.add_argument_group('optional preprocessing arguments')
@@ -150,7 +150,7 @@ def preprocess_arg_parser() -> argparse.Namespace:
     return parser
 
 
-def logging_arg_parser() -> argparse.Namespace:
+def logging_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add logging group
     logging = parser.add_argument_group('optional logging arguments')

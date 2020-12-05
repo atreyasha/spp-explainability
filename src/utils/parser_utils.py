@@ -26,14 +26,14 @@ class Metavar_Circum_Symbols(argparse.HelpFormatter):
         """
         Function to return option metavariable type with circum-symbols
         """
-        return "<" + action.type.__name__ + ">"
+        return "<" + action.type.__name__ + ">"  # type: ignore
 
     def _get_default_metavar_for_positional(self,
                                             action: argparse.Action) -> str:
         """
         Function to return positional metavariable type with circum-symbols
         """
-        return "<" + action.type.__name__ + ">"
+        return "<" + action.type.__name__ + ">"  # type: ignore
 
 
 class Metavar_Indenter(argparse.HelpFormatter):
@@ -61,8 +61,8 @@ class Metavar_Indenter(argparse.HelpFormatter):
 
         # short action name; start on the same line and pad two spaces
         elif len(action_header) <= action_width:
-            tup = self._current_indent, '', action_width, action_header
-            action_header = '%*s%-*s  ' % tup
+            tup = self._current_indent, '', action_width, action_header  # type: ignore
+            action_header = '%*s%-*s  ' % tup  # type: ignore
             indent_first = 0
 
         # long action name; start on the next line
@@ -108,7 +108,7 @@ class Metavar_Indenter(argparse.HelpFormatter):
             metavar, = self._metavar_formatter(action, default)(1)
             return metavar
         else:
-            parts = []
+            parts = []  # type: ignore
             parts.extend(action.option_strings)
             return ', '.join(parts)
 
