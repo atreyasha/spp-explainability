@@ -22,81 +22,25 @@ Tasks
 
     1.  Current
 
-        1.  **TODO** work on major changes to architecture
+        1.  **TODO** major changes to architecture and
+            workflow
 
             **DEADLINE:** *\<2020-12-24 Thu\>*
 
-            1.  sort out below tasks once more before proceeding
+            1.  technique: execute code on low batch level with preset
+                arg namespace in `soft_patterns.py` and `train.py` -\>
+                use this to understand batch level processes and address
+                limitations below
 
-            2.  execute code on low batch level with preset arg
-                namespace in `soft_patterns.py` and `train.py` -\> use
-                this to understand batch level processes and limitations
-                -\> correct typing where necessary
+            2.  core model developments
 
-            3.  initial issues
-
-                1.  creating tensors inside `torch.nn.Module` keeps them
-                    out of autograd, initializing other
-                    `torch.nn.Module` subclasses creates `Paramater`
-                    classes which learn by default, therefore it is
-                    necessary to instantiate learnable parameters in a
-                    custom `torch.nn.Module` with the `Paramter` class
-                    -\> other tensors default to no learning
-
-                2.  experiment module with and without `fixed_var` to
-                    see if `autograd` gets enabled
-
-                3.  need to understand `nn.Module` functionality before
-                    anything else -\> investigate whether `fixed_var`
-                    function is indeed necessary or can be removed since
-                    `requires_grad` is set to False by default, but
-                    coule be some conflict with `nn.Module` default
-                    parameter construction with `requires_grad = True`
-                    -\> left intact for now and appears to work well
-
-                4.  look into replacing `loss.data` with
-                    `loss.detach()`: see
-                    <https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data>
-
-                5.  model appears to work out-of-box for multiple
-                    classes -\> might not be reliable because it might
-                    only focus on one class
-
-                6.  look into iteration progress snippet with gold and
-                    predicted \"1\'s\" meaning
-
-                7.  confirm whether `Adam` falls under
-                    `torch.optim.Optimizer` when running code
-
-                8.  replace input arg namespace with explicit arguments
-
-                9.  rename unsemantic functions such as `read_docs` to
-                    `read_doc(ument)`
-
-                10. look into ISO hard encoding when reading files -\>
-                    perhaps this can be modified
-
-                11. replace current status bars with tqdm and
-                    torch-infused bar which could help to understand
-                    more parameters
-
-                12. make separate script to pre-processing raw data into
-                    readable format for sopa++ -\> consider renaming
-                    `preprocess_glove.py` to more appropriate name later
-                    -\> add nltk where needed for pre-processing
-
-                13. change argument names later on as this might break
-                    things in actual script for testing
-
-                14. improve code quality with unique model logging and
+                1.  improve code quality with unique model logging and
                     tensorboard workflows
 
-            4.  core model changes
-
-                1.  use separate tokenizers such as nltk or
+                2.  use separate tokenizers such as nltk or
                     sentencepiece tokenizer from Transformers library
 
-                2.  why are `*START*` and `*END*` tokens repeated before
+                3.  why are `*START*` and `*END*` tokens repeated before
                     and after, and why is `*UNK*` used for padding when
                     a separate `*PAD*` token could be used?
 
@@ -105,7 +49,7 @@ Tasks
                         needs to be taken into account in the
                         interpretation/visualization phase
 
-                3.  dynamic OR static word/sub-word embeddings
+                4.  dynamic OR static word/sub-word embeddings
 
                     1.  unknown, start and end GloVe vector should be
                         learned, not set to zero
@@ -124,97 +68,160 @@ Tasks
                         embeddings to reduce overfitting as much as
                         possible
 
-                    5.  sub-word contextual embeddings are available as
-                        well, see: fastText or
+                    5.  sub-word non-contextual embeddings are available
+                        as well, see: fastText or
                         <https://nlp.h-its.org/bpemb/#cite>
 
-                4.  experiment more gracious self-loops and epsilon
+                5.  experiment more gracious self-loops and epsilon
                     transitions for improved generalization
 
-                5.  modify final layer to a general additive layer with
+                6.  modify final layer to a general additive layer with
                     tree structure or soft logic where possible -\>
                     perform this incrementally for comparison
 
-                6.  make incremental tree of changes with grid-search
+                7.  use data processor class from torch where possible
+                    and flexible -\> not necessarily urgent but could be
+                    interesting
+
+                8.  make incremental tree of changes with grid-search
                     and random-seed-variant repeats -\> do grid search
                     and multiple runs of each best model with different
                     random seeds to get standard deviation of
                     performance
 
-            5.  core explainability changes
+            3.  core explainability changes
 
-                1.  revert/refactor soft_patterns_rnn, visualization,
-                    interpretation and testing scripts from git backlog
-                    to repository -\> understand and improve these
-                    significantly
-
-                2.  focus on explainability rather than performance
+                1.  focus on explainability rather than performance
                     since the data set is relatively easy to perform on
                     -\> this part should be well studied and motivated
                     -\> final ensemble of regular expressions should
                     give insights and perform similar to main SoPa++
                     neural model
 
-            6.  fine-tuning
+                2.  revert/refactor soft_patterns_rnn, visualization,
+                    interpretation and testing scripts from git backlog
+                    to repository -\> understand and improve these
+                    significantly
 
-                1.  consider adding mypy as a test case suite -\> but
-                    use --ignore-missing-imports and
-                    --allow-redefinition
+                3.  best case scenario: user should be able to transfer
+                    easily between models and regex-ensemble in both
+                    directions for \"human-computer interaction\"
 
-                2.  design new and improved test cases using pytest
-                    after understanding code completely
+            4.  diverse minor issues
 
-                3.  fine-tune typing in internal functions of
-                    `SoftPatternClassifier` since some of them require
-                    batch-level testing to ascertain, eg.
-                    `get_transition_matrices`, `load_pattern` -\> need
-                    to ascertain wither `pre_computed_patterns` is List
-                    or List\[List\[str\]\] -\> consider removing `float`
-                    from
-                    `self_loop_scale: Union[torch.Tensor, float, None]`
-                    in `transition_once`
+                1.  testing/typing
 
-                4.  address debug level issues throughout code -\> esp.
-                    where it affects clear typing in `forward`
+                    1.  add mypy as a test case suite, design new and
+                        improved test cases using pytest after
+                        understanding code completely
 
-                5.  change types where `None` is permitted alongside
-                    other type to `Union[Type, None]` -\> need to go
-                    through all scripts and parse out `None` arguments
+                    2.  address debug level issues throughout code -\>
+                        esp. where it affects clear typing in `forward`
 
-                6.  fix up python logging verbosity and pass tqdm
-                    directly to logger instead of purely to stdout -\>
-                    integrate this well with debug argument as per
-                    legacy sopa: see
-                    <https://github.com/tqdm/tqdm/issues/313>
+                    3.  fine-tune typing in internal functions of
+                        `SoftPatternClassifier` since some of them
+                        require batch-level testing to ascertain, eg.
+                        `get_transition_matrices`, `load_pattern` -\>
+                        need to ascertain wither `pre_computed_patterns`
+                        is List or List\[List\[str\]\] -\> consider
+                        removing `float` from
+                        `self_loop_scale: Union[torch.Tensor, float, None]`
+                        in `transition_once`
 
-                7.  add discrete choices in arg_parser for `--shared-sl`
+                    4.  read more about purpose of using mypy and
+                        workflow to integrate it into stack or testing
+                        -\> good for overall testing
 
-                8.  possible to make separate argparse Namespace which
-                    can be passed to main, this could help with
-                    portability
+                    5.  look into cases where List was replaced by
+                        Sequential and how this can be changed or
+                        understood to keep consistency (ie. keep
+                        everything to List)
 
-                9.  use `renv` for managing and shipping R dependencies
-                    -\> keep just `renv.lock` for easier shipping and
-                    ignore other files
+                2.  argparse/logging/dependencies
 
-                10. add proper type checking later to flymake, use data
-                    processor class from torch later on
+                    1.  replace input arg namespace with explicit
+                        arguments, OR possible to make separate argparse
+                        Namespace which can be passed to main, this
+                        could help with portability
 
-                11. extend workflow to other RASA NLU data sets given
-                    time and resources -\> would require new
-                    pre-processing scripts
+                    2.  change argument names later on as this might
+                        break things in actual scripts
 
-                12. provide only description of data structures (eg.
-                    data, labels) required for training processes
+                    3.  add discrete choices in arg_parser for
+                        `--shared-sl`
 
-                13. consider changing default helpers in readme to
-                    python helpers instead of those from shell scripts
+                    4.  fix up python logging verbosity and pass tqdm
+                        directly to logger instead of purely to stdout
+                        -\> integrate this well with debug argument as
+                        per legacy sopa: see
+                        <https://github.com/tqdm/tqdm/issues/313>
+
+                    5.  use `renv` for managing and shipping R
+                        dependencies -\> keep just `renv.lock` for
+                        easier shipping and ignore other files
+
+                3.  miscellaneous
+
+                    1.  `torch.nn.Module`
+
+                        1.  creating tensors inside `torch.nn.Module`
+                            keeps them out of autograd, initializing
+                            other `torch.nn.Module` subclasses creates
+                            `Paramater` classes which learn by default,
+                            therefore it is necessary to instantiate
+                            learnable parameters in a custom
+                            `torch.nn.Module` with the `Paramter` class
+                            -\> other tensors default to no learning
+
+                        2.  experiment module with and without
+                            `fixed_var` to see if `autograd` gets
+                            enabled
+
+                        3.  need to understand `nn.Module` functionality
+                            before anything else -\> investigate whether
+                            `fixed_var` function is indeed necessary or
+                            can be removed since `requires_grad` is set
+                            to False by default, but could be some
+                            conflict with `nn.Module` default parameter
+                            construction with `requires_grad = True` -\>
+                            left intact for now and appears to work well
+
+                    2.  look into replacing `loss.data` with
+                        `loss.detach()`: see
+                        <https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data>
+
+                    3.  look into iteration progress snippet with gold
+                        and predicted \"1\'s\" meaning
+
+                    4.  confirm whether `Adam` falls under
+                        `torch.optim.Optimizer` when running code
+
+                    5.  rename unsemantic functions such as `read_docs`
+                        to `read_doc(ument)`
+
+                    6.  look into ISO hard encoding when reading files
+                        -\> perhaps this can be modified
+
+                4.  documentation
+
+                    1.  provide only description of data structures (eg.
+                        data, labels) required for training processes
+                        -\> remove actua data
+
+                    2.  consider changing default helpers in readme to
+                        python helpers instead of those from shell
+                        scripts
 
         2.  run SoPa++ for multiple runs to survey performance -\> run
-            on all variants and data-set portions with grid-search to
-            get plenty of candidates
+            on all variants and data-set portions with (repeated)
+            grid-search to get plenty of candidates, means and standard
+            deviations
 
             **DEADLINE:** *\<2021-02-01 Mon\>*
+
+            1.  if possible: extend workflow to other RASA NLU data sets
+                given time and resources -\> would require new
+                pre-processing scripts
 
         3.  with decent model performance, branch off to improve
             explainability with weighting of patterns -\> do this and
