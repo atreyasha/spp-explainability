@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Set up git hooks
+# Type check all python source code with mypy
 set -e
 
 # usage function
