@@ -1,33 +1,38 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Iterable, Callable, List, Union
+from typing import Callable, List, Union, Any, Tuple
 from .data_utils import (UNK_IDX, START_TOKEN_IDX, END_TOKEN_IDX, Vocab,
                          identity)
 import numpy as np
 import torch
 
 
-def chunked(xs: Iterable, chunk_size: int) -> List:
+def chunked(xs: List[Tuple[List[int], int]],
+            chunk_size: int) -> List[List[Tuple[List[int], int]]]:
     xs = list(xs)
     return [xs[i:i + chunk_size] for i in range(0, len(xs), chunk_size)]
 
 
-def decreasing_length(xs: Iterable) -> List:
+def decreasing_length(
+        xs: List[Tuple[List[int], int]]) -> List[Tuple[List[int], int]]:
     return sorted(list(xs), key=lambda x: len(x[0]), reverse=True)
 
 
-def chunked_sorted(xs: Iterable, chunk_size: int) -> List:
+def chunked_sorted(xs: List[Tuple[List[int], int]],
+                   chunk_size: int) -> List[List[Tuple[List[int], int]]]:
     return chunked(decreasing_length(xs), chunk_size)
 
 
-def shuffled_chunked_sorted(xs: Iterable, chunk_size: int) -> List:
+def shuffled_chunked_sorted(
+        xs: List[Tuple[List[int], int]],
+        chunk_size: int) -> List[List[Tuple[List[int], int]]]:
     chunks = chunked_sorted(xs, chunk_size)
     np.random.shuffle(chunks)
     return chunks
 
 
-def right_pad(xs: List, min_len: int, pad_element: str) -> List:
+def right_pad(xs: List[Any], min_len: int, pad_element: Any) -> List[Any]:
     return xs + [pad_element] * (min_len - len(xs))
 
 
@@ -53,7 +58,8 @@ def normalize(data: torch.Tensor) -> None:
         data[i] = data[i] / torch.norm(data[i])
 
 
-def enable_gradient_clipping(model: torch.nn.Module, clip: float) -> None:
+def enable_gradient_clipping(model: torch.nn.Module,
+                             clip: Union[float, None]) -> None:
     if clip is not None and clip > 0:
         clip_function = lambda grad: grad.clamp(-clip, clip)
         for parameter in model.parameters():

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import List, Iterable
+from typing import List, Iterable, Dict, Any, Union
 from nltk import word_tokenize
 from .utils.parser_utils import argparse_formatter
 from .utils.logging_utils import make_logger
@@ -12,25 +12,25 @@ import csv
 import os
 
 
-def read_tsv(input_file: str) -> List:
+def read_tsv(input_file: str) -> List[Any]:
     with open(input_file, 'r') as input_file_stream:
         raw_list = list(csv.reader(input_file_stream, delimiter='\t'))
     return raw_list
 
 
-def mapping(classes: List) -> dict:
+def mapping(classes: List[str]) -> Dict[str, int]:
     return {element: i for i, element in enumerate(sorted(set(classes)))}
 
 
-def serialize(data: List, mapping: dict) -> List:
+def serialize(data: List[str], mapping: Dict[str, int]) -> List[int]:
     return [mapping[element] for element in data]
 
 
-def tokenize(data: List) -> List:
+def tokenize(data: List[str]) -> List[str]:
     return [" ".join(word_tokenize(element)) for element in data]
 
 
-def make_unique(full_data: Iterable) -> List:
+def make_unique(full_data: Iterable[Any]) -> List[Any]:
     unique_list = []
     for element in full_data:
         if element not in unique_list:
@@ -38,8 +38,8 @@ def make_unique(full_data: Iterable) -> List:
     return unique_list
 
 
-def write_file(full_data: List, mapping: dict, prefix: str,
-               write_directory: str) -> None:
+def write_file(full_data: List[List[Union[str, int]]], mapping: Dict[str, int],
+               prefix: str, write_directory: str) -> None:
     # make write directoy if it does not exist
     os.makedirs(write_directory, exist_ok=True)
     # split compund data into two

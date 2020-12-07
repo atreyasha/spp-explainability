@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from time import monotonic
-from typing import List, Union
 from collections import OrderedDict
+from typing import List, Union, MutableMapping, Any, Tuple, cast
 from torch import LongTensor
 from torch.nn import NLLLoss, Module
 from torch.nn.functional import log_softmax
@@ -26,16 +26,15 @@ import torch
 import os
 
 
-def train_batch(
-        model: Module,
-        batch: Batch,
-        num_classes: int,
-        gold_output: List,
-        optimizer: torch.optim.Optimizer,
-        loss_function: torch.nn.modules.loss._Loss,
-        gpu: bool = False,
-        debug: int = 0,
-        dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
+def train_batch(model: Module,
+                batch: Batch,
+                num_classes: int,
+                gold_output: List[int],
+                optimizer: torch.optim.Optimizer,
+                loss_function: torch.nn.modules.loss._Loss,
+                gpu: bool = False,
+                debug: int = 0,
+                dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
     """Train on one doc. """
     optimizer.zero_grad()
     time0 = monotonic()
@@ -55,15 +54,14 @@ def train_batch(
     return loss.detach()
 
 
-def compute_loss(
-        model: Module,
-        batch: Batch,
-        num_classes: int,
-        gold_output: List,
-        loss_function: torch.nn.modules.loss._Loss,
-        gpu: bool,
-        debug: int = 0,
-        dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
+def compute_loss(model: Module,
+                 batch: Batch,
+                 num_classes: int,
+                 gold_output: List[int],
+                 loss_function: torch.nn.modules.loss._Loss,
+                 gpu: bool,
+                 debug: int = 0,
+                 dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
     time1 = monotonic()
     output = model.forward(batch, debug, dropout)
 
@@ -77,7 +75,7 @@ def compute_loss(
 
 
 def evaluate_accuracy(model: Module,
-                      data: List,
+                      data: List[Tuple[List[int], int]],
                       batch_size: int,
                       gpu: bool,
                       debug: int = 0) -> float:
@@ -99,8 +97,8 @@ def evaluate_accuracy(model: Module,
     return correct / n
 
 
-def train(train_data: List,
-          dev_data: List,
+def train(train_data: List[Tuple[List[int], int]],
+          dev_data: List[Tuple[List[int], int]],
           model: Module,
           num_classes: int,
           model_save_dir: str,
@@ -243,7 +241,7 @@ def train(train_data: List,
 def main(args: argparse.Namespace) -> None:
     print(args)
 
-    pattern_specs: OrderedDict[int, int] = OrderedDict(
+    pattern_specs: MutableMapping[int, int] = OrderedDict(
         sorted(
             (
                 [int(y) for y in x.split("-")]  # type: ignore
@@ -281,6 +279,7 @@ def main(args: argparse.Namespace) -> None:
                              vocab,
                              num_padding_tokens=num_padding_tokens)
     dev_labels = read_labels(args.vl)
+    dev_input = cast(List[List[int]], dev_input)
     dev_data = list(zip(dev_input, dev_labels))
 
     np.random.shuffle(dev_data)
@@ -289,6 +288,7 @@ def main(args: argparse.Namespace) -> None:
     train_input, _ = read_docs(args.td,
                                vocab,
                                num_padding_tokens=num_padding_tokens)
+    train_input = cast(List[List[int]], train_input)
     train_labels = read_labels(args.tl)
 
     print("training instances:", len(train_input))
@@ -349,7 +349,8 @@ def main(args: argparse.Namespace) -> None:
           args.patience)
 
 
-def read_patterns(ifile: str, pattern_specs: OrderedDict[int, int]) -> List:
+def read_patterns(ifile: str, pattern_specs: MutableMapping[int,
+                                                            int]) -> List[Any]:
     with open(ifile, encoding='utf-8') as ifh:
         pre_computed_patterns = [
             l.rstrip().split() for l in ifh if len(l.rstrip())

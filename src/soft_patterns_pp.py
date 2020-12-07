@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from time import monotonic
-from typing import List, Union, Tuple, cast
-from collections import OrderedDict
+from typing import List, Union, Tuple, cast, MutableMapping, Any
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
 from torch.nn import Module, Parameter, ModuleList, Linear
 from torch.nn.utils.rnn import pad_packed_sequence
 from .utils.model_utils import (to_cuda, argmax, fixed_var, normalize,
                                 Semiring, Batch)
 from .utils.data_utils import Vocab
+import numpy as np
 import torch
 
 CW_TOKEN = "CW"
@@ -54,11 +54,11 @@ class SoftPatternClassifier(Module):
     """
     def __init__(
             self,
-            pattern_specs: OrderedDict,
+            pattern_specs: MutableMapping[int, int],
             mlp_hidden_dim: int,
             num_mlp_layers: int,
             num_classes: int,
-            embeddings: List,
+            embeddings: List[np.ndarray],
             vocab: Vocab,
             semiring: Semiring,
             bias_scale_param: float,
@@ -204,9 +204,9 @@ class SoftPatternClassifier(Module):
         return transition_matrices
 
     def load_pre_computed_patterns(
-            self, pre_computed_patterns: List, diag_data: torch.Tensor,
-            bias_data: torch.Tensor,
-            pattern_spec: OrderedDict) -> Tuple[torch.Tensor, torch.Tensor]:
+        self, pre_computed_patterns: List[Any], diag_data: torch.Tensor,
+        bias_data: torch.Tensor, pattern_spec: MutableMapping[int, int]
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Loading a set of pre-coputed patterns into diagonal and bias arrays"""
         pattern_indices = dict((p, 0) for p in pattern_spec)
 

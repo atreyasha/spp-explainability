@@ -20,11 +20,11 @@ def identity(x: Any) -> Any:
     return x
 
 
-def nub(xs: Iterable) -> Generator:
+def nub(xs: Iterable[Any]) -> Generator[Any, None, None]:
     return nub_by(xs, identity)
 
 
-def nub_by(xs: Iterable, key: Callable) -> Generator:
+def nub_by(xs: Iterable[Any], key: Callable) -> Generator[Any, None, None]:
     seen = set()
 
     def check_and_add(x: Any) -> bool:
@@ -39,7 +39,7 @@ def nub_by(xs: Iterable, key: Callable) -> Generator:
 
 class Vocab:
     def __init__(self,
-                 names: Iterable,
+                 names: Iterable[Any],
                  default: Union[int, str] = UNK_TOKEN,
                  start: Union[int, str] = START_TOKEN,
                  end: Union[int, str] = END_TOKEN) -> None:
@@ -86,9 +86,10 @@ def is_printable(word: str) -> bool:
 
 
 def read_embeddings(
-        filename: str,
-        fixed_vocab: Union[Vocab, None] = None,
-        max_vocab_size: Union[int, None] = None) -> Tuple[Vocab, List, int]:
+    filename: str,
+    fixed_vocab: Union[Vocab, None] = None,
+    max_vocab_size: Union[int, None] = None
+) -> Tuple[Vocab, List[np.ndarray], int]:
     print("Reading", filename)
     dim, has_header = check_dim_and_header(filename)
     # assign unknown, start and end tokens to zero vector
