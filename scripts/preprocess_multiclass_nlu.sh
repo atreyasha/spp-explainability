@@ -23,6 +23,7 @@ check_help() {
   done
 }
 
+# define function
 preprocess_multiclass_nlu() {
   python3 -m src.preprocess_multiclass_nlu
 }

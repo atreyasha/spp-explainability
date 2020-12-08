@@ -23,7 +23,7 @@ check_help() {
   done
 }
 
-# download and prepare small NLU intent data sets
+# download and prepare Facebook multi-class NLU data set
 facebook_multi_task_nlu() {
   local directory="./data/facebook_multiclass_nlu/raw"
   mkdir -p "$directory"
@@ -31,6 +31,7 @@ facebook_multi_task_nlu() {
   unzip "$directory/multilingual_task_oriented_dialog_slotfilling.zip" -d "$directory"
 }
 
+# download GloVe 6B word vectors
 glove_6B() {
   local directory="./data/glove_6B"
   mkdir -p "$directory"
