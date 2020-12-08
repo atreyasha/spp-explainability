@@ -8,12 +8,17 @@
 ***** Current
 ****** TODO major changes to architecture and workflow
        DEADLINE: <2020-12-24 Thu>
-******* technique: execute code on low batch level with preset arg namespace in =soft_patterns.py= and =train.py= -> use this to understand batch level processes and address limitations below
-******* core model developments
-******** improve code quality with unique model logging and tensorboard workflows 
-******** use separate tokenizers such as nltk or sentencepiece tokenizer from Transformers library 
+******* initial steps
+******** execute code on low batch level with preset arg namespace in =soft_patterns.py= -> use this to understand batch level processes and fix minor issues where present such as variable naming, formatting etc. 
 ******** why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
 ********* review and opine whether this needs to be changed -> perhaps there is a reason but this needs to be taken into account in the interpretation/visualization phase
+******** experiment module with and without =fixed_var= to see if =autograd= gets enabled
+******** need to understand =nn.Module= functionality before anything else -> investigate whether =fixed_var= function is indeed necessary or can be removed since =requires_grad= is set to False by default, but could be some conflict with =nn.Module= default parameter construction with ~requires_grad = True~ -> left intact for now and appears to work well
+******** address scattered TODOs in code if still remaining
+
+******* core model developments
+******** improve code quality with unique model logging and tensorboard workflows with more metrics where possible
+******** use separate (incremental) tokenizers such as nltk or sentencepiece tokenizer from Transformers library 
 ******** dynamic OR static word/sub-word embeddings
 ********* unknown, start and end GloVe vector should be learned, not set to zero
 ********* OR perhaps there is merit in keeping input vectors fixed to prevent overfitting in small subset of them
@@ -22,39 +27,36 @@
 ********* sub-word non-contextual embeddings are available as well, see: fastText or https://nlp.h-its.org/bpemb/#cite
 ******** experiment more gracious self-loops and epsilon transitions for improved generalization 
 ******** modify final layer to a general additive layer with tree structure or soft logic where possible -> perform this incrementally for comparison
-******** use data processor class from torch where possible and flexible -> not necessarily urgent but could be interesting 
 ******** make incremental tree of changes with grid-search and random-seed-variant repeats -> do grid search and multiple runs of each best model with different random seeds to get standard deviation of performance
+
 ******* core explainability changes
 ******** focus on explainability rather than performance since the data set is relatively easy to perform on -> this part should be well studied and motivated -> final ensemble of regular expressions should give insights and perform similar to main SoPa++ neural model
 ******** revert/refactor soft_patterns_rnn, visualization, interpretation and testing scripts from git backlog to repository -> understand and improve these significantly
 ******** best case scenario: user should be able to transfer easily between models and regex-ensemble in both directions for "human-computer interaction"
         
 ******* diverse minor issues
+******** argparse/logging/dependencies
+********* replace input arg namespace with explicit arguments, OR possible to make separate argparse Namespace which can be passed to main, this could help with portability
+********* change argument names later on as this might break things in actual scripts
+********* add discrete choices in arg_parser for =--shared-sl=
+********* use logger instead of usual printing during model runs
+********* fix up python logging verbosity and pass tqdm directly to logger instead of purely to stdout -> integrate this well with debug argument as per legacy sopa: see https://github.com/tqdm/tqdm/issues/313
+********* use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
+******** miscellaneous
+********* use data processor class from torch where possible and flexible -> not necessarily urgent but could be interesting 
+********* look into replacing =loss.data= with =loss.detach()=: see https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data
+********* look into iteration progress snippet with gold and predicted "1's" meaning
+********* confirm whether =Adam= falls under =torch.optim.Optimizer= when running code
+********* rename unsemantic functions such as =read_docs= to =read_doc(ument)=
+********* look into ISO hard encoding when reading files -> perhaps this can be modified
+********* rename variables across source code to more consistent types such as =input_file=, =output_file=, =*_file_stream=, etc.
+********* replace =debug= workflow with more elegant workflow
 ******** testing/typing
 ********* add mypy as a test case suite, design new and improved test cases using pytest after understanding code completely
 ********* address debug level issues throughout code -> esp. where it affects clear typing in =forward=
 ********* fine-tune typing in internal functions of =SoftPatternClassifier= since some of them require batch-level testing to ascertain, eg. =get_transition_matrices=, =load_pattern= -> need to ascertain wither =pre_computed_patterns= is List or List[List[str]] -> consider removing =float= from =self_loop_scale: Union[torch.Tensor, float, None]= in =transition_once=
 ********* read more about purpose of using mypy and workflow to integrate it into stack or testing -> good for overall testing
 ********* look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List)
-******** argparse/logging/dependencies
-********* replace input arg namespace with explicit arguments, OR possible to make separate argparse Namespace which can be passed to main, this could help with portability
-********* change argument names later on as this might break things in actual scripts
-********* add discrete choices in arg_parser for =--shared-sl=
-********* fix up python logging verbosity and pass tqdm directly to logger instead of purely to stdout -> integrate this well with debug argument as per legacy sopa: see https://github.com/tqdm/tqdm/issues/313
-********* use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
-******** miscellaneous
-********* =torch.nn.Module=
-********** creating tensors inside =torch.nn.Module= keeps them out of autograd, initializing other =torch.nn.Module= subclasses creates =Paramater= classes which learn by default, therefore it is necessary to instantiate learnable parameters in a custom =torch.nn.Module= with the =Paramter= class -> other tensors default to no learning
-********** experiment module with and without =fixed_var= to see if =autograd= gets enabled
-********** need to understand =nn.Module= functionality before anything else -> investigate whether =fixed_var= function is indeed necessary or can be removed since =requires_grad= is set to False by default, but could be some conflict with =nn.Module= default parameter construction with ~requires_grad = True~ -> left intact for now and appears to work well
-********* look into replacing =loss.data= with =loss.detach()=: see https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data
-********* look into iteration progress snippet with gold and predicted "1's" meaning
-********* confirm whether =Adam= falls under =torch.optim.Optimizer= when running code
-********* rename unsemantic functions such as =read_docs= to =read_doc(ument)=
-********* look into ISO hard encoding when reading files -> perhaps this can be modified
-******** documentation
-********* provide only description of data structures (eg. data, labels) required for training processes -> remove actua data
-********* consider changing default helpers in readme to python helpers instead of those from shell scripts
 
 ****** run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with (repeated) grid-search to get plenty of candidates, means and standard deviations
        DEADLINE: <2021-02-01 Mon>
@@ -62,9 +64,12 @@
 ****** with decent model performance, branch off to improve explainability with weighting of patterns -> do this and the previous task simultaneously
        DEADLINE: <2021-02-01 Mon>
 
-***** Long-term
+***** Long-term/KIV
+****** creating tensors inside =torch.nn.Module= keeps them out of autograd, initializing other =torch.nn.Module= subclasses creates =Paramater= classes which learn by default, therefore it is necessary to instantiate learnable parameters in a custom =torch.nn.Module= with the =Paramter= class -> other tensors default to no learning
+****** provide only description of data structures (eg. data, labels) required for training processes -> remove actua data
+****** consider changing default helpers in readme to python helpers instead of those from shell scripts
 ****** update metadata in scripts later with new workflows, eg. with help scripts, comments describing functionality and readme descriptions for git hooks
-****** add pydocstrings to all functions for improved documentation
+****** add pydocstrings to all functions for improved documentation -> plus comments where relevant
 ****** add MIT license when made public
 ****** make list of all useful commands for slurm
 
@@ -132,6 +137,8 @@
 ****** extension/recommendations -> transducer for seq2seq tasks
        
 ** Completed
+***** DONE look through =train.py= and make comments on general processes -> fix minor issues where present such as variable naming, formatting etc.
+      CLOSED: [2020-12-08 Tue 18:38]
 ***** DONE major code refactoring for main model with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
       CLOSED: [2020-12-05 Sat 18:47] DEADLINE: <2020-12-06 Sun>
 ***** DONE add tensorboard to explicit dependencies to view relevant logs during training

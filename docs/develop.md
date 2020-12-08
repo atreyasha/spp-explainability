@@ -27,20 +27,15 @@ Tasks
 
             **DEADLINE:** *\<2020-12-24 Thu\>*
 
-            1.  technique: execute code on low batch level with preset
-                arg namespace in `soft_patterns.py` and `train.py` -\>
-                use this to understand batch level processes and address
-                limitations below
+            1.  initial steps
 
-            2.  core model developments
+                1.  execute code on low batch level with preset arg
+                    namespace in `soft_patterns.py` -\> use this to
+                    understand batch level processes and fix minor
+                    issues where present such as variable naming,
+                    formatting etc.
 
-                1.  improve code quality with unique model logging and
-                    tensorboard workflows
-
-                2.  use separate tokenizers such as nltk or
-                    sentencepiece tokenizer from Transformers library
-
-                3.  why are `*START*` and `*END*` tokens repeated before
+                2.  why are `*START*` and `*END*` tokens repeated before
                     and after, and why is `*UNK*` used for padding when
                     a separate `*PAD*` token could be used?
 
@@ -49,7 +44,29 @@ Tasks
                         needs to be taken into account in the
                         interpretation/visualization phase
 
-                4.  dynamic OR static word/sub-word embeddings
+                3.  experiment module with and without `fixed_var` to
+                    see if `autograd` gets enabled
+
+                4.  need to understand `nn.Module` functionality before
+                    anything else -\> investigate whether `fixed_var`
+                    function is indeed necessary or can be removed since
+                    `requires_grad` is set to False by default, but
+                    could be some conflict with `nn.Module` default
+                    parameter construction with `requires_grad = True`
+                    -\> left intact for now and appears to work well
+
+                5.  address scattered TODOs in code if still remaining
+
+            2.  core model developments
+
+                1.  improve code quality with unique model logging and
+                    tensorboard workflows with more metrics where
+                    possible
+
+                2.  use separate (incremental) tokenizers such as nltk
+                    or sentencepiece tokenizer from Transformers library
+
+                3.  dynamic OR static word/sub-word embeddings
 
                     1.  unknown, start and end GloVe vector should be
                         learned, not set to zero
@@ -72,18 +89,14 @@ Tasks
                         as well, see: fastText or
                         <https://nlp.h-its.org/bpemb/#cite>
 
-                5.  experiment more gracious self-loops and epsilon
+                4.  experiment more gracious self-loops and epsilon
                     transitions for improved generalization
 
-                6.  modify final layer to a general additive layer with
+                5.  modify final layer to a general additive layer with
                     tree structure or soft logic where possible -\>
                     perform this incrementally for comparison
 
-                7.  use data processor class from torch where possible
-                    and flexible -\> not necessarily urgent but could be
-                    interesting
-
-                8.  make incremental tree of changes with grid-search
+                6.  make incremental tree of changes with grid-search
                     and random-seed-variant repeats -\> do grid search
                     and multiple runs of each best model with different
                     random seeds to get standard deviation of
@@ -109,7 +122,62 @@ Tasks
 
             4.  diverse minor issues
 
-                1.  testing/typing
+                1.  argparse/logging/dependencies
+
+                    1.  replace input arg namespace with explicit
+                        arguments, OR possible to make separate argparse
+                        Namespace which can be passed to main, this
+                        could help with portability
+
+                    2.  change argument names later on as this might
+                        break things in actual scripts
+
+                    3.  add discrete choices in arg_parser for
+                        `--shared-sl`
+
+                    4.  use logger instead of usual printing during
+                        model runs
+
+                    5.  fix up python logging verbosity and pass tqdm
+                        directly to logger instead of purely to stdout
+                        -\> integrate this well with debug argument as
+                        per legacy sopa: see
+                        <https://github.com/tqdm/tqdm/issues/313>
+
+                    6.  use `renv` for managing and shipping R
+                        dependencies -\> keep just `renv.lock` for
+                        easier shipping and ignore other files
+
+                2.  miscellaneous
+
+                    1.  use data processor class from torch where
+                        possible and flexible -\> not necessarily urgent
+                        but could be interesting
+
+                    2.  look into replacing `loss.data` with
+                        `loss.detach()`: see
+                        <https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data>
+
+                    3.  look into iteration progress snippet with gold
+                        and predicted \"1\'s\" meaning
+
+                    4.  confirm whether `Adam` falls under
+                        `torch.optim.Optimizer` when running code
+
+                    5.  rename unsemantic functions such as `read_docs`
+                        to `read_doc(ument)`
+
+                    6.  look into ISO hard encoding when reading files
+                        -\> perhaps this can be modified
+
+                    7.  rename variables across source code to more
+                        consistent types such as `input_file`,
+                        `output_file`, `*_file_stream`, etc.
+
+                    8.  replace `debug` workflow with more elegant
+                        workflow
+
+                3.  testing/typing
 
                     1.  add mypy as a test case suite, design new and
                         improved test cases using pytest after
@@ -137,81 +205,6 @@ Tasks
                         understood to keep consistency (ie. keep
                         everything to List)
 
-                2.  argparse/logging/dependencies
-
-                    1.  replace input arg namespace with explicit
-                        arguments, OR possible to make separate argparse
-                        Namespace which can be passed to main, this
-                        could help with portability
-
-                    2.  change argument names later on as this might
-                        break things in actual scripts
-
-                    3.  add discrete choices in arg_parser for
-                        `--shared-sl`
-
-                    4.  fix up python logging verbosity and pass tqdm
-                        directly to logger instead of purely to stdout
-                        -\> integrate this well with debug argument as
-                        per legacy sopa: see
-                        <https://github.com/tqdm/tqdm/issues/313>
-
-                    5.  use `renv` for managing and shipping R
-                        dependencies -\> keep just `renv.lock` for
-                        easier shipping and ignore other files
-
-                3.  miscellaneous
-
-                    1.  `torch.nn.Module`
-
-                        1.  creating tensors inside `torch.nn.Module`
-                            keeps them out of autograd, initializing
-                            other `torch.nn.Module` subclasses creates
-                            `Paramater` classes which learn by default,
-                            therefore it is necessary to instantiate
-                            learnable parameters in a custom
-                            `torch.nn.Module` with the `Paramter` class
-                            -\> other tensors default to no learning
-
-                        2.  experiment module with and without
-                            `fixed_var` to see if `autograd` gets
-                            enabled
-
-                        3.  need to understand `nn.Module` functionality
-                            before anything else -\> investigate whether
-                            `fixed_var` function is indeed necessary or
-                            can be removed since `requires_grad` is set
-                            to False by default, but could be some
-                            conflict with `nn.Module` default parameter
-                            construction with `requires_grad = True` -\>
-                            left intact for now and appears to work well
-
-                    2.  look into replacing `loss.data` with
-                        `loss.detach()`: see
-                        <https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data>
-
-                    3.  look into iteration progress snippet with gold
-                        and predicted \"1\'s\" meaning
-
-                    4.  confirm whether `Adam` falls under
-                        `torch.optim.Optimizer` when running code
-
-                    5.  rename unsemantic functions such as `read_docs`
-                        to `read_doc(ument)`
-
-                    6.  look into ISO hard encoding when reading files
-                        -\> perhaps this can be modified
-
-                4.  documentation
-
-                    1.  provide only description of data structures (eg.
-                        data, labels) required for training processes
-                        -\> remove actua data
-
-                    2.  consider changing default helpers in readme to
-                        python helpers instead of those from shell
-                        scripts
-
         2.  run SoPa++ for multiple runs to survey performance -\> run
             on all variants and data-set portions with (repeated)
             grid-search to get plenty of candidates, means and standard
@@ -229,17 +222,32 @@ Tasks
 
             **DEADLINE:** *\<2021-02-01 Mon\>*
 
-    2.  Long-term
+    2.  Long-term/KIV
 
-        1.  update metadata in scripts later with new workflows, eg.
+        1.  creating tensors inside `torch.nn.Module` keeps them out of
+            autograd, initializing other `torch.nn.Module` subclasses
+            creates `Paramater` classes which learn by default,
+            therefore it is necessary to instantiate learnable
+            parameters in a custom `torch.nn.Module` with the `Paramter`
+            class -\> other tensors default to no learning
+
+        2.  provide only description of data structures (eg. data,
+            labels) required for training processes -\> remove actua
+            data
+
+        3.  consider changing default helpers in readme to python
+            helpers instead of those from shell scripts
+
+        4.  update metadata in scripts later with new workflows, eg.
             with help scripts, comments describing functionality and
             readme descriptions for git hooks
 
-        2.  add pydocstrings to all functions for improved documentation
+        5.  add pydocstrings to all functions for improved documentation
+            -\> plus comments where relevant
 
-        3.  add MIT license when made public
+        6.  add MIT license when made public
 
-        4.  make list of all useful commands for slurm
+        7.  make list of all useful commands for slurm
 
 2.  SoPa++
 
@@ -409,6 +417,12 @@ Tasks
 
 Completed
 ---------
+
+**DONE** look through `train.py` and make comments on general
+processes -\> fix minor issues where present such as variable naming,
+formatting etc.
+
+**CLOSED:** *\[2020-12-08 Tue 18:38\]*
 
 **DONE** major code refactoring for main model with
 conversion to recent PyTorch (eg. 1.\*) and CUDA versions (eg. 10.\*)
