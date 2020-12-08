@@ -3,7 +3,7 @@
 
 from time import monotonic
 from collections import OrderedDict
-from typing import List, Union, MutableMapping, Any, Tuple, cast
+from typing import List, Union, MutableMapping, Tuple, cast
 from torch import LongTensor
 from torch.nn import NLLLoss, Module
 from torch.nn.functional import log_softmax
@@ -35,22 +35,31 @@ def train_batch(model: Module,
                 gpu: bool = False,
                 debug: int = 0,
                 dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
-    """Train on one doc. """
+    # set optimizer gradients to zero
     optimizer.zero_grad()
+
+    # compute model loss
     time0 = monotonic()
     loss = compute_loss(model, batch, num_classes, gold_output, loss_function,
                         gpu, debug, dropout)
+
+    # compute loss gradients for all parameters
     time1 = monotonic()
     loss.backward()
-    time2 = monotonic()
 
+    # perform a single optimization step
+    time2 = monotonic()
     optimizer.step()
+
+    # debug output if necessary
     if debug:
         time3 = monotonic()
         print(
             "Time in loss: {}, time in backward: {}, time in step: {}".format(
                 round(time1 - time0, 3), round(time2 - time1, 3),
                 round(time3 - time2, 3)))
+
+    # detach loss from computational graph and return tensor data
     return loss.detach()
 
 
@@ -62,13 +71,16 @@ def compute_loss(model: Module,
                  gpu: bool,
                  debug: int = 0,
                  dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
+    # compute model outputs given batch
     time1 = monotonic()
     output = model.forward(batch, debug, dropout)
 
+    # debug output if necessary
     if debug:
         time2 = monotonic()
         print("Forward total in loss: {}".format(round(time2 - time1, 3)))
 
+    # return loss over output and gold
     return loss_function(
         log_softmax(output, dim=1).view(batch.size(), num_classes),
         to_cuda(gpu)(fixed_var(LongTensor(gold_output))))
@@ -79,22 +91,39 @@ def evaluate_accuracy(model: Module,
                       batch_size: int,
                       gpu: bool,
                       debug: int = 0) -> float:
-    n = float(len(data))
+    # instantiate local variables
+    number_data_points = float(len(data))
     correct = 0
     num_1s = 0
+
+    # chunk data into sorted batches and iterate
     for batch in chunked_sorted(data, batch_size):
+        # create batch and send to GPU if present
         batch_obj = Batch([x for x, y in batch], model.embeddings,
                           to_cuda(gpu))
+
+        # parse gold output
         gold = [y for x, y in batch]
+
+        # predict output using model
         predicted = model.predict(batch_obj, debug)
+
+        # find number of predicted class 1's
+        # NOTE: legacy technique for binary classifier
+        # TODO: replace or reject, as well as print statement below
         num_1s += predicted.count(1)
+
+        # find number of correctly predicted data points
         correct += sum(1 for pred, gold in zip(predicted, gold)
                        if pred == gold)
 
+    # print information on predicted 1's
     print("num predicted 1s:", num_1s)
     print("num gold 1s:     ", sum(gold == 1 for _, gold in data))
 
-    return correct / n
+    # return raw accuracy float
+    # TODO: replace this workflow with more robust metric such as F1 score
+    return correct / number_data_points
 
 
 def train(train_data: List[Tuple[List[int], int]],
@@ -114,51 +143,71 @@ def train(train_data: List[Tuple[List[int], int]],
           dropout: Union[torch.nn.Module, float, None] = 0,
           word_dropout: float = 0,
           patience: int = 1000) -> Module:
-    """ Train a model on all the given docs """
-
+    # instantiate Adam optimizer
     optimizer = Adam(model.parameters(), lr=learning_rate)
+
+    # instantiate negative log-likelihood loss
+    # NOTE: reduce by summing over batch instead of default 'mean'
     loss_function = NLLLoss(weight=None, reduction="sum")
 
+    # enable gradient clipping in-place if provided
     enable_gradient_clipping(model, clip)
 
+    # initialize dropout if provided
     if dropout:
         dropout = torch.nn.Dropout(dropout)
     else:
         dropout = None
 
+    # initialize paramter which adjusts "." creation for progress loop
     debug_print = int(100 / batch_size) + 1
 
+    # initialize tensorboard writer if provided
     writer = None
-
     if model_save_dir is not None:
         writer = SummaryWriter(os.path.join(model_save_dir, "logs"))
 
+    # initialize learning rate scheduler if provided
     if run_scheduler:
         scheduler = ReduceLROnPlateau(optimizer, 'min', 0.1, 10, True)
 
+    # initialize floats for re-use
     best_dev_loss = 100000000.
     best_dev_loss_index = -1
     best_dev_acc = -1.
+
+    # initialize timer for debugging/printing
     start_time = monotonic()
 
+    # loop over epochs
     for it in range(num_iterations):
+        # shuffle training data
         np.random.shuffle(train_data)
 
+        # initialize training loss and run count
         loss = 0.0
         i = 0
+
+        # loop over shuffled train batches
         for batch in shuffled_chunked_sorted(train_data, batch_size):
+            # create batch object
             batch_obj = Batch([x[0] for x in batch], model.embeddings,
                               to_cuda(gpu), word_dropout, max_len)
+            # parse out gold labels
             gold = [x[1] for x in batch]
+            # find aggregate loss across samples in batch
             loss += torch.sum(
                 train_batch(model, batch_obj, num_classes, gold, optimizer,
                             loss_function, gpu, debug, dropout))
-
+            # print dots for progress
             if i % debug_print == (debug_print - 1):
                 print(".", end="", flush=True)
+            # increment batch counter
             i += 1
 
+        # add parameter data to tensorboard if provided
         if writer is not None:
+            # add named parameter data
             for name, param in model.named_parameters():
                 writer.add_scalar("parameter_mean/" + name, param.data.mean(),
                                   it)
@@ -169,33 +218,47 @@ def train(train_data: List[Tuple[List[int], int]],
                                       param.grad.data.mean(), it)
                     writer.add_scalar("gradient_std/" + name,
                                       param.grad.data.std(), it)
-
+            # add loss data
             writer.add_scalar("loss/loss_train", loss, it)
 
+        # initialize dev loss and run count
         dev_loss = 0.0
         i = 0
+
+        # loop over static dev set
         for batch in chunked_sorted(dev_data, batch_size):
+            # create batch object
             batch_obj = Batch([x[0] for x in batch], model.embeddings,
                               to_cuda(gpu))
+            # parse out gold labels
             gold = [x[1] for x in batch]
+            # find aggregate loss across dev samples in batch
             dev_loss += torch.sum(
                 compute_loss(model, batch_obj, num_classes, gold,
                              loss_function, gpu, debug).data)
-
+            # print dots for progress
             if i % debug_print == (debug_print - 1):
                 print(".", end="", flush=True)
-
+            # increment batch counter
             i += 1
 
+        # add dev loss data to tensorboard
         if writer is not None:
             writer.add_scalar("loss/loss_dev", dev_loss, it)
+
+        # add newline for stdout progress loop
         print("\n")
 
+        # find time for finished iteration
         finish_iter_time = monotonic()
+
+        # evaluate training and dev accuracies
+        # TODO: do not limit training data accuracy here
         train_acc = evaluate_accuracy(model, train_data[:1000], batch_size,
                                       gpu)
         dev_acc = evaluate_accuracy(model, dev_data, batch_size, gpu)
 
+        # print out report of current iteration
         print(
             "iteration: {:>7,} train time: {:>9,.3f}m, eval time: {:>9,.3f}m "
             "train loss: {:>12,.3f} train_acc: {:>8,.3f}% "
@@ -204,6 +267,9 @@ def train(train_data: List[Tuple[List[int], int]],
                 (monotonic() - finish_iter_time) / 60, loss / len(train_data),
                 train_acc * 100, dev_loss / len(dev_data), dev_acc * 100))
 
+        # check for loss improvement and save model if there is reduction
+        # optionally increment patience counter or stop training
+        # NOTE: loss values are summed over all data (not mean)
         if dev_loss < best_dev_loss:
             if dev_acc > best_dev_acc:
                 best_dev_acc = dev_acc
@@ -223,6 +289,8 @@ def train(train_data: List[Tuple[List[int], int]],
                       "iterations without improving dev loss. Breaking")
                 break
 
+        # check for improvement in dev best accuracy
+        # TODO: likely remove this block since it is not necessary
         if dev_acc > best_dev_acc:
             best_dev_acc = dev_acc
             print("New best acc!")
@@ -232,15 +300,31 @@ def train(train_data: List[Tuple[List[int], int]],
                 print("saving model to", model_save_file)
                 torch.save(model.state_dict(), model_save_file)
 
+        # apply learning rate scheduler after epoch
         if run_scheduler:
             scheduler.step(dev_loss)
 
+    # return reference to model
+    # TODO: remove this return value since model is updated in-place
+    # TODO: check other code references if this is needed
     return model
 
 
 def main(args: argparse.Namespace) -> None:
+    # print namespace arguments
     print(args)
 
+    # read important arguments and define as local variables
+    num_train_instances = args.num_train_instances
+    mlp_hidden_dim = args.mlp_hidden_dim
+    num_mlp_layers = args.num_mlp_layers
+    num_iterations = args.num_iterations
+    model_save_dir = args.model_save_dir
+
+    # set default temporary value for pre_computed_patterns
+    pre_computed_patterns = None
+
+    # convert pattern_specs string in OrderedDict
     pattern_specs: MutableMapping[int, int] = OrderedDict(
         sorted(
             (
@@ -248,75 +332,72 @@ def main(args: argparse.Namespace) -> None:
                 for x in args.patterns.split("_")),
             key=lambda t: t[0]))
 
-    pre_computed_patterns = None
-
+    # read pre_computed_patterns if it exists, format pattern_specs accordingly
     if args.pre_computed_patterns is not None:
         pre_computed_patterns = read_patterns(args.pre_computed_patterns,
                                               pattern_specs)
         pattern_specs = OrderedDict(
             sorted(pattern_specs.items(), key=lambda t: t[0]))
 
-    n = args.num_train_instances
-    mlp_hidden_dim = args.mlp_hidden_dim
-    num_mlp_layers = args.num_mlp_layers
-
+    # set global random seed if specified
     if args.seed != -1:
         torch.manual_seed(args.seed)
         np.random.seed(args.seed)
 
+    # read dev and train vocabularies
     dev_vocab = vocab_from_text(args.vd)
     print("Dev vocab size:", len(dev_vocab))
     train_vocab = vocab_from_text(args.td)
     print("Train vocab size:", len(train_vocab))
-    dev_vocab |= train_vocab
 
-    vocab, embeddings, word_dim = \
-        read_embeddings(args.embedding_file, dev_vocab)
+    # combine dev and train vocabularies into global object
+    vocab = dev_vocab | train_vocab
 
+    # read embeddings file and output intersected vocab
+    # embeddings and word-vector dimensionality
+    vocab, embeddings, word_dim = read_embeddings(args.embedding_file, vocab)
+
+    # set number of padding tokens as one less than the longest pattern length
+    # TODO: understand why this is set and if this is necessary
     num_padding_tokens = max(list(pattern_specs.keys())) - 1
 
+    # read development data and shuffle
     dev_input, _ = read_docs(args.vd,
                              vocab,
                              num_padding_tokens=num_padding_tokens)
     dev_labels = read_labels(args.vl)
     dev_input = cast(List[List[int]], dev_input)
     dev_data = list(zip(dev_input, dev_labels))
-
     np.random.shuffle(dev_data)
-    num_iterations = args.num_iterations
 
+    # read train data and shuffle
     train_input, _ = read_docs(args.td,
                                vocab,
                                num_padding_tokens=num_padding_tokens)
     train_input = cast(List[List[int]], train_input)
     train_labels = read_labels(args.tl)
-
-    print("training instances:", len(train_input))
-
     num_classes = len(set(train_labels))
-
-    # truncate data (to debug faster)
     train_data = list(zip(train_input, train_labels))
     np.random.shuffle(train_data)
 
+    # print diagnostic information
+    print("training instances:", len(train_input))
     print("num_classes:", num_classes)
 
-    if n is not None:
-        train_data = train_data[:n]
-        dev_data = dev_data[:n]
+    # truncate data if necessary
+    if num_train_instances is not None:
+        train_data = train_data[:num_train_instances]
+        dev_data = dev_data[:num_train_instances]
 
     # NOTE: temporary workaround to remove RNN for simplicity
-    # if args.use_rnn:
-    #     rnn = Rnn(word_dim, args.hidden_dim, cell_type=LSTM, gpu=args.gpu)
-    # else:
-    #     rnn = None
+    # TODO: bring back complete option in the future to test efficacy
     rnn = None
 
-    semiring = \
-        MaxPlusSemiring if args.maxplus else (
-            LogSpaceMaxTimesSemiring if args.maxtimes else ProbSemiring
-        )
+    # define semiring as per argument provided
+    semiring = MaxPlusSemiring if args.maxplus else (
+        LogSpaceMaxTimesSemiring if args.maxtimes else ProbSemiring)
 
+    # create SoftPatternClassifier
     model = SoftPatternClassifier(pattern_specs, mlp_hidden_dim,
                                   num_mlp_layers, num_classes, embeddings,
                                   vocab, semiring, args.bias_scale_param,
@@ -324,24 +405,27 @@ def main(args: argparse.Namespace) -> None:
                                   args.no_sl, args.shared_sl, args.no_eps,
                                   args.eps_scale, args.self_loop_scale)
 
+    # send model to GPU if present
     if args.gpu:
         model.to_cuda(model)
 
-    model_file_prefix = 'model'
-    # Loading model
+    # define model prefix
+    # TODO: format this better with timestamping
+    model_file_prefix = "model"
+
+    # load model if argument provided
     if args.input_model is not None:
         state_dict = torch.load(args.input_model)
         model.load_state_dict(state_dict)
+        # TODO: format this better with timestamping
         model_file_prefix = 'model_retrained'
 
-    model_save_dir = args.model_save_dir
-
+    # create model_save_dir if argument provided
     if model_save_dir is not None:
         if not os.path.exists(model_save_dir):
             os.makedirs(model_save_dir)
 
-    print("Training with", model_file_prefix)
-
+    # train SoftPatternClassifier
     train(train_data, dev_data, model, num_classes, model_save_dir,
           num_iterations, model_file_prefix, args.learning_rate,
           args.batch_size, args.scheduler, args.gpu, args.clip,
@@ -349,21 +433,23 @@ def main(args: argparse.Namespace) -> None:
           args.patience)
 
 
-def read_patterns(ifile: str, pattern_specs: MutableMapping[int,
-                                                            int]) -> List[Any]:
+def read_patterns(ifile: str,
+                  pattern_specs: MutableMapping[int, int]) -> List[List[str]]:
+    # read pre_compute_patterns into a list
     with open(ifile, encoding='utf-8') as ifh:
         pre_computed_patterns = [
-            l.rstrip().split() for l in ifh if len(l.rstrip())
+            line.rstrip().split() for line in ifh if len(line.rstrip())
         ]
 
-    for p in pre_computed_patterns:
-        l = len(p) + 1
-
-        if l not in pattern_specs:
-            pattern_specs[l] = 1
+    # update pattern_specs object with patterns metadata
+    for pattern in pre_computed_patterns:
+        lookup_length = len(pattern) + 1
+        if lookup_length not in pattern_specs:
+            pattern_specs[lookup_length] = 1
         else:
-            pattern_specs[l] += 1
+            pattern_specs[lookup_length] += 1
 
+    # return read object
     return pre_computed_patterns
 
 

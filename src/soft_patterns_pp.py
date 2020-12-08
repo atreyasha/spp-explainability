@@ -64,7 +64,7 @@ class SoftPatternClassifier(Module):
             bias_scale_param: float,
             gpu: bool = False,
             rnn: Union[Module, None] = None,
-            pre_computed_patterns: Union[List, None] = None,
+            pre_computed_patterns: Union[List[List[str]], None] = None,
             no_sl: bool = False,
             shared_sl: int = 0,
             no_eps: bool = False,
@@ -204,7 +204,7 @@ class SoftPatternClassifier(Module):
         return transition_matrices
 
     def load_pre_computed_patterns(
-        self, pre_computed_patterns: List[Any], diag_data: torch.Tensor,
+        self, pre_computed_patterns: List[List[str]], diag_data: torch.Tensor,
         bias_data: torch.Tensor, pattern_spec: MutableMapping[int, int]
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Loading a set of pre-coputed patterns into diagonal and bias arrays"""
