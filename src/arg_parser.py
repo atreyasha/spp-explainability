@@ -13,8 +13,8 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
     # numeric and character-accepting options
     sopa.add_argument(
         "--patterns",
-        help=
-        "Pattern lengths and numbers: an underscore separated list of length-number pairs",
+        help=("Pattern lengths and numbers: an underscore separated list of " +
+              "length-number pairs"),
         default="5-50_4-50_3-50_2-50",
         type=str)
     sopa.add_argument("--bias-scale-param",
@@ -29,12 +29,15 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
                       type=float)
     sopa.add_argument(
         "--shared-sl",
-        help=
-        "Share main path and self loop parameters, where self loops are discounted by a self_loop_parameter. "
-        + str(SHARED_SL_PARAM_PER_STATE_PER_PATTERN) +
-        ": one parameter per state per pattern, " +
-        str(SHARED_SL_SINGLE_PARAM) + ": a global parameter",
+        help=("Share main path and self loop parameters, where self loops " +
+              "are discounted by a self_loop_parameter. " +
+              str(SHARED_SL_PARAM_PER_STATE_PER_PATTERN) +
+              ": one parameter per state per pattern, " +
+              str(SHARED_SL_SINGLE_PARAM) + ": a global parameter"),
         default=0,
+        choices=[
+            0, SHARED_SL_PARAM_PER_STATE_PER_PATTERN, SHARED_SL_SINGLE_PARAM
+        ],
         type=int)
     sopa.add_argument("--mlp-hidden-dim",
                       help="MLP hidden dimension",
@@ -112,9 +115,9 @@ def training_arg_parser() -> argparse.ArgumentParser:
     train.add_argument("--batch-size", help="Batch size", default=1, type=int)
     train.add_argument(
         "--max-doc-len",
-        help=
-        "Maximum doc length. For longer documents, spans of length max_doc_len will be randomly "
-        "selected each iteration (-1 means no restriction)",
+        help=("Maximum doc length. For longer documents, spans of length "
+              "--max-doc-len will be randomly "
+              "selected each iteration (-1 means no restriction)"),
         default=-1,
         type=int)
     train.add_argument("--seed", help="Random seed", default=100, type=int)
