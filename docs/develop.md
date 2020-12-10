@@ -13,8 +13,7 @@
     -   [Inductive logic on NLP search
         spaces](#inductive-logic-on-nlp-search-spaces)
 
-Tasks
------
+## Tasks
 
 ### Research
 
@@ -29,13 +28,27 @@ Tasks
 
             1.  initial steps
 
-                1.  execute code on low batch level with preset arg
+                1.  **TODO** understand code in
+                    `soft_patterns.py` and add comments where
+                    necessary + fix long line flymake errors around +
+                    rename alphabetical variables to more semantic terms
+
+                2.  **TODO** need to understand `nn.Module`
+                    functionality before anything else -\> investigate
+                    whether `fixed_var` function is indeed necessary or
+                    can be removed since `requires_grad` is set to False
+                    by default, but could be some conflict with
+                    `nn.Module` default parameter construction with
+                    `requires_grad = True` -\> left intact for now and
+                    appears to work well
+
+                3.  execute code on low batch level with preset arg
                     namespace in `soft_patterns.py` -\> use this to
                     understand batch level processes and fix minor
                     issues where present such as variable naming,
                     formatting etc.
 
-                2.  why are `*START*` and `*END*` tokens repeated before
+                4.  why are `*START*` and `*END*` tokens repeated before
                     and after, and why is `*UNK*` used for padding when
                     a separate `*PAD*` token could be used?
 
@@ -44,18 +57,8 @@ Tasks
                         needs to be taken into account in the
                         interpretation/visualization phase
 
-                3.  experiment module with and without `fixed_var` to
-                    see if `autograd` gets enabled
-
-                4.  need to understand `nn.Module` functionality before
-                    anything else -\> investigate whether `fixed_var`
-                    function is indeed necessary or can be removed since
-                    `requires_grad` is set to False by default, but
-                    could be some conflict with `nn.Module` default
-                    parameter construction with `requires_grad = True`
-                    -\> left intact for now and appears to work well
-
                 5.  address scattered TODOs in code if still remaining
+                    OR otherwise add them to below tass
 
             2.  core model developments
 
@@ -67,6 +70,7 @@ Tasks
                     or sentencepiece tokenizer from Transformers library
 
                 3.  dynamic OR static word/sub-word embeddings
+                    (incremental)
 
                     1.  unknown, start and end GloVe vector should be
                         learned, not set to zero
@@ -88,6 +92,15 @@ Tasks
                     5.  sub-word non-contextual embeddings are available
                         as well, see: fastText or
                         <https://nlp.h-its.org/bpemb/#cite>
+
+                    6.  OR possibly place contextual BERT or ELMO-like
+                        embeddings beneath SoPa -\> could lend itself to
+                        higher performance but might be problematic for
+                        explainability since word-vectors are no longer
+                        easily obtained for words and are all contextual
+                        -\> averaging contextual vectors may not make
+                        sense for explainability -\> this might shift
+                        the focus away from explainability
 
                 4.  experiment more gracious self-loops and epsilon
                     transitions for improved generalization
@@ -114,7 +127,10 @@ Tasks
                 2.  revert/refactor soft_patterns_rnn, visualization,
                     interpretation and testing scripts from git backlog
                     to repository -\> understand and improve these
-                    significantly
+                    significantly -\> rnn code removed from
+                    `soft_patterns.py` to make code simpler -\> add it
+                    back later if necessary by looking up legacy code
+                    definitions
 
                 3.  best case scenario: user should be able to transfer
                     easily between models and regex-ensemble in both
@@ -415,8 +431,7 @@ Tasks
 
         5.  extension/recommendations -\> transducer for seq2seq tasks
 
-Completed
----------
+## Completed
 
 **DONE** look through `train.py` and make comments on general
 processes -\> fix minor issues where present such as variable naming,
@@ -581,8 +596,7 @@ headers in org-mode to markdown conversion
 
 **CLOSED:** *\[2020-10-22 Thu 12:36\]*
 
-Legacy
-------
+## Legacy
 
 ### Interpretable RNN architectures
 
