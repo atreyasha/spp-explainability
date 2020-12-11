@@ -28,12 +28,7 @@
 
             1.  initial steps
 
-                1.  **TODO** understand code in
-                    `soft_patterns.py` and add comments where
-                    necessary + fix long line flymake errors around +
-                    rename alphabetical variables to more semantic terms
-
-                2.  **TODO** need to understand `nn.Module`
+                1.  **TODO** need to understand `nn.Module`
                     functionality before anything else -\> investigate
                     whether `fixed_var` function is indeed necessary or
                     can be removed since `requires_grad` is set to False
@@ -42,13 +37,14 @@
                     `requires_grad = True` -\> left intact for now and
                     appears to work well
 
-                3.  execute code on low batch level with preset arg
-                    namespace in `soft_patterns.py` -\> use this to
-                    understand batch level processes and fix minor
-                    issues where present such as variable naming,
-                    formatting etc.
+                2.  **TODO** execute code on low batch level
+                    with preset arg namespace in `soft_patterns.py` -\>
+                    use this to understand batch level processes and fix
+                    minor issues where present such as variable naming,
+                    formatting etc. -\> use `ipdb` to help out here
+                    instead of going through problematic code
 
-                4.  why are `*START*` and `*END*` tokens repeated before
+                3.  why are `*START*` and `*END*` tokens repeated before
                     and after, and why is `*UNK*` used for padding when
                     a separate `*PAD*` token could be used?
 
@@ -57,7 +53,7 @@
                         needs to be taken into account in the
                         interpretation/visualization phase
 
-                5.  address scattered TODOs in code if still remaining
+                4.  address scattered TODOs in code if still remaining
                     OR otherwise add them to below tass
 
             2.  core model developments
