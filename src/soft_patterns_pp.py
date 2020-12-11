@@ -380,6 +380,7 @@ class SoftPatternClassifier(Module):
         scores = self.semiring.to_float(scores)
 
         # TODO: clean out this set of return operations
+        # it should be more logical and/or clean
         if debug % 4 == 3:
             return self.mlp.forward(scores), transition_matrices, all_hiddens
         elif debug % 4 == 1:
@@ -396,11 +397,10 @@ class SoftPatternClassifier(Module):
             transition_matrix_val: torch.Tensor, zero_padding: torch.Tensor,
             restart_padding: torch.Tensor,
             self_loop_scale: Union[torch.Tensor, float, None]) -> torch.Tensor:
-        # TODO better understand what is going on here
         # adding epsilon transitions
-        # (don't consume a token, move forward one state)
+        # NOTE: don't consume a token, move forward one state
         # we do this before self-loops and single-steps.
-        # we only allow zero or one epsilon transition in a row.
+        # we only allow zero or one epsilon transition in a row
         if self.no_eps:
             after_epsilons = hiddens
         else:
@@ -411,13 +411,13 @@ class SoftPatternClassifier(Module):
                      self.semiring.times(hiddens[:, :, :-1], eps_value)), 2))
 
         # adding the start state
-        after_main_paths = \
-            cat((restart_padding,
-                 self.semiring.times(
-                     after_epsilons[:, :, :-1],
-                     transition_matrix_val[:, :, -1, :-1])
-                 ), 2)
+        after_main_paths = cat((restart_padding,
+                                self.semiring.times(
+                                    after_epsilons[:, :, :-1],
+                                    transition_matrix_val[:, :, -1, :-1])
+                                ), 2)
 
+        # adding self-loops
         if self.no_sl:
             return after_main_paths
         else:
