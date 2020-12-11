@@ -16,7 +16,7 @@ description = "Disable App Nap on OS X 10.9"
 category = "dev"
 optional = false
 python-versions = "*"
-marker = "sys_platform == \"darwin\""
+marker = "python_version >= \"3.4\" and sys_platform == \"darwin\" or sys_platform == \"darwin\""
 
 [[package]]
 name = "backcall"
@@ -65,7 +65,7 @@ description = "Cross-platform colored terminal text."
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-marker = "sys_platform == \"win32\""
+marker = "python_version >= \"3.4\" and sys_platform == \"win32\" or sys_platform == \"win32\""
 
 [[package]]
 name = "dataclasses"
@@ -164,6 +164,21 @@ testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pyt
 
 [package.dependencies]
 zipp = ">=0.5"
+
+[[package]]
+name = "ipdb"
+version = "0.13.4"
+description = "IPython-enabled pdb"
+category = "dev"
+optional = false
+python-versions = ">=2.7"
+
+[package.dependencies]
+setuptools = "*"
+
+[package.dependencies.ipython]
+version = ">=5.1.0"
+python = ">=3.4"
 
 [[package]]
 name = "ipython"
@@ -329,7 +344,7 @@ description = "Pexpect allows easy control of interactive console applications."
 category = "dev"
 optional = false
 python-versions = "*"
-marker = "sys_platform != \"win32\""
+marker = "python_version >= \"3.4\" and sys_platform != \"win32\" or sys_platform != \"win32\""
 
 [package.dependencies]
 ptyprocess = ">=0.5"
@@ -371,7 +386,7 @@ description = "Run a subprocess in a pseudo terminal"
 category = "dev"
 optional = false
 python-versions = "*"
-marker = "sys_platform != \"win32\""
+marker = "python_version >= \"3.4\" and sys_platform != \"win32\" or sys_platform != \"win32\""
 
 [[package]]
 name = "pyasn1"
@@ -626,7 +641,7 @@ testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pyt
 [metadata]
 lock-version = "1.0"
 python-versions = "^3.6.1"
-content-hash = "c0c3f3c3d4ac0429218406d2ec84222604c6305afde7e80c44bd51d1c654af21"
+content-hash = "7cf7c3ac35af3d88714b31d33a3376bde6c419efc42be9729d0615a0643f91cc"
 
 [metadata.files]
 absl-py = [
@@ -735,6 +750,9 @@ idna = [
 importlib-metadata = [
     {file = "importlib_metadata-3.1.1-py3-none-any.whl", hash = "sha256:6112e21359ef8f344e7178aa5b72dc6e62b38b0d008e6d3cb212c5b84df72013"},
     {file = "importlib_metadata-3.1.1.tar.gz", hash = "sha256:b0c2d3b226157ae4517d9625decf63591461c66b3a808c2666d538946519d170"},
+]
+ipdb = [
+    {file = "ipdb-0.13.4.tar.gz", hash = "sha256:c85398b5fb82f82399fc38c44fe3532c0dde1754abee727d8f5cfcc74547b334"},
 ]
 ipython = [
     {file = "ipython-7.11.0-py3-none-any.whl", hash = "sha256:cc70e2111d1629e31ef9ff445529f8bb2b4fc4f93bfe140c33fe18cf36fde072"},
