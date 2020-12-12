@@ -75,7 +75,7 @@ class Batch:
     def __init__(self,
                  docs: List[List[int]],
                  embeddings: List[np.ndarray],
-                 cuda: Callable,
+                 to_cuda: Callable,
                  word_dropout: float = 0,
                  max_len: int = -1) -> None:
         mini_vocab = Vocab.from_docs(docs,
@@ -86,7 +86,7 @@ class Batch:
         if max_len != -1:
             docs = [doc[:max_len] for doc in docs]
         doc_lens = [len(doc) for doc in docs]
-        self.doc_lens = cuda(torch.LongTensor(doc_lens))
+        self.doc_lens = to_cuda(torch.LongTensor(doc_lens))
         self.max_doc_len = max(doc_lens)
         if word_dropout:
             # for each token, with probability `word_dropout`
@@ -101,9 +101,9 @@ class Batch:
             right_pad(mini_vocab.numberize(doc), self.max_doc_len, UNK_IDX)
             for doc in docs
         ]
-        self.docs = [cuda(fixed_var(torch.LongTensor(doc))) for doc in docs]
+        self.docs = [to_cuda(fixed_var(torch.LongTensor(doc))) for doc in docs]
         local_embeddings = [embeddings[i] for i in mini_vocab.names]
-        self.embeddings_matrix = cuda(
+        self.embeddings_matrix = to_cuda(
             fixed_var(torch.FloatTensor(local_embeddings).t()))
 
     def size(self) -> int:
