@@ -62,39 +62,47 @@ def main(data_directory: str) -> None:
     train = os.path.join(data_directory, "raw", "en", "train-en.tsv")
     dev = os.path.join(data_directory, "raw", "en", "eval-en.tsv")
     test = os.path.join(data_directory, "raw", "en", "test-en.tsv")
+
     # process files
     logger.info("Reading input data")
     train = read_tsv(train)
     dev = read_tsv(dev)
     test = read_tsv(test)
+
     # extract data and labels
     train_data, train_labels = zip(*[[element[2], element[0]]
                                      for element in train])
     dev_data, dev_labels = zip(*[[element[2], element[0]] for element in dev])
     test_data, test_labels = zip(*[[element[2], element[0]]
                                    for element in test])
+
     # create indexed classes
     class_mapping = mapping(train_labels)
+
     # replace all classes with indices
     logger.info("Serializing output classes")
     train_labels = serialize(train_labels, class_mapping)
     dev_labels = serialize(dev_labels, class_mapping)
     test_labels = serialize(test_labels, class_mapping)
+
     # tokenize all datasets
     logger.info("Tokenizing with NLTK word_tokenize")
     train_data = tokenize(train_data)
     dev_data = tokenize(dev_data)
     test_data = tokenize(test_data)
+
     # make everything unique
     logger.info("Making data unique")
     train = make_unique(zip(train_data, train_labels))
     dev = make_unique(zip(dev_data, dev_labels))
     test = make_unique(zip(test_data, test_labels))
+
     # write main files
     logger.info("Sorting and writing data")
     write_file(train, class_mapping, "train", write_directory)
     write_file(dev, class_mapping, "dev", write_directory)
     write_file(test, class_mapping, "test", write_directory)
+
     # write class mapping
     with open(os.path.join(write_directory, "class_mapping.json"),
               'w') as output_file_stream:
