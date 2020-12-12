@@ -28,23 +28,14 @@
 
             1.  initial steps
 
-                1.  **TODO** need to understand `nn.Module`
-                    functionality before anything else -\> investigate
-                    whether `fixed_var` function is indeed necessary or
-                    can be removed since `requires_grad` is set to False
-                    by default, but could be some conflict with
-                    `nn.Module` default parameter construction with
-                    `requires_grad = True` -\> left intact for now and
-                    appears to work well
-
-                2.  **TODO** execute code on low batch level
+                1.  **TODO** execute code on low batch level
                     with preset arg namespace in `soft_patterns.py` -\>
                     use this to understand batch level processes and fix
                     minor issues where present such as variable naming,
                     formatting etc. -\> use `ipdb` to help out here
                     instead of going through problematic code
 
-                3.  why are `*START*` and `*END*` tokens repeated before
+                2.  why are `*START*` and `*END*` tokens repeated before
                     and after, and why is `*UNK*` used for padding when
                     a separate `*PAD*` token could be used?
 
@@ -53,7 +44,7 @@
                         needs to be taken into account in the
                         interpretation/visualization phase
 
-                4.  address scattered TODOs in code if still remaining
+                3.  address scattered TODOs in code if still remaining
                     OR otherwise add them to below tass
 
             2.  core model developments
@@ -150,13 +141,15 @@
                     4.  use logger instead of usual printing during
                         model runs
 
-                    5.  fix up python logging verbosity and pass tqdm
-                        directly to logger instead of purely to stdout
-                        -\> integrate this well with debug argument as
-                        per legacy sopa: see
+                    5.  integrate python logger well with debug argument
+                        in legacy sopa -\> would be better if everything
+                        is done through the logger given logging levels
+
+                    6.  pass tqdm directly to logger instead of directly
+                        to stdout: see
                         <https://github.com/tqdm/tqdm/issues/313>
 
-                    6.  use `renv` for managing and shipping R
+                    7.  use `renv` for managing and shipping R
                         dependencies -\> keep just `renv.lock` for
                         easier shipping and ignore other files
 
@@ -244,22 +237,26 @@
             class -\> other tensors default to no learning
 
         2.  provide only description of data structures (eg. data,
-            labels) required for training processes -\> remove actua
+            labels) required for training processes -\> remove actual
             data
 
-        3.  consider changing default helpers in readme to python
+        3.  reduce source code chunk newlines to no newlines -\> this
+            makes things slightly more concise given the existence of
+            multiple comments in between
+
+        4.  consider changing default helpers in readme to python
             helpers instead of those from shell scripts
 
-        4.  update metadata in scripts later with new workflows, eg.
+        5.  update metadata in scripts later with new workflows, eg.
             with help scripts, comments describing functionality and
             readme descriptions for git hooks
 
-        5.  add pydocstrings to all functions for improved documentation
+        6.  add pydocstrings to all functions for improved documentation
             -\> plus comments where relevant
 
-        6.  add MIT license when made public
+        7.  add MIT license when made public
 
-        7.  make list of all useful commands for slurm
+        8.  make list of all useful commands for slurm
 
 2.  SoPa++
 
@@ -428,6 +425,15 @@
         5.  extension/recommendations -\> transducer for seq2seq tasks
 
 ## Completed
+
+**DONE** need to understand `nn.Module` functionality before
+anything else -\> investigate whether `fixed_var` function is indeed
+necessary or can be removed since `requires_grad` is set to False by
+default, but could be some conflict with `nn.Module` default parameter
+construction with `requires_grad = True` -\> left intact for now and
+appears to work well
+
+**CLOSED:** *\[2020-12-12 Sat 12:28\]*
 
 **DONE** look through `train.py` and make comments on general
 processes -\> fix minor issues where present such as variable naming,

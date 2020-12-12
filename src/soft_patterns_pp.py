@@ -5,8 +5,7 @@ from time import monotonic
 from typing import List, Union, Tuple, cast, MutableMapping
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
 from torch.nn import Module, Parameter, ModuleList, Linear
-from .utils.model_utils import (to_cuda, argmax, normalize,
-                                Semiring, Batch)
+from .utils.model_utils import to_cuda, argmax, normalize, Semiring, Batch
 from .utils.data_utils import Vocab
 import numpy as np
 import torch
@@ -410,11 +409,10 @@ class SoftPatternClassifier(Module):
                      self.semiring.times(hiddens[:, :, :-1], eps_value)), 2))
 
         # adding the start state
-        after_main_paths = cat((restart_padding,
-                                self.semiring.times(
-                                    after_epsilons[:, :, :-1],
-                                    transition_matrix_val[:, :, -1, :-1])
-                                ), 2)
+        after_main_paths = cat(
+            (restart_padding,
+             self.semiring.times(after_epsilons[:, :, :-1],
+                                 transition_matrix_val[:, :, -1, :-1])), 2)
 
         # adding self-loops
         if self.no_sl:
@@ -438,5 +436,8 @@ class SoftPatternClassifier(Module):
             return self.semiring.plus(after_main_paths, after_self_loops)
 
     def predict(self, batch: Batch, debug: int = 0) -> List[int]:
+        # get raw predictions from sopa
         output = self.forward(batch, debug).data
+
+        # argmax over raw predictions and convert to integer
         return [int(x) for x in argmax(output)]

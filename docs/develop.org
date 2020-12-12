@@ -9,7 +9,6 @@
 ****** TODO major changes to architecture and workflow
        DEADLINE: <2020-12-24 Thu>
 ******* initial steps
-******** TODO need to understand =nn.Module= functionality before anything else -> investigate whether =fixed_var= function is indeed necessary or can be removed since =requires_grad= is set to False by default, but could be some conflict with =nn.Module= default parameter construction with ~requires_grad = True~ -> left intact for now and appears to work well 
 ******** TODO execute code on low batch level with preset arg namespace in =soft_patterns.py= -> use this to understand batch level processes and fix minor issues where present such as variable naming, formatting etc. -> use =ipdb= to help out here instead of going through problematic code
 ******** why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
 ********* review and opine whether this needs to be changed -> perhaps there is a reason but this needs to be taken into account in the interpretation/visualization phase
@@ -40,7 +39,8 @@
 ********* change argument names later on as this might break things in actual scripts
 ********* add discrete choices in arg_parser for =--shared-sl=
 ********* use logger instead of usual printing during model runs
-********* fix up python logging verbosity and pass tqdm directly to logger instead of purely to stdout -> integrate this well with debug argument as per legacy sopa: see https://github.com/tqdm/tqdm/issues/313
+********* integrate python logger well with debug argument in legacy sopa -> would be better if everything is done through the logger given logging levels
+********* pass tqdm directly to logger instead of directly to stdout: see https://github.com/tqdm/tqdm/issues/313
 ********* use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
 ******** miscellaneous
 ********* use data processor class from torch where possible and flexible -> not necessarily urgent but could be interesting 
@@ -66,7 +66,8 @@
 
 ***** Long-term/KIV
 ****** creating tensors inside =torch.nn.Module= keeps them out of autograd, initializing other =torch.nn.Module= subclasses creates =Paramater= classes which learn by default, therefore it is necessary to instantiate learnable parameters in a custom =torch.nn.Module= with the =Paramter= class -> other tensors default to no learning
-****** provide only description of data structures (eg. data, labels) required for training processes -> remove actua data
+****** provide only description of data structures (eg. data, labels) required for training processes -> remove actual data
+****** reduce source code chunk newlines to no newlines -> this makes things slightly more concise given the existence of multiple comments in between
 ****** consider changing default helpers in readme to python helpers instead of those from shell scripts
 ****** update metadata in scripts later with new workflows, eg. with help scripts, comments describing functionality and readme descriptions for git hooks
 ****** add pydocstrings to all functions for improved documentation -> plus comments where relevant
@@ -137,6 +138,8 @@
 ****** extension/recommendations -> transducer for seq2seq tasks
        
 ** Completed
+***** DONE need to understand =nn.Module= functionality before anything else -> investigate whether =fixed_var= function is indeed necessary or can be removed since =requires_grad= is set to False by default, but could be some conflict with =nn.Module= default parameter construction with ~requires_grad = True~ -> left intact for now and appears to work well 
+      CLOSED: [2020-12-12 Sat 12:28]
 ***** DONE look through =train.py= and make comments on general processes -> fix minor issues where present such as variable naming, formatting etc.
       CLOSED: [2020-12-08 Tue 18:38]
 ***** DONE major code refactoring for main model with conversion to recent PyTorch (eg. 1.*) and CUDA versions (eg. 10.*)
