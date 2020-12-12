@@ -16,8 +16,7 @@ from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 to_cuda, Batch, ProbSemiring,
                                 enable_gradient_clipping,
-                                LogSpaceMaxTimesSemiring, MaxPlusSemiring,
-                                fixed_var)
+                                LogSpaceMaxTimesSemiring, MaxPlusSemiring)
 from .soft_patterns_pp import SoftPatternClassifier
 from .arg_parser import soft_patterns_pp_arg_parser, training_arg_parser
 import numpy as np
@@ -83,7 +82,7 @@ def compute_loss(model: Module,
     # return loss over output and gold
     return loss_function(
         log_softmax(output, dim=1).view(batch.size(), num_classes),
-        to_cuda(gpu)(fixed_var(LongTensor(gold_output))))
+        to_cuda(gpu)(LongTensor(gold_output)))
 
 
 def evaluate_accuracy(model: Module,

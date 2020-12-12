@@ -5,7 +5,7 @@ from time import monotonic
 from typing import List, Union, Tuple, cast, MutableMapping
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
 from torch.nn import Module, Parameter, ModuleList, Linear
-from .utils.model_utils import (to_cuda, argmax, fixed_var, normalize,
+from .utils.model_utils import (to_cuda, argmax, normalize,
                                 Semiring, Batch)
 from .utils.data_utils import Vocab
 import numpy as np
@@ -121,9 +121,9 @@ class SoftPatternClassifier(Module):
             # NOTE: self_loop_scale is not a fixed tensor
             if self_loop_scale is not None:
                 self.self_loop_scale = self.semiring.from_float(
-                    self.to_cuda(fixed_var(FloatTensor([self_loop_scale]))))
+                    self.to_cuda(FloatTensor([self_loop_scale])))
             else:
-                self.self_loop_scale = self.to_cuda(fixed_var(semiring.one(1)))
+                self.self_loop_scale = self.to_cuda(semiring.one(1))
             # assign two diagonals instead of default one
             self.num_diags = 2
 
@@ -133,7 +133,7 @@ class SoftPatternClassifier(Module):
             end
         ] for pattern_len, num_patterns in self.pattern_specs.items()
                       for end in num_patterns * [pattern_len - 1]]
-        self.end_states = self.to_cuda(fixed_var(LongTensor(end_states)))
+        self.end_states = self.to_cuda(LongTensor(end_states))
 
         # create transition matrix diagonal and bias tensors
         # normalize diagonal data tensor
@@ -162,9 +162,9 @@ class SoftPatternClassifier(Module):
             # TODO: perhaps this can be learned as well
             if eps_scale is not None:
                 self.epsilon_scale = self.semiring.from_float(
-                    self.to_cuda(fixed_var(FloatTensor([eps_scale]))))
+                    self.to_cuda(FloatTensor([eps_scale])))
             else:
-                self.epsilon_scale = self.to_cuda(fixed_var(semiring.one(1)))
+                self.epsilon_scale = self.to_cuda(semiring.one(1))
 
         # print diagnostic information on parameter count
         print("# params:", sum(p.nelement() for p in self.parameters()))
@@ -306,18 +306,17 @@ class SoftPatternClassifier(Module):
         num_patterns = self.total_num_patterns
 
         # create null scores tensor
-        scores = self.to_cuda(
-            fixed_var(self.semiring.zero(batch_size, num_patterns)))
+        scores = self.to_cuda(self.semiring.zero(batch_size, num_patterns))
 
         # create restart_padding tensor
         # NOTE: to add start state for each word in the document.
         restart_padding = self.to_cuda(
-            fixed_var(self.semiring.one(batch_size, num_patterns, 1)))
+            self.semiring.one(batch_size, num_patterns, 1))
 
         # create zero_padding tensor
         # TODO: what is the purpose of this?
         zero_padding = self.to_cuda(
-            fixed_var(self.semiring.zero(batch_size, num_patterns, 1)))
+            self.semiring.zero(batch_size, num_patterns, 1))
 
         # get eps_value based on previous class settings
         eps_value = self.get_eps_value()

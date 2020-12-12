@@ -40,13 +40,6 @@ def to_cuda(gpu: bool) -> Callable:
     return (lambda v: v.cuda()) if gpu else identity
 
 
-def fixed_var(tensor: Union[np.ndarray, torch.Tensor]) -> torch.Tensor:
-    if isinstance(tensor, torch.Tensor):
-        return tensor.clone().detach().requires_grad_(False)
-    else:
-        return torch.tensor(tensor, requires_grad=False)
-
-
 def argmax(output: torch.Tensor) -> torch.Tensor:
     _, am = torch.max(output, 1)
     return am
@@ -101,10 +94,10 @@ class Batch:
             right_pad(mini_vocab.numberize(doc), self.max_doc_len, UNK_IDX)
             for doc in docs
         ]
-        self.docs = [to_cuda(fixed_var(torch.LongTensor(doc))) for doc in docs]
+        self.docs = [to_cuda(torch.LongTensor(doc)) for doc in docs]
         local_embeddings = [embeddings[i] for i in mini_vocab.names]
         self.embeddings_matrix = to_cuda(
-            fixed_var(torch.FloatTensor(local_embeddings).t()))
+            torch.FloatTensor(local_embeddings).t())
 
     def size(self) -> int:
         return len(self.docs)
@@ -118,6 +111,7 @@ class Semiring:
         self.one = one
         self.plus = plus
         self.times = times
+        # TODO figure out purposes of below two functions
         self.from_float = from_float
         self.to_float = to_float
 
