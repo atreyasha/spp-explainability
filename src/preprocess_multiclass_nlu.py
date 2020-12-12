@@ -56,12 +56,12 @@ def write_file(full_data: List[List[Union[str, int]]], mapping: Dict[str, int],
             output_file_stream.write("%s\n" % str(item))
 
 
-def main(data_directory: str) -> None:
+def main(args: argparse.Namespace) -> None:
     # define key directory and files
-    write_directory = os.path.join(data_directory, "clean")
-    train = os.path.join(data_directory, "raw", "en", "train-en.tsv")
-    dev = os.path.join(data_directory, "raw", "en", "eval-en.tsv")
-    test = os.path.join(data_directory, "raw", "en", "test-en.tsv")
+    write_directory = os.path.join(args.data_directory, "clean")
+    train = os.path.join(args.data_directory, "raw", "en", "train-en.tsv")
+    dev = os.path.join(args.data_directory, "raw", "en", "eval-en.tsv")
+    test = os.path.join(args.data_directory, "raw", "en", "test-en.tsv")
 
     # process files
     logger.info("Reading input data")
@@ -116,4 +116,4 @@ if __name__ == '__main__':
                  logging_arg_parser()])
     args = parser.parse_args()
     logger = make_logger(args.logging_level)
-    main(args.data_directory)
+    main(args)
