@@ -141,7 +141,7 @@ def train(train_data: List[Tuple[List[int], int]],
           debug: int = 0,
           dropout: Union[torch.nn.Module, float, None] = 0,
           word_dropout: float = 0,
-          patience: int = 1000) -> Module:
+          patience: int = 1000) -> None:
     # instantiate Adam optimizer
     optimizer = Adam(model.parameters(), lr=learning_rate)
 
@@ -302,11 +302,6 @@ def train(train_data: List[Tuple[List[int], int]],
         # apply learning rate scheduler after epoch
         if run_scheduler:
             scheduler.step(dev_loss)
-
-    # return reference to model
-    # TODO: remove this return value since model is updated in-place
-    # TODO: check other code references if this is needed
-    return model
 
 
 def main(args: argparse.Namespace) -> None:
