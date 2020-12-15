@@ -40,7 +40,7 @@ def make_unique(full_data: Iterable[Any]) -> List[Any]:
 
 def write_file(full_data: List[List[Union[str, int]]], mapping: Dict[str, int],
                prefix: str, write_directory: str) -> None:
-    # make write directoy if it does not exist
+    # make write directory if it does not exist
     os.makedirs(write_directory, exist_ok=True)
     # split compund data into two
     data, labels = zip(*sorted(full_data))
