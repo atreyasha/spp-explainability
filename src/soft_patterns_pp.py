@@ -343,6 +343,8 @@ class SoftPatternClassifier(Module):
         # start loop over all transition matrices
         for i, transition_matrix in enumerate(transition_matrices):
             # retrieve all hiddens given current state
+            # TODO: modifications can be made here to work on learnable
+            # embeddings directly
             hiddens = self.transition_once(eps_value, hiddens,
                                            transition_matrix, zero_padding,
                                            restart_padding, self_loop_scale)
@@ -358,7 +360,8 @@ class SoftPatternClassifier(Module):
                                               batch_size, num_patterns)
 
             # only update score when we're not already past the end of the doc
-            # NOTE: this returns where we not past the end of the document
+            # NOTE: this returns where we are not past the end of the document
+            # NOTE: this is useful for mixed length documents
             active_doc_idxs = torch.nonzero(torch.gt(batch.doc_lens,
                                                      i)).squeeze()
 
@@ -392,7 +395,7 @@ class SoftPatternClassifier(Module):
 
     def transition_once(
             self, eps_value: Union[torch.Tensor, None], hiddens: torch.Tensor,
-            transition_matrix_val: torch.Tensor, zero_padding: torch.Tensor,
+            transition_matrix: torch.Tensor, zero_padding: torch.Tensor,
             restart_padding: torch.Tensor,
             self_loop_scale: Union[torch.Tensor, float, None]) -> torch.Tensor:
         # adding epsilon transitions
@@ -412,25 +415,25 @@ class SoftPatternClassifier(Module):
         after_main_paths = cat(
             (restart_padding,
              self.semiring.times(after_epsilons[:, :, :-1],
-                                 transition_matrix_val[:, :, -1, :-1])), 2)
+                                 transition_matrix[:, :, -1, :-1])), 2)
 
         # adding self-loops
         if self.no_sl:
             return after_main_paths
         else:
-            # mypy-related fix, does not affect torch workflow
+            # NOTE: mypy-related fix, does not affect torch workflow
             self_loop_scale = cast(torch.Tensor, self_loop_scale)
 
             # adjust self_loop_scale
             if self.shared_sl == SHARED_SL_PARAM_PER_STATE_PER_PATTERN:
                 self_loop_scale = self_loop_scale.expand(
-                    transition_matrix_val[:, :, 0, :].size())
+                    transition_matrix[:, :, 0, :].size())
 
             # adding self loops (consume a token, stay in same state)
             after_self_loops = self.semiring.times(
                 self_loop_scale,
                 self.semiring.times(after_epsilons,
-                                    transition_matrix_val[:, :, 0, :]))
+                                    transition_matrix[:, :, 0, :]))
 
             # either happy or self-loop, not both
             return self.semiring.plus(after_main_paths, after_self_loops)
