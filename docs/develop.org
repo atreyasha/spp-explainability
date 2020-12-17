@@ -1,79 +1,74 @@
 #+STARTUP: overview
 #+OPTIONS: ^:nil
 #+OPTIONS: p:t
-  
+
 ** Tasks
+*** Current
+**** TODO Major changes to model
+     DEADLINE: <2020-12-24 Thu>
+***** Quick minor changes
+****** add discrete choices in arg_parser for =--shared-sl=
+****** change argparse argument names later on as this might break things in actual scripts
+****** rename unsemantic functions such as =read_docs= to =read_doc(ument)=       
+****** look into ISO hard encoding when reading files -> perhaps this can be modified
+****** rename variables across source code to more consistent types such as =input_file=, =output_file=, =*_file_stream=, etc.
+
+***** Longer minor changes
+****** address scattered TODOs in code if still remaining OR otherwise add them to below tasks
+****** address debug level issues throughout code -> esp. where it affects clear typing in =forward= -> or otherwise just remove =debug= argument altogether
+****** integrate python logger well with or without debug argument in legacy sopa -> would be better if everything is done through the logger given logging levels
+
+***** Core modelling developments
+****** improve code quality with unique model logging and tensorboard workflows with more metrics where possible -> save full model and not just state_dict, embeddings are already part of model currently and would be useful when saved since they would not need to be loaded via a local set of files 
+****** improve gold and predicted "1's" printing -> modify this with better and more expansive metrics such as F1 and loss
+****** improve status printing and replace with pytorch progress bars
+****** consider changing padding token to dedicated token instead of unknown -> these are not included within soft_pattern processing due to construction of Batch class only considering length of input sequences -> maybe padding the whole dataset might make more sense than doing this repeatedly within a Batch object -> worth thinking about this more
+****** might make overall more sense to use max-* semirings since they are easier to interpret -> try to replicate model from defaults of paper instead of code defaults during main runs -> change defaults directly in argument parser
+****** modify final layer to a general additive layer with tree structure or soft logic where possible
+****** add parameter to encourage more discrete learning of pattern scores, perhaps with sharp temperature parameter -> would improve explainability or binarize patterns if possible which would make interpretation much easier as well -> look into how other paper on RNN-FSA did this with temperature
+****** make incremental tree of changes with grid-search and random-seed-variant repeats -> do grid search and multiple runs of each best model with different random seeds to get standard deviation of performance -> experiment more gracious self-loops and epsilon transitions for improved generalization 
+       
+**** Run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with (repeated) grid-search to get plenty of candidates, means and standard deviations
+     DEADLINE: <2021-02-01 Mon>
+**** With decent model performance, branch off to improve explainability with weighting of patterns
+     DEADLINE: <2021-02-01 Mon>
+***** focus on explainability rather than performance since the data set is relatively easy to perform on -> this part should be well studied and motivated -> final ensemble of regular expressions should give insights and perform similar to main SoPa++ neural model
+***** revert/refactor soft_patterns_rnn, visualization, interpretation and testing scripts from git backlog to repository -> understand and improve these significantly -> rnn code removed from =soft_patterns.py= to make code simpler -> add it back later if necessary by looking up legacy code definitions
+***** why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
+****** posted as question to OP, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695
+****** overfitting that occurs to extra =*START*= and =*END*= tokens would be transferred to epsilon transitions if replaced with single padding instead of multiple
+***** best case scenario: user should be able to transfer easily between models and regex-ensemble in both directions for "human-computer interaction" 
+***** posted question to OP on self-loops visualization, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-728257052
+***** for mimic model, find best patterns that match, if not use a mean value for the pattern score that can be used as an analog -> or try other heuristics that can bring results of mimic and oracle closer to each other
+***** it would still be useful to show when mimic and oracle align and when they don't -> with some kind of distance measurement between their output scores
+
+*** Long-term
+**** Dynamic and sub-word embeddings
+***** use both word and sub-word tokenizers such as nltk or sentencepiece tokenizer 
+****** sub-word non-contextual embeddings: fastText or https://nlp.h-its.org/bpemb/#cite
+****** word-level non-contextual embeddings: stick to GloVe
+***** use both static and dynamic token embeddings
+****** dynamic: start, end and padding tokens should be fixed, while unknown and others could be learned
+****** dynamic: can use a lower learning rate for embeddings to reduce overfitting as much as possible
+**** Argparse, logging and dependencies
+***** pass tqdm directly to logger instead of directly to stdout: see https://github.com/tqdm/tqdm/issues/313
+***** use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
+***** *brainstorm:* replace input arg namespace with explicit arguments, OR possible to make separate argparse Namespace which can be passed to main, this could help with portability (needs brainstorming since there are tradeoffs between argparse Namespace and explicit variable definitions)
+**** Typing and testing
+***** add mypy as a test case suite, design new and improved test cases using pytest after understanding code completely
+***** fine-tune typing in internal functions of =SoftPatternClassifier= since some of them require batch-level testing to ascertain, eg. =get_transition_matrices=, =load_pattern= -> need to ascertain wither =pre_computed_patterns= is List or List[List[str]] -> consider removing =float= from =self_loop_scale: Union[torch.Tensor, float, None]= in =transition_once=
+***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List)
+**** Documentation
+***** reduce source code chunk newlines to no newlines -> this makes things slightly more concise given the existence of multiple comments in between
+***** consider changing default helpers in readme to python helpers instead of those from shell scripts
+***** update metadata in scripts later with new workflows, eg. with help scripts, comments describing functionality and readme descriptions for git hooks
+***** add pydocstrings to all functions for improved documentation -> plus comments where relevant
+***** provide description of data structures (eg. data, labels) required for training processes
+***** make list of all useful commands for slurm -> useful to re-use later on
+***** add MIT license when made public
+      
+** Notes
 *** Research
-**** Clean code and documentation
-***** Current
-****** TODO major changes to architecture and workflow
-       DEADLINE: <2020-12-24 Thu>
-******* initial steps
-******** TODO execute code on low batch level with preset arg namespace in =soft_patterns.py= -> use this to understand batch level processes and fix minor issues where present such as variable naming, formatting etc. -> use =ipdb= to help out here instead of going through problematic code
-******** why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
-********* review and opine whether this needs to be changed -> perhaps there is a reason but this needs to be taken into account in the interpretation/visualization phase
-******** address scattered TODOs in code if still remaining OR otherwise add them to below tass
-
-******* core model developments
-******** improve code quality with unique model logging and tensorboard workflows with more metrics where possible
-******** use separate (incremental) tokenizers such as nltk or sentencepiece tokenizer from Transformers library 
-******** dynamic OR static word/sub-word embeddings (incremental)
-********* unknown, start and end GloVe vector should be learned, not set to zero
-********* OR perhaps there is merit in keeping input vectors fixed to prevent overfitting in small subset of them
-********* OR perhaps modify such that the =*UNK*= token can be used for learning over the dataset, while =*START*=, =*END*= and =*PAD*= tokens stay as zeroes to complement overall model
-********* consider still using dynamic embeddings versus static -> can use a lower learning rate for embeddings to reduce overfitting as much as possible
-********* sub-word non-contextual embeddings are available as well, see: fastText or https://nlp.h-its.org/bpemb/#cite
-********* OR possibly place contextual BERT or ELMO-like embeddings beneath SoPa -> could lend itself to higher performance but might be problematic for explainability since word-vectors are no longer easily obtained for words and are all contextual -> averaging contextual vectors may not make sense for explainability -> this might shift the focus away from explainability
-******** experiment more gracious self-loops and epsilon transitions for improved generalization 
-******** modify final layer to a general additive layer with tree structure or soft logic where possible -> perform this incrementally for comparison
-******** make incremental tree of changes with grid-search and random-seed-variant repeats -> do grid search and multiple runs of each best model with different random seeds to get standard deviation of performance
-
-******* core explainability changes
-******** focus on explainability rather than performance since the data set is relatively easy to perform on -> this part should be well studied and motivated -> final ensemble of regular expressions should give insights and perform similar to main SoPa++ neural model
-******** revert/refactor soft_patterns_rnn, visualization, interpretation and testing scripts from git backlog to repository -> understand and improve these significantly -> rnn code removed from =soft_patterns.py= to make code simpler -> add it back later if necessary by looking up legacy code definitions
-******** best case scenario: user should be able to transfer easily between models and regex-ensemble in both directions for "human-computer interaction"
-        
-******* diverse minor issues
-******** argparse/logging/dependencies
-********* replace input arg namespace with explicit arguments, OR possible to make separate argparse Namespace which can be passed to main, this could help with portability
-********* change argument names later on as this might break things in actual scripts
-********* add discrete choices in arg_parser for =--shared-sl=
-********* use logger instead of usual printing during model runs
-********* integrate python logger well with debug argument in legacy sopa -> would be better if everything is done through the logger given logging levels
-********* pass tqdm directly to logger instead of directly to stdout: see https://github.com/tqdm/tqdm/issues/313
-********* use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
-******** miscellaneous
-********* use data processor class from torch where possible and flexible -> not necessarily urgent but could be interesting 
-********* look into replacing =loss.data= with =loss.detach()=: see https://pytorch.org/blog/pytorch-0_4_0-migration-guide/#what-about-data
-********* look into iteration progress snippet with gold and predicted "1's" meaning
-********* confirm whether =Adam= falls under =torch.optim.Optimizer= when running code
-********* rename unsemantic functions such as =read_docs= to =read_doc(ument)=
-********* look into ISO hard encoding when reading files -> perhaps this can be modified
-********* rename variables across source code to more consistent types such as =input_file=, =output_file=, =*_file_stream=, etc.
-********* replace =debug= workflow with more elegant workflow
-******** testing/typing
-********* add mypy as a test case suite, design new and improved test cases using pytest after understanding code completely
-********* address debug level issues throughout code -> esp. where it affects clear typing in =forward=
-********* fine-tune typing in internal functions of =SoftPatternClassifier= since some of them require batch-level testing to ascertain, eg. =get_transition_matrices=, =load_pattern= -> need to ascertain wither =pre_computed_patterns= is List or List[List[str]] -> consider removing =float= from =self_loop_scale: Union[torch.Tensor, float, None]= in =transition_once=
-********* read more about purpose of using mypy and workflow to integrate it into stack or testing -> good for overall testing
-********* look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List)
-
-****** run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with (repeated) grid-search to get plenty of candidates, means and standard deviations
-       DEADLINE: <2021-02-01 Mon>
-******* if possible: extend workflow to other RASA NLU data sets given time and resources -> would require new pre-processing scripts
-****** with decent model performance, branch off to improve explainability with weighting of patterns -> do this and the previous task simultaneously
-       DEADLINE: <2021-02-01 Mon>
-
-***** Long-term/KIV
-****** creating tensors inside =torch.nn.Module= keeps them out of autograd, initializing other =torch.nn.Module= subclasses creates =Paramater= classes which learn by default, therefore it is necessary to instantiate learnable parameters in a custom =torch.nn.Module= with the =Paramter= class -> other tensors default to no learning
-****** provide only description of data structures (eg. data, labels) required for training processes -> remove actual data
-****** reduce source code chunk newlines to no newlines -> this makes things slightly more concise given the existence of multiple comments in between
-****** consider changing default helpers in readme to python helpers instead of those from shell scripts
-****** update metadata in scripts later with new workflows, eg. with help scripts, comments describing functionality and readme descriptions for git hooks
-****** add pydocstrings to all functions for improved documentation -> plus comments where relevant
-****** add MIT license when made public
-****** make list of all useful commands for slurm
-
 **** SoPa++
 ***** extensions
 ****** leverage dynamic sub-word-level embeddings from recent advancements in Transformer-based language modeling.
@@ -88,8 +83,6 @@
 ****** SoPa encourages minimal learning of wildcards/self-loops and $\epsilon$-transitions, which leads to increased overfitting on rare words such as proper nouns
 ****** while SoPa provides an interpretable architecture to learn discrete word-level patterns, it is also utilizes occlusion to determine the importance of various patterns. Occlusion is usually a technique reserved for uninterpretable model architectures and contributes little to global explainability
 ****** SoPa was only tested empirically on binary text classification tasks
-***** issues
-****** unsure what self-loops and fwd-1s mean in output of =visualize.py= -> GitHub issue made to request for more information: https://github.com/Noahs-ARK/soft_patterns/issues/8 
 ***** general: likely higher performance due to direct inference and less costly conversion methods
 
 **** Data sets
@@ -132,6 +125,7 @@
 ****** further work: porting this technique to a transformer where possible
 ***** Self-thoughts
 ****** semirings, abstract algebra and how they are used for finite-state machines in Forward and Viterbi algorithms -> go deeper into this to get some background
+****** use more appropriate and generalized semiring terminology from Peng et al. 2019 -> more generalized compared to SoPa paper
 ****** Chomsky hierarchy of languages -> might be relevant especially relating to CFGs
 ****** FSA/WFSAs -> input theoretical CS, mathematics background to describe these
 ****** ANN's historical literature -> describe how ANNs approximate symbolic representations
