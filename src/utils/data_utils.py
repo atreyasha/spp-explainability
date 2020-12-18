@@ -130,7 +130,7 @@ def read_docs(
     vocab: Vocab,
     num_padding_tokens: int = 1
 ) -> Tuple[Sequence[Sequence[int]], Sequence[Sequence[Union[int, str]]]]:
-    with open(filename, encoding='ISO-8859-1') as input_file:
+    with open(filename, encoding='utf-8') as input_file:
         docs = [line.rstrip().split() for line in input_file]
     return ([
         pad(vocab.numberize(doc),
@@ -151,7 +151,7 @@ def read_labels(filename: str) -> List[int]:
 
 
 def vocab_from_text(filename: str) -> Vocab:
-    with open(filename, encoding='ISO-8859-1') as input_file:
+    with open(filename, encoding='utf-8') as input_file:
         return Vocab.from_docs([line.rstrip().split() for line in input_file])
 
 
