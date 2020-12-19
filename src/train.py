@@ -385,10 +385,6 @@ def main(args: argparse.Namespace) -> None:
         train_data = train_data[:num_train_instances]
         dev_data = dev_data[:num_train_instances]
 
-    # NOTE: temporary workaround to remove RNN for simplicity
-    # TODO: bring back complete option in the future to test efficacy
-    rnn = None
-
     # define semiring as per argument provided
     semiring = MaxPlusSemiring if args.max_plus_semiring else (
         LogSpaceMaxTimesSemiring if args.max_times_semiring else ProbSemiring)
@@ -397,7 +393,7 @@ def main(args: argparse.Namespace) -> None:
     model = SoftPatternClassifier(pattern_specs, mlp_hidden_dim,
                                   mlp_num_layers, num_classes, embeddings,
                                   vocab, semiring, args.bias_scale, args.gpu,
-                                  rnn, pre_computed_patterns, args.no_sl,
+                                  pre_computed_patterns, args.no_sl,
                                   args.shared_sl, args.no_eps, args.eps_scale,
                                   args.self_loop_scale)
 

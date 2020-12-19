@@ -67,7 +67,6 @@ class SoftPatternClassifier(Module):
             semiring: Semiring,
             bias_scale: float,
             gpu: bool = False,
-            rnn: Union[Module, None] = None,
             pre_computed_patterns: Union[List[List[str]], None] = None,
             shared_sl: int = 0,
             no_sl: bool = False,
@@ -83,7 +82,6 @@ class SoftPatternClassifier(Module):
         self.embeddings = embeddings
         self.to_cuda = to_cuda(gpu)
         self.total_num_patterns = sum(pattern_specs.values())
-        self.rnn = rnn
         self.mlp = MLP(self.total_num_patterns, mlp_hidden_dim, mlp_num_layers,
                        num_classes)
         self.num_diags = 1
@@ -93,13 +91,10 @@ class SoftPatternClassifier(Module):
         self.max_pattern_length = max(list(pattern_specs.keys()))
         self.no_eps = no_eps
         self.bias_scale = bias_scale
+        self.word_dim = len(embeddings[0])
 
         # print diagnositc information on input patterns
         print(self.total_num_patterns, pattern_specs)
-
-        # assign class variables from conditionals
-        if self.rnn is None:
-            self.word_dim = len(embeddings[0])
 
         # assign class variables from conditionals
         if self.shared_sl != 0:
