@@ -24,36 +24,22 @@
 
     **DEADLINE:** *\<2020-12-24 Thu\>*
 
-    1.  Quick minor changes
+    1.  Medium-impact changes
 
-        1.  add discrete choices in arg_parser for `--shared-sl`
-
-        2.  change argparse argument names later on as this might break
-            things in actual scripts
-
-        3.  rename unsemantic functions such as `read_docs` to
-            `read_doc(ument)`
-
-        4.  look into ISO hard encoding when reading files -\> perhaps
-            this can be modified
-
-        5.  rename variables across source code to more consistent types
-            such as `input_file`, `output_file`, `*_file_stream`, etc.
-
-    2.  Longer minor changes
-
-        1.  address scattered TODOs in code if still remaining OR
-            otherwise add them to below tasks
-
-        2.  address debug level issues throughout code -\> esp. where it
+        1.  address debug level issues throughout code -\> esp. where it
             affects clear typing in `forward` -\> or otherwise just
             remove `debug` argument altogether
 
-        3.  integrate python logger well with or without debug argument
-            in legacy sopa -\> would be better if everything is done
-            through the logger given logging levels
+        2.  integrate python logger to replace debug workflow where
+            possible
 
-    3.  Core modelling developments
+        3.  add different forms of status printing which are independent
+            of the debug argument
+
+        4.  address scattered TODOs in code if still remaining OR
+            otherwise add them to below tasks
+
+    2.  Core modelling developments
 
         1.  improve code quality with unique model logging and
             tensorboard workflows with more metrics where possible -\>
@@ -64,33 +50,48 @@
 
         2.  improve gold and predicted \"1\'s\" printing -\> modify this
             with better and more expansive metrics such as F1 and loss
+            which also get logged
 
-        3.  improve status printing and replace with pytorch progress
-            bars
+        3.  improve patience implementation to be more sensible
 
-        4.  consider changing padding token to dedicated token instead
+        4.  add test script evaluation within train script where
+            relevant, if not elsewhere as separate script -\> would
+            require a semi-shared argument parser function
+
+        5.  improve status printing and replace with pytorch progress
+            bars -\> might need custom data loader or otherwise see:
+            <https://towardsdatascience.com/training-models-with-a-progress-a-bar-2b664de3e13e>
+
+        6.  improve learning rate scheduler implementation to more
+            soft-coded than hard-coded
+
+        7.  consider changing padding token to dedicated token instead
             of unknown -\> these are not included within soft_pattern
             processing due to construction of Batch class only
-            considering length of input sequences -\> maybe padding the
-            whole dataset might make more sense than doing this
-            repeatedly within a Batch object -\> worth thinking about
-            this more
+            considering length of input sequences
 
-        5.  might make overall more sense to use max-\* semirings since
+        8.  maybe padding the whole dataset might make more sense than
+            doing this repeatedly within each Batch object
+
+        9.  make batch object more efficient, look at existing pytorch
+            classes that could help with this
+
+        10. might make overall more sense to use max-\* semirings since
             they are easier to interpret -\> try to replicate model from
             defaults of paper instead of code defaults during main runs
             -\> change defaults directly in argument parser
 
-        6.  modify final layer to a general additive layer with tree
-            structure or soft logic where possible
-
-        7.  add parameter to encourage more discrete learning of pattern
+        11. add parameter to encourage more discrete learning of pattern
             scores, perhaps with sharp temperature parameter -\> would
             improve explainability or binarize patterns if possible
             which would make interpretation much easier as well -\> look
             into how other paper on RNN-FSA did this with temperature
 
-        8.  make incremental tree of changes with grid-search and
+        12. modify final layer to a general additive layer; preferably
+            with tree structure or soft logic where possible -\>
+            otherwise simple linear layer would work too
+
+        13. make incremental tree of changes with grid-search and
             random-seed-variant repeats -\> do grid search and multiple
             runs of each best model with different random seeds to get
             standard deviation of performance -\> experiment more
@@ -104,52 +105,65 @@
     **DEADLINE:** *\<2021-02-01 Mon\>*
 
 3.  With decent model performance, branch off to improve explainability
-    with weighting of patterns
+    with weighting of patterns to address other research questions
 
     **DEADLINE:** *\<2021-02-01 Mon\>*
 
-    1.  focus on explainability rather than performance since the data
-        set is relatively easy to perform on -\> this part should be
-        well studied and motivated -\> final ensemble of regular
-        expressions should give insights and perform similar to main
-        SoPa++ neural model
+    1.  Mimic model
 
-    2.  revert/refactor soft_patterns_rnn, visualization, interpretation
-        and testing scripts from git backlog to repository -\>
-        understand and improve these significantly -\> rnn code removed
-        from `soft_patterns.py` to make code simpler -\> add it back
-        later if necessary by looking up legacy code definitions
+        1.  final ensemble of regular expressions should give insights
+            and perform similar to main SoPa++ neural model
 
-    3.  why are `*START*` and `*END*` tokens repeated before and after,
-        and why is `*UNK*` used for padding when a separate `*PAD*`
-        token could be used?
+        2.  best case scenario: user should be able to transfer easily
+            between models and regex-ensemble in both directions for
+            \"human-computer interaction\"
 
-        1.  posted as question to OP, see:
-            <https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695>
+        3.  for mimic model, find best patterns that match, if not use a
+            mean value for the pattern score that can be used as an
+            analog -\> or try other heuristics that can bring results of
+            mimic and oracle closer to each other
 
-        2.  overfitting that occurs to extra `*START*` and `*END*`
-            tokens would be transferred to epsilon transitions if
-            replaced with single padding instead of multiple
+        4.  posted question to OP on self-loops visualization, see:
+            <https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-728257052>
 
-    4.  best case scenario: user should be able to transfer easily
-        between models and regex-ensemble in both directions for
-        \"human-computer interaction\"
+        5.  aim to produce pretty and compact ensemble of regular
+            expressions which can analyzed and manipulated by a human
 
-    5.  posted question to OP on self-loops visualization, see:
-        <https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-728257052>
+    2.  Oracle model
 
-    6.  for mimic model, find best patterns that match, if not use a
-        mean value for the pattern score that can be used as an analog
-        -\> or try other heuristics that can bring results of mimic and
-        oracle closer to each other
+        1.  refactor `soft_patterns_rnn` (if necessary),
+            `visualization`, `interpretation` (two of highest priority)
+            and `testing` scripts from git backlog to repository
 
-    7.  it would still be useful to show when mimic and oracle align and
-        when they don\'t -\> with some kind of distance measurement
-        between their output scores
+        2.  why are `*START*` and `*END*` tokens repeated before and
+            after, and why is `*UNK*` used for padding when a separate
+            `*PAD*` token could be used?
+
+            1.  posted as question to OP, see:
+                <https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695>
+
+            2.  overfitting that occurs to extra `*START*` and `*END*`
+                tokens would be transferred to epsilon transitions if
+                replaced with single padding instead of multiple
+
+    3.  Distance between oracle and mimic
+
+        1.  it would still be useful to show when mimic and oracle align
+            and when they don\'t -\> with some kind of distance
+            measurement between their output scores
+
+        2.  compare confusion matrices between orace and mimic and
+            compute euclidean distances on scores or binary predictions
 
 ### Long-term
 
-1.  Dynamic and sub-word embeddings
+1.  Performance
+
+    1.  tests run in paper show almost perfect accuracy, which could be
+        a baseline to match or otherwise come close to, in order to
+        probe explainability
+
+2.  Dynamic and sub-word embeddings (optional)
 
     1.  use both word and sub-word tokenizers such as nltk or
         sentencepiece tokenizer
@@ -167,7 +181,10 @@
         2.  dynamic: can use a lower learning rate for embeddings to
             reduce overfitting as much as possible
 
-2.  Argparse, logging and dependencies
+        3.  dynamic: convert embeddings to tensor instead of leaving it
+            as a list
+
+3.  Argparse, logging and dependencies
 
     1.  pass tqdm directly to logger instead of directly to stdout: see
         <https://github.com/tqdm/tqdm/issues/313>
@@ -181,7 +198,7 @@
         brainstorming since there are tradeoffs between argparse
         Namespace and explicit variable definitions)
 
-3.  Typing and testing
+4.  Typing and testing
 
     1.  add mypy as a test case suite, design new and improved test
         cases using pytest after understanding code completely
@@ -199,29 +216,38 @@
         this can be changed or understood to keep consistency (ie. keep
         everything to List)
 
-4.  Documentation
+5.  Documentation
 
-    1.  reduce source code chunk newlines to no newlines -\> this makes
+    1.  ensure consistent variable names for variables used in different
+        scopes
+
+    2.  ensure consistent variable names for reading/writing such as
+        `filename`, `*_file_stream`
+
+    3.  reduce source code chunk newlines to no newlines -\> this makes
         things slightly more concise given the existence of multiple
         comments in between
 
-    2.  consider changing default helpers in readme to python helpers
-        instead of those from shell scripts
+    4.  consider changing default helpers in readme to python helpers
+        instead of those from shell scripts,
 
-    3.  update metadata in scripts later with new workflows, eg. with
+    5.  where applicable, improve documentation of argparse variables
+        within argparse script
+
+    6.  update metadata in scripts later with new workflows, eg. with
         help scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    4.  add pydocstrings to all functions for improved documentation -\>
+    7.  add pydocstrings to all functions for improved documentation -\>
         plus comments where relevant
 
-    5.  provide description of data structures (eg. data, labels)
+    8.  provide description of data structures (eg. data, labels)
         required for training processes
 
-    6.  make list of all useful commands for slurm -\> useful to re-use
+    9.  make list of all useful commands for slurm -\> useful to re-use
         later on
 
-    7.  add MIT license when made public
+    10. add MIT license when made public
 
 ## Notes
 
@@ -391,6 +417,17 @@
         6.  extension/recommendations -\> transducer for seq2seq tasks
 
 ## Completed
+
+**DONE** remove `rnn` option from code altogether -\> keep
+things simple for now
+
+**CLOSED:** *\[2020-12-19 Sat 02:33\]*
+
+**DONE** change argparse variable names within train script
+to reflect parser and make this consistent throughout, including in
+other auxiliary scripts
+
+**CLOSED:** *\[2020-12-19 Sat 01:33\]*
 
 **DONE** need to understand `nn.Module` functionality before
 anything else -\> investigate whether `fixed_var` function is indeed

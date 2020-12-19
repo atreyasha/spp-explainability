@@ -6,50 +6,57 @@
 *** Current
 **** TODO Major changes to model
      DEADLINE: <2020-12-24 Thu>
-***** Quick minor changes
-****** add discrete choices in arg_parser for =--shared-sl=
-****** change argparse argument names later on as this might break things in actual scripts
-****** rename unsemantic functions such as =read_docs= to =read_doc(ument)=       
-****** look into ISO hard encoding when reading files -> perhaps this can be modified
-****** rename variables across source code to more consistent types such as =input_file=, =output_file=, =*_file_stream=, etc.
-
-***** Longer minor changes
-****** address scattered TODOs in code if still remaining OR otherwise add them to below tasks
+***** Medium-impact changes
 ****** address debug level issues throughout code -> esp. where it affects clear typing in =forward= -> or otherwise just remove =debug= argument altogether
-****** integrate python logger well with or without debug argument in legacy sopa -> would be better if everything is done through the logger given logging levels
+****** integrate python logger to replace debug workflow where possible
+****** add different forms of status printing which are independent of the debug argument
+****** address scattered TODOs in code if still remaining OR otherwise add them to below tasks
 
 ***** Core modelling developments
 ****** improve code quality with unique model logging and tensorboard workflows with more metrics where possible -> save full model and not just state_dict, embeddings are already part of model currently and would be useful when saved since they would not need to be loaded via a local set of files 
-****** improve gold and predicted "1's" printing -> modify this with better and more expansive metrics such as F1 and loss
-****** improve status printing and replace with pytorch progress bars
-****** consider changing padding token to dedicated token instead of unknown -> these are not included within soft_pattern processing due to construction of Batch class only considering length of input sequences -> maybe padding the whole dataset might make more sense than doing this repeatedly within a Batch object -> worth thinking about this more
+****** improve gold and predicted "1's" printing -> modify this with better and more expansive metrics such as F1 and loss which also get logged
+****** improve patience implementation to be more sensible
+****** add test script evaluation within train script where relevant, if not elsewhere as separate script -> would require a semi-shared argument parser function
+****** improve status printing and replace with pytorch progress bars -> might need custom data loader or otherwise see: https://towardsdatascience.com/training-models-with-a-progress-a-bar-2b664de3e13e
+****** improve learning rate scheduler implementation to more soft-coded than hard-coded
+****** consider changing padding token to dedicated token instead of unknown -> these are not included within soft_pattern processing due to construction of Batch class only considering length of input sequences
+****** maybe padding the whole dataset might make more sense than doing this repeatedly within each Batch object
+****** make batch object more efficient, look at existing pytorch classes that could help with this
 ****** might make overall more sense to use max-* semirings since they are easier to interpret -> try to replicate model from defaults of paper instead of code defaults during main runs -> change defaults directly in argument parser
-****** modify final layer to a general additive layer with tree structure or soft logic where possible
 ****** add parameter to encourage more discrete learning of pattern scores, perhaps with sharp temperature parameter -> would improve explainability or binarize patterns if possible which would make interpretation much easier as well -> look into how other paper on RNN-FSA did this with temperature
+****** modify final layer to a general additive layer; preferably with tree structure or soft logic where possible -> otherwise simple linear layer would work too
 ****** make incremental tree of changes with grid-search and random-seed-variant repeats -> do grid search and multiple runs of each best model with different random seeds to get standard deviation of performance -> experiment more gracious self-loops and epsilon transitions for improved generalization 
        
 **** Run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with (repeated) grid-search to get plenty of candidates, means and standard deviations
      DEADLINE: <2021-02-01 Mon>
-**** With decent model performance, branch off to improve explainability with weighting of patterns
+**** With decent model performance, branch off to improve explainability with weighting of patterns to address other research questions
      DEADLINE: <2021-02-01 Mon>
-***** focus on explainability rather than performance since the data set is relatively easy to perform on -> this part should be well studied and motivated -> final ensemble of regular expressions should give insights and perform similar to main SoPa++ neural model
-***** revert/refactor soft_patterns_rnn, visualization, interpretation and testing scripts from git backlog to repository -> understand and improve these significantly -> rnn code removed from =soft_patterns.py= to make code simpler -> add it back later if necessary by looking up legacy code definitions
-***** why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
-****** posted as question to OP, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695
-****** overfitting that occurs to extra =*START*= and =*END*= tokens would be transferred to epsilon transitions if replaced with single padding instead of multiple
-***** best case scenario: user should be able to transfer easily between models and regex-ensemble in both directions for "human-computer interaction" 
-***** posted question to OP on self-loops visualization, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-728257052
-***** for mimic model, find best patterns that match, if not use a mean value for the pattern score that can be used as an analog -> or try other heuristics that can bring results of mimic and oracle closer to each other
-***** it would still be useful to show when mimic and oracle align and when they don't -> with some kind of distance measurement between their output scores
+***** Mimic model
+****** final ensemble of regular expressions should give insights and perform similar to main SoPa++ neural model
+****** best case scenario: user should be able to transfer easily between models and regex-ensemble in both directions for "human-computer interaction" 
+****** for mimic model, find best patterns that match, if not use a mean value for the pattern score that can be used as an analog -> or try other heuristics that can bring results of mimic and oracle closer to each other
+****** posted question to OP on self-loops visualization, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-728257052
+****** aim to produce pretty and compact ensemble of regular expressions which can analyzed and manipulated by a human
+***** Oracle model
+****** refactor =soft_patterns_rnn= (if necessary), =visualization=, =interpretation= (two of highest priority) and =testing= scripts from git backlog to repository
+****** why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
+******* posted as question to OP, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695
+******* overfitting that occurs to extra =*START*= and =*END*= tokens would be transferred to epsilon transitions if replaced with single padding instead of multiple
+***** Distance between oracle and mimic
+****** it would still be useful to show when mimic and oracle align and when they don't -> with some kind of distance measurement between their output scores
+****** compare confusion matrices between orace and mimic and compute euclidean distances on scores or binary predictions
 
 *** Long-term
-**** Dynamic and sub-word embeddings
-***** use both word and sub-word tokenizers such as nltk or sentencepiece tokenizer 
+**** Performance
+***** tests run in paper show almost perfect accuracy, which could be a baseline to match or otherwise come close to, in order to probe explainability
+**** Dynamic and sub-word embeddings (optional)
+***** use both word and sub-word tokenizers such as nltk or sentencepiece tokenizer
 ****** sub-word non-contextual embeddings: fastText or https://nlp.h-its.org/bpemb/#cite
 ****** word-level non-contextual embeddings: stick to GloVe
 ***** use both static and dynamic token embeddings
 ****** dynamic: start, end and padding tokens should be fixed, while unknown and others could be learned
 ****** dynamic: can use a lower learning rate for embeddings to reduce overfitting as much as possible
+****** dynamic: convert embeddings to tensor instead of leaving it as a list
 **** Argparse, logging and dependencies
 ***** pass tqdm directly to logger instead of directly to stdout: see https://github.com/tqdm/tqdm/issues/313
 ***** use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
@@ -59,8 +66,11 @@
 ***** fine-tune typing in internal functions of =SoftPatternClassifier= since some of them require batch-level testing to ascertain, eg. =get_transition_matrices=, =load_pattern= -> need to ascertain wither =pre_computed_patterns= is List or List[List[str]] -> consider removing =float= from =self_loop_scale: Union[torch.Tensor, float, None]= in =transition_once=
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List)
 **** Documentation
+***** ensure consistent variable names for variables used in different scopes
+***** ensure consistent variable names for reading/writing such as =filename=, =*_file_stream=
 ***** reduce source code chunk newlines to no newlines -> this makes things slightly more concise given the existence of multiple comments in between
-***** consider changing default helpers in readme to python helpers instead of those from shell scripts
+***** consider changing default helpers in readme to python helpers instead of those from shell scripts, 
+***** where applicable, improve documentation of argparse variables within argparse script
 ***** update metadata in scripts later with new workflows, eg. with help scripts, comments describing functionality and readme descriptions for git hooks
 ***** add pydocstrings to all functions for improved documentation -> plus comments where relevant
 ***** provide description of data structures (eg. data, labels) required for training processes
@@ -132,6 +142,10 @@
 ****** extension/recommendations -> transducer for seq2seq tasks
        
 ** Completed
+***** DONE remove =rnn= option from code altogether -> keep things simple for now
+      CLOSED: [2020-12-19 Sat 02:33]
+***** DONE change argparse variable names within train script to reflect parser and make this consistent throughout, including in other auxiliary scripts
+      CLOSED: [2020-12-19 Sat 01:33]
 ***** DONE need to understand =nn.Module= functionality before anything else -> investigate whether =fixed_var= function is indeed necessary or can be removed since =requires_grad= is set to False by default, but could be some conflict with =nn.Module= default parameter construction with ~requires_grad = True~ -> left intact for now and appears to work well 
       CLOSED: [2020-12-12 Sat 12:28]
 ***** DONE look through =train.py= and make comments on general processes -> fix minor issues where present such as variable naming, formatting etc.
