@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from time import monotonic
 from collections import OrderedDict
 from typing import List, Union, MutableMapping, Tuple, cast
 from torch import LongTensor
@@ -32,31 +31,19 @@ def train_batch(model: Module,
                 optimizer: torch.optim.Optimizer,
                 loss_function: torch.nn.modules.loss._Loss,
                 gpu: bool = False,
-                debug: int = 0,
                 dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
     # set optimizer gradients to zero
     optimizer.zero_grad()
 
     # compute model loss
-    time0 = monotonic()
     loss = compute_loss(model, batch, num_classes, gold_output, loss_function,
-                        gpu, debug, dropout)
+                        gpu, dropout)
 
     # compute loss gradients for all parameters
-    time1 = monotonic()
     loss.backward()
 
     # perform a single optimization step
-    time2 = monotonic()
     optimizer.step()
-
-    # debug output if necessary
-    if debug:
-        time3 = monotonic()
-        print(
-            "Time in loss: {}, time in backward: {}, time in step: {}".format(
-                round(time1 - time0, 3), round(time2 - time1, 3),
-                round(time3 - time2, 3)))
 
     # detach loss from computational graph and return tensor data
     return loss.detach()
@@ -68,16 +55,9 @@ def compute_loss(model: Module,
                  gold_output: List[int],
                  loss_function: torch.nn.modules.loss._Loss,
                  gpu: bool,
-                 debug: int = 0,
                  dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
     # compute model outputs given batch
-    time1 = monotonic()
-    output = model.forward(batch, debug, dropout)
-
-    # debug output if necessary
-    if debug:
-        time2 = monotonic()
-        print("Forward total in loss: {}".format(round(time2 - time1, 3)))
+    output = model.forward(batch, dropout)
 
     # return loss over output and gold
     return loss_function(
@@ -85,11 +65,8 @@ def compute_loss(model: Module,
         to_cuda(gpu)(LongTensor(gold_output)))
 
 
-def evaluate_accuracy(model: Module,
-                      data: List[Tuple[List[int], int]],
-                      batch_size: int,
-                      gpu: bool,
-                      debug: int = 0) -> float:
+def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
+                      batch_size: int, gpu: bool) -> float:
     # instantiate local variables
     number_data_points = float(len(data))
     correct = 0
@@ -105,7 +82,7 @@ def evaluate_accuracy(model: Module,
         gold = [y for x, y in batch]
 
         # predict output using model
-        predicted = model.predict(batch_obj, debug)
+        predicted = model.predict(batch_obj)
 
         # find number of predicted class 1's
         # NOTE: legacy technique for binary classifier
@@ -138,7 +115,6 @@ def train(train_data: List[Tuple[List[int], int]],
           gpu: bool = False,
           clip_threshold: Union[float, None] = None,
           max_doc_len: int = -1,
-          debug: int = 0,
           dropout: Union[torch.nn.Module, float, None] = 0,
           word_dropout: float = 0,
           patience: int = 30) -> None:
@@ -175,9 +151,6 @@ def train(train_data: List[Tuple[List[int], int]],
     best_dev_loss_index = -1
     best_dev_acc = -1.
 
-    # initialize timer for debugging/printing
-    start_time = monotonic()
-
     # loop over epochs
     for epoch in range(epochs):
         # shuffle training data
@@ -197,7 +170,7 @@ def train(train_data: List[Tuple[List[int], int]],
             # find aggregate loss across samples in batch
             loss += torch.sum(
                 train_batch(model, batch_obj, num_classes, gold, optimizer,
-                            loss_function, gpu, debug, dropout))
+                            loss_function, gpu, dropout))
             # print dots for progress
             if i % debug_print == (debug_print - 1):
                 print(".", end="", flush=True)
@@ -234,7 +207,7 @@ def train(train_data: List[Tuple[List[int], int]],
             # find aggregate loss across dev samples in batch
             dev_loss += torch.sum(
                 compute_loss(model, batch_obj, num_classes, gold,
-                             loss_function, gpu, debug).data)
+                             loss_function, gpu).data)
             # print dots for progress
             if i % debug_print == (debug_print - 1):
                 print(".", end="", flush=True)
@@ -248,9 +221,6 @@ def train(train_data: List[Tuple[List[int], int]],
         # add newline for stdout progress loop
         print("\n")
 
-        # find time for finished iteration
-        finish_iter_time = monotonic()
-
         # evaluate training and dev accuracies
         # TODO: do not limit training data accuracy here
         train_acc = evaluate_accuracy(model, train_data[:1000], batch_size,
@@ -258,13 +228,10 @@ def train(train_data: List[Tuple[List[int], int]],
         dev_acc = evaluate_accuracy(model, dev_data, batch_size, gpu)
 
         # print out report of current iteration
-        print(
-            "iteration: {:>7,} train time: {:>9,.3f}m, eval time: {:>9,.3f}m "
-            "train loss: {:>12,.3f} train_acc: {:>8,.3f}% "
-            "dev loss: {:>12,.3f} dev_acc: {:>8,.3f}%".format(
-                epoch, (finish_iter_time - start_time) / 60,
-                (monotonic() - finish_iter_time) / 60, loss / len(train_data),
-                train_acc * 100, dev_loss / len(dev_data), dev_acc * 100))
+        print("iteration: {:>7,} train loss: {:>12,.3f} train_acc: {:>8,.3f}% "
+              "dev loss: {:>12,.3f} dev_acc: {:>8,.3f}%".format(
+                  epoch, loss / len(train_data), train_acc * 100,
+                  dev_loss / len(dev_data), dev_acc * 100))
 
         # check for loss improvement and save model if there is reduction
         # optionally increment patience counter or stop training
@@ -421,7 +388,7 @@ def main(args: argparse.Namespace) -> None:
     train(train_data, dev_data, model, num_classes, models_directory, epochs,
           model_file_prefix, args.learning_rate, args.batch_size,
           args.scheduler, args.gpu, args.clip_threshold, args.max_doc_len,
-          args.debug, args.dropout, args.word_dropout, args.patience)
+          args.dropout, args.word_dropout, args.patience)
 
 
 def read_patterns(filename: str,

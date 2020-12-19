@@ -139,10 +139,6 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        help="Patience parameter for early stopping",
                        default=30,
                        type=int)
-    train.add_argument("--debug",
-                       help="Specify debug level",
-                       default=0,
-                       type=int)
     # boolean flags
     train.add_argument("--scheduler",
                        help=("Use learning rate scheduler to reduce "

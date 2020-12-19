@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from time import monotonic
 from typing import List, Union, Tuple, cast, MutableMapping
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
 from torch.nn import Module, Parameter, ModuleList, Linear
@@ -281,12 +280,9 @@ class SoftPatternClassifier(Module):
 
     def forward(self,
                 batch: Batch,
-                debug: int = 0,
                 dropout: Union[Module, None] = None) -> torch.Tensor:
         # start timer and get transition matrices
-        time1 = monotonic()
         transition_matrices = self.get_transition_matrices(batch, dropout)
-        time2 = monotonic()
 
         # set self_loop_scale based on class variables
         self_loop_scale = None
@@ -331,10 +327,6 @@ class SoftPatternClassifier(Module):
         hiddens[:, :,
                 0] = self.to_cuda(self.semiring.one(batch_size, num_patterns))
 
-        # debug related adjustment
-        if debug % 4 == 3:
-            all_hiddens = [hiddens[0, :, :]]
-
         # start loop over all transition matrices
         for i, transition_matrix in enumerate(transition_matrices):
             # retrieve all hiddens given current state
@@ -343,10 +335,6 @@ class SoftPatternClassifier(Module):
             hiddens = self.transition_once(eps_value, hiddens,
                                            transition_matrix, zero_padding,
                                            restart_padding, self_loop_scale)
-
-            # debuge related adjustment
-            if debug % 4 == 3:
-                all_hiddens.append(hiddens[0, :, :])
 
             # look at the end state for each pattern, and "add" it into score
             # NOTE: torch.gather helps to extract values at indices
@@ -364,25 +352,13 @@ class SoftPatternClassifier(Module):
             scores[active_doc_idxs] = self.semiring.plus(
                 scores[active_doc_idxs], end_state_vals[active_doc_idxs])
 
-        # debug-related printing
-        if debug:
-            time3 = monotonic()
-            print("MM: {}, other: {}".format(round(time2 - time1, 3),
-                                             round(time3 - time2, 3)))
-
         # update scores to float
         # NOTE: scores represent end values on top of SoPa
         # these are passed on to the MLP below
         scores = self.semiring.to_float(scores)
 
-        # TODO: clean out this set of return operations
-        # it should be more logical and/or clean
-        if debug % 4 == 3:
-            return self.mlp.forward(scores), transition_matrices, all_hiddens
-        elif debug % 4 == 1:
-            return self.mlp.forward(scores), scores
-        else:
-            return self.mlp.forward(scores)
+        # return output of MLP
+        return self.mlp.forward(scores)
 
     def get_eps_value(self) -> Union[torch.Tensor, None]:
         return None if self.no_eps else self.semiring.times(
@@ -433,9 +409,9 @@ class SoftPatternClassifier(Module):
             # either happy or self-loop, not both
             return self.semiring.plus(after_main_paths, after_self_loops)
 
-    def predict(self, batch: Batch, debug: int = 0) -> List[int]:
+    def predict(self, batch: Batch) -> List[int]:
         # get raw predictions from sopa
-        output = self.forward(batch, debug).data
+        output = self.forward(batch).data
 
         # argmax over raw predictions and convert to integer
         return [int(x) for x in argmax(output)]
