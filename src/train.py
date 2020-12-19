@@ -318,7 +318,7 @@ def main(args: argparse.Namespace) -> None:
 
     # read embeddings file and output intersected vocab
     # embeddings and word-vector dimensionality
-    vocab, embeddings, word_dim = read_embeddings(args.embeddings, vocab)
+    vocab, embeddings, _ = read_embeddings(args.embeddings, vocab)
 
     # set number of padding tokens as one less than the longest pattern length
     # TODO: understand why this is set and if this is necessary
