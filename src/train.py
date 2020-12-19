@@ -72,7 +72,6 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
     # instantiate local variables
     number_data_points = float(len(data))
     correct = 0
-    num_1s = 0
 
     # chunk data into sorted batches and iterate
     for batch in chunked_sorted(data, batch_size):
@@ -86,18 +85,9 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
         # predict output using model
         predicted = model.predict(batch_obj)
 
-        # find number of predicted class 1's
-        # NOTE: legacy technique for binary classifier
-        # TODO: replace or reject, as well as print statement below
-        num_1s += predicted.count(1)
-
         # find number of correctly predicted data points
         correct += sum(1 for pred, gold in zip(predicted, gold)
                        if pred == gold)
-
-    # log information on predicted 1's
-    logger.info("num predicted 1s: %s" % num_1s)
-    logger.info("num gold 1s: %s" % sum(gold == 1 for _, gold in data))
 
     # return raw accuracy float
     # TODO: replace this workflow with more robust metric such as F1 score
