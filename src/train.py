@@ -129,19 +129,19 @@ def train(train_data: List[Tuple[List[int], int]],
           dev_data: List[Tuple[List[int], int]],
           model: Module,
           num_classes: int,
-          model_save_dir: str,
-          num_iterations: int,
+          models_directory: str,
+          epochs: int,
           model_file_prefix: str,
           learning_rate: float,
           batch_size: int,
           run_scheduler: bool = False,
           gpu: bool = False,
-          clip: Union[float, None] = None,
-          max_len: int = -1,
+          clip_threshold: Union[float, None] = None,
+          max_doc_len: int = -1,
           debug: int = 0,
           dropout: Union[torch.nn.Module, float, None] = 0,
           word_dropout: float = 0,
-          patience: int = 1000) -> None:
+          patience: int = 30) -> None:
     # instantiate Adam optimizer
     optimizer = Adam(model.parameters(), lr=learning_rate)
 
@@ -150,7 +150,7 @@ def train(train_data: List[Tuple[List[int], int]],
     loss_function = NLLLoss(weight=None, reduction="sum")
 
     # enable gradient clipping in-place if provided
-    enable_gradient_clipping(model, clip)
+    enable_gradient_clipping(model, clip_threshold)
 
     # initialize dropout if provided
     if dropout:
@@ -163,8 +163,8 @@ def train(train_data: List[Tuple[List[int], int]],
 
     # initialize tensorboard writer if provided
     writer = None
-    if model_save_dir is not None:
-        writer = SummaryWriter(os.path.join(model_save_dir, "logs"))
+    if models_directory is not None:
+        writer = SummaryWriter(os.path.join(models_directory, "logs"))
 
     # initialize learning rate scheduler if provided
     if run_scheduler:
@@ -179,7 +179,7 @@ def train(train_data: List[Tuple[List[int], int]],
     start_time = monotonic()
 
     # loop over epochs
-    for it in range(num_iterations):
+    for epoch in range(epochs):
         # shuffle training data
         np.random.shuffle(train_data)
 
@@ -191,7 +191,7 @@ def train(train_data: List[Tuple[List[int], int]],
         for batch in shuffled_chunked_sorted(train_data, batch_size):
             # create batch object
             batch_obj = Batch([x[0] for x in batch], model.embeddings,
-                              to_cuda(gpu), word_dropout, max_len)
+                              to_cuda(gpu), word_dropout, max_doc_len)
             # parse out gold labels
             gold = [x[1] for x in batch]
             # find aggregate loss across samples in batch
@@ -209,16 +209,16 @@ def train(train_data: List[Tuple[List[int], int]],
             # add named parameter data
             for name, param in model.named_parameters():
                 writer.add_scalar("parameter_mean/" + name, param.data.mean(),
-                                  it)
+                                  epoch)
                 writer.add_scalar("parameter_std/" + name, param.data.std(),
-                                  it)
+                                  epoch)
                 if param.grad is not None:
                     writer.add_scalar("gradient_mean/" + name,
-                                      param.grad.data.mean(), it)
+                                      param.grad.data.mean(), epoch)
                     writer.add_scalar("gradient_std/" + name,
-                                      param.grad.data.std(), it)
+                                      param.grad.data.std(), epoch)
             # add loss data
-            writer.add_scalar("loss/loss_train", loss, it)
+            writer.add_scalar("loss/loss_train", loss, epoch)
 
         # initialize dev loss and run count
         dev_loss = 0.0
@@ -243,7 +243,7 @@ def train(train_data: List[Tuple[List[int], int]],
 
         # add dev loss data to tensorboard
         if writer is not None:
-            writer.add_scalar("loss/loss_dev", dev_loss, it)
+            writer.add_scalar("loss/loss_dev", dev_loss, epoch)
 
         # add newline for stdout progress loop
         print("\n")
@@ -262,7 +262,7 @@ def train(train_data: List[Tuple[List[int], int]],
             "iteration: {:>7,} train time: {:>9,.3f}m, eval time: {:>9,.3f}m "
             "train loss: {:>12,.3f} train_acc: {:>8,.3f}% "
             "dev loss: {:>12,.3f} dev_acc: {:>8,.3f}%".format(
-                it, (finish_iter_time - start_time) / 60,
+                epoch, (finish_iter_time - start_time) / 60,
                 (monotonic() - finish_iter_time) / 60, loss / len(train_data),
                 train_acc * 100, dev_loss / len(dev_data), dev_acc * 100))
 
@@ -276,9 +276,10 @@ def train(train_data: List[Tuple[List[int], int]],
             print("New best dev!")
             best_dev_loss = dev_loss
             best_dev_loss_index = 0
-            if model_save_dir is not None:
+            if models_directory is not None:
                 model_save_file = os.path.join(
-                    model_save_dir, "{}_{}.pth".format(model_file_prefix, it))
+                    models_directory,
+                    "{}_{}.pth".format(model_file_prefix, epoch))
                 print("saving model to", model_save_file)
                 torch.save(model.state_dict(), model_save_file)
         else:
@@ -293,9 +294,10 @@ def train(train_data: List[Tuple[List[int], int]],
         if dev_acc > best_dev_acc:
             best_dev_acc = dev_acc
             print("New best acc!")
-            if model_save_dir is not None:
+            if models_directory is not None:
                 model_save_file = os.path.join(
-                    model_save_dir, "{}_{}.pth".format(model_file_prefix, it))
+                    models_directory,
+                    "{}_{}.pth".format(model_file_prefix, epoch))
                 print("saving model to", model_save_file)
                 torch.save(model.state_dict(), model_save_file)
 
@@ -311,9 +313,9 @@ def main(args: argparse.Namespace) -> None:
     # read important arguments and define as local variables
     num_train_instances = args.num_train_instances
     mlp_hidden_dim = args.mlp_hidden_dim
-    num_mlp_layers = args.num_mlp_layers
-    num_iterations = args.num_iterations
-    model_save_dir = args.model_save_dir
+    mlp_num_layers = args.mlp_num_layers
+    models_directory = args.models_directory
+    epochs = args.epochs
 
     # set default temporary value for pre_computed_patterns
     pre_computed_patterns = None
@@ -339,9 +341,9 @@ def main(args: argparse.Namespace) -> None:
         np.random.seed(args.seed)
 
     # read dev and train vocabularies
-    dev_vocab = vocab_from_text(args.vd)
+    dev_vocab = vocab_from_text(args.valid_data)
     print("Dev vocab size:", len(dev_vocab))
-    train_vocab = vocab_from_text(args.td)
+    train_vocab = vocab_from_text(args.train_data)
     print("Train vocab size:", len(train_vocab))
 
     # combine dev and train vocabularies into global object
@@ -349,27 +351,27 @@ def main(args: argparse.Namespace) -> None:
 
     # read embeddings file and output intersected vocab
     # embeddings and word-vector dimensionality
-    vocab, embeddings, word_dim = read_embeddings(args.embedding_file, vocab)
+    vocab, embeddings, word_dim = read_embeddings(args.embeddings, vocab)
 
     # set number of padding tokens as one less than the longest pattern length
     # TODO: understand why this is set and if this is necessary
     num_padding_tokens = max(list(pattern_specs.keys())) - 1
 
     # read development data and shuffle
-    dev_input, _ = read_docs(args.vd,
+    dev_input, _ = read_docs(args.valid_data,
                              vocab,
                              num_padding_tokens=num_padding_tokens)
-    dev_labels = read_labels(args.vl)
+    dev_labels = read_labels(args.valid_labels)
     dev_input = cast(List[List[int]], dev_input)
     dev_data = list(zip(dev_input, dev_labels))
     np.random.shuffle(dev_data)
 
     # read train data and shuffle
-    train_input, _ = read_docs(args.td,
+    train_input, _ = read_docs(args.train_data,
                                vocab,
                                num_padding_tokens=num_padding_tokens)
     train_input = cast(List[List[int]], train_input)
-    train_labels = read_labels(args.tl)
+    train_labels = read_labels(args.train_labels)
     num_classes = len(set(train_labels))
     train_data = list(zip(train_input, train_labels))
     np.random.shuffle(train_data)
@@ -388,16 +390,16 @@ def main(args: argparse.Namespace) -> None:
     rnn = None
 
     # define semiring as per argument provided
-    semiring = MaxPlusSemiring if args.maxplus else (
-        LogSpaceMaxTimesSemiring if args.maxtimes else ProbSemiring)
+    semiring = MaxPlusSemiring if args.max_plus_semiring else (
+        LogSpaceMaxTimesSemiring if args.max_times_semiring else ProbSemiring)
 
     # create SoftPatternClassifier
     model = SoftPatternClassifier(pattern_specs, mlp_hidden_dim,
-                                  num_mlp_layers, num_classes, embeddings,
-                                  vocab, semiring, args.bias_scale_param,
-                                  args.gpu, rnn, pre_computed_patterns,
-                                  args.no_sl, args.shared_sl, args.no_eps,
-                                  args.eps_scale, args.self_loop_scale)
+                                  mlp_num_layers, num_classes, embeddings,
+                                  vocab, semiring, args.bias_scale, args.gpu,
+                                  rnn, pre_computed_patterns, args.no_sl,
+                                  args.shared_sl, args.no_eps, args.eps_scale,
+                                  args.self_loop_scale)
 
     # send model to GPU if present
     if args.gpu:
@@ -408,23 +410,22 @@ def main(args: argparse.Namespace) -> None:
     model_file_prefix = "model"
 
     # load model if argument provided
-    if args.input_model is not None:
-        state_dict = torch.load(args.input_model)
+    if args.load_model is not None:
+        state_dict = torch.load(args.load_model)
         model.load_state_dict(state_dict)
         # TODO: format this better with timestamping
         model_file_prefix = 'model_retrained'
 
-    # create model_save_dir if argument provided
-    if model_save_dir is not None:
-        if not os.path.exists(model_save_dir):
-            os.makedirs(model_save_dir)
+    # create models_directory if argument provided
+    if models_directory is not None:
+        if not os.path.exists(models_directory):
+            os.makedirs(models_directory)
 
     # train SoftPatternClassifier
-    train(train_data, dev_data, model, num_classes, model_save_dir,
-          num_iterations, model_file_prefix, args.learning_rate,
-          args.batch_size, args.scheduler, args.gpu, args.clip,
-          args.max_doc_len, args.debug, args.dropout, args.word_dropout,
-          args.patience)
+    train(train_data, dev_data, model, num_classes, models_directory, epochs,
+          model_file_prefix, args.learning_rate, args.batch_size,
+          args.scheduler, args.gpu, args.clip_threshold, args.max_doc_len,
+          args.debug, args.dropout, args.word_dropout, args.patience)
 
 
 def read_patterns(ifile: str,

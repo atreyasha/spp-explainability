@@ -52,9 +52,10 @@ def normalize(data: torch.Tensor) -> None:
 
 
 def enable_gradient_clipping(model: torch.nn.Module,
-                             clip: Union[float, None]) -> None:
-    if clip is not None and clip > 0:
-        clip_function = lambda grad: grad.clamp(-clip, clip)
+                             clip_threshold: Union[float, None]) -> None:
+    if clip_threshold is not None and clip_threshold > 0:
+        clip_function = lambda grad: grad.clamp(-clip_threshold, clip_threshold
+                                                )
         for parameter in model.parameters():
             if parameter.requires_grad:
                 parameter.register_hook(clip_function)
@@ -70,14 +71,14 @@ class Batch:
                  embeddings: List[np.ndarray],
                  to_cuda: Callable,
                  word_dropout: float = 0,
-                 max_len: int = -1) -> None:
+                 max_doc_len: int = -1) -> None:
         mini_vocab = Vocab.from_docs(docs,
                                      default=UNK_IDX,
                                      start=START_TOKEN_IDX,
                                      end=END_TOKEN_IDX)
         # limit maximum document length (for efficiency reasons).
-        if max_len != -1:
-            docs = [doc[:max_len] for doc in docs]
+        if max_doc_len != -1:
+            docs = [doc[:max_doc_len] for doc in docs]
         doc_lens = [len(doc) for doc in docs]
         self.doc_lens = to_cuda(torch.LongTensor(doc_lens))
         self.max_doc_len = max(doc_lens)

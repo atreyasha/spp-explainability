@@ -21,19 +21,19 @@ SHARED_SL_SINGLE_PARAM = 2
 
 
 class MLP(Module):
-    def __init__(self, input_dim: int, hidden_layer_dim: int, num_layers: int,
-                 num_classes: int) -> None:
+    def __init__(self, input_dim: int, mlp_hidden_dim: int,
+                 mlp_num_layers: int, num_classes: int) -> None:
         # initialize all class properties from torch.nn.Module
         super(MLP, self).__init__()
 
         # set up class variables
-        self.num_layers = num_layers
+        self.mlp_num_layers = mlp_num_layers
 
         # create MLP structure based on input variables
         layers = []
-        for i in range(num_layers):
-            d1 = input_dim if i == 0 else hidden_layer_dim
-            d2 = hidden_layer_dim if i < (num_layers - 1) else num_classes
+        for i in range(mlp_num_layers):
+            d1 = input_dim if i == 0 else mlp_hidden_dim
+            d2 = mlp_hidden_dim if i < (mlp_num_layers - 1) else num_classes
             layer = Linear(d1, d2)
             layers.append(layer)
 
@@ -60,17 +60,17 @@ class SoftPatternClassifier(Module):
             self,
             pattern_specs: MutableMapping[int, int],
             mlp_hidden_dim: int,
-            num_mlp_layers: int,
+            mlp_num_layers: int,
             num_classes: int,
             embeddings: List[np.ndarray],
             vocab: Vocab,
             semiring: Semiring,
-            bias_scale_param: float,
+            bias_scale: float,
             gpu: bool = False,
             rnn: Union[Module, None] = None,
             pre_computed_patterns: Union[List[List[str]], None] = None,
-            no_sl: bool = False,
             shared_sl: int = 0,
+            no_sl: bool = False,
             no_eps: bool = False,
             eps_scale: Union[float, None] = None,
             self_loop_scale: Union[torch.Tensor, float, None] = None) -> None:
@@ -84,7 +84,7 @@ class SoftPatternClassifier(Module):
         self.to_cuda = to_cuda(gpu)
         self.total_num_patterns = sum(pattern_specs.values())
         self.rnn = rnn
-        self.mlp = MLP(self.total_num_patterns, mlp_hidden_dim, num_mlp_layers,
+        self.mlp = MLP(self.total_num_patterns, mlp_hidden_dim, mlp_num_layers,
                        num_classes)
         self.num_diags = 1
         self.no_sl = no_sl
@@ -92,7 +92,7 @@ class SoftPatternClassifier(Module):
         self.pattern_specs = pattern_specs
         self.max_pattern_length = max(list(pattern_specs.keys()))
         self.no_eps = no_eps
-        self.bias_scale_param = bias_scale_param
+        self.bias_scale = bias_scale
 
         # print diagnositc information on input patterns
         print(self.total_num_patterns, pattern_specs)
@@ -183,7 +183,7 @@ class SoftPatternClassifier(Module):
         # TODO: understand why matrix multiplication is required here
         transition_scores = self.semiring.from_float(
             mm(self.diags, batch.embeddings_matrix) +
-            self.bias_scale_param * self.bias).t()
+            self.bias_scale * self.bias).t()
 
         # apply dropout where necessary
         if dropout is not None and dropout:
@@ -432,8 +432,8 @@ class SoftPatternClassifier(Module):
             # adding self loops (consume a token, stay in same state)
             after_self_loops = self.semiring.times(
                 self_loop_scale,
-                self.semiring.times(after_epsilons,
-                                    transition_matrix[:, :, 0, :]))
+                self.semiring.times(after_epsilons, transition_matrix[:, :,
+                                                                      0, :]))
 
             # either happy or self-loop, not both
             return self.semiring.plus(after_main_paths, after_self_loops)
