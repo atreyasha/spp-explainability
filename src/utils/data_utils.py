@@ -96,13 +96,13 @@ def read_embeddings(
     unk_vec = np.zeros(dim)
     left_pad_vec = np.zeros(dim)
     right_pad_vec = np.zeros(dim)
-    with open(filename, encoding='utf-8') as input_file:
+    with open(filename, 'r', encoding='utf-8') as input_file_stream:
         if has_header:
-            input_file.readline()
+            input_file_stream.readline()
         word_vecs: Iterable[Tuple[str, np.ndarray]] = (
             (word, np.fromstring(vec_str, dtype=float, sep=' '))
             for word, vec_str in (line.rstrip().split(" ", 1)
-                                  for line in input_file)
+                                  for line in input_file_stream)
             if is_printable(word) and (
                 fixed_vocab is None or word in fixed_vocab))
         if max_vocab_size is not None:
@@ -117,8 +117,8 @@ def read_embeddings(
 
 
 def check_dim_and_header(filename: str) -> Tuple[int, bool]:
-    with open(filename, encoding='utf-8') as input_file:
-        first_line = input_file.readline().rstrip().split()
+    with open(filename, 'r', encoding='utf-8') as input_file_stream:
+        first_line = input_file_stream.readline().rstrip().split()
         if len(first_line) == 2:
             return int(first_line[1]), True
         else:
@@ -130,8 +130,8 @@ def read_docs(
     vocab: Vocab,
     num_padding_tokens: int = 1
 ) -> Tuple[Sequence[Sequence[int]], Sequence[Sequence[Union[int, str]]]]:
-    with open(filename, encoding='utf-8') as input_file:
-        docs = [line.rstrip().split() for line in input_file]
+    with open(filename, 'r', encoding='utf-8') as input_file_stream:
+        docs = [line.rstrip().split() for line in input_file_stream]
     return ([
         pad(vocab.numberize(doc),
             num_padding_tokens=num_padding_tokens,
@@ -146,13 +146,14 @@ def read_docs(
 
 
 def read_labels(filename: str) -> List[int]:
-    with open(filename) as input_file:
-        return [int(line.rstrip()) for line in input_file]
+    with open(filename, 'r', encoding='utf-8') as input_file_stream:
+        return [int(line.rstrip()) for line in input_file_stream]
 
 
 def vocab_from_text(filename: str) -> Vocab:
-    with open(filename, encoding='utf-8') as input_file:
-        return Vocab.from_docs([line.rstrip().split() for line in input_file])
+    with open(filename, 'r', encoding='utf-8') as input_file_stream:
+        return Vocab.from_docs(
+            [line.rstrip().split() for line in input_file_stream])
 
 
 @overload

@@ -12,8 +12,8 @@ import csv
 import os
 
 
-def read_tsv(input_file: str) -> List[Any]:
-    with open(input_file, 'r') as input_file_stream:
+def read_tsv(filename: str) -> List[Any]:
+    with open(filename, 'r', encoding='utf-8') as input_file_stream:
         raw_list = list(csv.reader(input_file_stream, delimiter='\t'))
     return raw_list
 

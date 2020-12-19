@@ -428,12 +428,13 @@ def main(args: argparse.Namespace) -> None:
           args.debug, args.dropout, args.word_dropout, args.patience)
 
 
-def read_patterns(ifile: str,
+def read_patterns(filename: str,
                   pattern_specs: MutableMapping[int, int]) -> List[List[str]]:
     # read pre_compute_patterns into a list
-    with open(ifile, encoding='utf-8') as ifh:
+    with open(filename, encoding='utf-8') as input_file_stream:
         pre_computed_patterns = [
-            line.rstrip().split() for line in ifh if len(line.rstrip())
+            line.rstrip().split() for line in input_file_stream
+            if len(line.rstrip())
         ]
 
     # update pattern_specs object with patterns metadata
