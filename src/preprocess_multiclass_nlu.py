@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from tqdm import tqdm
 from typing import List, Iterable, Dict, Any, Union
 from nltk import word_tokenize
 from .utils.parser_utils import argparse_formatter
@@ -27,12 +28,15 @@ def serialize(data: List[str], mapping: Dict[str, int]) -> List[int]:
 
 
 def tokenize(data: List[str]) -> List[str]:
-    return [" ".join(word_tokenize(element)) for element in data]
+    return [
+        " ".join(word_tokenize(element))
+        for element in tqdm(data, disable=disable_tqdm)
+    ]
 
 
 def make_unique(full_data: Iterable[Any]) -> List[Any]:
     unique_list = []
-    for element in full_data:
+    for element in tqdm(full_data, disable=disable_tqdm):
         if element not in unique_list:
             unique_list.append(element)
     return unique_list
@@ -86,16 +90,20 @@ def main(args: argparse.Namespace) -> None:
     test_labels = serialize(test_labels, class_mapping)
 
     # tokenize all datasets
-    logger.info("Tokenizing with NLTK word_tokenize")
+    logger.info("Tokenizing training data")
     train_data = tokenize(train_data)
+    logger.info("Tokenizing validation data")
     dev_data = tokenize(dev_data)
+    logger.info("Tokenizing test data")
     test_data = tokenize(test_data)
 
     # make everything unique
-    logger.info("Making data unique")
-    train = make_unique(zip(train_data, train_labels))
-    dev = make_unique(zip(dev_data, dev_labels))
-    test = make_unique(zip(test_data, test_labels))
+    logger.info("Making training data unique")
+    train = make_unique(list(zip(train_data, train_labels)))
+    logger.info("Making validation data unique")
+    dev = make_unique(list(zip(dev_data, dev_labels)))
+    logger.info("Making test data unique")
+    test = make_unique(list(zip(test_data, test_labels)))
 
     # write main files
     logger.info("Sorting and writing data")
@@ -116,4 +124,5 @@ if __name__ == '__main__':
                  logging_arg_parser()])
     args = parser.parse_args()
     logger = make_logger(args.logging_level)
+    disable_tqdm = args.disable_tqdm
     main(args)

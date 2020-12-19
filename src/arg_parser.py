@@ -171,4 +171,7 @@ def logging_arg_parser() -> argparse.ArgumentParser:
         default="info",
         choices=["debug", "info", "warning", "error", "critical"],
         type=str)
+    logging.add_argument("--disable-tqdm",
+                         help="Disable tqdm progress bars",
+                         action='store_true')
     return parser
