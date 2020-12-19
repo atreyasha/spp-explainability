@@ -92,9 +92,6 @@ class SoftPatternClassifier(Module):
         self.bias_scale = bias_scale
         self.word_dim = len(embeddings[0])
 
-        # print diagnositc information on input patterns
-        print(self.total_num_patterns, pattern_specs)
-
         # assign class variables from conditionals
         if self.shared_sl != 0:
             # shared parameters between main path and self loop
@@ -158,9 +155,6 @@ class SoftPatternClassifier(Module):
                     self.to_cuda(FloatTensor([eps_scale])))
             else:
                 self.epsilon_scale = self.to_cuda(semiring.one(1))
-
-        # print diagnostic information on parameter count
-        print("# params:", sum(p.nelement() for p in self.parameters()))
 
     def get_transition_matrices(
             self,

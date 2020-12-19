@@ -16,8 +16,10 @@ from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 to_cuda, Batch, ProbSemiring,
                                 enable_gradient_clipping,
                                 LogSpaceMaxTimesSemiring, MaxPlusSemiring)
+from .utils.logging_utils import make_logger
 from .soft_patterns_pp import SoftPatternClassifier
-from .arg_parser import soft_patterns_pp_arg_parser, training_arg_parser
+from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
+                         logging_arg_parser)
 import numpy as np
 import argparse
 import torch
@@ -93,9 +95,9 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
         correct += sum(1 for pred, gold in zip(predicted, gold)
                        if pred == gold)
 
-    # print information on predicted 1's
-    print("num predicted 1s:", num_1s)
-    print("num gold 1s:     ", sum(gold == 1 for _, gold in data))
+    # log information on predicted 1's
+    logger.info("num predicted 1s: %s" % num_1s)
+    logger.info("num gold 1s: %s" % sum(gold == 1 for _, gold in data))
 
     # return raw accuracy float
     # TODO: replace this workflow with more robust metric such as F1 score
@@ -227,11 +229,12 @@ def train(train_data: List[Tuple[List[int], int]],
                                       gpu)
         dev_acc = evaluate_accuracy(model, dev_data, batch_size, gpu)
 
-        # print out report of current iteration
-        print("iteration: {:>7,} train loss: {:>12,.3f} train_acc: {:>8,.3f}% "
-              "dev loss: {:>12,.3f} dev_acc: {:>8,.3f}%".format(
-                  epoch, loss / len(train_data), train_acc * 100,
-                  dev_loss / len(dev_data), dev_acc * 100))
+        # log out report of current iteration
+        logger.info(
+            "iteration: {:>7,} train loss: {:>12,.3f} train_acc: {:>8,.3f}% "
+            "dev loss: {:>12,.3f} dev_acc: {:>8,.3f}%".format(
+                epoch, loss / len(train_data), train_acc * 100,
+                dev_loss / len(dev_data), dev_acc * 100))
 
         # check for loss improvement and save model if there is reduction
         # optionally increment patience counter or stop training
@@ -239,33 +242,33 @@ def train(train_data: List[Tuple[List[int], int]],
         if dev_loss < best_dev_loss:
             if dev_acc > best_dev_acc:
                 best_dev_acc = dev_acc
-                print("New best acc!")
-            print("New best dev!")
+                logger.info("New best acc!")
+            logger.info("New best dev!")
             best_dev_loss = dev_loss
             best_dev_loss_index = 0
             if models_directory is not None:
                 model_save_file = os.path.join(
                     models_directory,
                     "{}_{}.pth".format(model_file_prefix, epoch))
-                print("saving model to", model_save_file)
+                logger.info("saving model to: %s" % model_save_file)
                 torch.save(model.state_dict(), model_save_file)
         else:
             best_dev_loss_index += 1
             if best_dev_loss_index == patience:
-                print("Reached", patience,
-                      "iterations without improving dev loss. Breaking")
+                logger.info("%s patience iterations reached, breaking" %
+                            patience)
                 break
 
         # check for improvement in dev best accuracy
         # TODO: likely remove this block since it is not necessary
         if dev_acc > best_dev_acc:
             best_dev_acc = dev_acc
-            print("New best acc!")
+            logger.info("New best acc!")
             if models_directory is not None:
                 model_save_file = os.path.join(
                     models_directory,
                     "{}_{}.pth".format(model_file_prefix, epoch))
-                print("saving model to", model_save_file)
+                logger.info("saving model to: %s" % model_save_file)
                 torch.save(model.state_dict(), model_save_file)
 
         # apply learning rate scheduler after epoch
@@ -274,8 +277,8 @@ def train(train_data: List[Tuple[List[int], int]],
 
 
 def main(args: argparse.Namespace) -> None:
-    # print namespace arguments
-    print(args)
+    # log namespace arguments
+    logger.info(args)
 
     # read important arguments and define as local variables
     num_train_instances = args.num_train_instances
@@ -302,6 +305,9 @@ def main(args: argparse.Namespace) -> None:
         pattern_specs = OrderedDict(
             sorted(pattern_specs.items(), key=lambda t: t[0]))
 
+    # log diagnositc information on input patterns
+    logger.info("Patterns: %s" % pattern_specs)
+
     # set global random seed if specified
     if args.seed != -1:
         torch.manual_seed(args.seed)
@@ -309,9 +315,9 @@ def main(args: argparse.Namespace) -> None:
 
     # read dev and train vocabularies
     dev_vocab = vocab_from_text(args.valid_data)
-    print("Dev vocab size:", len(dev_vocab))
+    logger.info("Validation vocab size: %s" % len(dev_vocab))
     train_vocab = vocab_from_text(args.train_data)
-    print("Train vocab size:", len(train_vocab))
+    logger.info("Training vocab size: %s" % len(train_vocab))
 
     # combine dev and train vocabularies into global object
     vocab = dev_vocab | train_vocab
@@ -343,9 +349,9 @@ def main(args: argparse.Namespace) -> None:
     train_data = list(zip(train_input, train_labels))
     np.random.shuffle(train_data)
 
-    # print diagnostic information
-    print("training instances:", len(train_input))
-    print("num_classes:", num_classes)
+    # log diagnostic information
+    logger.info("Training instances: %s" % len(train_input))
+    logger.info("Number of classes: %s" % num_classes)
 
     # truncate data if necessary
     if num_train_instances is not None:
@@ -363,6 +369,10 @@ def main(args: argparse.Namespace) -> None:
                                   pre_computed_patterns, args.no_sl,
                                   args.shared_sl, args.no_eps, args.eps_scale,
                                   args.self_loop_scale)
+
+    # log diagnostic information on parameter count
+    logger.info("Model parameters: %s" %
+                sum(parameter.nelement() for parameter in model.parameters()))
 
     # send model to GPU if present
     if args.gpu:
@@ -413,9 +423,12 @@ def read_patterns(filename: str,
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse_formatter,
-        parents=[training_arg_parser(),
-                 soft_patterns_pp_arg_parser()])
+    parser = argparse.ArgumentParser(formatter_class=argparse_formatter,
+                                     parents=[
+                                         training_arg_parser(),
+                                         soft_patterns_pp_arg_parser(),
+                                         logging_arg_parser()
+                                     ])
     args = parser.parse_args()
+    logger = make_logger(args.logging_level)
     main(args)

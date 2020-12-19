@@ -90,7 +90,6 @@ def read_embeddings(
     fixed_vocab: Union[Vocab, None] = None,
     max_vocab_size: Union[int, None] = None
 ) -> Tuple[Vocab, List[np.ndarray], int]:
-    print("Reading", filename)
     dim, has_header = check_dim_and_header(filename)
     # assign unknown, start and end tokens to zero vector
     unk_vec = np.zeros(dim)
@@ -108,7 +107,6 @@ def read_embeddings(
         if max_vocab_size is not None:
             word_vecs = islice(word_vecs, max_vocab_size - 1)
         word_vecs = list(word_vecs)
-    print("Done reading", len(word_vecs), "vectors of dimension", dim)
     vocab = Vocab((word for word, _ in word_vecs))
     # prepend special embeddings to (normalized) word embeddings
     vecs = [unk_vec, left_pad_vec, right_pad_vec
