@@ -112,7 +112,6 @@ class Semiring:
         self.one = one
         self.plus = plus
         self.times = times
-        # TODO figure out purposes of below two functions
         self.from_float = from_float
         self.to_float = to_float
 
