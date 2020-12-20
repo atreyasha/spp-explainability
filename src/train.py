@@ -76,15 +76,12 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
 
     # chunk data into sorted batches and iterate
     for batch in chunked_sorted(data, batch_size):
-        # create batch and send to GPU if present
-        batch_obj = Batch([x for x, y in batch], model.embeddings,
-                          to_cuda(gpu))
-
-        # parse gold output
-        gold = [y for x, y in batch]
+        # create batch and parse gold output
+        batch, gold = Batch([x for x, y in batch], model.embeddings,
+                            to_cuda(gpu)), [y for x, y in batch]
 
         # predict output using model
-        predicted = model.predict(batch_obj)
+        predicted = model.predict(batch)
 
         # find number of correctly predicted data points
         correct += sum(1 for pred, gold in zip(predicted, gold)
@@ -133,6 +130,7 @@ def train(train_data: List[Tuple[List[int], int]],
         writer = SummaryWriter(os.path.join(models_directory, "logs"))
 
     # initialize learning rate scheduler if provided
+    # TODO boolean below does not correspond correctly, add verbosity flag
     if run_scheduler:
         scheduler = ReduceLROnPlateau(optimizer, 'min', 0.1, 10, True)
 
@@ -157,14 +155,14 @@ def train(train_data: List[Tuple[List[int], int]],
                   unit="batch") as tqdm_batches:
             # loop over shuffled train batches
             for batch in tqdm_batches:
-                # create batch object
-                batch_obj = Batch([x[0] for x in batch], model.embeddings,
-                                  to_cuda(gpu), word_dropout, max_doc_len)
-                # parse out gold labels
-                gold = [x[1] for x in batch]
+                # create batch object and parse out gold labels
+                batch, gold = Batch([x[0] for x in batch], model.embeddings,
+                                    to_cuda(gpu), word_dropout,
+                                    max_doc_len), [x[1] for x in batch]
+
                 # find aggregate loss across samples in batch
                 loss += torch.sum(
-                    train_batch(model, batch_obj, num_classes, gold, optimizer,
+                    train_batch(model, batch, num_classes, gold, optimizer,
                                 loss_function, gpu, dropout))
 
         # add parameter data to tensorboard if provided
@@ -189,14 +187,13 @@ def train(train_data: List[Tuple[List[int], int]],
                   disable=disable_tqdm,
                   unit="batch") as tqdm_batches:
             for batch in tqdm_batches:
-                # create batch object
-                batch_obj = Batch([x[0] for x in batch], model.embeddings,
-                                  to_cuda(gpu))
-                # parse out gold labels
-                gold = [x[1] for x in batch]
+                # create batch object and parse out gold labels
+                batch, gold = Batch([x[0] for x in batch], model.embeddings,
+                                    to_cuda(gpu)), [x[1] for x in batch]
+
                 # find aggregate loss across dev samples in batch
                 dev_loss += torch.sum(
-                    compute_loss(model, batch_obj, num_classes, gold,
+                    compute_loss(model, batch, num_classes, gold,
                                  loss_function, gpu).data)
 
         # add dev loss data to tensorboard
