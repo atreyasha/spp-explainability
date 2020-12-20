@@ -241,21 +241,6 @@ def train(train_data: List[Tuple[List[int], int]],
                     patience)
                 return None
 
-        # check for improvement in valid best accuracy
-        # NOTE: this block activates only if accuracy improved but loss did not
-        # it will not double activate since previous block would update itself
-        # TODO: consider removing this block if deemed unnecessary, or include
-        # it inside a conditional so its purpose is not left cryptic
-        if valid_acc > best_valid_acc:
-            best_valid_acc = valid_acc
-            logger.info("New best validation accuracy")
-            if models_directory is not None:
-                model_save_file = os.path.join(
-                    models_directory,
-                    "{}_{}.pth".format(model_file_prefix, epoch))
-                logger.info("Saving checkpoint: %s" % model_save_file)
-                torch.save(model.state_dict(), model_save_file)
-
         # apply learning rate scheduler after epoch
         if use_scheduler:
             scheduler.step(valid_loss)
