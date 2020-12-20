@@ -74,6 +74,9 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
     number_data_points = float(len(data))
     correct = 0
 
+    # set model in evaluation mode
+    model.eval()
+
     # chunk data into sorted batches and iterate
     for batch in chunked_sorted(data, batch_size):
         # create batch and parse gold output
@@ -86,6 +89,9 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
         # find number of correctly predicted data points
         correct += sum(1 for pred, gold in zip(predicted, gold)
                        if pred == gold)
+
+    # set model back to train mode
+    model.train()
 
     # return raw accuracy float
     # TODO: replace this workflow with more robust metric such as F1 score
