@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from tqdm import tqdm
 from collections import OrderedDict
 from typing import List, Union, MutableMapping, Tuple, cast
 from torch import LongTensor
@@ -126,9 +127,6 @@ def train(train_data: List[Tuple[List[int], int]],
     else:
         dropout = None
 
-    # initialize paramter which adjusts "." creation for progress loop
-    debug_print = int(100 / batch_size) + 1
-
     # initialize tensorboard writer if provided
     writer = None
     if models_directory is not None:
@@ -148,26 +146,26 @@ def train(train_data: List[Tuple[List[int], int]],
         # shuffle training data
         np.random.shuffle(train_data)
 
-        # initialize training loss and run count
+        # initialize training and dev loss
         loss = 0.0
-        i = 0
+        dev_loss = 0.0
 
-        # loop over shuffled train batches
-        for batch in shuffled_chunked_sorted(train_data, batch_size):
-            # create batch object
-            batch_obj = Batch([x[0] for x in batch], model.embeddings,
-                              to_cuda(gpu), word_dropout, max_doc_len)
-            # parse out gold labels
-            gold = [x[1] for x in batch]
-            # find aggregate loss across samples in batch
-            loss += torch.sum(
-                train_batch(model, batch_obj, num_classes, gold, optimizer,
-                            loss_function, gpu, dropout))
-            # print dots for progress
-            if i % debug_print == (debug_print - 1):
-                print(".", end="", flush=True)
-            # increment batch counter
-            i += 1
+        # main training loop
+        logger.info("Training SoPa++ model")
+        with tqdm(shuffled_chunked_sorted(train_data, batch_size),
+                  disable=disable_tqdm,
+                  unit="batch") as tqdm_batches:
+            # loop over shuffled train batches
+            for batch in tqdm_batches:
+                # create batch object
+                batch_obj = Batch([x[0] for x in batch], model.embeddings,
+                                  to_cuda(gpu), word_dropout, max_doc_len)
+                # parse out gold labels
+                gold = [x[1] for x in batch]
+                # find aggregate loss across samples in batch
+                loss += torch.sum(
+                    train_batch(model, batch_obj, num_classes, gold, optimizer,
+                                loss_function, gpu, dropout))
 
         # add parameter data to tensorboard if provided
         if writer is not None:
@@ -185,33 +183,25 @@ def train(train_data: List[Tuple[List[int], int]],
             # add loss data
             writer.add_scalar("loss/loss_train", loss, epoch)
 
-        # initialize dev loss and run count
-        dev_loss = 0.0
-        i = 0
-
         # loop over static dev set
-        for batch in chunked_sorted(dev_data, batch_size):
-            # create batch object
-            batch_obj = Batch([x[0] for x in batch], model.embeddings,
-                              to_cuda(gpu))
-            # parse out gold labels
-            gold = [x[1] for x in batch]
-            # find aggregate loss across dev samples in batch
-            dev_loss += torch.sum(
-                compute_loss(model, batch_obj, num_classes, gold,
-                             loss_function, gpu).data)
-            # print dots for progress
-            if i % debug_print == (debug_print - 1):
-                print(".", end="", flush=True)
-            # increment batch counter
-            i += 1
+        logger.info("Evaluating SoPa++ model on development data set")
+        with tqdm(chunked_sorted(dev_data, batch_size),
+                  disable=disable_tqdm,
+                  unit="batch") as tqdm_batches:
+            for batch in tqdm_batches:
+                # create batch object
+                batch_obj = Batch([x[0] for x in batch], model.embeddings,
+                                  to_cuda(gpu))
+                # parse out gold labels
+                gold = [x[1] for x in batch]
+                # find aggregate loss across dev samples in batch
+                dev_loss += torch.sum(
+                    compute_loss(model, batch_obj, num_classes, gold,
+                                 loss_function, gpu).data)
 
         # add dev loss data to tensorboard
         if writer is not None:
             writer.add_scalar("loss/loss_dev", dev_loss, epoch)
-
-        # add newline for stdout progress loop
-        print("\n")
 
         # evaluate training and dev accuracies
         # TODO: do not limit training data accuracy here
@@ -219,51 +209,57 @@ def train(train_data: List[Tuple[List[int], int]],
                                       gpu)
         dev_acc = evaluate_accuracy(model, dev_data, batch_size, gpu)
 
-        # log out report of current iteration
-        logger.info(
-            "iteration: {:>7,} train loss: {:>12,.3f} train_acc: {:>8,.3f}% "
-            "dev loss: {:>12,.3f} dev_acc: {:>8,.3f}%".format(
-                epoch, loss / len(train_data), train_acc * 100,
-                dev_loss / len(dev_data), dev_acc * 100))
+        # log out report of current epoch
+        logger.info("epoch: {}, train_loss: {:.3f}, train_acc: {:.3f}%, "
+                    "dev_loss: {:.3f}, dev_acc: {:.3f}%".format(
+                        epoch, loss / len(train_data), train_acc * 100,
+                        dev_loss / len(dev_data), dev_acc * 100))
 
         # check for loss improvement and save model if there is reduction
         # optionally increment patience counter or stop training
         # NOTE: loss values are summed over all data (not mean)
         if dev_loss < best_dev_loss:
+            logger.info("New best dev loss")
             if dev_acc > best_dev_acc:
                 best_dev_acc = dev_acc
-                logger.info("New best acc!")
-            logger.info("New best dev!")
+                logger.info("New best dev accuracy")
             best_dev_loss = dev_loss
             best_dev_loss_index = 0
             if models_directory is not None:
                 model_save_file = os.path.join(
                     models_directory,
                     "{}_{}.pth".format(model_file_prefix, epoch))
-                logger.info("saving model to: %s" % model_save_file)
+                logger.info("Saving checkpoint: %s" % model_save_file)
                 torch.save(model.state_dict(), model_save_file)
         else:
             best_dev_loss_index += 1
             if best_dev_loss_index == patience:
-                logger.info("%s patience iterations reached, breaking" %
-                            patience)
-                break
+                logger.info(
+                    "%s patience epochs threshold reached, stopping training" %
+                    patience)
+                return None
 
         # check for improvement in dev best accuracy
-        # TODO: likely remove this block since it is not necessary
+        # NOTE: this block activates only if accuracy improved but loss did not
+        # it will not double activate since previous block would update itself
+        # TODO: consider removing this block if deemed unnecessary, or include
+        # it inside a conditional so its purpose is not left cryptic
         if dev_acc > best_dev_acc:
             best_dev_acc = dev_acc
-            logger.info("New best acc!")
+            logger.info("New best dev accuracy")
             if models_directory is not None:
                 model_save_file = os.path.join(
                     models_directory,
                     "{}_{}.pth".format(model_file_prefix, epoch))
-                logger.info("saving model to: %s" % model_save_file)
+                logger.info("Saving checkpoint: %s" % model_save_file)
                 torch.save(model.state_dict(), model_save_file)
 
         # apply learning rate scheduler after epoch
         if run_scheduler:
             scheduler.step(dev_loss)
+
+    # log information at the end of training
+    logger.info("%s training epochs completed, stopping training" % epochs)
 
 
 def main(args: argparse.Namespace) -> None:
@@ -361,7 +357,7 @@ def main(args: argparse.Namespace) -> None:
                                   args.self_loop_scale)
 
     # log diagnostic information on parameter count
-    logger.info("Model parameters: %s" %
+    logger.info("Total model parameters: %s" %
                 sum(parameter.nelement() for parameter in model.parameters()))
 
     # send model to GPU if present
@@ -421,4 +417,5 @@ if __name__ == '__main__':
                                      ])
     args = parser.parse_args()
     logger = make_logger(args.logging_level)
+    disable_tqdm = args.disable_tqdm
     main(args)
