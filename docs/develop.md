@@ -24,46 +24,44 @@
 
     **DEADLINE:** *\<2020-12-24 Thu\>*
 
-    1.  Medium-impact changes
+    1.  Quick changes
 
-        1.  address debug level issues throughout code -\> esp. where it
-            affects clear typing in `forward` -\> or otherwise just
-            remove `debug` argument altogether
+        1.  **TODO** sort out issue of consistent variable
+            naming between `batch` and `batch_obj`
 
-        2.  integrate python logger to replace debug workflow where
-            possible
+        2.  **TODO** make consistent use of `validation`
+            versus `dev` throughout all source code -\> redo all log
+            messages and also file naming especially related to inputs,
+            preprocessing and argparse -\> will require time and effort
 
-        3.  add different forms of status printing which are independent
-            of the debug argument
-
-        4.  address scattered TODOs in code if still remaining OR
+        3.  address scattered TODOs in code if still remaining OR
             otherwise add them to below tasks
 
-    2.  Core modelling developments
+    2.  Medium-level changes
 
-        1.  improve code quality with unique model logging and
-            tensorboard workflows with more metrics where possible -\>
-            save full model and not just state_dict, embeddings are
-            already part of model currently and would be useful when
-            saved since they would not need to be loaded via a local set
-            of files
+        1.  improve patience and model checkpoint implementation to be
+            more sensible -\> some issues present as per comments,
+            perhaps could make the code cleaner and the log messages
+            more meaningful
 
-        2.  improve gold and predicted \"1\'s\" printing -\> modify this
-            with better and more expansive metrics such as F1 and loss
-            which also get logged
+        2.  save full model and not just state_dict, embeddings are
+            already part of model currently
 
-        3.  improve patience implementation to be more sensible
-
-        4.  add test script evaluation within train script where
-            relevant, if not elsewhere as separate script -\> would
-            require a semi-shared argument parser function
-
-        5.  improve status printing and replace with pytorch progress
-            bars -\> might need custom data loader or otherwise see:
-            <https://towardsdatascience.com/training-models-with-a-progress-a-bar-2b664de3e13e>
-
-        6.  improve learning rate scheduler implementation to more
+        3.  improve learning rate scheduler implementation to more
             soft-coded than hard-coded
+
+        4.  improve code quality with unique model logging (with
+            retraining) and tensorboard workflows -\> add compulsory
+            logging which is not used currently -\> log model metrics
+            with intra-epoch frequency which can be shared with tqdm for
+            displaying
+
+        5.  add argparse option of how often to update tqdm metrics in
+            training -\> should be shared parameter for tensorboard
+            logging
+
+        6.  look through shuffling that happens in training/model_utils
+            and whether it is necessary
 
         7.  consider changing padding token to dedicated token instead
             of unknown -\> these are not included within soft_pattern
@@ -81,21 +79,32 @@
             defaults of paper instead of code defaults during main runs
             -\> change defaults directly in argument parser
 
-        11. add parameter to encourage more discrete learning of pattern
-            scores, perhaps with sharp temperature parameter -\> would
-            improve explainability or binarize patterns if possible
-            which would make interpretation much easier as well -\> look
-            into how other paper on RNN-FSA did this with temperature
+    3.  Core modeling developments
 
-        12. modify final layer to a general additive layer; preferably
+        1.  compute test F1 on models at the end of training for
+            completeness
+
+        2.  add blind evaluation workflow for the model -\> this would
+            be useful for the grid-search model selection and might need
+            additional argument parser options
+
+        3.  add temperature parameter to encourage more discrete
+            learning of pattern scores -\> or binarize patterns via
+            `torch.gt` or `torch.relu` if possible which would make
+            interpretation much easier -\> look into how other paper on
+            RNN-FSA did this with temperature
+
+        4.  modify final layer to a general additive layer; preferably
             with tree structure or soft logic where possible -\>
-            otherwise simple linear layer would work too
+            otherwise simple linear layer with various basis functions
+            would work
 
-        13. make incremental tree of changes with grid-search and
-            random-seed-variant repeats -\> do grid search and multiple
-            runs of each best model with different random seeds to get
-            standard deviation of performance -\> experiment more
-            gracious self-loops and epsilon transitions for improved
+        5.  add thorough and efficient grid-search workflow
+
+        6.  incremental changes with grid-search -\> multiple runs of
+            each best model with different random seeds to get standard
+            deviation of performance -\> experiment more gracious
+            self-loops and epsilon transitions for improved
             generalization
 
 2.  Run SoPa++ for multiple runs to survey performance -\> run on all
@@ -163,6 +172,8 @@
         a baseline to match or otherwise come close to, in order to
         probe explainability
 
+    2.  work on `slurm-s3it` branch as a mirrored branch
+
 2.  Dynamic and sub-word embeddings (optional)
 
     1.  use both word and sub-word tokenizers such as nltk or
@@ -186,11 +197,11 @@
 
 3.  Argparse, logging and dependencies
 
-    1.  pass tqdm directly to logger instead of directly to stdout: see
-        <https://github.com/tqdm/tqdm/issues/313>
-
-    2.  use `renv` for managing and shipping R dependencies -\> keep
+    1.  use `renv` for managing and shipping R dependencies -\> keep
         just `renv.lock` for easier shipping and ignore other files
+
+    2.  **extra:** pass tqdm directly to logger instead of directly to
+        stdout: see <https://github.com/tqdm/tqdm/issues/313>
 
     3.  **brainstorm:** replace input arg namespace with explicit
         arguments, OR possible to make separate argparse Namespace which
@@ -218,36 +229,42 @@
 
 5.  Documentation
 
-    1.  ensure consistent variable names for variables used in different
+    1.  improve cryptic parts of code to be more easily readable, such
+        as workflow for loading pre-computed patterns inside the soft
+        patterns classifier -\> it can only be understood by studying
+        the code whereas it should be more structured with clear
+        conditionals
+
+    2.  ensure consistent variable names for variables used in different
         scopes
 
-    2.  ensure consistent variable names for reading/writing such as
+    3.  ensure consistent variable names for reading/writing such as
         `filename`, `*_file_stream`
 
-    3.  reduce source code chunk newlines to no newlines -\> this makes
+    4.  reduce source code chunk newlines to no newlines -\> this makes
         things slightly more concise given the existence of multiple
-        comments in between
+        comments in between -\> also remove unnecessary comments
 
-    4.  consider changing default helpers in readme to python helpers
+    5.  consider changing default helpers in readme to python helpers
         instead of those from shell scripts,
 
-    5.  where applicable, improve documentation of argparse variables
+    6.  where applicable, improve documentation of argparse variables
         within argparse script
 
-    6.  update metadata in scripts later with new workflows, eg. with
+    7.  update metadata in scripts later with new workflows, eg. with
         help scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    7.  add pydocstrings to all functions for improved documentation -\>
+    8.  add pydocstrings to all functions for improved documentation -\>
         plus comments where relevant
 
-    8.  provide description of data structures (eg. data, labels)
+    9.  provide description of data structures (eg. data, labels)
         required for training processes
 
-    9.  make list of all useful commands for slurm -\> useful to re-use
+    10. make list of all useful commands for slurm -\> useful to re-use
         later on
 
-    10. add MIT license when made public
+    11. add MIT license when made public
 
 ## Notes
 
