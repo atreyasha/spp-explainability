@@ -93,7 +93,7 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
 
 
 def train(train_data: List[Tuple[List[int], int]],
-          dev_data: List[Tuple[List[int], int]],
+          valid_data: List[Tuple[List[int], int]],
           model: Module,
           num_classes: int,
           models_directory: str,
@@ -140,18 +140,18 @@ def train(train_data: List[Tuple[List[int], int]],
                                       verbose=True)
 
     # initialize floats for re-use
-    best_dev_loss = 100000000.
-    best_dev_loss_index = -1
-    best_dev_acc = -1.
+    best_valid_loss = 100000000.
+    best_valid_loss_index = -1
+    best_valid_acc = -1.
 
     # loop over epochs
     for epoch in range(epochs):
         # shuffle training data
         np.random.shuffle(train_data)
 
-        # initialize training and dev loss
+        # initialize training and valid loss
         loss = 0.0
-        dev_loss = 0.0
+        valid_loss = 0.0
 
         # main training loop
         logger.info("Training SoPa++ model")
@@ -186,9 +186,9 @@ def train(train_data: List[Tuple[List[int], int]],
             # add loss data
             writer.add_scalar("loss/loss_train", loss, epoch)
 
-        # loop over static dev set
-        logger.info("Evaluating SoPa++ model on development data set")
-        with tqdm(chunked_sorted(dev_data, batch_size),
+        # loop over static valid set
+        logger.info("Evaluating SoPa++ model on validation set")
+        with tqdm(chunked_sorted(valid_data, batch_size),
                   disable=disable_tqdm,
                   unit="batch") as tqdm_batches:
             for batch in tqdm_batches:
@@ -196,37 +196,37 @@ def train(train_data: List[Tuple[List[int], int]],
                 batch, gold = Batch([x[0] for x in batch], model.embeddings,
                                     to_cuda(gpu)), [x[1] for x in batch]
 
-                # find aggregate loss across dev samples in batch
-                dev_loss += torch.sum(
+                # find aggregate loss across valid samples in batch
+                valid_loss += torch.sum(
                     compute_loss(model, batch, num_classes, gold,
                                  loss_function, gpu).data)
 
-        # add dev loss data to tensorboard
+        # add valid loss data to tensorboard
         if writer is not None:
-            writer.add_scalar("loss/loss_dev", dev_loss, epoch)
+            writer.add_scalar("loss/loss_valid", valid_loss, epoch)
 
-        # evaluate training and dev accuracies
+        # evaluate training and valid accuracies
         # TODO: do not limit training data accuracy here
         train_acc = evaluate_accuracy(model, train_data[:1000], batch_size,
                                       gpu)
-        dev_acc = evaluate_accuracy(model, dev_data, batch_size, gpu)
+        valid_acc = evaluate_accuracy(model, valid_data, batch_size, gpu)
 
         # log out report of current epoch
         logger.info("epoch: {}, train_loss: {:.3f}, train_acc: {:.3f}%, "
-                    "dev_loss: {:.3f}, dev_acc: {:.3f}%".format(
+                    "valid_loss: {:.3f}, valid_acc: {:.3f}%".format(
                         epoch, loss / len(train_data), train_acc * 100,
-                        dev_loss / len(dev_data), dev_acc * 100))
+                        valid_loss / len(valid_data), valid_acc * 100))
 
         # check for loss improvement and save model if there is reduction
         # optionally increment patience counter or stop training
         # NOTE: loss values are summed over all data (not mean)
-        if dev_loss < best_dev_loss:
-            logger.info("New best dev loss")
-            if dev_acc > best_dev_acc:
-                best_dev_acc = dev_acc
-                logger.info("New best dev accuracy")
-            best_dev_loss = dev_loss
-            best_dev_loss_index = 0
+        if valid_loss < best_valid_loss:
+            logger.info("New best validation loss")
+            if valid_acc > best_valid_acc:
+                best_valid_acc = valid_acc
+                logger.info("New best validation accuracy")
+            best_valid_loss = valid_loss
+            best_valid_loss_index = 0
             if models_directory is not None:
                 model_save_file = os.path.join(
                     models_directory,
@@ -234,21 +234,21 @@ def train(train_data: List[Tuple[List[int], int]],
                 logger.info("Saving checkpoint: %s" % model_save_file)
                 torch.save(model.state_dict(), model_save_file)
         else:
-            best_dev_loss_index += 1
-            if best_dev_loss_index == patience:
+            best_valid_loss_index += 1
+            if best_valid_loss_index == patience:
                 logger.info(
                     "%s patience epochs threshold reached, stopping training" %
                     patience)
                 return None
 
-        # check for improvement in dev best accuracy
+        # check for improvement in valid best accuracy
         # NOTE: this block activates only if accuracy improved but loss did not
         # it will not double activate since previous block would update itself
         # TODO: consider removing this block if deemed unnecessary, or include
         # it inside a conditional so its purpose is not left cryptic
-        if dev_acc > best_dev_acc:
-            best_dev_acc = dev_acc
-            logger.info("New best dev accuracy")
+        if valid_acc > best_valid_acc:
+            best_valid_acc = valid_acc
+            logger.info("New best validation accuracy")
             if models_directory is not None:
                 model_save_file = os.path.join(
                     models_directory,
@@ -258,7 +258,7 @@ def train(train_data: List[Tuple[List[int], int]],
 
         # apply learning rate scheduler after epoch
         if use_scheduler:
-            scheduler.step(dev_loss)
+            scheduler.step(valid_loss)
 
     # log information at the end of training
     logger.info("%s training epochs completed, stopping training" % epochs)
@@ -301,14 +301,14 @@ def main(args: argparse.Namespace) -> None:
         torch.manual_seed(args.seed)
         np.random.seed(args.seed)
 
-    # read dev and train vocabularies
-    dev_vocab = vocab_from_text(args.valid_data)
-    logger.info("Validation vocab size: %s" % len(dev_vocab))
+    # read valid and train vocabularies
     train_vocab = vocab_from_text(args.train_data)
-    logger.info("Training vocab size: %s" % len(train_vocab))
+    logger.info("Training vocabulary size: %s" % len(train_vocab))
+    valid_vocab = vocab_from_text(args.valid_data)
+    logger.info("Validation vocabulary size: %s" % len(valid_vocab))
 
-    # combine dev and train vocabularies into global object
-    vocab = dev_vocab | train_vocab
+    # combine valid and train vocabularies into global object
+    vocab = valid_vocab | train_vocab
 
     # read embeddings file and output intersected vocab
     # embeddings and word-vector dimensionality
@@ -318,14 +318,14 @@ def main(args: argparse.Namespace) -> None:
     # TODO: understand why this is set and if this is necessary
     num_padding_tokens = max(list(pattern_specs.keys())) - 1
 
-    # read development data and shuffle
-    dev_input, _ = read_docs(args.valid_data,
-                             vocab,
-                             num_padding_tokens=num_padding_tokens)
-    dev_labels = read_labels(args.valid_labels)
-    dev_input = cast(List[List[int]], dev_input)
-    dev_data = list(zip(dev_input, dev_labels))
-    np.random.shuffle(dev_data)
+    # read validation data and shuffle
+    valid_input, _ = read_docs(args.valid_data,
+                               vocab,
+                               num_padding_tokens=num_padding_tokens)
+    valid_labels = read_labels(args.valid_labels)
+    valid_input = cast(List[List[int]], valid_input)
+    valid_data = list(zip(valid_input, valid_labels))
+    np.random.shuffle(valid_data)
 
     # read train data and shuffle
     train_input, _ = read_docs(args.train_data,
@@ -344,7 +344,7 @@ def main(args: argparse.Namespace) -> None:
     # truncate data if necessary
     if num_train_instances is not None:
         train_data = train_data[:num_train_instances]
-        dev_data = dev_data[:num_train_instances]
+        valid_data = valid_data[:num_train_instances]
 
     # define semiring as per argument provided
     semiring = MaxPlusSemiring if args.max_plus_semiring else (
@@ -383,7 +383,7 @@ def main(args: argparse.Namespace) -> None:
             os.makedirs(models_directory)
 
     # train SoftPatternClassifier
-    train(train_data, dev_data, model, num_classes, models_directory, epochs,
+    train(train_data, valid_data, model, num_classes, models_directory, epochs,
           model_file_prefix, args.learning_rate, args.batch_size,
           args.use_scheduler, args.gpu, args.clip_threshold, args.max_doc_len,
           args.dropout, args.word_dropout, args.patience)

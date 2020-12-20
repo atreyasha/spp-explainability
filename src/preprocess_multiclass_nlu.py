@@ -64,19 +64,20 @@ def main(args: argparse.Namespace) -> None:
     # define key directory and files
     write_directory = os.path.join(args.data_directory, "clean")
     train = os.path.join(args.data_directory, "raw", "en", "train-en.tsv")
-    dev = os.path.join(args.data_directory, "raw", "en", "eval-en.tsv")
+    valid = os.path.join(args.data_directory, "raw", "en", "eval-en.tsv")
     test = os.path.join(args.data_directory, "raw", "en", "test-en.tsv")
 
     # process files
     logger.info("Reading input data")
     train = read_tsv(train)
-    dev = read_tsv(dev)
+    valid = read_tsv(valid)
     test = read_tsv(test)
 
     # extract data and labels
     train_data, train_labels = zip(*[[element[2], element[0]]
                                      for element in train])
-    dev_data, dev_labels = zip(*[[element[2], element[0]] for element in dev])
+    valid_data, valid_labels = zip(*[[element[2], element[0]]
+                                     for element in valid])
     test_data, test_labels = zip(*[[element[2], element[0]]
                                    for element in test])
 
@@ -86,14 +87,14 @@ def main(args: argparse.Namespace) -> None:
     # replace all classes with indices
     logger.info("Serializing output classes")
     train_labels = serialize(train_labels, class_mapping)
-    dev_labels = serialize(dev_labels, class_mapping)
+    valid_labels = serialize(valid_labels, class_mapping)
     test_labels = serialize(test_labels, class_mapping)
 
     # tokenize all datasets
     logger.info("Tokenizing training data")
     train_data = tokenize(train_data)
     logger.info("Tokenizing validation data")
-    dev_data = tokenize(dev_data)
+    valid_data = tokenize(valid_data)
     logger.info("Tokenizing test data")
     test_data = tokenize(test_data)
 
@@ -101,14 +102,14 @@ def main(args: argparse.Namespace) -> None:
     logger.info("Making training data unique")
     train = make_unique(list(zip(train_data, train_labels)))
     logger.info("Making validation data unique")
-    dev = make_unique(list(zip(dev_data, dev_labels)))
+    valid = make_unique(list(zip(valid_data, valid_labels)))
     logger.info("Making test data unique")
     test = make_unique(list(zip(test_data, test_labels)))
 
     # write main files
     logger.info("Sorting and writing data")
     write_file(train, class_mapping, "train", write_directory)
-    write_file(dev, class_mapping, "dev", write_directory)
+    write_file(valid, class_mapping, "valid", write_directory)
     write_file(test, class_mapping, "test", write_directory)
 
     # write class mapping
