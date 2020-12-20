@@ -101,7 +101,7 @@ def train(train_data: List[Tuple[List[int], int]],
           model_file_prefix: str,
           learning_rate: float,
           batch_size: int,
-          run_scheduler: bool = False,
+          use_scheduler: bool = False,
           gpu: bool = False,
           clip_threshold: Union[float, None] = None,
           max_doc_len: int = -1,
@@ -131,8 +131,13 @@ def train(train_data: List[Tuple[List[int], int]],
 
     # initialize learning rate scheduler if provided
     # TODO boolean below does not correspond correctly, add verbosity flag
-    if run_scheduler:
-        scheduler = ReduceLROnPlateau(optimizer, 'min', 0.1, 10, True)
+    if use_scheduler:
+        logger.info("Initializing learning rate scheduler")
+        scheduler = ReduceLROnPlateau(optimizer,
+                                      mode='min',
+                                      factor=0.1,
+                                      patience=10,
+                                      verbose=True)
 
     # initialize floats for re-use
     best_dev_loss = 100000000.
@@ -252,7 +257,7 @@ def train(train_data: List[Tuple[List[int], int]],
                 torch.save(model.state_dict(), model_save_file)
 
         # apply learning rate scheduler after epoch
-        if run_scheduler:
+        if use_scheduler:
             scheduler.step(dev_loss)
 
     # log information at the end of training
@@ -380,7 +385,7 @@ def main(args: argparse.Namespace) -> None:
     # train SoftPatternClassifier
     train(train_data, dev_data, model, num_classes, models_directory, epochs,
           model_file_prefix, args.learning_rate, args.batch_size,
-          args.scheduler, args.gpu, args.clip_threshold, args.max_doc_len,
+          args.use_scheduler, args.gpu, args.clip_threshold, args.max_doc_len,
           args.dropout, args.word_dropout, args.patience)
 
 

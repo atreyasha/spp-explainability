@@ -140,7 +140,7 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        default=30,
                        type=int)
     # boolean flags
-    train.add_argument("--scheduler",
+    train.add_argument("--use-scheduler",
                        help=("Use learning rate scheduler to reduce "
                              "learning rate on performance plateau"),
                        action='store_true')
