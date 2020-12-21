@@ -5,7 +5,12 @@ from typing import Callable, List, Union, Any, Tuple
 from .data_utils import (UNK_IDX, START_TOKEN_IDX, END_TOKEN_IDX, Vocab,
                          identity)
 import numpy as np
+import datetime
 import torch
+
+
+def timestamp() -> str:
+    return str(int(datetime.datetime.now().timestamp()))
 
 
 def chunked(xs: List[Tuple[List[int], int]],

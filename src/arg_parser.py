@@ -96,6 +96,7 @@ def training_arg_parser() -> argparse.ArgumentParser:
     train.add_argument("--models-directory",
                        help=("Directory where models and tensorboard logs "
                              "are saved"),
+                       default="./models",
                        type=str)
     train.add_argument("--pre-computed-patterns",
                        help="Path to file containing per-computed patterns",

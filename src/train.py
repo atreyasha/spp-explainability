@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from tqdm import tqdm
+from glob import glob
 from collections import OrderedDict
 from typing import List, Union, MutableMapping, Tuple, cast
 from torch import LongTensor
@@ -14,7 +15,7 @@ from .utils.parser_utils import argparse_formatter
 from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
                                read_embeddings)
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
-                                to_cuda, Batch, ProbSemiring,
+                                to_cuda, Batch, ProbSemiring, timestamp,
                                 enable_gradient_clipping,
                                 LogSpaceMaxTimesSemiring, MaxPlusSemiring)
 from .utils.logging_utils import make_logger
@@ -25,6 +26,27 @@ import numpy as np
 import argparse
 import torch
 import os
+
+
+def read_patterns(filename: str,
+                  pattern_specs: MutableMapping[int, int]) -> List[List[str]]:
+    # read pre_compute_patterns into a list
+    with open(filename, encoding='utf-8') as input_file_stream:
+        pre_computed_patterns = [
+            line.rstrip().split() for line in input_file_stream
+            if len(line.rstrip())
+        ]
+
+    # update pattern_specs object with patterns metadata
+    for pattern in pre_computed_patterns:
+        lookup_length = len(pattern) + 1
+        if lookup_length not in pattern_specs:
+            pattern_specs[lookup_length] = 1
+        else:
+            pattern_specs[lookup_length] += 1
+
+    # return read object
+    return pre_computed_patterns
 
 
 def train_batch(model: Module,
@@ -39,8 +61,14 @@ def train_batch(model: Module,
     optimizer.zero_grad()
 
     # compute model loss
-    loss = compute_loss(model, batch, num_classes, gold_output, loss_function,
-                        gpu, dropout, eval_mode=False)
+    loss = compute_loss(model,
+                        batch,
+                        num_classes,
+                        gold_output,
+                        loss_function,
+                        gpu,
+                        dropout,
+                        eval_mode=False)
 
     # compute loss gradients for all parameters
     loss.backward()
@@ -105,9 +133,8 @@ def train(train_data: List[Tuple[List[int], int]],
           valid_data: List[Tuple[List[int], int]],
           model: Module,
           num_classes: int,
-          models_directory: str,
           epochs: int,
-          model_file_prefix: str,
+          model_log_directory: str,
           learning_rate: float,
           batch_size: int,
           use_scheduler: bool = False,
@@ -235,19 +262,28 @@ def train(train_data: List[Tuple[List[int], int]],
         # optionally increment patience counter or stop training
         # NOTE: loss values are summed over all data (not mean)
         if valid_loss < best_valid_loss:
+            # log information and update records
             logger.info("New best validation loss")
             if valid_acc > best_valid_acc:
                 best_valid_acc = valid_acc
                 logger.info("New best validation accuracy")
             best_valid_loss = valid_loss
             best_valid_loss_index = 0
-            if models_directory is not None:
-                model_save_file = os.path.join(
-                    models_directory,
-                    "{}_{}.pth".format(model_file_prefix, epoch))
-                logger.info("Saving checkpoint: %s" % model_save_file)
-                torch.save(model.state_dict(), model_save_file)
+
+            # find all legacy models
+            legacy_models = glob(os.path.join(model_log_directory, "*.pt"))
+
+            # save best model
+            model_save_file = os.path.join(
+                model_log_directory, "spp_best_checkpoint_{}.pt".format(epoch))
+            logger.info("Saving checkpoint: %s" % model_save_file)
+            torch.save(model.state_dict(), model_save_file)
+
+            # delete all legacy models
+            # TODO: needs to be updated with shutil.rmtree in case of directory
+            [os.remove(legacy_model) for legacy_model in legacy_models]
         else:
+            # update patience counter and/or exit training if threshold reached
             best_valid_loss_index += 1
             if best_valid_loss_index == patience:
                 logger.info(
@@ -365,48 +401,32 @@ def main(args: argparse.Namespace) -> None:
     if args.gpu:
         model.to_cuda(model)
 
-    # define model prefix
-    # TODO: format this better with timestamping
-    model_file_prefix = "model"
+    # create models_directory if not present
+    if models_directory is not None:
+        if not os.path.exists(models_directory):
+            os.makedirs(models_directory)
+    else:
+        # save models in root of repository if no directory specified
+        models_directory = "./"
+
+    # define model log directory
+    # TODO: add additional conditional based on grid-training
+    model_log_directory = os.path.join(models_directory,
+                                       "spp_single_train_" + timestamp())
 
     # load model if argument provided
     if args.load_model is not None:
         state_dict = torch.load(args.load_model)
         model.load_state_dict(state_dict)
-        # TODO: format this better with timestamping
-        model_file_prefix = 'model_retrained'
-
-    # create models_directory if argument provided
-    if models_directory is not None:
-        if not os.path.exists(models_directory):
-            os.makedirs(models_directory)
+        # TODO: improve this workflow to borrow from input path
+        # and use the same directory for continuing training
+        model_log_directory = 'model_retrained'
 
     # train SoftPatternClassifier
-    train(train_data, valid_data, model, num_classes, models_directory, epochs,
-          model_file_prefix, args.learning_rate, args.batch_size,
+    train(train_data, valid_data, model, num_classes, epochs,
+          model_log_directory, args.learning_rate, args.batch_size,
           args.use_scheduler, args.gpu, args.clip_threshold, args.max_doc_len,
           args.dropout, args.word_dropout, args.patience)
-
-
-def read_patterns(filename: str,
-                  pattern_specs: MutableMapping[int, int]) -> List[List[str]]:
-    # read pre_compute_patterns into a list
-    with open(filename, encoding='utf-8') as input_file_stream:
-        pre_computed_patterns = [
-            line.rstrip().split() for line in input_file_stream
-            if len(line.rstrip())
-        ]
-
-    # update pattern_specs object with patterns metadata
-    for pattern in pre_computed_patterns:
-        lookup_length = len(pattern) + 1
-        if lookup_length not in pattern_specs:
-            pattern_specs[lookup_length] = 1
-        else:
-            pattern_specs[lookup_length] += 1
-
-    # return read object
-    return pre_computed_patterns
 
 
 if __name__ == '__main__':
