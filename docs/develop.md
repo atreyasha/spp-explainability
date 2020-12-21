@@ -26,58 +26,79 @@
 
     1.  Quick changes
 
-        1.  **TODO** sort out issue of consistent variable
-            naming between `batch` and `batch_obj`
+        1.  **TODO** log model metrics with intra/inter-epoch
+            frequency which can be shared with tqdm for displaying -\>
+            would require some recoding with modulos for checks and
+            re-thinking of how loss is computed -\> for eg. loss with
+            train mode vs. loss with eval mode at the end of epoch,
+            valid_loss is already computed without dropout, perhaps
+            still good to add model.eval() and model.train() before and
+            after loops -\> is tqdm bar update also needed for develop
+            set (perhaps not) -\> how to manage updates with batch vs.
+            epochs conflict and how to continue training as well, think
+            about whether to recompute accuracy as well on a batch-basis
 
-        2.  **TODO** make consistent use of `validation`
-            versus `dev` throughout all source code -\> redo all log
-            messages and also file naming especially related to inputs,
-            preprocessing and argparse -\> will require time and effort
+        2.  **TODO** make function to handle all relevant
+            interim evaluation and logging -\> log accuracy and others
+            as well where possible -\> can be re-used throughout model
+            with update count
 
-        3.  address scattered TODOs in code if still remaining OR
-            otherwise add them to below tasks
+        3.  **TODO** add argparse option of how often to
+            update tqdm metrics in training -\> should be shared
+            parameter for tensorboard logging
+
+        4.  consider switching to loss with mean reduction
+
+        5.  think whether this would be the best option and how to go
+            about checkpoint saving according to pytorch documentation,
+            save full model and not just state_dict, embeddings are
+            already part of model currently, change extension from
+            `.pth` to `.pt` which conforms to current precedents -\>
+            save optimizer, scheduler, embeddings and look at other data
+            that should be included in a checkpoint:
+            <https://pytorch.org/tutorials/beginner/saving_loading_models.html>
+
+            1.  think deeper about how to save model properly and
+                embeddings without issues of path based pickles
+
+        6.  improve code quality with continue training workflow -\>
+            need to read current epoch to save files and update
+            tensorboard events in correct location
 
     2.  Medium-level changes
 
-        1.  improve patience and model checkpoint implementation to be
-            more sensible -\> some issues present as per comments,
-            perhaps could make the code cleaner and the log messages
-            more meaningful
+        1.  address scattered TODOs in code if still remaining OR
+            otherwise add them to below tasks
 
-        2.  save full model and not just state_dict, embeddings are
-            already part of model currently
-
-        3.  improve learning rate scheduler implementation to more
-            soft-coded than hard-coded
-
-        4.  improve code quality with unique model logging (with
-            retraining) and tensorboard workflows -\> add compulsory
-            logging which is not used currently -\> log model metrics
-            with intra-epoch frequency which can be shared with tqdm for
-            displaying
-
-        5.  add argparse option of how often to update tqdm metrics in
-            training -\> should be shared parameter for tensorboard
-            logging
-
-        6.  look through shuffling that happens in training/model_utils
-            and whether it is necessary
-
-        7.  consider changing padding token to dedicated token instead
+        2.  consider changing padding token to dedicated token instead
             of unknown -\> these are not included within soft_pattern
             processing due to construction of Batch class only
             considering length of input sequences
 
-        8.  maybe padding the whole dataset might make more sense than
+        3.  maybe padding the whole dataset might make more sense than
             doing this repeatedly within each Batch object
 
-        9.  make batch object more efficient, look at existing pytorch
+            1.  combined model padding probably does not work well
+                because of inefficiencies, Batch object helps to keep
+                similar document lengths together to ensure most
+                computation is used correctly for updating scores and
+                not being ignored
+
+        4.  look through shuffling that happens in training/model_utils
+            and whether it is necessary in all places -\> or whether it
+            can be compressed in some places such as `model_utils.py`
+            functions
+
+        5.  make batch object more efficient, look at existing pytorch
             classes that could help with this
 
-        10. might make overall more sense to use max-\* semirings since
+        6.  might make overall more sense to use max-\* semirings since
             they are easier to interpret -\> try to replicate model from
             defaults of paper instead of code defaults during main runs
-            -\> change defaults directly in argument parser
+            -\> change defaults directly in argument parser -\> add
+            scheduler and other perks by default -\> make other defaults
+            more sensible for runs such as increasing epochs, learning
+            rate etc.
 
     3.  Core modeling developments
 
@@ -86,7 +107,8 @@
 
         2.  add blind evaluation workflow for the model -\> this would
             be useful for the grid-search model selection and might need
-            additional argument parser options
+            additional argument parser options -\> need to set
+            model.eval() before evaluating
 
         3.  add temperature parameter to encourage more discrete
             learning of pattern scores -\> or binarize patterns via
@@ -99,9 +121,24 @@
             otherwise simple linear layer with various basis functions
             would work
 
-        5.  add thorough and efficient grid-search workflow
+            1.  think of ways to use patterns only when there are enough
+                words in front and not to always compute, if this is
+                possible at all
 
-        6.  incremental changes with grid-search -\> multiple runs of
+        5.  add thorough and efficient grid-search workflow -\> emulate
+            similar workflow from single train
+
+        6.  think about how grid search workflow should work and which
+            models should be saved/deleted -\> good idea to keep best
+            model checkpoints from each grid run and separate event
+            files
+
+        7.  think about whether loss or accuracy should be monitored for
+            early stopping -\> especially given that losses are
+            calculated using forward without evaluation; implying that
+            dropout could have stochastic noise impact
+
+        8.  incremental changes with grid-search -\> multiple runs of
             each best model with different random seeds to get standard
             deviation of performance -\> experiment more gracious
             self-loops and epsilon transitions for improved
@@ -123,19 +160,23 @@
         1.  final ensemble of regular expressions should give insights
             and perform similar to main SoPa++ neural model
 
-        2.  best case scenario: user should be able to transfer easily
+        2.  think about how to work with unknown tokens on new data for
+            mimic model -\> maybe some mapping of embeddings to find
+            closest token/pattern or mean score might help
+
+        3.  best case scenario: user should be able to transfer easily
             between models and regex-ensemble in both directions for
             \"human-computer interaction\"
 
-        3.  for mimic model, find best patterns that match, if not use a
+        4.  for mimic model, find best patterns that match, if not use a
             mean value for the pattern score that can be used as an
             analog -\> or try other heuristics that can bring results of
             mimic and oracle closer to each other
 
-        4.  posted question to OP on self-loops visualization, see:
+        5.  posted question to OP on self-loops visualization, see:
             <https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-728257052>
 
-        5.  aim to produce pretty and compact ensemble of regular
+        6.  aim to produce pretty and compact ensemble of regular
             expressions which can analyzed and manipulated by a human
 
     2.  Oracle model
@@ -172,7 +213,10 @@
         a baseline to match or otherwise come close to, in order to
         probe explainability
 
-    2.  work on `slurm-s3it` branch as a mirrored branch
+    2.  improve learning rate scheduler implementation to more
+        soft-coded than hard-coded, if possible at all
+
+    3.  work on `slurm-s3it` branch as a mirrored branch
 
 2.  Dynamic and sub-word embeddings (optional)
 
@@ -200,10 +244,13 @@
     1.  use `renv` for managing and shipping R dependencies -\> keep
         just `renv.lock` for easier shipping and ignore other files
 
-    2.  **extra:** pass tqdm directly to logger instead of directly to
+    2.  perform sanity check to ensure cross-module imports are not
+        affected by presence of `logger`
+
+    3.  **extra:** pass tqdm directly to logger instead of directly to
         stdout: see <https://github.com/tqdm/tqdm/issues/313>
 
-    3.  **brainstorm:** replace input arg namespace with explicit
+    4.  **brainstorm:** replace input arg namespace with explicit
         arguments, OR possible to make separate argparse Namespace which
         can be passed to main, this could help with portability (needs
         brainstorming since there are tradeoffs between argparse
@@ -231,9 +278,9 @@
 
     1.  improve cryptic parts of code to be more easily readable, such
         as workflow for loading pre-computed patterns inside the soft
-        patterns classifier -\> it can only be understood by studying
-        the code whereas it should be more structured with clear
-        conditionals
+        patterns classifier and model checkpointing -\> it can only be
+        understood by studying the code whereas it should be more
+        structured with clear conditionals
 
     2.  ensure consistent variable names for variables used in different
         scopes
@@ -434,6 +481,13 @@
         6.  extension/recommendations -\> transducer for seq2seq tasks
 
 ## Completed
+
+**DONE** make consistent use of `validation` versus `dev`
+throughout all source code -\> redo all log messages and also file
+naming especially related to inputs, preprocessing and argparse -\> will
+require time and effort
+
+**CLOSED:** *\[2020-12-20 Sun 17:49\]*
 
 **DONE** remove `rnn` option from code altogether -\> keep
 things simple for now
