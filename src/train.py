@@ -161,9 +161,7 @@ def train(train_data: List[Tuple[List[int], int]],
         dropout = None
 
     # initialize tensorboard writer if provided
-    writer = None
-    if models_directory is not None:
-        writer = SummaryWriter(os.path.join(models_directory, "logs"))
+    writer = SummaryWriter(os.path.join(model_log_directory, "events"))
 
     # initialize learning rate scheduler if provided
     # TODO boolean below does not correspond correctly, add verbosity flag
@@ -206,21 +204,18 @@ def train(train_data: List[Tuple[List[int], int]],
                     train_batch(model, batch, num_classes, gold, optimizer,
                                 loss_function, gpu, dropout))
 
-        # add parameter data to tensorboard if provided
-        if writer is not None:
-            # add named parameter data
-            for name, param in model.named_parameters():
-                writer.add_scalar("parameter_mean/" + name, param.data.mean(),
-                                  epoch)
-                writer.add_scalar("parameter_std/" + name, param.data.std(),
-                                  epoch)
-                if param.grad is not None:
-                    writer.add_scalar("gradient_mean/" + name,
-                                      param.grad.data.mean(), epoch)
-                    writer.add_scalar("gradient_std/" + name,
-                                      param.grad.data.std(), epoch)
-            # add loss data
-            writer.add_scalar("loss/loss_train", loss, epoch)
+        # add named parameter data
+        for name, param in model.named_parameters():
+            writer.add_scalar("parameter_mean/" + name, param.data.mean(),
+                              epoch)
+            writer.add_scalar("parameter_std/" + name, param.data.std(), epoch)
+            if param.grad is not None:
+                writer.add_scalar("gradient_mean/" + name,
+                                  param.grad.data.mean(), epoch)
+                writer.add_scalar("gradient_std/" + name,
+                                  param.grad.data.std(), epoch)
+                # add loss data
+        writer.add_scalar("loss/loss_train", loss, epoch)
 
         # loop over static valid set
         logger.info("Evaluating SoPa++ model on validation set")
@@ -243,8 +238,7 @@ def train(train_data: List[Tuple[List[int], int]],
                                  eval_mode=True).data)
 
         # add valid loss data to tensorboard
-        if writer is not None:
-            writer.add_scalar("loss/loss_valid", valid_loss, epoch)
+        writer.add_scalar("loss/loss_valid", valid_loss, epoch)
 
         # evaluate training and valid accuracies
         # TODO: do not limit training data accuracy here
@@ -402,12 +396,8 @@ def main(args: argparse.Namespace) -> None:
         model.to_cuda(model)
 
     # create models_directory if not present
-    if models_directory is not None:
-        if not os.path.exists(models_directory):
-            os.makedirs(models_directory)
-    else:
-        # save models in root of repository if no directory specified
-        models_directory = "./"
+    if not os.path.exists(models_directory):
+        os.makedirs(models_directory)
 
     # define model log directory
     # TODO: add additional conditional based on grid-training
