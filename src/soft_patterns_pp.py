@@ -404,8 +404,14 @@ class SoftPatternClassifier(Module):
             return self.semiring.plus(after_main_paths, after_self_loops)
 
     def predict(self, batch: Batch) -> List[int]:
-        # get raw predictions from sopa
+        # disable training mode for evaluation, same as model.eval()
+        self.training = False
+
+        # get raw predictions from sopa, dropout is provided as None
         output = self.forward(batch).data
+
+        # revert training mode for training, same as model.train()
+        self.training = True
 
         # argmax over raw predictions and convert to integer
         return [int(x) for x in argmax(output)]

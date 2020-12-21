@@ -40,7 +40,7 @@ def train_batch(model: Module,
 
     # compute model loss
     loss = compute_loss(model, batch, num_classes, gold_output, loss_function,
-                        gpu, dropout)
+                        gpu, dropout, eval_mode=False)
 
     # compute loss gradients for all parameters
     loss.backward()
@@ -58,9 +58,18 @@ def compute_loss(model: Module,
                  gold_output: List[int],
                  loss_function: torch.nn.modules.loss._Loss,
                  gpu: bool,
-                 dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
+                 dropout: Union[torch.nn.Module, None] = None,
+                 eval_mode: bool = False) -> torch.Tensor:
+    # enable evaluation mode in model
+    if eval_mode:
+        model.eval()
+
     # compute model outputs given batch
     output = model.forward(batch, dropout)
+
+    # revert model to training mode
+    if eval_mode:
+        model.train()
 
     # return loss over output and gold
     return loss_function(
@@ -74,9 +83,6 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
     number_data_points = float(len(data))
     correct = 0
 
-    # set model in evaluation mode
-    model.eval()
-
     # chunk data into sorted batches and iterate
     for batch in chunked_sorted(data, batch_size):
         # create batch and parse gold output
@@ -89,9 +95,6 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
         # find number of correctly predicted data points
         correct += sum(1 for pred, gold in zip(predicted, gold)
                        if pred == gold)
-
-    # set model back to train mode
-    model.train()
 
     # return raw accuracy float
     # TODO: replace this workflow with more robust metric such as F1 score
@@ -204,8 +207,13 @@ def train(train_data: List[Tuple[List[int], int]],
 
                 # find aggregate loss across valid samples in batch
                 valid_loss += torch.sum(
-                    compute_loss(model, batch, num_classes, gold,
-                                 loss_function, gpu).data)
+                    compute_loss(model,
+                                 batch,
+                                 num_classes,
+                                 gold,
+                                 loss_function,
+                                 gpu,
+                                 eval_mode=True).data)
 
         # add valid loss data to tensorboard
         if writer is not None:
