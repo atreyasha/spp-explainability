@@ -408,7 +408,7 @@ class SoftPatternClassifier(Module):
         self.training = False
 
         # get raw predictions from sopa, dropout is provided as None
-        output = self.forward(batch).data
+        output = self.forward(batch).detach()
 
         # revert training mode for training, same as model.train()
         self.training = True

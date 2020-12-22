@@ -200,21 +200,21 @@ def train(train_data: List[Tuple[List[int], int]],
                                     max_doc_len), [x[1] for x in batch]
 
                 # find aggregate loss across samples in batch
-                loss += torch.sum(
-                    train_batch(model, batch, num_classes, gold, optimizer,
-                                loss_function, gpu, dropout))
+                loss += train_batch(model, batch, num_classes, gold, optimizer,
+                                    loss_function, gpu, dropout)
 
         # add named parameter data
         for name, param in model.named_parameters():
-            writer.add_scalar("parameter_mean/" + name, param.data.mean(),
-                              epoch)
-            writer.add_scalar("parameter_std/" + name, param.data.std(), epoch)
+            writer.add_scalar("parameter_mean/" + name,
+                              param.detach().mean(), epoch)
+            writer.add_scalar("parameter_std/" + name,
+                              param.detach().std(), epoch)
             if param.grad is not None:
                 writer.add_scalar("gradient_mean/" + name,
-                                  param.grad.data.mean(), epoch)
+                                  param.grad.detach().mean(), epoch)
                 writer.add_scalar("gradient_std/" + name,
-                                  param.grad.data.std(), epoch)
-                # add loss data
+                                  param.grad.detach().std(), epoch)
+        # add loss data
         writer.add_scalar("loss/loss_train", loss, epoch)
 
         # loop over static valid set
@@ -228,14 +228,13 @@ def train(train_data: List[Tuple[List[int], int]],
                                     to_cuda(gpu)), [x[1] for x in batch]
 
                 # find aggregate loss across valid samples in batch
-                valid_loss += torch.sum(
-                    compute_loss(model,
-                                 batch,
-                                 num_classes,
-                                 gold,
-                                 loss_function,
-                                 gpu,
-                                 eval_mode=True).data)
+                valid_loss += compute_loss(model,
+                                           batch,
+                                           num_classes,
+                                           gold,
+                                           loss_function,
+                                           gpu,
+                                           eval_mode=True).detach()
 
         # add valid loss data to tensorboard
         writer.add_scalar("loss/loss_valid", valid_loss, epoch)
