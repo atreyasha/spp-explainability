@@ -184,7 +184,7 @@ def train(train_data: List[Tuple[List[int], int]],
         np.random.shuffle(train_data)
 
         # initialize training and valid loss
-        loss = 0.0
+        train_loss = 0.0
         valid_loss = 0.0
 
         # main training loop
@@ -194,15 +194,35 @@ def train(train_data: List[Tuple[List[int], int]],
                   unit="batch",
                   desc="Training") as tqdm_batches:
             # loop over shuffled train batches
-            for batch in tqdm_batches:
+            for i, batch in enumerate(tqdm_batches):
                 # create batch object and parse out gold labels
                 batch, gold = Batch([x[0] for x in batch], model.embeddings,
                                     to_cuda(gpu), word_dropout,
                                     max_doc_len), [x[1] for x in batch]
 
                 # find aggregate loss across samples in batch
-                loss += train_batch(model, batch, num_classes, gold, optimizer,
-                                    loss_function, gpu, dropout)
+                train_batch_loss = train_batch(model, batch, num_classes, gold,
+                                               optimizer, loss_function, gpu,
+                                               dropout)
+
+                # add batch loss to train_loss
+                train_loss += train_batch_loss
+
+                # update tqdm progress bar
+                if (i + 1) % TQDM_UPDATE_FREQ == 0 or (i +
+                                                       1) == len(tqdm_batches):
+                    tqdm_batches.set_postfix(
+                        batch_loss=train_batch_loss.item() / batch.size())
+
+        # compute mean train loss over epoch and accuracy
+        # NOTE: mean_train_loss contains stochastic noise
+        LOGGER.info("Evaluating SoPa++ on training set")
+        mean_train_loss = train_loss / len(train_data)
+        train_acc = evaluate_accuracy(model, train_data, batch_size, gpu)
+
+        # add training loss data
+        writer.add_scalar("loss/train_loss", mean_train_loss, epoch)
+        writer.add_scalar("accuracy/train_accuracy", train_acc, epoch)
 
         # add named parameter data
         for name, param in model.named_parameters():
@@ -215,36 +235,42 @@ def train(train_data: List[Tuple[List[int], int]],
                                   param.grad.detach().mean(), epoch)
                 writer.add_scalar("gradient_std/" + name,
                                   param.grad.detach().std(), epoch)
-        # add loss data
-        writer.add_scalar("loss/loss_train", loss, epoch)
 
         # loop over static valid set
         LOGGER.info("Evaluating SoPa++ on validation set")
         with tqdm(chunked_sorted(valid_data, batch_size),
-                  disable=disable_tqdm,
-                  unit="batch") as tqdm_batches:
-            for batch in tqdm_batches:
+                  disable=DISABLE_TQDM,
+                  unit="batch",
+                  desc="Validating") as tqdm_batches:
+            for i, batch in enumerate(tqdm_batches):
                 # create batch object and parse out gold labels
                 batch, gold = Batch([x[0] for x in batch], model.embeddings,
                                     to_cuda(gpu)), [x[1] for x in batch]
 
                 # find aggregate loss across valid samples in batch
-                valid_loss += compute_loss(model,
-                                           batch,
-                                           num_classes,
-                                           gold,
-                                           loss_function,
-                                           gpu,
-                                           eval_mode=True).detach()
+                valid_batch_loss = compute_loss(model,
+                                                batch,
+                                                num_classes,
+                                                gold,
+                                                loss_function,
+                                                gpu,
+                                                eval_mode=True).detach()
+
+                # add batch loss to valid_loss
+                valid_loss += valid_batch_loss
+
+                if (i + 1) % TQDM_UPDATE_FREQ == 0 or (i +
+                                                       1) == len(tqdm_batches):
+                    tqdm_batches.set_postfix(
+                        batch_loss=valid_batch_loss.item() / batch.size())
+
+        # compute mean valid loss over epoch and accuracy
+        mean_valid_loss = valid_loss / len(valid_data)
+        valid_acc = evaluate_accuracy(model, valid_data, batch_size, gpu)
 
         # add valid loss data to tensorboard
-        writer.add_scalar("loss/loss_valid", valid_loss, epoch)
-
-        # evaluate training and valid accuracies
-        # TODO: do not limit training data accuracy here
-        train_acc = evaluate_accuracy(model, train_data[:1000], batch_size,
-                                      gpu)
-        valid_acc = evaluate_accuracy(model, valid_data, batch_size, gpu)
+        writer.add_scalar("loss/valid_loss", mean_valid_loss, epoch)
+        writer.add_scalar("accuracy/valid_accuracy", valid_acc, epoch)
 
         # log out report of current epoch
         LOGGER.info("epoch: {}, mean_train_loss: {:.3f}, train_acc: {:.3f}%, "
