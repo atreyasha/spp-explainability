@@ -30,13 +30,13 @@ def serialize(data: List[str], mapping: Dict[str, int]) -> List[int]:
 def tokenize(data: List[str]) -> List[str]:
     return [
         " ".join(word_tokenize(element))
-        for element in tqdm(data, disable=disable_tqdm)
+        for element in tqdm(data, disable=DISABLE_TQDM)
     ]
 
 
 def make_unique(full_data: Iterable[Any]) -> List[Any]:
     unique_list = []
-    for element in tqdm(full_data, disable=disable_tqdm):
+    for element in tqdm(full_data, disable=DISABLE_TQDM):
         if element not in unique_list:
             unique_list.append(element)
     return unique_list
@@ -68,7 +68,7 @@ def main(args: argparse.Namespace) -> None:
     test = os.path.join(args.data_directory, "raw", "en", "test-en.tsv")
 
     # process files
-    logger.info("Reading input data")
+    LOGGER.info("Reading input data")
     train = read_tsv(train)
     valid = read_tsv(valid)
     test = read_tsv(test)
@@ -85,29 +85,29 @@ def main(args: argparse.Namespace) -> None:
     class_mapping = mapping(train_labels)
 
     # replace all classes with indices
-    logger.info("Serializing output classes")
+    LOGGER.info("Serializing output classes")
     train_labels = serialize(train_labels, class_mapping)
     valid_labels = serialize(valid_labels, class_mapping)
     test_labels = serialize(test_labels, class_mapping)
 
     # tokenize all datasets
-    logger.info("Tokenizing training data")
+    LOGGER.info("Tokenizing training data")
     train_data = tokenize(train_data)
-    logger.info("Tokenizing validation data")
+    LOGGER.info("Tokenizing validation data")
     valid_data = tokenize(valid_data)
-    logger.info("Tokenizing test data")
+    LOGGER.info("Tokenizing test data")
     test_data = tokenize(test_data)
 
     # make everything unique
-    logger.info("Making training data unique")
+    LOGGER.info("Making training data unique")
     train = make_unique(list(zip(train_data, train_labels)))
-    logger.info("Making validation data unique")
+    LOGGER.info("Making validation data unique")
     valid = make_unique(list(zip(valid_data, valid_labels)))
-    logger.info("Making test data unique")
+    LOGGER.info("Making test data unique")
     test = make_unique(list(zip(test_data, test_labels)))
 
     # write main files
-    logger.info("Sorting and writing data")
+    LOGGER.info("Sorting and writing data")
     write_file(train, class_mapping, "train", write_directory)
     write_file(valid, class_mapping, "valid", write_directory)
     write_file(test, class_mapping, "test", write_directory)
@@ -124,6 +124,6 @@ if __name__ == '__main__':
         parents=[preprocess_arg_parser(),
                  logging_arg_parser()])
     args = parser.parse_args()
-    logger = make_logger(args.logging_level)
-    disable_tqdm = args.disable_tqdm
+    LOGGER = make_logger(args.logging_level)
+    DISABLE_TQDM = args.disable_tqdm
     main(args)

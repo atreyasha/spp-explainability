@@ -166,7 +166,7 @@ def train(train_data: List[Tuple[List[int], int]],
     # initialize learning rate scheduler if provided
     # TODO boolean below does not correspond correctly, add verbosity flag
     if use_scheduler:
-        logger.info("Initializing learning rate scheduler")
+        LOGGER.info("Initializing learning rate scheduler")
         scheduler = ReduceLROnPlateau(optimizer,
                                       mode='min',
                                       factor=0.1,
@@ -188,10 +188,11 @@ def train(train_data: List[Tuple[List[int], int]],
         valid_loss = 0.0
 
         # main training loop
-        logger.info("Training SoPa++ model")
+        LOGGER.info("Training SoPa++ model")
         with tqdm(shuffled_chunked_sorted(train_data, batch_size),
-                  disable=disable_tqdm,
-                  unit="batch") as tqdm_batches:
+                  disable=DISABLE_TQDM,
+                  unit="batch",
+                  desc="Training") as tqdm_batches:
             # loop over shuffled train batches
             for batch in tqdm_batches:
                 # create batch object and parse out gold labels
@@ -218,7 +219,7 @@ def train(train_data: List[Tuple[List[int], int]],
         writer.add_scalar("loss/loss_train", loss, epoch)
 
         # loop over static valid set
-        logger.info("Evaluating SoPa++ model on validation set")
+        LOGGER.info("Evaluating SoPa++ on validation set")
         with tqdm(chunked_sorted(valid_data, batch_size),
                   disable=disable_tqdm,
                   unit="batch") as tqdm_batches:
@@ -246,20 +247,20 @@ def train(train_data: List[Tuple[List[int], int]],
         valid_acc = evaluate_accuracy(model, valid_data, batch_size, gpu)
 
         # log out report of current epoch
-        logger.info("epoch: {}, train_loss: {:.3f}, train_acc: {:.3f}%, "
-                    "valid_loss: {:.3f}, valid_acc: {:.3f}%".format(
-                        epoch, loss / len(train_data), train_acc * 100,
-                        valid_loss / len(valid_data), valid_acc * 100))
+        LOGGER.info("epoch: {}, mean_train_loss: {:.3f}, train_acc: {:.3f}%, "
+                    "mean_valid_loss: {:.3f}, valid_acc: {:.3f}%".format(
+                        epoch, mean_train_loss, train_acc * 100,
+                        mean_valid_loss, valid_acc * 100))
 
         # check for loss improvement and save model if there is reduction
         # optionally increment patience counter or stop training
         # NOTE: loss values are summed over all data (not mean)
         if valid_loss < best_valid_loss:
             # log information and update records
-            logger.info("New best validation loss")
+            LOGGER.info("New best validation loss")
             if valid_acc > best_valid_acc:
                 best_valid_acc = valid_acc
-                logger.info("New best validation accuracy")
+                LOGGER.info("New best validation accuracy")
             best_valid_loss = valid_loss
             best_valid_loss_index = 0
 
@@ -269,7 +270,7 @@ def train(train_data: List[Tuple[List[int], int]],
             # save best model
             model_save_file = os.path.join(
                 model_log_directory, "spp_best_checkpoint_{}.pt".format(epoch))
-            logger.info("Saving checkpoint: %s" % model_save_file)
+            LOGGER.info("Saving checkpoint: %s" % model_save_file)
             torch.save(model.state_dict(), model_save_file)
 
             # delete all legacy models
@@ -279,7 +280,7 @@ def train(train_data: List[Tuple[List[int], int]],
             # update patience counter and/or exit training if threshold reached
             best_valid_loss_index += 1
             if best_valid_loss_index == patience:
-                logger.info(
+                LOGGER.info(
                     "%s patience epochs threshold reached, stopping training" %
                     patience)
                 return None
@@ -289,12 +290,12 @@ def train(train_data: List[Tuple[List[int], int]],
             scheduler.step(valid_loss)
 
     # log information at the end of training
-    logger.info("%s training epochs completed, stopping training" % epochs)
+    LOGGER.info("%s training epochs completed, stopping training" % epochs)
 
 
 def main(args: argparse.Namespace) -> None:
     # log namespace arguments
-    logger.info(args)
+    LOGGER.info(args)
 
     # read important arguments and define as local variables
     num_train_instances = args.num_train_instances
@@ -322,7 +323,7 @@ def main(args: argparse.Namespace) -> None:
             sorted(pattern_specs.items(), key=lambda t: t[0]))
 
     # log diagnositc information on input patterns
-    logger.info("Patterns: %s" % pattern_specs)
+    LOGGER.info("Patterns: %s" % pattern_specs)
 
     # set global random seed if specified
     if args.seed != -1:
@@ -331,9 +332,9 @@ def main(args: argparse.Namespace) -> None:
 
     # read valid and train vocabularies
     train_vocab = vocab_from_text(args.train_data)
-    logger.info("Training vocabulary size: %s" % len(train_vocab))
+    LOGGER.info("Training vocabulary size: %s" % len(train_vocab))
     valid_vocab = vocab_from_text(args.valid_data)
-    logger.info("Validation vocabulary size: %s" % len(valid_vocab))
+    LOGGER.info("Validation vocabulary size: %s" % len(valid_vocab))
 
     # combine valid and train vocabularies into global object
     vocab = valid_vocab | train_vocab
@@ -366,8 +367,8 @@ def main(args: argparse.Namespace) -> None:
     np.random.shuffle(train_data)
 
     # log diagnostic information
-    logger.info("Training instances: %s" % len(train_input))
-    logger.info("Number of classes: %s" % num_classes)
+    LOGGER.info("Training instances: %s" % len(train_input))
+    LOGGER.info("Number of classes: %s" % num_classes)
 
     # truncate data if necessary
     if num_train_instances is not None:
@@ -387,7 +388,7 @@ def main(args: argparse.Namespace) -> None:
                                   args.self_loop_scale)
 
     # log diagnostic information on parameter count
-    logger.info("Total model parameters: %s" %
+    LOGGER.info("Total model parameters: %s" %
                 sum(parameter.nelement() for parameter in model.parameters()))
 
     # send model to GPU if present
@@ -426,6 +427,7 @@ if __name__ == '__main__':
                                          logging_arg_parser()
                                      ])
     args = parser.parse_args()
-    logger = make_logger(args.logging_level)
-    disable_tqdm = args.disable_tqdm
+    LOGGER = make_logger(args.logging_level)
+    DISABLE_TQDM = args.disable_tqdm
+    TQDM_UPDATE_FREQ = args.tqdm_update_freq
     main(args)
