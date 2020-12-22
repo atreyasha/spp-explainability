@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Set up git hooks
+# Prepare git hooks
 set -e
 
 # usage function
 usage() {
   cat <<EOF
-Usage: setup_git_hooks.sh [-h|--help]
+Usage: prepare_git_hooks.sh [-h|--help]
 Force copy git hooks to git repository config
 
 Optional arguments:
@@ -24,7 +24,7 @@ check_help() {
 }
 
 # define function
-setup_git_hooks() {
+prepare_git_hooks() {
   local input
   for input in ./hooks/*; do
     cp "$input" "./.git/hooks/"
@@ -33,4 +33,4 @@ setup_git_hooks() {
 
 # execute function
 check_help "$@"
-setup_git_hooks
+prepare_git_hooks

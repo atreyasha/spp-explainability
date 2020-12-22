@@ -24,7 +24,7 @@ check_help() {
 }
 
 # download and prepare Facebook multi-class NLU data set
-facebook_multi_task_nlu() {
+facebook_multiclass_nlu() {
   local directory="./data/facebook_multiclass_nlu/raw"
   mkdir -p "$directory"
   wget -N -P "$directory" "https://download.pytorch.org/data/multilingual_task_oriented_dialog_slotfilling.zip"
@@ -41,5 +41,5 @@ glove_6B() {
 
 # execute all functions
 check_help "$@"
-facebook_multi_task_nlu
+facebook_multiclass_nlu
 glove_6B
