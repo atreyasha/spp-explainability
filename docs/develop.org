@@ -1,39 +1,45 @@
 #+STARTUP: overview
 #+OPTIONS: ^:nil
 #+OPTIONS: p:t
-
+  
 ** Tasks
 *** Current
 **** TODO Major changes to model
      DEADLINE: <2020-12-24 Thu>
-***** Quick changes
-****** TODO log model metrics with intra/inter-epoch frequency which can be shared with tqdm for displaying -> would require some recoding with modulos for checks and re-thinking of how loss is computed -> for eg. loss with train mode vs. loss with eval mode at the end of epoch, valid_loss is already computed without dropout, perhaps still good to add model.eval() and model.train() before and after loops -> is tqdm bar update also needed for develop set (perhaps not) -> how to manage updates with batch vs. epochs conflict and how to continue training as well, think about whether to recompute accuracy as well on a batch-basis
-****** TODO make function to handle all relevant interim evaluation and logging -> log accuracy and others as well where possible -> can be re-used throughout model with update count
-****** TODO add argparse option of how often to update tqdm metrics in training -> should be shared parameter for tensorboard logging 
-****** consider switching to loss with mean reduction
-****** think whether this would be the best option and how to go about checkpoint saving according to pytorch documentation, save full model and not just state_dict, embeddings are already part of model currently, change extension from =.pth= to =.pt= which conforms to current precedents -> save optimizer, scheduler, embeddings and look at other data that should be included in a checkpoint: https://pytorch.org/tutorials/beginner/saving_loading_models.html
-******* think deeper about how to save model properly and embeddings without issues of path based pickles
-****** improve code quality with continue training workflow -> need to read current epoch to save files and update tensorboard events in correct location
-
+***** Quick changes        
+****** improve code quality with continue training workflow
+******* use train arg parser to read/overwrite arguments
+******* optimizer and scheduler state dictionaries would need to passed on via optional argument to train, maybe model can be initialized inside train function instead of in main
+******* read epoch information so training/tensorboard-logging can be done correctly -> if epochs are still remaining, train until they are finished otherwise train for another set of specified epochs
+******* settle issue of whether to use epoch index or count while saving information -> re-think and make implementation consistent most importantly
+******* test if training can be continued seamlessly with information stored in checkpoint
+****** figure out saving and loading models on both cpu and gpu -> might need to insert map_location argument for specific devices -> can test out with some models saved on s3it gpu -> always save model on cpu: see https://discuss.pytorch.org/t/how-to-get-a-cpu-state-dict/24712 
+****** consider making implementation of torch device more explicit where possible with torch.device and "to" function -> would help with cpu/gpu save/load issues seamlessly -> can specify on command line which GPU to use for single case
+****** test if model works on GPU with new changes -> do quick check without too much detail
+****** update all =eps= with =epsilons= and =sl= with =self_loops= where possible
+       
 ***** Medium-level changes
 ****** address scattered TODOs in code if still remaining OR otherwise add them to below tasks
+****** look through shuffling that happens in training/model_utils and whether it is necessary in all places -> or whether it can be compressed in some places such as =model_utils.py= functions
 ****** consider changing padding token to dedicated token instead of unknown -> these are not included within soft_pattern processing due to construction of Batch class only considering length of input sequences
 ****** maybe padding the whole dataset might make more sense than doing this repeatedly within each Batch object
 ******* combined model padding probably does not work well because of inefficiencies, Batch object helps to keep similar document lengths together to ensure most computation is used correctly for updating scores and not being ignored
-****** look through shuffling that happens in training/model_utils and whether it is necessary in all places -> or whether it can be compressed in some places such as =model_utils.py= functions
-****** make batch object more efficient, look at existing pytorch classes that could help with this
+****** make batch object more efficient, look at existing pytorch classes that could help with this -> probably not the best case since the Batch class has a specific use
 ****** might make overall more sense to use max-* semirings since they are easier to interpret -> try to replicate model from defaults of paper instead of code defaults during main runs -> change defaults directly in argument parser -> add scheduler and other perks by default -> make other defaults more sensible for runs such as increasing epochs, learning rate etc.
 
 ***** Core modeling developments
-****** compute test F1 on models at the end of training for completeness
-****** add blind evaluation workflow for the model -> this would be useful for the grid-search model selection and might need additional argument parser options -> need to set model.eval() before evaluating
+****** reduce circum-padding token count to 1 instead of length of longest pattern
+****** add test evaluation workflow for the model with separate script -> this would be useful for the grid-search model selection and might need additional argument parser options -> need to set model.eval() before evaluating
+******* compute test F1 on models at the end of training for completeness
 ****** add temperature parameter to encourage more discrete learning of pattern scores -> or binarize patterns via =torch.gt= or =torch.relu= if possible which would make interpretation much easier -> look into how other paper on RNN-FSA did this with temperature
 ****** modify final layer to a general additive layer; preferably with tree structure or soft logic where possible -> otherwise simple linear layer with various basis functions would work
 ******* think of ways to use patterns only when there are enough words in front and not to always compute, if this is possible at all
-****** add thorough and efficient grid-search workflow -> emulate similar workflow from single train
+******* make use of torch cuda calls in improved model -> tensor.cuda() returns a copy of the tensor in the GPU while module.cuda() sends the model/parameters to the GPU -> not useful for static case since this would create memory overhaul
+****** add thorough and efficient grid-search workflow -> emulate similar workflow from single train -> perhaps nest single train inside grid directory so everything remains modular
 ****** think about how grid search workflow should work and which models should be saved/deleted -> good idea to keep best model checkpoints from each grid run and separate event files
 ****** think about whether loss or accuracy should be monitored for early stopping -> especially given that losses are calculated using forward without evaluation; implying that dropout could have stochastic noise impact
-****** incremental changes with grid-search -> multiple runs of each best model with different random seeds to get standard deviation of performance -> experiment more gracious self-loops and epsilon transitions for improved generalization 
+****** incremental changes with grid-search -> multiple runs of each best model with different random seeds to get standard deviation of performance -> experiment more gracious self-loops and epsilon transitions for improved generalization
+
 **** Run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with (repeated) grid-search to get plenty of candidates, means and standard deviations
      DEADLINE: <2021-02-01 Mon>
 **** With decent model performance, branch off to improve explainability with weighting of patterns to address other research questions
@@ -43,13 +49,13 @@
 ****** think about how to work with unknown tokens on new data for mimic model -> maybe some mapping of embeddings to find closest token/pattern or mean score might help
 ****** best case scenario: user should be able to transfer easily between models and regex-ensemble in both directions for "human-computer interaction" 
 ****** for mimic model, find best patterns that match, if not use a mean value for the pattern score that can be used as an analog -> or try other heuristics that can bring results of mimic and oracle closer to each other
-****** posted question to OP on self-loops visualization, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-728257052
 ****** aim to produce pretty and compact ensemble of regular expressions which can analyzed and manipulated by a human
+****** posted question to OP on self-loops visualization, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-728257052
 ***** Oracle model
 ****** refactor =soft_patterns_rnn= (if necessary), =visualization=, =interpretation= (two of highest priority) and =testing= scripts from git backlog to repository
 ****** why are =*START*= and =*END*= tokens repeated before and after, and why is =*UNK*= used for padding when a separate =*PAD*= token could be used?
-******* posted as question to OP, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695
 ******* overfitting that occurs to extra =*START*= and =*END*= tokens would be transferred to epsilon transitions if replaced with single padding instead of multiple
+******* posted as question to OP, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695
 ***** Distance between oracle and mimic
 ****** it would still be useful to show when mimic and oracle align and when they don't -> with some kind of distance measurement between their output scores
 ****** compare confusion matrices between orace and mimic and compute euclidean distances on scores or binary predictions
@@ -58,7 +64,11 @@
 **** Performance
 ***** tests run in paper show almost perfect accuracy, which could be a baseline to match or otherwise come close to, in order to probe explainability
 ***** improve learning rate scheduler implementation to more soft-coded than hard-coded, if possible at all
-***** work on =slurm-s3it= branch as a mirrored branch
+***** replace all legacy tensor.data calls with tensor.detach() for safety
+***** work on =slurm-s3it= branch as a mirrored branch -> easier to keep workflow simple for =jarvis= only and ignore =s3it=
+**** Visualization
+***** remember that tensorboard events start at epoch index 0, which means after the first epoch of training
+***** if necessary, the x-axis should be scaled forward by 1 to give the correct training epochs
 **** Dynamic and sub-word embeddings (optional)
 ***** use both word and sub-word tokenizers such as nltk or sentencepiece tokenizer
 ****** sub-word non-contextual embeddings: fastText or https://nlp.h-its.org/bpemb/#cite
@@ -66,14 +76,18 @@
 ***** use both static and dynamic token embeddings
 ****** dynamic: start, end and padding tokens should be fixed, while unknown and others could be learned
 ****** dynamic: can use a lower learning rate for embeddings to reduce overfitting as much as possible
-****** dynamic: convert embeddings to tensor instead of leaving it as a list
+****** dynamic: convert embeddings into a tensor and register as parameter inside model which gets saved with state dictionary object -> not useful for static case since this would create memory overhaul
 **** Argparse, logging and dependencies
+***** consider whether to pass =logger=, =disable_tqdm= and =tqdm_update_freq= variables directly via functions
 ***** use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
-***** perform sanity check to ensure cross-module imports are not affected by presence of =logger=
+***** perform sanity check to ensure cross-module imports are not affected by presence of =logger=, or otherwise use root logger in case it cannot be imported
 ***** *extra:* pass tqdm directly to logger instead of directly to stdout: see https://github.com/tqdm/tqdm/issues/313
 ***** *brainstorm:* replace input arg namespace with explicit arguments, OR possible to make separate argparse Namespace which can be passed to main, this could help with portability (needs brainstorming since there are tradeoffs between argparse Namespace and explicit variable definitions)
 **** Typing and testing
+***** include test code by instantiating class and/or other simple methods which are inherent to the workflow
+***** ensure that redefined variables are given all possible unioned types used inside code
 ***** add mypy as a test case suite, design new and improved test cases using pytest after understanding code completely
+***** consider adding Optional type to all optional arguments
 ***** fine-tune typing in internal functions of =SoftPatternClassifier= since some of them require batch-level testing to ascertain, eg. =get_transition_matrices=, =load_pattern= -> need to ascertain wither =pre_computed_patterns= is List or List[List[str]] -> consider removing =float= from =self_loop_scale: Union[torch.Tensor, float, None]= in =transition_once=
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List)
 **** Documentation
@@ -154,6 +168,10 @@
 ****** extension/recommendations -> transducer for seq2seq tasks
        
 ** Completed
+***** DONE log model metrics with intra/inter-epoch frequency which can be shared with tqdm for displaying -> would require some recoding with modulos -> how to manage updates with batch vs. epochs conflict and how to continue training as well, think about whether to recompute accuracy as well on a batch-basis
+      CLOSED: [2020-12-22 Tue 12:22]
+***** DONE add argparse option of how often to update tqdm metrics in training -> should be shared parameter for tensorboard logging 
+      CLOSED: [2020-12-22 Tue 12:22]
 ***** DONE make consistent use of =validation= versus =dev= throughout all source code -> redo all log messages and also file naming especially related to inputs, preprocessing and argparse -> will require time and effort
       CLOSED: [2020-12-20 Sun 17:49]
 ***** DONE remove =rnn= option from code altogether -> keep things simple for now
