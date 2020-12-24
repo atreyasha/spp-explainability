@@ -67,10 +67,10 @@ class SoftPatternClassifier(Module):
             bias_scale: float,
             gpu: bool = False,
             pre_computed_patterns: Union[List[List[str]], None] = None,
-            shared_sl: int = 0,
-            no_sl: bool = False,
-            no_eps: bool = False,
-            eps_scale: Union[float, None] = None,
+            shared_self_loops: int = 0,
+            no_self_loops: bool = False,
+            no_epsilons: bool = False,
+            epsilon_scale: Union[float, None] = None,
             self_loop_scale: Union[torch.Tensor, float, None] = None) -> None:
         # initialize all class properties from torch.nn.Module
         super(SoftPatternClassifier, self).__init__()
@@ -84,29 +84,29 @@ class SoftPatternClassifier(Module):
         self.mlp = MLP(self.total_num_patterns, mlp_hidden_dim, mlp_num_layers,
                        num_classes)
         self.num_diags = 1
-        self.no_sl = no_sl
-        self.shared_sl = shared_sl
+        self.no_self_loops = no_self_loops
+        self.shared_self_loops = shared_self_loops
         self.pattern_specs = pattern_specs
         self.max_pattern_length = max(list(pattern_specs.keys()))
-        self.no_eps = no_eps
+        self.no_epsilons = no_epsilons
         self.bias_scale = bias_scale
         self.word_dim = len(embeddings[0])
 
         # assign class variables from conditionals
-        if self.shared_sl != 0:
+        if self.shared_self_loops != 0:
             # shared parameters between main path and self loop
             # 1: one parameter per state per pattern
             # 2: a single global parameter
-            if self.shared_sl == SHARED_SL_PARAM_PER_STATE_PER_PATTERN:
+            if self.shared_self_loops == SHARED_SL_PARAM_PER_STATE_PER_PATTERN:
                 # create a tensor for each pattern
                 shared_sl_data = randn(self.total_num_patterns,
                                        self.max_pattern_length)
-            elif self.shared_sl == SHARED_SL_SINGLE_PARAM:
+            elif self.shared_self_loops == SHARED_SL_SINGLE_PARAM:
                 # create a single tensor
                 shared_sl_data = randn(1)
             # NOTE: assign tensor to a learnable parameter
             self.self_loop_scale = Parameter(shared_sl_data)
-        elif not self.no_sl:
+        elif not self.no_self_loops:
             # workflow for self-loops that are not shared
             # NOTE: self_loop_scale is not a fixed tensor
             if self_loop_scale is not None:
@@ -118,7 +118,6 @@ class SoftPatternClassifier(Module):
             self.num_diags = 2
 
         # create list of end state indexes for each pattern
-        # convert this into class-specifc tensor
         end_states = [[
             end
         ] for pattern_len, num_patterns in self.pattern_specs.items()
@@ -143,7 +142,7 @@ class SoftPatternClassifier(Module):
         self.bias = Parameter(bias_data)
 
         # assign class variables if epsilon transitions are allowed
-        if not self.no_eps:
+        if not self.no_epsilons:
             # NOTE: this parameter is learned
             self.epsilon = Parameter(
                 randn(self.total_num_patterns, self.max_pattern_length - 1))
@@ -216,7 +215,7 @@ class SoftPatternClassifier(Module):
 
         # pattern indices: which patterns are we loading?
         # the pattern index from which we start loading each pattern length
-        # TODO: not sure what this segment is doing -> why offset?
+        # TODO: unsure why there is offset here
         # NOTE: probably to get pattern index in diagonal data
         for (i, pattern_length) in enumerate(pattern_specs.keys()):
             pattern_indices[pattern_length] = count
@@ -252,7 +251,7 @@ class SoftPatternClassifier(Module):
         diag = EPSILON * torch.randn(len(pattern), self.word_dim)
         bias = torch.zeros(len(pattern))
 
-        # TODO: what is the purpose of this factor value?
+        # TODO: unsure why this factor value is chosen
         factor = 10
 
         # traversing elements of pattern.
@@ -280,12 +279,12 @@ class SoftPatternClassifier(Module):
 
         # set self_loop_scale based on class variables
         self_loop_scale = None
-        if self.shared_sl:
+        if self.shared_self_loops:
             self_loop_scale = self.semiring.from_float(self.self_loop_scale)
-        elif not self.no_sl:
+        elif not self.no_self_loops:
             self_loop_scale = self.self_loop_scale
 
-        # assign local variables
+        # assign batch_size
         batch_size = batch.size()
         num_patterns = self.total_num_patterns
 
@@ -355,7 +354,7 @@ class SoftPatternClassifier(Module):
         return self.mlp.forward(scores)
 
     def get_eps_value(self) -> Union[torch.Tensor, None]:
-        return None if self.no_eps else self.semiring.times(
+        return None if self.no_epsilons else self.semiring.times(
             self.epsilon_scale, self.semiring.from_float(self.epsilon))
 
     def transition_once(
@@ -367,7 +366,7 @@ class SoftPatternClassifier(Module):
         # NOTE: don't consume a token, move forward one state
         # we do this before self-loops and single-steps.
         # we only allow zero or one epsilon transition in a row
-        if self.no_eps:
+        if self.no_epsilons:
             after_epsilons = hiddens
         else:
             # doesn't depend on token, just state
@@ -383,14 +382,14 @@ class SoftPatternClassifier(Module):
                                  transition_matrix[:, :, -1, :-1])), 2)
 
         # adding self-loops
-        if self.no_sl:
+        if self.no_self_loops:
             return after_main_paths
         else:
             # NOTE: mypy-related fix, does not affect torch workflow
             self_loop_scale = cast(torch.Tensor, self_loop_scale)
 
             # adjust self_loop_scale
-            if self.shared_sl == SHARED_SL_PARAM_PER_STATE_PER_PATTERN:
+            if self.shared_self_loops == SHARED_SL_PARAM_PER_STATE_PER_PATTERN:
                 self_loop_scale = self_loop_scale.expand(
                     transition_matrix[:, :, 0, :].size())
 

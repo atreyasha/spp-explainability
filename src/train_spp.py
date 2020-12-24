@@ -392,26 +392,32 @@ def main(args: argparse.Namespace) -> None:
     train_data = list(zip(train_input, train_labels))
     np.random.shuffle(train_data)
 
-    # log diagnostic information
-    LOGGER.info("Training instances: %s" % len(train_input))
-    LOGGER.info("Number of classes: %s" % num_classes)
-
     # truncate data if necessary
     if num_train_instances is not None:
         train_data = train_data[:num_train_instances]
         valid_data = valid_data[:num_train_instances]
 
-    # define semiring as per argument provided
-    semiring = MaxPlusSemiring if args.max_plus_semiring else (
-        LogSpaceMaxTimesSemiring if args.max_times_semiring else ProbSemiring)
+    # log diagnostic information
+    LOGGER.info("Number of classes: %s" % num_classes)
+    LOGGER.info("Training instances: %s" % len(train_data))
+    LOGGER.info("Validation instances: %s" % len(valid_data))
+
+    # define semiring as per argument provided and log
+    if args.semiring == "MaxPlusSemiring":
+        semiring = MaxPlusSemiring
+    elif args.semiring == "MaxTimesSemiring":
+        semiring = LogSpaceMaxTimesSemiring
+    elif args.semiring == "ProbSemiring":
+        semiring = ProbSemiring
+    LOGGER.info("Semiring: %s" % args.semiring)
 
     # create SoftPatternClassifier
     model = SoftPatternClassifier(pattern_specs, mlp_hidden_dim,
                                   mlp_num_layers, num_classes, embeddings,
                                   vocab, semiring, args.bias_scale, args.gpu,
-                                  pre_computed_patterns, args.no_sl,
-                                  args.shared_sl, args.no_eps, args.eps_scale,
-                                  args.self_loop_scale)
+                                  pre_computed_patterns, args.no_self_loops,
+                                  args.shared_self_loops, args.no_epsilons,
+                                  args.epsilon_scale, args.self_loop_scale)
 
     # log diagnostic information on parameter count
     LOGGER.info("Total model parameters: %s" %

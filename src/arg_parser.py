@@ -17,18 +17,24 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
               "PatternLength1-PatternCount1_PatternLength2-PatternCount2_..."),
         default="5-50_4-50_3-50_2-50",
         type=str)
+    sopa.add_argument("--semiring",
+                      help="Specify which semiring to use",
+                      default="ProbSemiring",
+                      choices=["MaxPlusSemiring", "MaxTimesSemiring",
+                               "ProbSemiring"],
+                      type=str)
     sopa.add_argument("--bias-scale",
                       help="Scale biases by this parameter",
                       default=0.1,
                       type=float)
-    sopa.add_argument("--eps-scale",
+    sopa.add_argument("--epsilon-scale",
                       help="Scale epsilons by this parameter",
                       type=float)
     sopa.add_argument("--self-loop-scale",
                       help="Scale self-loops by this parameter",
                       type=float)
     sopa.add_argument(
-        "--shared-sl",
+        "--shared-self-loops",
         help=("Option to share main path and self loop parameters. " +
               "0: do not share parameters, " +
               str(SHARED_SL_PARAM_PER_STATE_PER_PATTERN) +
@@ -48,16 +54,10 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
                       default=2,
                       type=int)
     # boolean flags
-    sopa.add_argument("--max-plus-semiring",
-                      help="Use max-plus semiring",
-                      action='store_true')
-    sopa.add_argument("--max-times-semiring",
-                      help="Use max-times semiring",
-                      action='store_true')
-    sopa.add_argument("--no-sl",
+    sopa.add_argument("--no-self-loops",
                       help="Do not use self loops",
                       action='store_true')
-    sopa.add_argument("--no-eps",
+    sopa.add_argument("--no-epsilons",
                       help="Do not use epsilon transitions",
                       action='store_true')
     return parser
