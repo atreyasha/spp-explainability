@@ -5,17 +5,17 @@ description = ""
 authors = ["Atreya Shankar <35427332+atreyasha@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.6.1"
+python = "^3.7"
 numpy = "^1.19.4"
 tensorboardx = "^2.1"
-torch = "^1.7.0"
+torch = "1.7.0"
 nltk = "^3.5"
 tqdm = "^4.54.1"
 tensorboard = "^2.4.0"
 
 [tool.poetry.dev-dependencies]
 ipython = "7.11.0"
-mypy = "^0.790"
+mypy = "0.790"
 ipdb = "^0.13.4"
 
 [build-system]
