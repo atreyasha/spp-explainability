@@ -25,6 +25,7 @@ from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
 import numpy as np
 import argparse
 import torch
+import json
 import os
 
 
@@ -47,6 +48,30 @@ def read_patterns(filename: str,
 
     # return read object
     return pre_computed_patterns
+
+
+def save_checkpoint(epoch: int, model: torch.nn.Module,
+                    optimizer: torch.optim.Optimizer,
+                    scheduler: Union[ReduceLROnPlateau, None],
+                    best_valid_loss: float, best_valid_loss_index: int,
+                    best_valid_acc: float, path: str) -> None:
+    torch.save(
+        {
+            "epoch":
+            epoch,
+            "model_state_dict":
+            model.state_dict(),
+            "optimizer_state_dict":
+            optimizer.state_dict(),
+            "scheduler_state_dict":
+            scheduler.state_dict() if scheduler is not None else None,
+            "best_valid_loss":
+            best_valid_loss,
+            "best_valid_loss_index":
+            best_valid_loss_index,
+            "best_valid_acc":
+            best_valid_acc
+        }, path)
 
 
 def train_batch(model: Module,
@@ -114,11 +139,13 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
     # chunk data into sorted batches and iterate
     for batch in chunked_sorted(data, batch_size):
         # create batch and parse gold output
-        batch, gold = Batch([x for x, y in batch], model.embeddings,
-                            to_cuda(gpu)), [y for x, y in batch]
+        batch, gold = Batch(  # type: ignore
+            [x for x, y in batch],
+            model.embeddings,  # type: ignore
+            to_cuda(gpu)), [y for x, y in batch]
 
         # predict output using model
-        predicted = model.predict(batch)
+        predicted = model.predict(batch)  # type: ignore
 
         # find number of correctly predicted data points
         correct += sum(1 for pred, gold in zip(predicted, gold)
@@ -156,6 +183,8 @@ def train(train_data: List[Tuple[List[int], int]],
 
     # initialize dropout if provided
     if dropout:
+        # mypy-related type change
+        dropout = cast(float, dropout)
         dropout = torch.nn.Dropout(dropout)
     else:
         dropout = None
@@ -172,10 +201,12 @@ def train(train_data: List[Tuple[List[int], int]],
                                       factor=0.1,
                                       patience=10,
                                       verbose=True)
+    else:
+        scheduler = None
 
     # initialize floats for re-use
     best_valid_loss = 100000000.
-    best_valid_loss_index = -1
+    best_valid_loss_index = 0
     best_valid_acc = -1.
 
     # loop over epochs
@@ -183,22 +214,27 @@ def train(train_data: List[Tuple[List[int], int]],
         # shuffle training data
         np.random.shuffle(train_data)
 
-        # initialize training and valid loss
-        train_loss = 0.0
-        valid_loss = 0.0
+        # initialize training and valid loss, and hook to stop training
+        train_loss = 0.
+        valid_loss = 0.
+        stop_training = False
 
         # main training loop
         LOGGER.info("Training SoPa++ model")
         with tqdm(shuffled_chunked_sorted(train_data, batch_size),
                   disable=DISABLE_TQDM,
                   unit="batch",
-                  desc="Training") as tqdm_batches:
+                  desc="Training [Epoch %s/%s]" %
+                  (epoch + 1, epochs)) as tqdm_batches:
             # loop over shuffled train batches
             for i, batch in enumerate(tqdm_batches):
                 # create batch object and parse out gold labels
-                batch, gold = Batch([x[0] for x in batch], model.embeddings,
-                                    to_cuda(gpu), word_dropout,
-                                    max_doc_len), [x[1] for x in batch]
+                batch, gold = Batch(
+                    [x[0] for x in batch],
+                    model.embeddings,  # type: ignore
+                    to_cuda(gpu),
+                    word_dropout,
+                    max_doc_len), [x[1] for x in batch]
 
                 # find aggregate loss across samples in batch
                 train_batch_loss = train_batch(model, batch, num_classes, gold,
@@ -206,7 +242,7 @@ def train(train_data: List[Tuple[List[int], int]],
                                                dropout)
 
                 # add batch loss to train_loss
-                train_loss += train_batch_loss
+                train_loss += train_batch_loss  # type: ignore
 
                 # update tqdm progress bar
                 if (i + 1) % TQDM_UPDATE_FREQ == 0 or (i +
@@ -241,11 +277,14 @@ def train(train_data: List[Tuple[List[int], int]],
         with tqdm(chunked_sorted(valid_data, batch_size),
                   disable=DISABLE_TQDM,
                   unit="batch",
-                  desc="Validating") as tqdm_batches:
+                  desc="Validating [Epoch %s/%s]" %
+                  (epoch + 1, epochs)) as tqdm_batches:
             for i, batch in enumerate(tqdm_batches):
                 # create batch object and parse out gold labels
-                batch, gold = Batch([x[0] for x in batch], model.embeddings,
-                                    to_cuda(gpu)), [x[1] for x in batch]
+                batch, gold = Batch(
+                    [x[0] for x in batch],
+                    model.embeddings,  # type: ignore
+                    to_cuda(gpu)), [x[1] for x in batch]
 
                 # find aggregate loss across valid samples in batch
                 valid_batch_loss = compute_loss(model,
@@ -257,7 +296,7 @@ def train(train_data: List[Tuple[List[int], int]],
                                                 eval_mode=True).detach()
 
                 # add batch loss to valid_loss
-                valid_loss += valid_batch_loss
+                valid_loss += valid_batch_loss  # type: ignore
 
                 if (i + 1) % TQDM_UPDATE_FREQ == 0 or (i +
                                                        1) == len(tqdm_batches):
@@ -273,10 +312,15 @@ def train(train_data: List[Tuple[List[int], int]],
         writer.add_scalar("accuracy/valid_accuracy", valid_acc, epoch)
 
         # log out report of current epoch
-        LOGGER.info("epoch: {}, mean_train_loss: {:.3f}, train_acc: {:.3f}%, "
-                    "mean_valid_loss: {:.3f}, valid_acc: {:.3f}%".format(
-                        epoch, mean_train_loss, train_acc * 100,
-                        mean_valid_loss, valid_acc * 100))
+        LOGGER.info(
+            "epoch: {}/{}, mean_train_loss: {:.3f}, train_acc: {:.3f}%, "
+            "mean_valid_loss: {:.3f}, valid_acc: {:.3f}%".format(
+                epoch + 1, epochs, mean_train_loss, train_acc * 100,
+                mean_valid_loss, valid_acc * 100))
+
+        # apply learning rate scheduler after epoc
+        if scheduler is not None:
+            scheduler.step(valid_loss)
 
         # check for loss improvement and save model if there is reduction
         # optionally increment patience counter or stop training
@@ -287,33 +331,62 @@ def train(train_data: List[Tuple[List[int], int]],
             if valid_acc > best_valid_acc:
                 best_valid_acc = valid_acc
                 LOGGER.info("New best validation accuracy")
+
+            # update patience related diagnostics
             best_valid_loss = valid_loss
             best_valid_loss_index = 0
+            LOGGER.info("Patience counter: %s/%s" %
+                        (best_valid_loss_index, patience))
 
-            # find all legacy models
-            legacy_models = glob(os.path.join(model_log_directory, "*.pt"))
+            # find previous best checkpoint(s)
+            legacy_checkpoints = glob(
+                os.path.join(model_log_directory, "*_best_*.pt"))
 
-            # save best model
+            # save new best checkpoint
             model_save_file = os.path.join(
-                model_log_directory, "spp_best_checkpoint_{}.pt".format(epoch))
-            LOGGER.info("Saving checkpoint: %s" % model_save_file)
-            torch.save(model.state_dict(), model_save_file)
+                model_log_directory, "spp_checkpoint_best_{}.pt".format(epoch))
+            LOGGER.info("Saving best checkpoint: %s" % model_save_file)
+            save_checkpoint(epoch, model, optimizer, scheduler,
+                            best_valid_loss, best_valid_loss_index,
+                            best_valid_acc, model_save_file)
 
-            # delete all legacy models
-            # TODO: needs to be updated with shutil.rmtree in case of directory
-            [os.remove(legacy_model) for legacy_model in legacy_models]
+            # delete previous best checkpoint(s)
+            for legacy_checkpoint in legacy_checkpoints:
+                os.remove(legacy_checkpoint)
         else:
-            # update patience counter and/or exit training if threshold reached
+            # update patience related diagnostics
             best_valid_loss_index += 1
+            LOGGER.info("Patience counter: %s/%s" %
+                        (best_valid_loss_index, patience))
+
+            # create hook to exit training if patience threshold reached
+            # TODO: what if index is already more than continue train patience
+            # can overcome by changing this to >= and writing note
+            # or otherwise check this before training continues
             if best_valid_loss_index == patience:
                 LOGGER.info(
                     "%s patience epochs threshold reached, stopping training" %
                     patience)
-                return None
+                stop_training = True
 
-        # apply learning rate scheduler after epoch
-        if use_scheduler:
-            scheduler.step(valid_loss)
+        # find previous last checkpoint(s)
+        legacy_checkpoints = glob(
+            os.path.join(model_log_directory, "*_last_*.pt"))
+
+        # save latest checkpoint
+        model_save_file = os.path.join(
+            model_log_directory, "spp_checkpoint_last_{}.pt".format(epoch))
+        LOGGER.info("Saving last checkpoint: %s" % model_save_file)
+        save_checkpoint(epoch, model, optimizer, scheduler, best_valid_loss,
+                        best_valid_loss_index, best_valid_acc, model_save_file)
+
+        # delete previous last checkpoint(s)
+        for legacy_checkpoint in legacy_checkpoints:
+            os.remove(legacy_checkpoint)
+
+        # hook to stop training in case patience threshold was reached
+        if stop_training:
+            return None
 
     # log information at the end of training
     LOGGER.info("%s training epochs completed, stopping training" % epochs)
@@ -425,22 +498,36 @@ def main(args: argparse.Namespace) -> None:
 
     # send model to GPU if present
     if args.gpu:
-        model.to_cuda(model)
-
-    # create models_directory if not present
-    if not os.path.exists(models_directory):
-        os.makedirs(models_directory)
+        model.cuda()  # type: ignore
 
     # define model log directory
     # TODO: add additional conditional based on grid-training
-    model_log_directory = os.path.join(models_directory,
-                                       "spp_single_train_" + timestamp())
+    if args.load_model is None:
+        # create model log directory
+        model_log_directory = os.path.join(models_directory,
+                                           "spp_single_train_" + timestamp())
+        os.makedirs(model_log_directory, exist_ok=True)
 
-    # load model if argument provided
-    if args.load_model is not None:
+        # extract relevant arguments for spp model
+        soft_pattern_args = soft_patterns_pp_arg_parser().parse_args("")
+        for key in soft_pattern_args.__dict__:
+            if key in args.__dict__:
+                setattr(soft_pattern_args, key, getattr(args, key))
+
+        # dump soft patterns model arguments for posterity
+        with open(
+                os.path.join(model_log_directory,
+                             "soft_patterns_pp_config.json"),
+                "w") as output_file_stream:
+            json.dump(soft_pattern_args.__dict__,
+                      output_file_stream,
+                      ensure_ascii=False)
+    else:
+        # load model if argument provided
         state_dict = torch.load(args.load_model)
         model.load_state_dict(state_dict)
         # TODO: improve this workflow to borrow from input path
+        # TODO: perhaps pass this workflow directly into train
         # and use the same directory for continuing training
         model_log_directory = 'model_retrained'
 
