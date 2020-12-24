@@ -11,7 +11,7 @@ from torch.nn.functional import log_softmax
 from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tensorboardX import SummaryWriter
-from .utils.parser_utils import argparse_formatter
+from .utils.parser_utils import ArgparseFormatter
 from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
                                read_embeddings)
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
@@ -446,7 +446,7 @@ def main(args: argparse.Namespace) -> None:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(formatter_class=argparse_formatter,
+    parser = argparse.ArgumentParser(formatter_class=ArgparseFormatter,
                                      parents=[
                                          training_arg_parser(),
                                          soft_patterns_pp_arg_parser(),

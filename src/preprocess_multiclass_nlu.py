@@ -4,7 +4,7 @@
 from tqdm import tqdm
 from typing import List, Iterable, Dict, Any, Union
 from nltk import word_tokenize
-from .utils.parser_utils import argparse_formatter
+from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import make_logger
 from .arg_parser import preprocess_arg_parser, logging_arg_parser
 import argparse
@@ -120,7 +120,7 @@ def main(args: argparse.Namespace) -> None:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        formatter_class=argparse_formatter,
+        formatter_class=ArgparseFormatter,
         parents=[preprocess_arg_parser(),
                  logging_arg_parser()])
     args = parser.parse_args()

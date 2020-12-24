@@ -113,9 +113,9 @@ class Metavar_Indenter(argparse.HelpFormatter):
             return ', '.join(parts)
 
 
-class argparse_formatter(argparse.ArgumentDefaultsHelpFormatter,
-                         Metavar_Circum_Symbols, Metavar_Indenter,
-                         Sorting_Help_Formatter):
+class ArgparseFormatter(argparse.ArgumentDefaultsHelpFormatter,
+                        Metavar_Circum_Symbols, Metavar_Indenter,
+                        Sorting_Help_Formatter):
     """
     Class to combine argument parsers in order to display meta-variables
     and defaults for arguments
