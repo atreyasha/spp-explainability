@@ -4,7 +4,7 @@
 from typing import List, Union, Tuple, cast, MutableMapping
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
 from torch.nn import Module, Parameter, ModuleList, Linear
-from .utils.model_utils import to_cuda, argmax, normalize, Semiring, Batch
+from .utils.model_utils import argmax, normalize, Semiring, Batch
 from .utils.data_utils import Vocab
 import numpy as np
 import torch
@@ -79,7 +79,6 @@ class SoftPatternClassifier(Module):
         self.semiring = semiring
         self.vocab = vocab
         self.embeddings = embeddings
-        self.to_cuda = to_cuda(gpu)
         self.total_num_patterns = sum(pattern_specs.values())
         self.mlp = MLP(self.total_num_patterns, mlp_hidden_dim, mlp_num_layers,
                        num_classes)
@@ -110,10 +109,11 @@ class SoftPatternClassifier(Module):
             # workflow for self-loops that are not shared
             # NOTE: self_loop_scale is not a fixed tensor
             if self_loop_scale is not None:
-                self.self_loop_scale = self.semiring.from_float(
-                    self.to_cuda(FloatTensor([self_loop_scale])))
+                self.register_buffer(
+                    "self_loop_scale",
+                    self.semiring.from_float(FloatTensor([self_loop_scale])))
             else:
-                self.self_loop_scale = self.to_cuda(semiring.one(1))
+                self.register_buffer("self_loop_scale", semiring.one(1))
             # assign two diagonals instead of default one
             self.num_diags = 2
 
@@ -122,7 +122,7 @@ class SoftPatternClassifier(Module):
             end
         ] for pattern_len, num_patterns in self.pattern_specs.items()
                       for end in num_patterns * [pattern_len - 1]]
-        self.end_states = self.to_cuda(LongTensor(end_states))
+        self.register_buffer("end_states", LongTensor(end_states))
 
         # create transition matrix diagonal and bias tensors
         # normalize diagonal data tensor
@@ -147,13 +147,34 @@ class SoftPatternClassifier(Module):
             self.epsilon = Parameter(
                 randn(self.total_num_patterns, self.max_pattern_length - 1))
 
-            # since these are currently fixed, they are not doing anything.
-            # TODO: perhaps this can be learned as well
-            if eps_scale is not None:
-                self.epsilon_scale = self.semiring.from_float(
-                    self.to_cuda(FloatTensor([eps_scale])))
+            # factor by which to scale epsilon parameter
+            if epsilon_scale is not None:
+                self.register_buffer(
+                    "epsilon_scale",
+                    self.semiring.from_float(FloatTensor([epsilon_scale])))
             else:
-                self.epsilon_scale = self.to_cuda(semiring.one(1))
+                self.register_buffer("epsilon_scale", semiring.one(1))
+
+        # register null scores tensor
+        self.register_buffer("scores",
+                             self.semiring.zero(self.total_num_patterns),
+                             persistent=False)
+
+        # register restart_padding tensor
+        self.register_buffer("restart_padding",
+                             self.semiring.one(self.total_num_patterns, 1),
+                             persistent=False)
+
+        # register zero_padding tensor
+        self.register_buffer("zero_padding",
+                             self.semiring.zero(self.total_num_patterns, 1),
+                             persistent=False)
+
+        # register hiddens tensor
+        self.register_buffer("hiddens",
+                             self.semiring.zero(self.total_num_patterns,
+                                                self.max_pattern_length),
+                             persistent=False)
 
     def get_transition_matrices(
             self,
@@ -286,39 +307,34 @@ class SoftPatternClassifier(Module):
 
         # assign batch_size
         batch_size = batch.size()
-        num_patterns = self.total_num_patterns
 
-        # create null scores tensor
-        scores = self.to_cuda(self.semiring.zero(batch_size, num_patterns))
+        # clone null scores tensor
+        scores = self.scores.expand(batch_size, -1).clone()  # type: ignore
 
-        # create restart_padding tensor
-        # NOTE: to add start state for each word in the document.
-        restart_padding = self.to_cuda(
-            self.semiring.one(batch_size, num_patterns, 1))
+        # clone restart_padding tensor to add start state for each word
+        restart_padding = self.restart_padding.expand(  # type: ignore
+            batch_size, -1, -1).clone()
 
-        # create zero_padding tensor
+        # clone zero_padding tensor
         # TODO: what is the purpose of this?
-        zero_padding = self.to_cuda(
-            self.semiring.zero(batch_size, num_patterns, 1))
+        zero_padding = self.zero_padding.expand(  # type: ignore
+            batch_size, -1, -1).clone()
+
+        # initialize hiddens tensor
+        hiddens = self.hiddens.expand(  # type: ignore
+            batch_size, -1, -1).clone()
+
+        # set start state (0) to 1 for each pattern in each doc
+        hiddens[:, :, 0] = self.semiring.one(
+            batch_size,
+            self.total_num_patterns)
 
         # get eps_value based on previous class settings
         eps_value = self.get_eps_value()
 
         # enumerate all end pattern states
-        batch_end_state_idxs = self.end_states.expand(batch_size, num_patterns,
-                                                      1)
-
-        # initialize hiddens tensor
-        hiddens = self.semiring.zero(batch_size, num_patterns,
-                                     self.max_pattern_length)
-        if isinstance(hiddens, torch.Tensor):
-            hiddens = self.to_cuda(hiddens)
-        else:
-            hiddens = self.to_cuda(torch.tensor(hiddens))
-
-        # set start state (0) to 1 for each pattern in each doc
-        hiddens[:, :,
-                0] = self.to_cuda(self.semiring.one(batch_size, num_patterns))
+        batch_end_state_idxs = self.end_states.expand(  # type: ignore
+            batch_size, self.total_num_patterns, -1)
 
         # start loop over all transition matrices
         for i, transition_matrix in enumerate(transition_matrices):
@@ -333,7 +349,8 @@ class SoftPatternClassifier(Module):
             # NOTE: torch.gather helps to extract values at indices
             end_state_vals = torch.gather(hiddens, 2,
                                           batch_end_state_idxs).view(
-                                              batch_size, num_patterns)
+                                              batch_size,
+                                              self.total_num_patterns)
 
             # only update score when we're not already past the end of the doc
             # NOTE: this returns where we are not past the end of the document
