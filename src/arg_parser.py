@@ -93,6 +93,11 @@ def training_arg_parser() -> argparse.ArgumentParser:
     train.add_argument("--load-model",
                        help="Path to pre-trained model file",
                        type=str)
+    train.add_argument("--gpu-device",
+                       help=("GPU device specification in case --gpu option"
+                             " is used"),
+                       default="cuda:0",
+                       type=str)
     train.add_argument("--models-directory",
                        help=("Directory where models and tensorboard logs "
                              "are saved"),
@@ -139,6 +144,11 @@ def training_arg_parser() -> argparse.ArgumentParser:
     train.add_argument("--patience",
                        help="Patience parameter for early stopping",
                        default=30,
+                       type=int)
+    train.add_argument("--num-threads",
+                       help=("Set the number of threads used for intraop "
+                             "parallelism on CPU"),
+                       default=None,
                        type=int)
     # boolean flags
     train.add_argument("--use-scheduler",

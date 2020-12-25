@@ -80,7 +80,7 @@ def train_batch(model: Module,
                 gold_output: List[int],
                 optimizer: torch.optim.Optimizer,
                 loss_function: torch.nn.modules.loss._Loss,
-                gpu: bool = False,
+                gpu_device: Union[str, None] = None,
                 dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
     # set optimizer gradients to zero
     optimizer.zero_grad()
@@ -91,7 +91,7 @@ def train_batch(model: Module,
                         num_classes,
                         gold_output,
                         loss_function,
-                        gpu,
+                        gpu_device,
                         dropout,
                         eval_mode=False)
 
@@ -110,7 +110,7 @@ def compute_loss(model: Module,
                  num_classes: int,
                  gold_output: List[int],
                  loss_function: torch.nn.modules.loss._Loss,
-                 gpu: bool,
+                 gpu_device: Union[str, None],
                  dropout: Union[torch.nn.Module, None] = None,
                  eval_mode: bool = False) -> torch.Tensor:
     # enable evaluation mode in model
@@ -127,11 +127,11 @@ def compute_loss(model: Module,
     # return loss over output and gold
     return loss_function(
         log_softmax(output, dim=1).view(batch.size(), num_classes),
-        to_cuda(gpu)(LongTensor(gold_output)))
+        to_cuda(gpu_device)(LongTensor(gold_output)))
 
 
 def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
-                      batch_size: int, gpu: bool) -> float:
+                      batch_size: int, gpu_device: Union[str, None]) -> float:
     # instantiate local variables
     number_data_points = float(len(data))
     correct = 0
@@ -142,7 +142,7 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
         batch, gold = Batch(  # type: ignore
             [x for x, y in batch],
             model.embeddings,  # type: ignore
-            to_cuda(gpu)), [y for x, y in batch]
+            to_cuda(gpu_device)), [y for x, y in batch]
 
         # predict output using model
         predicted = model.predict(batch)  # type: ignore
@@ -165,7 +165,7 @@ def train(train_data: List[Tuple[List[int], int]],
           learning_rate: float,
           batch_size: int,
           use_scheduler: bool = False,
-          gpu: bool = False,
+          gpu_device: Union[str, None] = None,
           clip_threshold: Union[float, None] = None,
           max_doc_len: int = -1,
           dropout: Union[torch.nn.Module, float, None] = 0,
@@ -232,13 +232,13 @@ def train(train_data: List[Tuple[List[int], int]],
                 batch, gold = Batch(
                     [x[0] for x in batch],
                     model.embeddings,  # type: ignore
-                    to_cuda(gpu),
+                    to_cuda(gpu_device),
                     word_dropout,
                     max_doc_len), [x[1] for x in batch]
 
                 # find aggregate loss across samples in batch
                 train_batch_loss = train_batch(model, batch, num_classes, gold,
-                                               optimizer, loss_function, gpu,
+                                               optimizer, loss_function, gpu_device,
                                                dropout)
 
                 # add batch loss to train_loss
@@ -254,7 +254,7 @@ def train(train_data: List[Tuple[List[int], int]],
         # NOTE: mean_train_loss contains stochastic noise
         LOGGER.info("Evaluating SoPa++ on training set")
         mean_train_loss = train_loss / len(train_data)
-        train_acc = evaluate_accuracy(model, train_data, batch_size, gpu)
+        train_acc = evaluate_accuracy(model, train_data, batch_size, gpu_device)
 
         # add training loss data
         writer.add_scalar("loss/train_loss", mean_train_loss, epoch)
@@ -284,7 +284,7 @@ def train(train_data: List[Tuple[List[int], int]],
                 batch, gold = Batch(
                     [x[0] for x in batch],
                     model.embeddings,  # type: ignore
-                    to_cuda(gpu)), [x[1] for x in batch]
+                    to_cuda(gpu_device)), [x[1] for x in batch]
 
                 # find aggregate loss across valid samples in batch
                 valid_batch_loss = compute_loss(model,
@@ -292,7 +292,7 @@ def train(train_data: List[Tuple[List[int], int]],
                                                 num_classes,
                                                 gold,
                                                 loss_function,
-                                                gpu,
+                                                gpu_device,
                                                 eval_mode=True).detach()
 
                 # add batch loss to valid_loss
@@ -305,7 +305,7 @@ def train(train_data: List[Tuple[List[int], int]],
 
         # compute mean valid loss over epoch and accuracy
         mean_valid_loss = valid_loss / len(valid_data)
-        valid_acc = evaluate_accuracy(model, valid_data, batch_size, gpu)
+        valid_acc = evaluate_accuracy(model, valid_data, batch_size, gpu_device)
 
         # add valid loss data to tensorboard
         writer.add_scalar("loss/valid_loss", mean_valid_loss, epoch)
@@ -395,6 +395,25 @@ def train(train_data: List[Tuple[List[int], int]],
 def main(args: argparse.Namespace) -> None:
     # log namespace arguments
     LOGGER.info(args)
+
+    # set torch number of threads
+    if args.num_threads is None:
+        LOGGER.info("Using default number of CPU threads: %s" %
+                    torch.get_num_threads())
+    else:
+        torch.set_num_threads(args.num_threads)
+        LOGGER.info("Using specified number of CPU threads: %s" %
+                    args.num_threads)
+
+    # specify cpu device
+    cpu_device = torch.device("cpu")
+
+    # specify gpu device if relevant
+    if args.gpu:
+        gpu_device = torch.device(args.gpu_device)
+        LOGGER.info("Using GPU device: %s" % args.gpu_device)
+    else:
+        gpu_device = None
 
     # read important arguments and define as local variables
     num_train_instances = args.num_train_instances
@@ -487,7 +506,7 @@ def main(args: argparse.Namespace) -> None:
     # create SoftPatternClassifier
     model = SoftPatternClassifier(pattern_specs, mlp_hidden_dim,
                                   mlp_num_layers, num_classes, embeddings,
-                                  vocab, semiring, args.bias_scale, args.gpu,
+                                  vocab, semiring, args.bias_scale,
                                   pre_computed_patterns, args.no_self_loops,
                                   args.shared_self_loops, args.no_epsilons,
                                   args.epsilon_scale, args.self_loop_scale)
@@ -496,12 +515,7 @@ def main(args: argparse.Namespace) -> None:
     LOGGER.info("Total model parameters: %s" %
                 sum(parameter.nelement() for parameter in model.parameters()))
 
-    # send model to GPU if present
-    if args.gpu:
-        model.cuda()  # type: ignore
-
     # define model log directory
-    # TODO: add additional conditional based on grid-training
     if args.load_model is None:
         # create model log directory
         model_log_directory = os.path.join(models_directory,
@@ -524,6 +538,7 @@ def main(args: argparse.Namespace) -> None:
                       ensure_ascii=False)
     else:
         # load model if argument provided
+        # TODO: load with cpu map location -> use earlier device for this
         state_dict = torch.load(args.load_model)
         model.load_state_dict(state_dict)
         # TODO: improve this workflow to borrow from input path
@@ -531,11 +546,15 @@ def main(args: argparse.Namespace) -> None:
         # and use the same directory for continuing training
         model_log_directory = 'model_retrained'
 
+    # send model to GPU if present
+    if gpu_device is not None:
+        model.to(gpu_device)  # type: ignore
+
     # train SoftPatternClassifier
     train(train_data, valid_data, model, num_classes, epochs,
           model_log_directory, args.learning_rate, args.batch_size,
-          args.use_scheduler, args.gpu, args.clip_threshold, args.max_doc_len,
-          args.dropout, args.word_dropout, args.patience)
+          args.use_scheduler, gpu_device, args.clip_threshold,
+          args.max_doc_len, args.dropout, args.word_dropout, args.patience)
 
 
 if __name__ == '__main__':

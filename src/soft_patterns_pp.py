@@ -65,7 +65,6 @@ class SoftPatternClassifier(Module):
             vocab: Vocab,
             semiring: Semiring,
             bias_scale: float,
-            gpu: bool = False,
             pre_computed_patterns: Union[List[List[str]], None] = None,
             shared_self_loops: int = 0,
             no_self_loops: bool = False,

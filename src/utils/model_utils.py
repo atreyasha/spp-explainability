@@ -41,8 +41,8 @@ def right_pad(xs: List[Any], min_len: int, pad_element: Any) -> List[Any]:
     return xs + [pad_element] * (min_len - len(xs))
 
 
-def to_cuda(gpu: bool) -> Callable:
-    return (lambda v: v.cuda()) if gpu else identity
+def to_cuda(gpu_device: Union[str, None]) -> Callable:
+    return (lambda v: v.to(gpu_device)) if gpu_device is not None else identity
 
 
 def argmax(output: torch.Tensor) -> torch.Tensor:
