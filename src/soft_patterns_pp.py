@@ -306,32 +306,31 @@ class SoftPatternClassifier(Module):
         batch_size = batch.size()
 
         # clone null scores tensor
-        scores = self.scores.expand(batch_size, -1).clone()  # type: ignore
+        scores = self.scores.expand(  # type: ignore
+            batch_size, -1).detach().clone()
 
         # clone restart_padding tensor to add start state for each word
         restart_padding = self.restart_padding.expand(  # type: ignore
-            batch_size, -1, -1).clone()
+            batch_size, -1, -1).detach().clone()
 
         # clone zero_padding tensor
-        # TODO: what is the purpose of this?
         zero_padding = self.zero_padding.expand(  # type: ignore
-            batch_size, -1, -1).clone()
+            batch_size, -1, -1).detach().clone()
 
         # initialize hiddens tensor
         hiddens = self.hiddens.expand(  # type: ignore
-            batch_size, -1, -1).clone()
+            batch_size, -1, -1).detach().clone()
+
+        # enumerate all end pattern states
+        end_states = self.end_states.expand(  # type: ignore
+            batch_size, self.total_num_patterns, -1).detach().clone()
 
         # set start state (0) to 1 for each pattern in each doc
-        hiddens[:, :, 0] = self.semiring.one(
-            batch_size,
-            self.total_num_patterns)
+        hiddens[:, :, 0] = self.semiring.one(batch_size,
+                                             self.total_num_patterns)
 
         # get eps_value based on previous class settings
         eps_value = self.get_eps_value()
-
-        # enumerate all end pattern states
-        batch_end_state_idxs = self.end_states.expand(  # type: ignore
-            batch_size, self.total_num_patterns, -1)
 
         # start loop over all transition matrices
         for i, transition_matrix in enumerate(transition_matrices):
@@ -344,20 +343,18 @@ class SoftPatternClassifier(Module):
 
             # look at the end state for each pattern, and "add" it into score
             # NOTE: torch.gather helps to extract values at indices
-            end_state_vals = torch.gather(hiddens, 2,
-                                          batch_end_state_idxs).view(
-                                              batch_size,
-                                              self.total_num_patterns)
+            end_state_vals = torch.gather(hiddens, 2, end_states).view(
+                batch_size, self.total_num_patterns)
 
             # only update score when we're not already past the end of the doc
             # NOTE: this returns where we are not past the end of the document
             # NOTE: this is useful for mixed length documents
-            active_doc_idxs = torch.nonzero(torch.gt(batch.doc_lens,
-                                                     i)).squeeze()
+            active_doc_indices = torch.nonzero(torch.gt(batch.doc_lens,
+                                                        i), as_tuple=True)[0]
 
             # update scores with relevant tensor values
-            scores[active_doc_idxs] = self.semiring.plus(
-                scores[active_doc_idxs], end_state_vals[active_doc_idxs])
+            scores[active_doc_indices] = self.semiring.plus(
+                scores[active_doc_indices], end_state_vals[active_doc_indices])
 
         # update scores to float
         # NOTE: scores represent end values on top of SoPa
