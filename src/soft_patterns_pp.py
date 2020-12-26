@@ -76,7 +76,7 @@ class SoftPatternClassifier(Module):
         # assign trivial class variables
         self.semiring = semiring
         self.vocab = vocab
-        self.embeddings = Embedding.from_pretrained(embeddings).float()
+        self.embeddings = Embedding.from_pretrained(embeddings)
         self.total_num_patterns = sum(pattern_specs.values())
         self.mlp = MLP(self.total_num_patterns, mlp_hidden_dim, mlp_num_layers,
                        num_classes)
