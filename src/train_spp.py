@@ -118,11 +118,7 @@ def compute_loss(model: Module,
         model.eval()
 
     # compute model outputs given batch
-    output = model.forward(batch, dropout)
-
-    # revert model to training mode
-    if eval_mode:
-        model.train()
+    output = model.forward(batch)
 
     # return loss over output and gold
     return loss_function(
@@ -181,14 +177,6 @@ def train(train_data: List[Tuple[List[int], int]],
     # enable gradient clipping in-place if provided
     enable_gradient_clipping(model, clip_threshold)
 
-    # initialize dropout if provided
-    if dropout:
-        # mypy-related type change
-        dropout = cast(float, dropout)
-        dropout = torch.nn.Dropout(dropout)
-    else:
-        dropout = None
-
     # initialize tensorboard writer if provided
     writer = SummaryWriter(os.path.join(model_log_directory, "events"))
 
@@ -238,8 +226,8 @@ def train(train_data: List[Tuple[List[int], int]],
 
                 # find aggregate loss across samples in batch
                 train_batch_loss = train_batch(model, batch, num_classes, gold,
-                                               optimizer, loss_function, gpu_device,
-                                               dropout)
+                                               optimizer, loss_function,
+                                               gpu_device)
 
                 # add batch loss to train_loss
                 train_loss += train_batch_loss  # type: ignore
@@ -509,7 +497,8 @@ def main(args: argparse.Namespace) -> None:
                                   vocab, semiring, args.bias_scale,
                                   pre_computed_patterns, args.no_self_loops,
                                   args.shared_self_loops, args.no_epsilons,
-                                  args.epsilon_scale, args.self_loop_scale)
+                                  args.epsilon_scale, args.self_loop_scale,
+                                  args.dropout)
 
     # log diagnostic information on parameter count
     LOGGER.info("Total model parameters: %s" %
@@ -554,7 +543,7 @@ def main(args: argparse.Namespace) -> None:
     train(train_data, valid_data, model, num_classes, epochs,
           model_log_directory, args.learning_rate, args.batch_size,
           args.use_scheduler, gpu_device, args.clip_threshold,
-          args.max_doc_len, args.dropout, args.word_dropout, args.patience)
+          args.max_doc_len, args.word_dropout, args.patience)
 
 
 if __name__ == '__main__':

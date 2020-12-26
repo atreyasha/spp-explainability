@@ -3,8 +3,8 @@
 
 from typing import List, Union, Tuple, cast, MutableMapping
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
-from torch.nn import Module, Parameter, ModuleList, Linear
 from .utils.model_utils import argmax, normalize, Semiring, Batch
+from torch.nn import Module, Parameter, ModuleList, Linear, Dropout
 from .utils.data_utils import Vocab
 import numpy as np
 import torch
@@ -70,7 +70,8 @@ class SoftPatternClassifier(Module):
             no_self_loops: bool = False,
             no_epsilons: bool = False,
             epsilon_scale: Union[float, None] = None,
-            self_loop_scale: Union[torch.Tensor, float, None] = None) -> None:
+            self_loop_scale: Union[torch.Tensor, float, None] = None,
+            dropout: float = 0.) -> None:
         # initialize all class properties from torch.nn.Module
         super(SoftPatternClassifier, self).__init__()
 
@@ -89,6 +90,7 @@ class SoftPatternClassifier(Module):
         self.no_epsilons = no_epsilons
         self.bias_scale = bias_scale
         self.word_dim = len(embeddings[0])
+        self.dropout = Dropout(dropout)
 
         # assign class variables from conditionals
         if self.shared_self_loops != 0:
@@ -177,8 +179,7 @@ class SoftPatternClassifier(Module):
 
     def get_transition_matrices(
             self,
-            batch: Batch,
-            dropout: Union[Module, None] = None) -> List[torch.Tensor]:
+            batch: Batch) -> List[torch.Tensor]:
         # initialize local variables
         batch_size = batch.size()
         max_doc_len = batch.max_doc_len
@@ -192,9 +193,8 @@ class SoftPatternClassifier(Module):
             mm(self.diags, batch.embeddings_matrix) +
             self.bias_scale * self.bias).t()
 
-        # apply dropout where necessary
-        if dropout is not None and dropout:
-            transition_scores = dropout(transition_scores)
+        # apply registered dropout
+        transition_scores = self.dropout(transition_scores)
 
         # indexes transition scores for each doc in batch
         batched_transition_scores = [
@@ -291,11 +291,9 @@ class SoftPatternClassifier(Module):
         # return updated tensors
         return diag, bias
 
-    def forward(self,
-                batch: Batch,
-                dropout: Union[Module, None] = None) -> torch.Tensor:
+    def forward(self, batch: Batch) -> torch.Tensor:
         # start timer and get transition matrices
-        transition_matrices = self.get_transition_matrices(batch, dropout)
+        transition_matrices = self.get_transition_matrices(batch)
 
         # set self_loop_scale based on class variables
         self_loop_scale = None
