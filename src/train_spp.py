@@ -80,8 +80,7 @@ def train_batch(model: Module,
                 gold_output: List[int],
                 optimizer: torch.optim.Optimizer,
                 loss_function: torch.nn.modules.loss._Loss,
-                gpu_device: Union[str, None] = None,
-                dropout: Union[torch.nn.Module, None] = None) -> torch.Tensor:
+                gpu_device: Union[torch.device, None] = None) -> torch.Tensor:
     # set optimizer gradients to zero
     optimizer.zero_grad()
 
@@ -91,9 +90,7 @@ def train_batch(model: Module,
                         num_classes,
                         gold_output,
                         loss_function,
-                        gpu_device,
-                        dropout,
-                        eval_mode=False)
+                        gpu_device)
 
     # compute loss gradients for all parameters
     loss.backward()
@@ -110,13 +107,7 @@ def compute_loss(model: Module,
                  num_classes: int,
                  gold_output: List[int],
                  loss_function: torch.nn.modules.loss._Loss,
-                 gpu_device: Union[str, None],
-                 dropout: Union[torch.nn.Module, None] = None,
-                 eval_mode: bool = False) -> torch.Tensor:
-    # enable evaluation mode in model
-    if eval_mode:
-        model.eval()
-
+                 gpu_device: Union[torch.device, None]) -> torch.Tensor:
     # compute model outputs given batch
     output = model.forward(batch)
 
@@ -127,7 +118,8 @@ def compute_loss(model: Module,
 
 
 def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
-                      batch_size: int, gpu_device: Union[str, None]) -> float:
+                      batch_size: int, gpu_device: Union[torch.device,
+                                                         None]) -> float:
     # instantiate local variables
     number_data_points = float(len(data))
     correct = 0
@@ -163,10 +155,9 @@ def train(train_data: List[Tuple[List[int], int]],
           learning_rate: float,
           batch_size: int,
           use_scheduler: bool = False,
-          gpu_device: Union[str, None] = None,
+          gpu_device: Union[torch.device, None] = None,
           clip_threshold: Union[float, None] = None,
           max_doc_len: int = -1,
-          dropout: Union[torch.nn.Module, float, None] = 0,
           word_dropout: float = 0,
           patience: int = 30) -> None:
     # instantiate Adam optimizer
@@ -186,6 +177,7 @@ def train(train_data: List[Tuple[List[int], int]],
     # TODO boolean below does not correspond correctly, add verbosity flag
     if use_scheduler:
         LOGGER.info("Initializing learning rate scheduler")
+        scheduler: Union[ReduceLROnPlateau, None]
         scheduler = ReduceLROnPlateau(optimizer,
                                       mode='min',
                                       factor=0.1,
@@ -400,6 +392,7 @@ def main(args: argparse.Namespace) -> None:
 
     # specify gpu device if relevant
     if args.gpu:
+        gpu_device: Union[torch.device, None]
         gpu_device = torch.device(args.gpu_device)
         LOGGER.info("Using GPU device: %s" % args.gpu_device)
     else:
