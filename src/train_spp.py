@@ -15,13 +15,13 @@ from .utils.parser_utils import ArgparseFormatter
 from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
                                read_embeddings)
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
-                                to_cuda, Batch, ProbSemiring, timestamp,
-                                enable_gradient_clipping,
+                                to_cuda, argmax, timestamp, Batch,
+                                enable_gradient_clipping, ProbSemiring,
                                 LogSpaceMaxTimesSemiring, MaxPlusSemiring)
-from .utils.logging_utils import make_logger
 from .soft_patterns_pp import SoftPatternClassifier
 from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
                          logging_arg_parser)
+from .utils.logging_utils import make_logger
 import numpy as np
 import argparse
 import torch
@@ -140,15 +140,17 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
             model.embeddings,  # type: ignore
             to_cuda(gpu_device)), [y for x, y in batch]
 
-        # predict output using model
-        predicted = model.predict(batch)  # type: ignore
+        # get raw output using model
+        output = model.forward(batch)  # type: ignore
+
+        # get predicted classes from raw output
+        predicted = [int(x) for x in argmax(output)]
 
         # find number of correctly predicted data points
         correct += sum(1 for pred, gold in zip(predicted, gold)
                        if pred == gold)
 
     # return raw accuracy float
-    # TODO: replace this workflow with more robust metric such as F1 score
     return correct / number_data_points
 
 

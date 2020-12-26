@@ -3,8 +3,8 @@
 
 from typing import List, Union, Tuple, cast, MutableMapping
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
-from .utils.model_utils import argmax, normalize, Semiring, Batch
 from torch.nn import Module, Parameter, ModuleList, Linear, Dropout
+from .utils.model_utils import normalize, Semiring, Batch
 from .utils.data_utils import Vocab
 import numpy as np
 import torch
@@ -412,16 +412,3 @@ class SoftPatternClassifier(Module):
 
             # either happy or self-loop, not both
             return self.semiring.plus(after_main_paths, after_self_loops)
-
-    def predict(self, batch: Batch) -> List[int]:
-        # disable training mode for evaluation, same as model.eval()
-        self.training = False
-
-        # get raw predictions from sopa, dropout is provided as None
-        output = self.forward(batch).detach()
-
-        # revert training mode for training, same as model.train()
-        self.training = True
-
-        # argmax over raw predictions and convert to integer
-        return [int(x) for x in argmax(output)]
