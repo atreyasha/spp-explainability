@@ -73,7 +73,7 @@ def neg_infinity(*sizes: int) -> torch.Tensor:
 class Batch:
     def __init__(self,
                  docs: List[List[int]],
-                 embeddings: List[np.ndarray],
+                 embeddings: torch.nn.Module,
                  to_cuda: Callable,
                  word_dropout: float = 0,
                  max_doc_len: int = -1) -> None:
@@ -101,9 +101,8 @@ class Batch:
             for doc in docs
         ]
         self.docs = [to_cuda(torch.LongTensor(doc)) for doc in docs]
-        local_embeddings = [embeddings[i] for i in mini_vocab.names]
-        self.embeddings_matrix = to_cuda(
-            torch.FloatTensor(local_embeddings).t())
+        self.local_embeddings = embeddings(torch.LongTensor(
+            mini_vocab.names)).t()
 
     def size(self) -> int:
         return len(self.docs)

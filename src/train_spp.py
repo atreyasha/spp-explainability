@@ -455,6 +455,10 @@ def main(args: argparse.Namespace) -> None:
     # embeddings and word-vector dimensionality
     vocab, embeddings, _ = read_embeddings(args.embeddings, vocab)
 
+    # convert embeddings to torch tensor
+    embeddings = np.vstack(embeddings)
+    embeddings = torch.from_numpy(embeddings)
+
     # set number of padding tokens as one less than the longest pattern length
     # TODO: understand why this is set and if this is necessary
     num_padding_tokens = max(list(pattern_specs.keys())) - 1

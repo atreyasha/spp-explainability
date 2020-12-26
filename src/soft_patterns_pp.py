@@ -3,10 +3,9 @@
 
 from typing import List, Union, Tuple, cast, MutableMapping
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
-from torch.nn import Module, Parameter, ModuleList, Linear, Dropout
+from torch.nn import Module, Parameter, ModuleList, Linear, Dropout, Embedding
 from .utils.model_utils import normalize, Semiring, Batch
 from .utils.data_utils import Vocab
-import numpy as np
 import torch
 
 # CW token refers to an arbitrary token with high bias
@@ -55,30 +54,29 @@ class MLP(Module):
 
 
 class SoftPatternClassifier(Module):
-    def __init__(
-            self,
-            pattern_specs: MutableMapping[int, int],
-            mlp_hidden_dim: int,
-            mlp_num_layers: int,
-            num_classes: int,
-            embeddings: List[np.ndarray],
-            vocab: Vocab,
-            semiring: Semiring,
-            bias_scale: float,
-            pre_computed_patterns: Union[List[List[str]], None] = None,
-            shared_self_loops: int = 0,
-            no_self_loops: bool = False,
-            no_epsilons: bool = False,
-            epsilon_scale: Union[float, None] = None,
-            self_loop_scale: Union[torch.Tensor, float, None] = None,
-            dropout: float = 0.) -> None:
+    def __init__(self,
+                 pattern_specs: MutableMapping[int, int],
+                 mlp_hidden_dim: int,
+                 mlp_num_layers: int,
+                 num_classes: int,
+                 embeddings: torch.Tensor,
+                 vocab: Vocab,
+                 semiring: Semiring,
+                 bias_scale: float,
+                 pre_computed_patterns: Union[List[List[str]], None] = None,
+                 shared_self_loops: int = 0,
+                 no_self_loops: bool = False,
+                 no_epsilons: bool = False,
+                 epsilon_scale: Union[float, None] = None,
+                 self_loop_scale: Union[torch.Tensor, float, None] = None,
+                 dropout: float = 0.) -> None:
         # initialize all class properties from torch.nn.Module
         super(SoftPatternClassifier, self).__init__()
 
         # assign trivial class variables
         self.semiring = semiring
         self.vocab = vocab
-        self.embeddings = embeddings
+        self.embeddings = Embedding.from_pretrained(embeddings).float()
         self.total_num_patterns = sum(pattern_specs.values())
         self.mlp = MLP(self.total_num_patterns, mlp_hidden_dim, mlp_num_layers,
                        num_classes)
@@ -89,7 +87,6 @@ class SoftPatternClassifier(Module):
         self.max_pattern_length = max(list(pattern_specs.keys()))
         self.no_epsilons = no_epsilons
         self.bias_scale = bias_scale
-        self.word_dim = len(embeddings[0])
         self.dropout = Dropout(dropout)
 
         # assign class variables from conditionals
@@ -129,7 +126,7 @@ class SoftPatternClassifier(Module):
         # normalize diagonal data tensor
         diag_data_size = (self.total_num_patterns * self.num_diags *
                           self.max_pattern_length)
-        diag_data = randn(diag_data_size, self.word_dim)
+        diag_data = randn(diag_data_size, self.embeddings.embedding_dim)
         bias_data = randn(diag_data_size, 1)
         normalize(diag_data)
 
@@ -177,9 +174,7 @@ class SoftPatternClassifier(Module):
                                                 self.max_pattern_length),
                              persistent=False)
 
-    def get_transition_matrices(
-            self,
-            batch: Batch) -> List[torch.Tensor]:
+    def get_transition_matrices(self, batch: Batch) -> List[torch.Tensor]:
         # initialize local variables
         batch_size = batch.size()
         max_doc_len = batch.max_doc_len
@@ -190,7 +185,7 @@ class SoftPatternClassifier(Module):
         # these would represent transition scores for each word in vocab
         # TODO: understand why matrix multiplication is required here
         transition_scores = self.semiring.from_float(
-            mm(self.diags, batch.embeddings_matrix) +
+            mm(self.diags, batch.local_embeddings) +
             self.bias_scale * self.bias).t()
 
         # apply registered dropout
@@ -226,7 +221,8 @@ class SoftPatternClassifier(Module):
         # view diag_data and bias_data in appropriate tensor sizes
         diag_data_size = diag_data.size()[0]
         diag_data = diag_data.view(self.total_num_patterns, self.num_diags,
-                                   self.max_pattern_length, self.word_dim)
+                                   self.max_pattern_length,
+                                   self.embeddings.embedding_dim)
         bias_data = bias_data.view(self.total_num_patterns, self.num_diags,
                                    self.max_pattern_length)
 
@@ -262,13 +258,15 @@ class SoftPatternClassifier(Module):
             pattern_indices[pattern_length] += 1
 
         # return tensors in appropriate data format
-        return diag_data.view(diag_data_size, self.word_dim), bias_data.view(
-            diag_data_size, 1)
+        return diag_data.view(diag_data_size,
+                              self.embeddings.embedding_dim), bias_data.view(
+                                  diag_data_size, 1)
 
     def load_pattern(self,
                      pattern: List[str]) -> Tuple[torch.Tensor, torch.Tensor]:
         # initialize local variables
-        diag = EPSILON * torch.randn(len(pattern), self.word_dim)
+        diag = EPSILON * torch.randn(len(pattern),
+                                     self.embeddings.embedding_dim)
         bias = torch.zeros(len(pattern))
 
         # TODO: unsure why this factor value is chosen
@@ -349,8 +347,8 @@ class SoftPatternClassifier(Module):
             # only update score when we're not already past the end of the doc
             # NOTE: this returns where we are not past the end of the document
             # NOTE: this is useful for mixed length documents
-            active_doc_indices = torch.nonzero(torch.gt(batch.doc_lens,
-                                                        i), as_tuple=True)[0]
+            active_doc_indices = torch.nonzero(torch.gt(batch.doc_lens, i),
+                                               as_tuple=True)[0]
 
             # update scores with relevant tensor values
             scores[active_doc_indices] = self.semiring.plus(
