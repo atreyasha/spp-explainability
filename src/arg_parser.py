@@ -184,9 +184,9 @@ def logging_arg_parser() -> argparse.ArgumentParser:
         type=str)
     logging.add_argument(
         "--tqdm-update-freq",
-        help=("After how many training updates should "
+        help=("Specify after how many training updates should "
               "the tqdm progress bar be updated with model diagnostics"),
-        default=5,
+        default=1,
         type=int)
     logging.add_argument("--disable-tqdm",
                          help="Disable tqdm progress bars",
