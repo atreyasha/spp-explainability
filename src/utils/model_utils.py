@@ -110,12 +110,13 @@ class Batch:
 
 
 class Semiring:
-    def __init__(self, zero: Callable[..., torch.Tensor],
+    def __init__(self,
+                 zero: Callable[..., torch.Tensor],
                  one: Callable[..., torch.Tensor],
                  plus: Callable[..., torch.Tensor],
                  times: Callable[..., torch.Tensor],
                  from_float: Callable[..., torch.Tensor],
-                 to_float: Callable[..., torch.Tensor]) -> None:
+                 to_float: Callable[..., torch.Tensor]) -> None:  # yapf: disable
         self.zero = zero
         self.one = one
         self.plus = plus
