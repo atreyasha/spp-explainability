@@ -101,8 +101,8 @@ class Batch:
             for doc in docs
         ]
         self.docs = [to_cuda(torch.LongTensor(doc)) for doc in docs]
-        self.local_embeddings = embeddings(torch.LongTensor(
-            mini_vocab.names)).t()
+        self.local_embeddings = embeddings(to_cuda(torch.LongTensor(
+            mini_vocab.names))).t()
 
     def size(self) -> int:
         return len(self.docs)
