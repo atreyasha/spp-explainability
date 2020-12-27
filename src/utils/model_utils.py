@@ -15,7 +15,6 @@ def timestamp() -> str:
 
 def chunked(xs: List[Tuple[List[int], int]],
             chunk_size: int) -> List[List[Tuple[List[int], int]]]:
-    xs = list(xs)
     return [xs[i:i + chunk_size] for i in range(0, len(xs), chunk_size)]
 
 
@@ -32,7 +31,9 @@ def chunked_sorted(xs: List[Tuple[List[int], int]],
 def shuffled_chunked_sorted(
         xs: List[Tuple[List[int], int]],
         chunk_size: int) -> List[List[Tuple[List[int], int]]]:
-    chunks = chunked_sorted(xs, chunk_size)
+    shuffled_xs = xs.copy()
+    np.random.shuffle(shuffled_xs)
+    chunks = chunked_sorted(shuffled_xs, chunk_size)
     np.random.shuffle(chunks)
     return chunks
 

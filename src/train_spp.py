@@ -193,9 +193,6 @@ def train(train_data: List[Tuple[List[int], int]],
         # set model on train mode
         model.train()
 
-        # shuffle training data
-        np.random.shuffle(train_data)
-
         # initialize training and valid loss, and hook to stop training
         train_loss = 0.
         valid_loss = 0.
@@ -208,7 +205,7 @@ def train(train_data: List[Tuple[List[int], int]],
                   unit="batch",
                   desc="Training [Epoch %s/%s]" %
                   (epoch + 1, epochs)) as tqdm_batches:
-            # loop over shuffled train batches
+            # loop over train batches
             for i, batch in enumerate(tqdm_batches):
                 # create batch object and parse out gold labels
                 batch, gold = Batch(
@@ -456,16 +453,7 @@ def main(args: argparse.Namespace) -> None:
     # TODO: understand why this is set and if this is necessary
     num_padding_tokens = max(list(pattern_specs.keys())) - 1
 
-    # read validation data and shuffle
-    valid_input, _ = read_docs(args.valid_data,
-                               vocab,
-                               num_padding_tokens=num_padding_tokens)
-    valid_labels = read_labels(args.valid_labels)
-    valid_input = cast(List[List[int]], valid_input)
-    valid_data = list(zip(valid_input, valid_labels))
-    np.random.shuffle(valid_data)
-
-    # read train data and shuffle
+    # read train data
     train_input, _ = read_docs(args.train_data,
                                vocab,
                                num_padding_tokens=num_padding_tokens)
@@ -473,7 +461,14 @@ def main(args: argparse.Namespace) -> None:
     train_labels = read_labels(args.train_labels)
     num_classes = len(set(train_labels))
     train_data = list(zip(train_input, train_labels))
-    np.random.shuffle(train_data)
+
+    # read validation data
+    valid_input, _ = read_docs(args.valid_data,
+                               vocab,
+                               num_padding_tokens=num_padding_tokens)
+    valid_input = cast(List[List[int]], valid_input)
+    valid_labels = read_labels(args.valid_labels)
+    valid_data = list(zip(valid_input, valid_labels))
 
     # truncate data if necessary
     if num_train_instances is not None:
