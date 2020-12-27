@@ -111,9 +111,11 @@ class SoftPatternClassifier(Module):
             if self_loop_scale is not None:
                 self.register_buffer(
                     "self_loop_scale",
-                    self.semiring.from_float(FloatTensor([self_loop_scale])))
+                    self.semiring.from_float(FloatTensor([self_loop_scale])),
+                    persistent=False)
             else:
-                self.register_buffer("self_loop_scale", semiring.one(1))
+                self.register_buffer("self_loop_scale", semiring.one(1),
+                                     persistent=False)
             # assign two diagonals instead of default one
             self.num_diags = 2
 
@@ -122,7 +124,8 @@ class SoftPatternClassifier(Module):
             end
         ] for pattern_len, num_patterns in self.pattern_specs.items()
                       for end in num_patterns * [pattern_len - 1]]
-        self.register_buffer("end_states", LongTensor(end_states))
+        self.register_buffer("end_states", LongTensor(end_states),
+                             persistent=False)
 
         # create transition matrix diagonal and bias tensors
         # normalize diagonal data tensor
@@ -151,9 +154,11 @@ class SoftPatternClassifier(Module):
             if epsilon_scale is not None:
                 self.register_buffer(
                     "epsilon_scale",
-                    self.semiring.from_float(FloatTensor([epsilon_scale])))
+                    self.semiring.from_float(FloatTensor([epsilon_scale])),
+                    persistent=False)
             else:
-                self.register_buffer("epsilon_scale", semiring.one(1))
+                self.register_buffer("epsilon_scale", semiring.one(1),
+                                     persistent=False)
 
         # register null scores tensor
         self.register_buffer("scores",
