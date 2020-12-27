@@ -92,7 +92,7 @@ class SoftPatternClassifier(Module):
         self.dropout = Dropout(dropout)
 
         # assign class variables from conditionals
-        if self.shared_self_loops != 0:
+        if self.shared_self_loops:
             # shared parameters between main path and self loop
             # 1: one parameter per state per pattern
             # 2: a single global parameter
@@ -305,7 +305,7 @@ class SoftPatternClassifier(Module):
         if self.shared_self_loops:
             self_loop_scale = self.semiring.from_float(self.self_loop_scale)
         elif not self.no_self_loops:
-            self_loop_scale = self.self_loop_scale
+            self_loop_scale = self.self_loop_scale.detach().clone()
 
         # assign batch_size
         batch_size = batch.size()
@@ -371,7 +371,8 @@ class SoftPatternClassifier(Module):
 
     def get_eps_value(self) -> Union[torch.Tensor, None]:
         return None if self.no_epsilons else self.semiring.times(
-            self.epsilon_scale, self.semiring.from_float(self.epsilon))
+            self.epsilon_scale.detach().clone(),
+            self.semiring.from_float(self.epsilon))
 
     def transition_once(
             self, eps_value: Union[torch.Tensor, None], hiddens: torch.Tensor,
