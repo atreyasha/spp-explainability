@@ -523,6 +523,14 @@ def main(args: argparse.Namespace) -> None:
             json.dump(soft_pattern_args.__dict__,
                       output_file_stream,
                       ensure_ascii=False)
+
+        # dump vocab indices for re-use
+        with open(os.path.join(model_log_directory, "vocab.txt"),
+                  "w") as output_file_stream:
+            dict_list = [(key, value) for key, value in vocab.index.items()]
+            dict_list = sorted(dict_list, key=lambda x: x[1])
+            for item in dict_list:
+                output_file_stream.write("%s\n" % item[0])
     else:
         # load model if argument provided
         # TODO: load with cpu map location -> use earlier device for this

@@ -8,9 +8,9 @@ import numpy as np
 import string
 
 PRINTABLE = set(string.printable)
-UNK_TOKEN = "*UNK*"
-START_TOKEN = "*START*"
-END_TOKEN = "*END*"
+UNK_TOKEN = "[UNK]"
+START_TOKEN = "[START]"
+END_TOKEN = "[END]"
 UNK_IDX = 0
 START_TOKEN_IDX = 1
 END_TOKEN_IDX = 2
@@ -79,6 +79,23 @@ class Vocab:
                    default=default,
                    start=start,
                    end=end)
+
+    @classmethod
+    def from_vocab_file(cls,
+                        filename: str,
+                        default: Union[int, str] = UNK_TOKEN,
+                        start: Union[int, str] = START_TOKEN,
+                        end: Union[int, str] = END_TOKEN) -> 'Vocab':
+        vocab = cls([], default=default, start=start, end=end)
+        with open(filename, "r") as input_file_stream:
+            vocab.index = {
+                line.strip(): index
+                for index, line in enumerate(input_file_stream)
+            }
+        vocab.names = list(zip(*sorted([(key, value)
+                                        for key, value in vocab.index.items()],
+                                       key=lambda x: x[1])))[0]
+        return vocab
 
 
 def is_printable(word: str) -> bool:
