@@ -509,18 +509,27 @@ def main(args: argparse.Namespace) -> None:
                                            "spp_single_train_" + timestamp())
         os.makedirs(model_log_directory, exist_ok=True)
 
-        # extract relevant arguments for spp model
-        soft_pattern_args = soft_patterns_pp_arg_parser().parse_args("")
-        for key in soft_pattern_args.__dict__:
-            if key in args.__dict__:
-                setattr(soft_pattern_args, key, getattr(args, key))
+        # extract relevant arguments for model and training configs
+        soft_patterns_args_dict = soft_patterns_pp_arg_parser().parse_args(
+            "").__dict__
+        remaining_args_dict = {}
+        for key in args.__dict__:
+            if key in soft_patterns_args_dict:
+                soft_patterns_args_dict[key] = getattr(args, key)
+            else:
+                remaining_args_dict[key] = getattr(args, key)
 
         # dump soft patterns model arguments for posterity
-        with open(
-                os.path.join(model_log_directory,
-                             "soft_patterns_pp_config.json"),
-                "w") as output_file_stream:
-            json.dump(soft_pattern_args.__dict__,
+        with open(os.path.join(model_log_directory, "model_config.json"),
+                  "w") as output_file_stream:
+            json.dump(soft_patterns_args_dict,
+                      output_file_stream,
+                      ensure_ascii=False)
+
+        # dump training arguments for posterity
+        with open(os.path.join(model_log_directory, "training_config.json"),
+                  "w") as output_file_stream:
+            json.dump(remaining_args_dict,
                       output_file_stream,
                       ensure_ascii=False)
 
