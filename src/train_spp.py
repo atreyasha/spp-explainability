@@ -70,14 +70,18 @@ def save_checkpoint(epoch: int, model: torch.nn.Module,
             "best_valid_loss_index":
             best_valid_loss_index,
             "best_valid_acc":
-            best_valid_acc
+            best_valid_acc,
+            "numpy_random_state":
+            np.random.get_state(),
+            "torch_random_state":
+            torch.random.get_rng_state()
         }, path)
 
 
 def train_batch(model: Module,
                 batch: Batch,
                 num_classes: int,
-                gold_output: List[int],
+                gold: List[int],
                 optimizer: torch.optim.Optimizer,
                 loss_function: torch.nn.modules.loss._Loss,
                 gpu_device: Union[torch.device, None] = None) -> torch.Tensor:
@@ -85,11 +89,7 @@ def train_batch(model: Module,
     optimizer.zero_grad()
 
     # compute model loss
-    loss = compute_loss(model,
-                        batch,
-                        num_classes,
-                        gold_output,
-                        loss_function,
+    loss = compute_loss(model, batch, num_classes, gold, loss_function,
                         gpu_device)
 
     # compute loss gradients for all parameters
@@ -102,11 +102,8 @@ def train_batch(model: Module,
     return loss.detach()
 
 
-def compute_loss(model: Module,
-                 batch: Batch,
-                 num_classes: int,
-                 gold_output: List[int],
-                 loss_function: torch.nn.modules.loss._Loss,
+def compute_loss(model: Module, batch: Batch, num_classes: int,
+                 gold: List[int], loss_function: torch.nn.modules.loss._Loss,
                  gpu_device: Union[torch.device, None]) -> torch.Tensor:
     # compute model outputs given batch
     output = model.forward(batch)
@@ -114,7 +111,7 @@ def compute_loss(model: Module,
     # return loss over output and gold
     return loss_function(
         log_softmax(output, dim=1).view(batch.size(), num_classes),
-        to_cuda(gpu_device)(LongTensor(gold_output)))
+        to_cuda(gpu_device)(LongTensor(gold)))
 
 
 def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
@@ -279,11 +276,8 @@ def train(train_data: List[Tuple[List[int], int]],
                         to_cuda(gpu_device)), [x[1] for x in batch]
 
                     # find aggregate loss across valid samples in batch
-                    valid_batch_loss = compute_loss(model,
-                                                    batch,
-                                                    num_classes,
-                                                    gold,
-                                                    loss_function,
+                    valid_batch_loss = compute_loss(model, batch, num_classes,
+                                                    gold, loss_function,
                                                     gpu_device)
 
                     # add batch loss to valid_loss
@@ -448,14 +442,13 @@ def main(args: argparse.Namespace) -> None:
     valid_vocab = vocab_from_text(args.valid_data)
     LOGGER.info("Validation vocabulary size: %s" % len(valid_vocab))
 
-    # combine valid and train vocabularies into global object
+    # combine valid and train vocabularies into combined object
     vocab = valid_vocab | train_vocab
 
     # read embeddings file and output intersected vocab
     # embeddings and word-vector dimensionality
+    # convert embeddings to torch FloatTensor
     vocab, embeddings, _ = read_embeddings(args.embeddings, vocab)
-
-    # convert embeddings to torch tensor
     embeddings = np.vstack(embeddings).astype(np.float32)
     embeddings = torch.from_numpy(embeddings)
 
