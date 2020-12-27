@@ -508,7 +508,7 @@ def main(args: argparse.Namespace) -> None:
                                   pre_computed_patterns, args.no_self_loops,
                                   args.shared_self_loops, args.no_epsilons,
                                   args.epsilon_scale, args.self_loop_scale,
-                                  args.dropout)
+                                  args.dropout, args.dynamic_embeddings)
 
     # log diagnostic information on parameter count
     LOGGER.info("Total model parameters: %s" %

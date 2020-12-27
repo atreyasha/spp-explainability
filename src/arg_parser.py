@@ -17,12 +17,12 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
               "PatternLength1-PatternCount1_PatternLength2-PatternCount2_..."),
         default="5-50_4-50_3-50_2-50",
         type=str)
-    sopa.add_argument("--semiring",
-                      help="Specify which semiring to use",
-                      default="ProbSemiring",
-                      choices=["MaxPlusSemiring", "MaxTimesSemiring",
-                               "ProbSemiring"],
-                      type=str)
+    sopa.add_argument(
+        "--semiring",
+        help="Specify which semiring to use",
+        default="ProbSemiring",
+        choices=["MaxPlusSemiring", "MaxTimesSemiring", "ProbSemiring"],
+        type=str)
     sopa.add_argument("--bias-scale",
                       help="Scale biases by this parameter",
                       default=0.1,
@@ -54,6 +54,9 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
                       default=2,
                       type=int)
     # boolean flags
+    sopa.add_argument("--dynamic-embeddings",
+                      help="Enable learning of token embeddings",
+                      action='store_true')
     sopa.add_argument("--no-self-loops",
                       help="Do not use self loops",
                       action='store_true')
@@ -83,15 +86,17 @@ def training_arg_parser() -> argparse.ArgumentParser:
                           help="Path to validation labels file",
                           required=True,
                           type=str)
-    required.add_argument("--embeddings",
-                          help="Path to GloVe token embeddings file",
-                          required=True,
-                          type=str)
     # add train group for clearer annotations
     train = parser.add_argument_group('optional training arguments')
     # numeric and character-accepting options
+    train.add_argument("--embeddings",
+                       help=("Path to GloVe token embeddings file. This can "
+                             "be ignored if --load-model is provided"),
+                       default="./data/glove_6B/glove.6B.300d.txt",
+                       type=str)
     train.add_argument("--load-model",
-                       help="Path to pre-trained model file",
+                       help="Path to pre-trained model file. This option "
+                       "makes the --embeddings option redundant",
                        type=str)
     train.add_argument("--gpu-device",
                        help=("GPU device specification in case --gpu option"
@@ -132,7 +137,7 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        type=int)
     train.add_argument("--seed",
                        help="Global random seed for numpy and torch",
-                       default=420,
+                       default=42,
                        type=int)
     train.add_argument("--num-train-instances",
                        help="Maximum number of training instances",
