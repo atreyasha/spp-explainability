@@ -2,3 +2,4 @@
 events*
 *.json
 *.txt
+*.log
