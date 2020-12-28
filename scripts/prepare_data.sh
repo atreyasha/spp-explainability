@@ -33,7 +33,7 @@ facebook_multiclass_nlu() {
 
 # download GloVe 6B word vectors
 glove_6B() {
-  local directory="./data/glove_6B"
+  local directory="./data/glove_6B_uncased"
   mkdir -p "$directory"
   wget -N -P "$directory" "http://nlp.stanford.edu/data/glove.6B.zip"
   unzip "$directory/glove.6B.zip" -d "$directory"
