@@ -11,7 +11,7 @@ import torch
 # CW token refers to an arbitrary token with high bias
 CW_TOKEN = "CW"
 # factor to keep matrix values small but nonzero
-EPSILON = 1e-10
+NUMERICAL_EPSILON = 1e-10
 # shared_sl value for greedily learnable self-loop paramaters
 SHARED_SL_PARAM_PER_STATE_PER_PATTERN = 1
 # shared_sl value for global learnable self-loop parameter
@@ -98,13 +98,13 @@ class SoftPatternClassifier(Module):
             # 2: a single global parameter
             if self.shared_self_loops == SHARED_SL_PARAM_PER_STATE_PER_PATTERN:
                 # create a tensor for each pattern
-                shared_sl_data = randn(self.total_num_patterns,
-                                       self.max_pattern_length)
+                shared_self_loop_data = randn(self.total_num_patterns,
+                                              self.max_pattern_length)
             elif self.shared_self_loops == SHARED_SL_SINGLE_PARAM:
                 # create a single tensor
-                shared_sl_data = randn(1)
+                shared_self_loop_data = randn(1)
             # NOTE: assign tensor to a learnable parameter
-            self.self_loop_scale = Parameter(shared_sl_data)
+            self.self_loop_scale = Parameter(shared_self_loop_data)
         elif not self.no_self_loops:
             # workflow for self-loops that are not shared
             # NOTE: self_loop_scale is not a fixed tensor
@@ -149,7 +149,7 @@ class SoftPatternClassifier(Module):
         # assign class variables if epsilon transitions are allowed
         if not self.no_epsilons:
             # NOTE: this parameter is learned
-            self.epsilon = Parameter(
+            self.epsilons = Parameter(
                 randn(self.total_num_patterns, self.max_pattern_length - 1))
 
             # factor by which to scale epsilon parameter
@@ -275,8 +275,8 @@ class SoftPatternClassifier(Module):
     def load_pattern(self,
                      pattern: List[str]) -> Tuple[torch.Tensor, torch.Tensor]:
         # initialize local variables
-        diag = EPSILON * torch.randn(len(pattern),
-                                     self.embeddings.embedding_dim)
+        diag = NUMERICAL_EPSILON * torch.randn(len(pattern),
+                                               self.embeddings.embedding_dim)
         bias = torch.zeros(len(pattern))
 
         # TODO: unsure why this factor value is chosen
@@ -337,21 +337,21 @@ class SoftPatternClassifier(Module):
         hiddens[:, :, 0] = self.semiring.one(batch_size,
                                              self.total_num_patterns)
 
-        # get eps_value based on previous class settings
-        eps_value = self.get_eps_value()
+        # get epsilon_values based on previous class settings
+        epsilon_values = self.get_epsilon_values()
 
         # start loop over all transition matrices
         for i, transition_matrix in enumerate(transition_matrices):
             # retrieve all hiddens given current state
             # TODO: modifications can be made here to work on learnable
             # embeddings directly
-            hiddens = self.transition_once(eps_value, hiddens,
+            hiddens = self.transition_once(epsilon_values, hiddens,
                                            transition_matrix, zero_padding,
                                            restart_padding, self_loop_scale)
 
             # look at the end state for each pattern, and "add" it into score
             # NOTE: torch.gather helps to extract values at indices
-            end_state_vals = torch.gather(hiddens, 2, end_states).view(
+            end_state_values = torch.gather(hiddens, 2, end_states).view(
                 batch_size, self.total_num_patterns)
 
             # only update score when we're not already past the end of the doc
@@ -362,7 +362,8 @@ class SoftPatternClassifier(Module):
 
             # update scores with relevant tensor values
             scores[active_doc_indices] = self.semiring.plus(
-                scores[active_doc_indices], end_state_vals[active_doc_indices])
+                scores[active_doc_indices],
+                end_state_values[active_doc_indices])
 
         # update scores to float
         # NOTE: scores represent end values on top of SoPa
@@ -372,15 +373,15 @@ class SoftPatternClassifier(Module):
         # return output of MLP
         return self.mlp.forward(scores)
 
-    def get_eps_value(self) -> Union[torch.Tensor, None]:
+    def get_epsilon_values(self) -> Union[torch.Tensor, None]:
         return None if self.no_epsilons else self.semiring.times(
             self.epsilon_scale.detach().clone(),  # type: ignore
-            self.semiring.from_float(self.epsilon))
+            self.semiring.from_float(self.epsilons))
 
     def transition_once(
-            self, eps_value: Union[torch.Tensor, None], hiddens: torch.Tensor,
-            transition_matrix: torch.Tensor, zero_padding: torch.Tensor,
-            restart_padding: torch.Tensor,
+            self, epsilon_values: Union[torch.Tensor, None],
+            hiddens: torch.Tensor, transition_matrix: torch.Tensor,
+            zero_padding: torch.Tensor, restart_padding: torch.Tensor,
             self_loop_scale: Union[torch.Tensor, float, None]) -> torch.Tensor:
         # adding epsilon transitions
         # NOTE: don't consume a token, move forward one state
@@ -393,7 +394,8 @@ class SoftPatternClassifier(Module):
             after_epsilons = self.semiring.plus(
                 hiddens,
                 cat((zero_padding,
-                     self.semiring.times(hiddens[:, :, :-1], eps_value)), 2))
+                     self.semiring.times(hiddens[:, :, :-1], epsilon_values)),
+                    2))
 
         # adding the start state
         after_main_paths = cat(
