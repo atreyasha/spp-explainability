@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from tqdm import tqdm
-from typing import List, Iterable, Dict, Any, Union
+from typing import List, Dict, Any, Union
 from nltk import word_tokenize
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import make_logger
+from .utils.data_utils import unique
 from .arg_parser import preprocess_arg_parser, logging_arg_parser
 import argparse
 import json
@@ -37,14 +38,6 @@ def tokenize(data: List[str]) -> List[str]:
 
 def lowercase(data: List[str]) -> List[str]:
     return [element.lower() for element in data]
-
-
-def make_unique(full_data: Iterable[Any]) -> List[Any]:
-    unique_list = []
-    for element in tqdm(full_data, disable=DISABLE_TQDM):
-        if element not in unique_list:
-            unique_list.append(element)
-    return unique_list
 
 
 def write_file(full_data: List[List[Union[str, int]]], mapping: Dict[str, int],
@@ -119,11 +112,11 @@ def main(args: argparse.Namespace) -> None:
 
     # make everything unique
     LOGGER.info("Making training data unique")
-    train = make_unique(list(zip(train_data, train_labels)))
+    train = list(unique(zip(train_data, train_labels)))
     LOGGER.info("Making validation data unique")
-    valid = make_unique(list(zip(valid_data, valid_labels)))
+    valid = list(unique(zip(valid_data, valid_labels)))
     LOGGER.info("Making test data unique")
-    test = make_unique(list(zip(test_data, test_labels)))
+    test = list(unique(zip(test_data, test_labels)))
 
     # write main files
     LOGGER.info("Sorting and writing data")
