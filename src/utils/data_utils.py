@@ -11,20 +11,20 @@ PRINTABLE = set(string.printable)
 UNK_TOKEN = "[UNK]"
 START_TOKEN = "[START]"
 END_TOKEN = "[END]"
-UNK_IDX = 0
-START_TOKEN_IDX = 1
-END_TOKEN_IDX = 2
+UNK_INDEX = 0
+START_TOKEN_INDEX = 1
+END_TOKEN_INDEX = 2
 
 
 def identity(x: Any) -> Any:
     return x
 
 
-def nub(xs: Iterable[Any]) -> Generator[Any, None, None]:
-    return nub_by(xs, identity)
+def unique(xs: Iterable[Any]) -> Generator[Any, None, None]:
+    return unique_by(xs, identity)
 
 
-def nub_by(xs: Iterable[Any], key: Callable) -> Generator[Any, None, None]:
+def unique_by(xs: Iterable[Any], key: Callable) -> Generator[Any, None, None]:
     seen = set()
 
     def check_and_add(x: Any) -> bool:
@@ -44,7 +44,7 @@ class Vocab:
                  start: Union[int, str] = START_TOKEN,
                  end: Union[int, str] = END_TOKEN) -> None:
         self.default = default
-        self.names = list(nub(chain([default, start, end], names)))
+        self.names = list(unique(chain([default, start, end], names)))
         self.index = {name: i for i, name in enumerate(self.names)}
 
     def __getitem__(self, index: int) -> Union[int, str]:
@@ -52,7 +52,7 @@ class Vocab:
             self.names) else self.default
 
     def __call__(self, name: Union[int, str]) -> int:
-        return self.index.get(name, UNK_IDX)
+        return self.index.get(name, UNK_INDEX)
 
     def __contains__(self, item: str) -> bool:
         return item in self.index
@@ -67,7 +67,7 @@ class Vocab:
         return [self(token) for token in doc]
 
     def denumberize(self, doc: List[int]) -> Sequence[Union[int, str]]:
-        return [self[idx] for idx in doc]
+        return [self[index] for index in doc]
 
     @classmethod
     def from_docs(cls,
@@ -150,8 +150,8 @@ def read_docs(
     return ([
         pad(vocab.numberize(doc),
             num_padding_tokens=num_padding_tokens,
-            START=START_TOKEN_IDX,
-            END=END_TOKEN_IDX) for doc in docs
+            START=START_TOKEN_INDEX,
+            END=END_TOKEN_INDEX) for doc in docs
     ], [
         pad(doc,
             num_padding_tokens=num_padding_tokens,
@@ -185,7 +185,7 @@ def pad(doc: Sequence[str], num_padding_tokens: int, START: str,
 
 def pad(doc: Sequence[Union[int, str]],
         num_padding_tokens: int = 1,
-        START: Union[int, str] = START_TOKEN_IDX,
-        END: Union[int, str] = END_TOKEN_IDX) -> Sequence[Union[int, str]]:
+        START: Union[int, str] = START_TOKEN_INDEX,
+        END: Union[int, str] = END_TOKEN_INDEX) -> Sequence[Union[int, str]]:
     return ([START] * num_padding_tokens) + list(doc) + ([END] *
                                                          num_padding_tokens)
