@@ -440,14 +440,25 @@ def main(args: argparse.Namespace) -> None:
     LOGGER.info("Validation vocabulary size: %s" % len(valid_vocab))
 
     # combine valid and train vocabularies into combined object
-    vocab = valid_vocab | train_vocab
+    vocab_combined = valid_vocab | train_vocab
+    LOGGER.info("Combined vocabulary size: %s" % len(vocab_combined))
 
     # read embeddings file and output intersected vocab
     # embeddings and word-vector dimensionality
     # convert embeddings to torch FloatTensor
-    vocab, embeddings, _ = read_embeddings(args.embeddings, vocab)
+    vocab, embeddings, _ = read_embeddings(args.embeddings, vocab_combined)
     embeddings = np.vstack(embeddings).astype(np.float32)
     embeddings = torch.from_numpy(embeddings)
+
+    # show output of tokens lost during vocabulary extraction
+    missing = [
+        token for token in vocab_combined.names if token not in vocab.names
+    ]
+    LOGGER.info("GloVe-intersected vocabulary size: %s" %
+                len(vocab))
+    LOGGER.info("Number of tokens not found in GloVe vocabulary: %s" %
+                len(missing))
+    LOGGER.info("Lost tokens: %s" % missing)
 
     # set number of padding tokens as one less than the longest pattern length
     # TODO: understand why this is set and if this is necessary
