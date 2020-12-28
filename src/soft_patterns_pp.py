@@ -382,7 +382,7 @@ class SoftPatternClassifier(Module):
             self, epsilon_values: Union[torch.Tensor, None],
             hiddens: torch.Tensor, transition_matrix: torch.Tensor,
             zero_padding: torch.Tensor, restart_padding: torch.Tensor,
-            self_loop_scale: Union[torch.Tensor, float, None]) -> torch.Tensor:
+            self_loop_scale: Union[torch.Tensor, None]) -> torch.Tensor:
         # adding epsilon transitions
         # NOTE: don't consume a token, move forward one state
         # we do this before self-loops and single-steps.
