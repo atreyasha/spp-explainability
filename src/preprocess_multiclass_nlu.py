@@ -11,6 +11,7 @@ import argparse
 import json
 import csv
 import os
+import re
 
 
 def read_tsv(filename: str) -> List[Any]:
@@ -34,6 +35,10 @@ def tokenize(data: List[str]) -> List[str]:
     ]
 
 
+def lowercase(data: List[str]) -> List[str]:
+    return [element.lower() for element in data]
+
+
 def make_unique(full_data: Iterable[Any]) -> List[Any]:
     unique_list = []
     for element in tqdm(full_data, disable=DISABLE_TQDM):
@@ -54,8 +59,10 @@ def write_file(full_data: List[List[Union[str, int]]], mapping: Dict[str, int],
         for item in data:
             output_file_stream.write("%s\n" % item)
     # write labels
-    with open(os.path.join(write_directory, prefix + ".labels"),
-              'w') as output_file_stream:
+    with open(
+            os.path.join(write_directory,
+                         re.sub(r"(.*)(\..*)", r"\1", prefix) + ".labels"),
+            'w') as output_file_stream:
         for item in labels:
             output_file_stream.write("%s\n" % str(item))
 
@@ -98,6 +105,18 @@ def main(args: argparse.Namespace) -> None:
     LOGGER.info("Tokenizing test data")
     test_data = tokenize(test_data)
 
+    if not args.truecase:
+        # lowercasing
+        LOGGER.info("Lower-casing training data")
+        train_data = lowercase(train_data)
+        LOGGER.info("Lower-casing validation data")
+        valid_data = lowercase(valid_data)
+        LOGGER.info("Lower-casing test data")
+        test_data = lowercase(test_data)
+        suffix = "uncased"
+    else:
+        suffix = "truecased"
+
     # make everything unique
     LOGGER.info("Making training data unique")
     train = make_unique(list(zip(train_data, train_labels)))
@@ -108,9 +127,9 @@ def main(args: argparse.Namespace) -> None:
 
     # write main files
     LOGGER.info("Sorting and writing data")
-    write_file(train, class_mapping, "train", write_directory)
-    write_file(valid, class_mapping, "valid", write_directory)
-    write_file(test, class_mapping, "test", write_directory)
+    write_file(train, class_mapping, "train." + suffix, write_directory)
+    write_file(valid, class_mapping, "valid." + suffix, write_directory)
+    write_file(test, class_mapping, "test." + suffix, write_directory)
 
     # write class mapping
     with open(os.path.join(write_directory, "class_mapping.json"),

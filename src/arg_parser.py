@@ -174,6 +174,11 @@ def preprocess_arg_parser() -> argparse.ArgumentParser:
                             help="Data directory containing clean input data",
                             default="./data/facebook_multiclass_nlu/",
                             type=str)
+    preprocess.add_argument(
+        "--truecase",
+        help=("Retain true casing when preprocessing data. "
+              "Otherwise data will be lowercased by default"),
+        action="store_true")
     return parser
 
 
