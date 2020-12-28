@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Prepare git hooks
 set -e
 
 # usage function
@@ -9,7 +8,7 @@ Usage: prepare_git_hooks.sh [-h|--help]
 Force copy git hooks to git repository config
 
 Optional arguments:
-  -h, --help         Show this help message and exit
+  -h, --help    Show this help message and exit
 EOF
 }
 

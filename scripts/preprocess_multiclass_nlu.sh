@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
-# Preprocess Facebook multiclass NLU data
 set -e
 
 # usage function
 usage() {
   cat <<EOF
 Usage: preprocess_multiclass_nlu.sh [-h|--help]
-Preprocess Facebook multiclass NLU data
+Preprocess Facebook multiclass NLU data using repository defaults
 
 Optional arguments:
-  -h, --help         Show this help message and exit
+  -h, --help    Show this help message and exit
 EOF
 }
 

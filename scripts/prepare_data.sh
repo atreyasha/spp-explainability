@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
-# Download key data sets for SoPa++
 set -e
 
 # usage function
 usage() {
   cat <<EOF
 Usage: prepare_data.sh [-h|--help]
-Prepare data sets for SoPa++
+Download and prepare data sets for SoPa++
 
 Optional arguments:
-  -h, --help         Show this help message and exit
+  -h, --help    Show this help message and exit
 EOF
 }
 
@@ -31,7 +30,7 @@ facebook_multiclass_nlu() {
   unzip "$directory/multilingual_task_oriented_dialog_slotfilling.zip" -d "$directory"
 }
 
-# download GloVe 6B word vectors
+# download and prepare GloVe 6B uncased word vectors
 glove_6B() {
   local directory="./data/glove_6B_uncased"
   mkdir -p "$directory"

@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
-# Type check all python source code with mypy
 set -e
 
 # usage function
 usage() {
   cat <<EOF
 Usage: test_typecheck.sh [-h|--help]
-Test source code to ensure consistent typing
+Test source code with mypy to ensure consistent data typing
 
 Optional arguments:
-  -h, --help         Show this help message and exit
+  -h, --help    Show this help message and exit
 EOF
 }
 
