@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from typing import Union
+import os
+import sys
 import logging
 
 
-def make_logger(level: str) -> logging.Logger:
+def make_logger(level: str,
+                log_filename: Union[str, None] = None) -> logging.Logger:
     # create logger
     logger = logging.getLogger(level)
 
@@ -20,20 +24,25 @@ def make_logger(level: str) -> logging.Logger:
     # set logger level
     logger.setLevel(levels[level.lower()])
 
-    # create console handler and set level to debug
-    stream_handler = logging.StreamHandler()
-    stream_handler.setLevel(logging.DEBUG)
-
     # create formatter
     formatter = logging.Formatter(
         '%(asctime)s | %(levelname)s | %(filename)s | %(funcName)s | %(message)s'
     )
 
-    # add formatter to stream_handler
-    stream_handler.setFormatter(formatter)
+    # set output stread to stdout
+    stdout_handler = logging.StreamHandler(sys.stdout)
+    stdout_handler.setLevel(logging.DEBUG)
+    stdout_handler.setFormatter(formatter)
+    logger.addHandler(stdout_handler)
 
-    # add stream_handler to logger
-    logger.addHandler(stream_handler)
+    # set output to append to file
+    if log_filename is not None:
+        if not os.path.exists(os.path.dirname(log_filename)):
+            os.makedirs(os.path.dirname(log_filename), exist_ok=True)
+        file_handler = logging.FileHandler(log_filename)
+        file_handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
 
     # return final logger
     return logger

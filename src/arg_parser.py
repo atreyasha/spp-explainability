@@ -103,10 +103,10 @@ def training_arg_parser() -> argparse.ArgumentParser:
                              " is used"),
                        default="cuda:0",
                        type=str)
-    train.add_argument("--models-directory",
+    train.add_argument("--model-log-directory",
                        help=("Directory where models and tensorboard logs "
-                             "are saved"),
-                       default="./models",
+                             "for current training run are saved"),
+                       default="./models/spp_single_train_sample",
                        type=str)
     train.add_argument("--pre-computed-patterns",
                        help="Path to file containing per-computed patterns",
