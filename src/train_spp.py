@@ -15,8 +15,8 @@ from .utils.parser_utils import ArgparseFormatter
 from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
                                read_embeddings)
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
-                                to_cuda, argmax, timestamp, Batch,
-                                enable_gradient_clipping, ProbSemiring,
+                                to_cuda, argmax, timestamp,
+                                enable_gradient_clipping, Batch, ProbSemiring,
                                 LogSpaceMaxTimesSemiring, MaxPlusSemiring)
 from .soft_patterns_pp import SoftPatternClassifier
 from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
@@ -454,8 +454,7 @@ def main(args: argparse.Namespace) -> None:
     missing = [
         token for token in vocab_combined.names if token not in vocab.names
     ]
-    LOGGER.info("GloVe-intersected vocabulary size: %s" %
-                len(vocab))
+    LOGGER.info("GloVe-intersected vocabulary size: %s" % len(vocab))
     LOGGER.info("Number of tokens not found in GloVe vocabulary: %s" %
                 len(missing))
     LOGGER.info("Lost tokens: %s" % missing)
