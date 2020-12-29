@@ -29,7 +29,12 @@ train_spp() {
   session_logfile="$model_log_directory/session.log"
   mkdir -p "$model_log_directory"
 
-  python3 -m src.train_spp --train-data "./data/facebook_multiclass_nlu/clean/train.uncased.data" --train-labels "./data/facebook_multiclass_nlu/clean/train.labels" --valid-data "./data/facebook_multiclass_nlu/clean/valid.uncased.data" --valid-labels "./data/facebook_multiclass_nlu/clean/valid.labels" --model-log-directory "$model_log_directory" | tee -a "$session_logfile"
+  python3 -m src.train_spp \
+    --train-data "./data/facebook_multiclass_nlu/clean/train.uncased.data" \
+    --train-labels "./data/facebook_multiclass_nlu/clean/train.labels" \
+    --valid-data "./data/facebook_multiclass_nlu/clean/valid.uncased.data" \
+    --valid-labels "./data/facebook_multiclass_nlu/clean/valid.labels" \
+    --model-log-directory "$model_log_directory" | tee -a "$session_logfile"
 }
 
 # execute function
