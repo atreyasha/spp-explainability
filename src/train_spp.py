@@ -29,8 +29,12 @@ import json
 import os
 
 
-def read_patterns(filename: str,
-                  pattern_specs: MutableMapping[int, int]) -> List[List[str]]:
+def read_patterns(
+    filename: str, pattern_specs: MutableMapping[int, int]
+) -> Tuple[MutableMapping[int, int], List[List[str]]]:
+    # create new pattern_specs variable copy
+    pattern_specs = pattern_specs.copy()
+
     # read pre_compute_patterns into a list
     with open(filename, encoding='utf-8') as input_file_stream:
         pre_computed_patterns = [
@@ -47,7 +51,7 @@ def read_patterns(filename: str,
             pattern_specs[lookup_length] += 1
 
     # return read object
-    return pre_computed_patterns
+    return pattern_specs, pre_computed_patterns
 
 
 def save_checkpoint(epoch: int, model: torch.nn.Module,
@@ -419,8 +423,8 @@ def main(args: argparse.Namespace) -> None:
 
     # read pre_computed_patterns if it exists, format pattern_specs accordingly
     if args.pre_computed_patterns is not None:
-        pre_computed_patterns = read_patterns(args.pre_computed_patterns,
-                                              pattern_specs)
+        pattern_specs, pre_computed_patterns = read_patterns(
+            args.pre_computed_patterns, pattern_specs)
         pattern_specs = OrderedDict(
             sorted(pattern_specs.items(), key=lambda t: t[0]))
 
