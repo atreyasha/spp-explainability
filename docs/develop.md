@@ -22,64 +22,86 @@
 
 1.  **TODO** Major changes to model
 
-    **DEADLINE:** *\<2020-12-24 Thu\>*
+    **DEADLINE:** *\<2021-01-01 Fri\>*
 
     1.  Quick changes
 
-        1.  improve code quality with continue training workflow
+        1.  **TODO** think of robust and modular way of doing
+            this because re-training could occur for single and
+            grid-training scenarios and we would have to make sense of
+            all of these factors -\> ideal solution should use single
+            train re-training and build it directly onto grid training
+            -\> maybe include a continue training flag directly inside
+            -\> perhaps add some exit hooks with exit codes to signal
+            what happened during training
 
-            1.  use train arg parser to read/overwrite arguments
+        2.  **TODO** improve code quality with continue
+            training workflow
 
-            2.  optimizer and scheduler state dictionaries would need to
+            1.  use cpu device to load model first on cpu before sending
+                to gpu
+
+            2.  use train arg parser to read/overwrite arguments
+
+            3.  optimizer and scheduler state dictionaries would need to
                 passed on via optional argument to train, maybe model
                 can be initialized inside train function instead of in
                 main
 
-            3.  read epoch information so training/tensorboard-logging
+            4.  read epoch information so training/tensorboard-logging
                 can be done correctly -\> if epochs are still remaining,
                 train until they are finished otherwise train for
                 another set of specified epochs
 
-            4.  settle issue of whether to use epoch index or count
+            5.  settle issue of whether to use epoch index or count
                 while saving information -\> re-think and make
                 implementation consistent most importantly
 
-            5.  test if training can be continued seamlessly with
+            6.  test if training can be continued seamlessly with
                 information stored in checkpoint
 
-        2.  figure out saving and loading models on both cpu and gpu -\>
-            might need to insert map_location argument for specific
-            devices -\> can test out with some models saved on s3it gpu
-            -\> always save model on cpu: see
-            <https://discuss.pytorch.org/t/how-to-get-a-cpu-state-dict/24712>
+            7.  modernize torch gradient clipping function if relevant
 
-        3.  consider making implementation of torch device more explicit
-            where possible with torch.device and \"to\" function -\>
-            would help with cpu/gpu save/load issues seamlessly -\> can
-            specify on command line which GPU to use for single case
+            8.  use different workflow when loading from model since
+                embeddings would not need to be read -\> perhaps need to
+                initialize embeddings with correct dimension and then
+                update them later on
 
-        4.  test if model works on GPU with new changes -\> do quick
-            check without too much detail
+            9.  think of effective workflow to load back random states,
+                check if last and best checkpoints have the same random
+                states -\> test if the same training procedure is indeed
+                returned
 
-        5.  update all `eps` with `epsilons` and `sl` with `self_loops`
-            where possible
+            10. think more about where model loading should happen since
+                this would determine how other things go -\> maybe make
+                this into a function so this can be re-used in tests
+                script
 
-    2.  Medium-level changes
+            11. add one tensorboard event log for each re-train
+                iteration, so it is clear how many re-train runs there
+                were
 
-        1.  address scattered TODOs in code if still remaining OR
-            otherwise add them to below tasks
+            12. if re-training, rename each training config with an
+                index so it is clear which came first -\> or simply
+                append to the same training config file with different
+                indices
 
-        2.  look through shuffling that happens in training/model_utils
-            and whether it is necessary in all places -\> or whether it
-            can be compressed in some places such as `model_utils.py`
-            functions
+            13. perhaps add workflow to know exactly when training was
+                stopped or at which epoch -\> would be easy to tell in
+                training log which would be written, or through
+                tensorboard logs
 
-        3.  consider changing padding token to dedicated token instead
+            14. check patience counter before training to ensure there
+                is no problem with hacks
+
+    2.  Medium-impact changes
+
+        1.  consider changing padding token to dedicated token instead
             of unknown -\> these are not included within soft_pattern
             processing due to construction of Batch class only
             considering length of input sequences
 
-        4.  maybe padding the whole dataset might make more sense than
+        2.  maybe padding the whole dataset might make more sense than
             doing this repeatedly within each Batch object
 
             1.  combined model padding probably does not work well
@@ -88,11 +110,14 @@
                 computation is used correctly for updating scores and
                 not being ignored
 
-        5.  make batch object more efficient, look at existing pytorch
+        3.  make Batch object more efficient, look at existing pytorch
             classes that could help with this -\> probably not the best
             case since the Batch class has a specific use
 
-        6.  might make overall more sense to use max-\* semirings since
+        4.  reduce circum-padding token count to 1 instead of length of
+            longest pattern
+
+        5.  might make overall more sense to use max-\* semirings since
             they are easier to interpret -\> try to replicate model from
             defaults of paper instead of code defaults during main runs
             -\> change defaults directly in argument parser -\> add
@@ -100,18 +125,44 @@
             more sensible for runs such as increasing epochs, learning
             rate etc.
 
+        6.  test out to see if scheduler works and if its state gets
+            incremented -\> need to train single model for long period
+            of time and analyze state_dict of scheduler to see what has
+            been recorded
+
+        7.  address scattered TODOs in code if still remaining OR
+            otherwise add them to below tasks
+
     3.  Core modeling developments
 
-        1.  reduce circum-padding token count to 1 instead of length of
-            longest pattern
+        1.  look into ATIS dataset as replacement since it was also used
+            by other papers, can be ported quickly
 
         2.  add test evaluation workflow for the model with separate
             script -\> this would be useful for the grid-search model
             selection and might need additional argument parser options
-            -\> need to set model.eval() before evaluating
+            -\> need to set model.eval() before evaluating -\> let this
+            be completely independent and applied to all grid-search
+            models
 
             1.  compute test F1 on models at the end of training for
                 completeness
+
+            2.  removal of predict function inside model, but could be
+                added back if this becomes boilerplate later in testing
+                script
+
+            3.  think again about adding model.eval() and model.train()
+                inside functions, or to keep outside in more global
+                context
+
+            4.  tokenizer configuration should also be saved such as
+                nltk punkt tokenizer, if something like this is present,
+                currently we use nltk tokenizer which is fixed within
+                the current nltk version
+
+            5.  test code should use model vocabulary directly -\> this
+                can be used to ensure everything is within model
 
         3.  add temperature parameter to encourage more discrete
             learning of pattern scores -\> or binarize patterns via
@@ -154,6 +205,19 @@
             self-loops and epsilon transitions for improved
             generalization
 
+            1.  read more about cross module logger imports, fix this to
+                be done correctly and try few experiments to see how it
+                works, this will help in allowing for cross module
+                functions to be imported
+
+            2.  try higher precision computing in case this would help
+                with a smaller model -\> perhaps convert everything to
+                DoubleTensor if this helps later on
+
+            3.  try to use pure bash script for grid search instead of
+                developing another python script -\> need some way of
+                pre-determining grid search space
+
 2.  Run SoPa++ for multiple runs to survey performance -\> run on all
     variants and data-set portions with (repeated) grid-search to get
     plenty of candidates, means and standard deviations
@@ -195,11 +259,11 @@
             `visualization`, `interpretation` (two of highest priority)
             and `testing` scripts from git backlog to repository
 
-        2.  why are `*START*` and `*END*` tokens repeated before and
-            after, and why is `*UNK*` used for padding when a separate
-            `*PAD*` token could be used?
+        2.  why are `[START]` and `[END]` tokens repeated before and
+            after, and why is `[UNK]` used for padding when a separate
+            `[PAD]` token could be used?
 
-            1.  overfitting that occurs to extra `*START*` and `*END*`
+            1.  overfitting that occurs to extra `[START]` and `[END]`
                 tokens would be transferred to epsilon transitions if
                 replaced with single padding instead of multiple
 
@@ -215,6 +279,13 @@
         2.  compare confusion matrices between orace and mimic and
             compute euclidean distances on scores or binary predictions
 
+    4.  Test out scripts for loading pre-computed-patterns to ensure
+        they work without bugs -\> especially torch segment with data
+        sharing -\> missing load information for self-loops -\> might
+        bug out for case with no self_loops because of index 1 of
+        `diags` and `bias` being updated which is only present with
+        self_loops, perhaps replace with index of -1
+
 ### Long-term
 
 1.  Performance
@@ -229,10 +300,38 @@
     3.  replace all legacy tensor.data calls with tensor.detach() for
         safety
 
-    4.  work on `slurm-s3it` branch as a mirrored branch -\> easier to
-        keep workflow simple for `jarvis` only and ignore `s3it`
+    4.  work on `slurm-s3it` branch as a mirrored branch -\> keep slogs
+        since session.log does not keep tqdm progress bar
 
-2.  Visualization
+    5.  add `with torch.no_grad()` scope indicator alongside
+        `model.eval()` to perform inference/validation correctly and
+        efficiently -\> check other areas where this can be done
+
+    6.  check to ensure detach and clones are done together where
+        variable is created and updated, or otherwise detach is done for
+        variables where only data needs to be referenced
+
+    7.  check code for `squeeze()` call which can be problematic for dim
+        1 tensors
+
+    8.  make script to determine optimal batch sizes and upper bounds
+
+    9.  add check to ensure start, end and pad tokens cannot occur
+        inside the sequence
+
+2.  Torch portability
+
+    1.  check if possible to replace all Batch object internals via
+        direct torch tensors instead of numpy -\> might help with speed
+        but not very important
+
+    2.  maybe use dataloader/dataset torch class instead of raw data,
+        read on memory improvements and better shuffling which saves
+        original order
+
+    3.  consider using a torch vocabulary class instead where applicable
+
+3.  Visualization
 
     1.  remember that tensorboard events start at epoch index 0, which
         means after the first epoch of training
@@ -240,7 +339,7 @@
     2.  if necessary, the x-axis should be scaled forward by 1 to give
         the correct training epochs
 
-3.  Dynamic and sub-word embeddings (optional)
+4.  Dynamic and sub-word embeddings (optional)
 
     1.  use both word and sub-word tokenizers such as nltk or
         sentencepiece tokenizer
@@ -263,7 +362,7 @@
             dictionary object -\> not useful for static case since this
             would create memory overhaul
 
-4.  Argparse, logging and dependencies
+5.  Argparse, logging and dependencies
 
     1.  consider whether to pass `logger`, `disable_tqdm` and
         `tqdm_update_freq` variables directly via functions
@@ -275,42 +374,44 @@
         affected by presence of `logger`, or otherwise use root logger
         in case it cannot be imported
 
-    4.  **extra:** pass tqdm directly to logger instead of directly to
+    4.  make argparse metavariable for file path, which can check if it
+        exists (if it is existing file/dir type, otherwise just a path)
+
+    5.  test download and all other scripts to ensure they work
+
+    6.  **extra:** pass tqdm directly to logger instead of directly to
         stdout: see <https://github.com/tqdm/tqdm/issues/313>
 
-    5.  **brainstorm:** replace input arg namespace with explicit
+    7.  **brainstorm:** replace input arg namespace with explicit
         arguments, OR possible to make separate argparse Namespace which
         can be passed to main, this could help with portability (needs
         brainstorming since there are tradeoffs between argparse
         Namespace and explicit variable definitions)
 
-5.  Typing and testing
+6.  Typing and testing
 
-    1.  include test code by instantiating class and/or other simple
+    1.  remove cast calls and replace with direct declaration as long as
+        variable was not defined earlier, otherwise must use cast
+
+    2.  fine-tune exact typing of pre-computed pattern loading functions
+        inside model source code -\> test this out to clarify everything
+
+    3.  include test code by instantiating class and/or other simple
         methods which are inherent to the workflow
 
-    2.  ensure that redefined variables are given all possible unioned
+    4.  ensure that redefined variables are given all possible unioned
         types used inside code
 
-    3.  add mypy as a test case suite, design new and improved test
+    5.  add mypy as a test case suite, design new and improved test
         cases using pytest after understanding code completely
 
-    4.  consider adding Optional type to all optional arguments
+    6.  consider adding Optional type to all optional arguments
 
-    5.  fine-tune typing in internal functions of
-        `SoftPatternClassifier` since some of them require batch-level
-        testing to ascertain, eg. `get_transition_matrices`,
-        `load_pattern` -\> need to ascertain wither
-        `pre_computed_patterns` is List or List\[List\[str\]\] -\>
-        consider removing `float` from
-        `self_loop_scale: Union[torch.Tensor, float, None]` in
-        `transition_once`
-
-    6.  look into cases where List was replaced by Sequential and how
+    7.  look into cases where List was replaced by Sequential and how
         this can be changed or understood to keep consistency (ie. keep
         everything to List)
 
-6.  Documentation
+7.  Documentation
 
     1.  improve cryptic parts of code to be more easily readable, such
         as workflow for loading pre-computed patterns inside the soft
@@ -344,10 +445,25 @@
     9.  provide description of data structures (eg. data, labels)
         required for training processes
 
-    10. make list of all useful commands for slurm -\> useful to re-use
+    10. shuffling inside of model_utils.py function will always produce
+        the same output given the same input -\> this is because sorting
+        order is always preserved in python\'s sorted function
+
+        1.  shuffling the data outside creates noise by shuffling the
+            order of sorting ties, which would ultimately cause their
+            order to be perturbed in the sort process as well, although
+            there is no clear-cut answer whether this introduce
+            cross-batch variance (perhaps for small batches and not
+            necessarily for large ones)
+
+        2.  change involves internal flat shuffling happening inside
+            function which ensures outside variables are the same, which
+            means random states can be reverted consistently
+
+    11. make list of all useful commands for slurm -\> useful to re-use
         later on
 
-    11. add MIT license when made public
+    12. add MIT license when made public
 
 ## Notes
 
