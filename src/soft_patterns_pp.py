@@ -77,8 +77,8 @@ class SoftPatternClassifier(Module):
         # assign quick class variables
         self.semiring = semiring
         self.vocab = vocab
-        self.embeddings = Embedding.from_pretrained(
-            embeddings, freeze=static_embeddings)
+        self.embeddings = Embedding.from_pretrained(embeddings,
+                                                    freeze=static_embeddings)
         self.total_num_patterns = sum(pattern_specs.values())
         self.mlp = MLP(self.total_num_patterns, mlp_hidden_dim, mlp_num_layers,
                        num_classes)
@@ -131,20 +131,20 @@ class SoftPatternClassifier(Module):
 
         # create transition matrix diagonal and bias tensors
         # normalize diagonal data tensor
-        diag_data_size = (self.total_num_patterns * self.num_diags *
-                          self.max_pattern_length)
-        diag_data = randn(diag_data_size, self.embeddings.embedding_dim)
-        bias_data = randn(diag_data_size, 1)
-        normalize(diag_data)
+        diags_size = (self.total_num_patterns * self.num_diags *
+                      self.max_pattern_length)
+        diags = randn(diags_size, self.embeddings.embedding_dim)
+        bias = randn(diags_size, 1)
+        normalize(diags)
 
         # load diagonal and bias data from patterns if provided
         if pre_computed_patterns is not None:
-            diag_data, bias_data = self.load_pre_computed_patterns(
-                pre_computed_patterns, diag_data, bias_data, pattern_specs)
+            diags, bias = self.load_pre_computed_patterns(
+                pre_computed_patterns, diags, bias, pattern_specs)
 
         # convert both diagonal and bias data into learnable parameters
-        self.diags = Parameter(diag_data)
-        self.bias = Parameter(bias_data)
+        self.diags = Parameter(diags)
+        self.bias = Parameter(bias)
 
         # assign class variables if epsilon transitions are allowed
         if not self.no_epsilons:
@@ -190,8 +190,8 @@ class SoftPatternClassifier(Module):
         max_doc_len = batch.max_doc_len
 
         # load transition scores
-        # mm: (diag_data_size x word_dim) @ (word_dim x batch_vocab_size)
-        # transition_score: diag_data_size x batch_vocab_size
+        # mm: (diags_size x word_dim) @ (word_dim x batch_vocab_size)
+        # transition_score: diags_size x batch_vocab_size
         # these would represent transition scores for each word in vocab
         # TODO: understand why matrix multiplication is required here
         transition_scores = self.semiring.from_float(
@@ -221,28 +221,27 @@ class SoftPatternClassifier(Module):
         return transition_matrices
 
     def load_pre_computed_patterns(
-        self, pre_computed_patterns: List[List[str]], diag_data: torch.Tensor,
-        bias_data: torch.Tensor, pattern_specs: MutableMapping[int, int]
+        self, pre_computed_patterns: List[List[str]], diags: torch.Tensor,
+        bias: torch.Tensor, pattern_specs: MutableMapping[int, int]
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         # extract pattern length as indices with zero counts
         pattern_indices = dict(
             (pattern_length, 0) for pattern_length in pattern_specs)
 
-        # view diag_data and bias_data in appropriate tensor sizes
-        diag_data_size = diag_data.size()[0]
-        diag_data = diag_data.view(self.total_num_patterns, self.num_diags,
-                                   self.max_pattern_length,
-                                   self.embeddings.embedding_dim)
-        bias_data = bias_data.view(self.total_num_patterns, self.num_diags,
-                                   self.max_pattern_length)
+        # view diags and bias in appropriate tensor sizes
+        diags_size = diags.size()[0]
+        diags = diags.view(self.total_num_patterns, self.num_diags,
+                           self.max_pattern_length,
+                           self.embeddings.embedding_dim)
+        bias = bias.view(self.total_num_patterns, self.num_diags,
+                         self.max_pattern_length)
 
         # initialize counter
         count = 0
 
         # pattern indices: which patterns are we loading?
         # the pattern index from which we start loading each pattern length
-        # TODO: unsure why there is offset here
-        # NOTE: probably to get pattern index in diagonal data
+        # NOTE: offset probably to get pattern index in diagonal data
         for (i, pattern_length) in enumerate(pattern_specs.keys()):
             pattern_indices[pattern_length] = count
             count += pattern_specs[pattern_length]
@@ -256,28 +255,28 @@ class SoftPatternClassifier(Module):
             index = pattern_indices[pattern_length]
 
             # loading diagonal and bias for pattern
-            diag, bias = self.load_pattern(pattern)
+            diags_subset, bias_subset = self.load_pattern(pattern)
 
             # updating diagonal and bias
             # NOTE: this is why reformatting was necessary
-            diag_data[index, 1, :(pattern_length - 1), :] = diag
-            bias_data[index, 1, :(pattern_length - 1)] = bias
+            diags[index, 1, :(pattern_length - 1), :] = diags_subset
+            bias[index, 1, :(pattern_length - 1)] = bias_subset
 
             # updating pattern_indices
             # NOTE: this ensures next update does not override current
             pattern_indices[pattern_length] += 1
 
         # return tensors in appropriate data format
-        return diag_data.view(diag_data_size,
-                              self.embeddings.embedding_dim), bias_data.view(
-                                  diag_data_size, 1)
+        return diags.view(diags_size,
+                          self.embeddings.embedding_dim), bias.view(
+                              diags_size, 1)
 
     def load_pattern(self,
                      pattern: List[str]) -> Tuple[torch.Tensor, torch.Tensor]:
         # initialize local variables
-        diag = NUMERICAL_EPSILON * torch.randn(len(pattern),
-                                               self.embeddings.embedding_dim)
-        bias = torch.zeros(len(pattern))
+        diags_subset = NUMERICAL_EPSILON * torch.randn(
+            len(pattern), self.embeddings.embedding_dim)
+        bias_subset = torch.zeros(len(pattern))
 
         # TODO: unsure why this factor value is chosen
         factor = 10
@@ -286,18 +285,19 @@ class SoftPatternClassifier(Module):
         for (i, element) in enumerate(pattern):
             # CW: high bias (we don't care about the identity of the token
             if element == CW_TOKEN:
-                bias[i] = factor
+                bias_subset[i] = factor
             else:
                 # concrete word: we do care about the token (low bias).
-                bias[i] = -factor
+                bias_subset[i] = -factor
                 # if we have a word vector for this element
                 # update the diagonal value with specific vector
                 if element in self.vocab:
-                    diag[i] = FloatTensor(
-                        factor * self.embeddings[self.vocab.index[element]])
+                    diags_subset[i] = FloatTensor(
+                        factor *
+                        self.embeddings(LongTensor(self.vocab(element))))
 
         # return updated tensors
-        return diag, bias
+        return diags_subset, bias_subset
 
     def forward(self, batch: Batch) -> torch.Tensor:
         # start timer and get transition matrices

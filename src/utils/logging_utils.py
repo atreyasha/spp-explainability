@@ -26,7 +26,7 @@ def make_logger(level: str) -> logging.Logger:
         '%(asctime)s | %(levelname)s | %(filename)s | %(funcName)s | %(message)s'
     )
 
-    # set output stread to stdout
+    # set output stream to stdout
     stdout_handler = logging.StreamHandler(sys.stdout)
     stdout_handler.setLevel(logging.DEBUG)
     stdout_handler.setFormatter(formatter)
