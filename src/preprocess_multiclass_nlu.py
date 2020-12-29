@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from tqdm import tqdm
-from typing import List, Dict, Any, Union
+from typing import List, Dict, Any, Generator, Iterable, Tuple
 from nltk import word_tokenize
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import make_logger
@@ -12,7 +11,6 @@ import argparse
 import json
 import csv
 import os
-import re
 
 
 def read_tsv(filename: str) -> List[Any]:
@@ -25,37 +23,35 @@ def mapping(classes: List[str]) -> Dict[str, int]:
     return {element: i for i, element in enumerate(sorted(set(classes)))}
 
 
-def serialize(data: List[str], mapping: Dict[str, int]) -> List[int]:
-    return [mapping[element] for element in data]
+def serialize(data: Iterable[str],
+              mapping: Dict[str, int]) -> Generator[int, None, None]:
+    return (mapping[element] for element in data)
 
 
-def tokenize(data: List[str]) -> List[str]:
-    return [
-        " ".join(word_tokenize(element))
-        for element in tqdm(data, disable=DISABLE_TQDM)
-    ]
+def tokenize(data: Iterable[str]) -> Generator[str, None, None]:
+    return (" ".join(word_tokenize(element)) for element in data)
 
 
-def lowercase(data: List[str]) -> List[str]:
-    return [element.lower() for element in data]
+def lowercase(data: Iterable[str]) -> Generator[str, None, None]:
+    return (element.lower() for element in data)
 
 
-def write_file(full_data: List[List[Union[str, int]]], mapping: Dict[str, int],
-               prefix: str, write_directory: str) -> None:
+def write_file(full_data: Generator[Tuple[str, int], None,
+                                    None], mapping: Dict[str, int],
+               prefix: str, suffix: str, write_directory: str) -> None:
     # make write directory if it does not exist
     os.makedirs(write_directory, exist_ok=True)
     # split compund data into two
     data, labels = zip(*sorted(full_data))
     # write data
-    with open(os.path.join(write_directory, prefix + ".data"),
-              'w') as output_file_stream:
+    with open(
+            os.path.join(write_directory, ".".join([prefix, suffix, "data"])),
+            'w') as output_file_stream:
         for item in data:
             output_file_stream.write("%s\n" % item)
     # write labels
-    with open(
-            os.path.join(write_directory,
-                         re.sub(r"(.*)(\..*)", r"\1", prefix) + ".labels"),
-            'w') as output_file_stream:
+    with open(os.path.join(write_directory, ".".join([prefix, "labels"])),
+              'w') as output_file_stream:
         for item in labels:
             output_file_stream.write("%s\n" % str(item))
 
@@ -98,8 +94,8 @@ def main(args: argparse.Namespace) -> None:
     LOGGER.info("Tokenizing test data")
     test_data = tokenize(test_data)
 
+    # process casing of data
     if not args.truecase:
-        # lowercasing
         LOGGER.info("Lower-casing training data")
         train_data = lowercase(train_data)
         LOGGER.info("Lower-casing validation data")
@@ -112,17 +108,17 @@ def main(args: argparse.Namespace) -> None:
 
     # make everything unique
     LOGGER.info("Making training data unique")
-    train = list(unique(zip(train_data, train_labels)))
+    train = unique(zip(train_data, train_labels))
     LOGGER.info("Making validation data unique")
-    valid = list(unique(zip(valid_data, valid_labels)))
+    valid = unique(zip(valid_data, valid_labels))
     LOGGER.info("Making test data unique")
-    test = list(unique(zip(test_data, test_labels)))
+    test = unique(zip(test_data, test_labels))
 
     # write main files
     LOGGER.info("Sorting and writing data")
-    write_file(train, class_mapping, "train." + suffix, write_directory)
-    write_file(valid, class_mapping, "valid." + suffix, write_directory)
-    write_file(test, class_mapping, "test." + suffix, write_directory)
+    write_file(train, class_mapping, "train", suffix, write_directory)
+    write_file(valid, class_mapping, "valid", suffix, write_directory)
+    write_file(test, class_mapping, "test", suffix, write_directory)
 
     # write class mapping
     with open(os.path.join(write_directory, "class_mapping.json"),
@@ -137,5 +133,4 @@ if __name__ == '__main__':
                  logging_arg_parser()])
     args = parser.parse_args()
     LOGGER = make_logger(args.logging_level)
-    DISABLE_TQDM = args.disable_tqdm
     main(args)
