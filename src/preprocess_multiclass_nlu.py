@@ -16,6 +16,7 @@ import os
 # get root LOGGER in case script is called by another
 LOGGER = logging.getLogger(__name__)
 
+
 def read_tsv(filename: str) -> List[Any]:
     with open(filename, 'r', encoding='utf-8') as input_file_stream:
         raw_list = list(csv.reader(input_file_stream, delimiter='\t'))
@@ -56,7 +57,7 @@ def write_file(full_data: Generator[Tuple[str, int], None,
     with open(os.path.join(write_directory, ".".join([prefix, "labels"])),
               'w') as output_file_stream:
         for item in labels:
-            output_file_stream.write("%s\n" % str(item))
+            output_file_stream.write("%s\n" % item)
 
 
 def main(args: argparse.Namespace) -> None:

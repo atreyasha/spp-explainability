@@ -3,6 +3,7 @@
 
 from tqdm import tqdm
 from glob import glob
+from functools import partial
 from collections import OrderedDict
 from typing import List, Union, Tuple, cast
 from torch import LongTensor
@@ -25,12 +26,24 @@ from .utils.logging_utils import make_logger
 import numpy as np
 import argparse
 import logging
+import signal
 import torch
 import json
+import sys
 import os
 
 # get root LOGGER in case script is called by another
 LOGGER = logging.getLogger(__name__)
+
+# define exit-codes
+FINISHED_EPOCHS = 0
+PATIENCE_THRESHOLD_BEFORE_EPOCHS = 1
+INTERRUPTION = 2
+
+
+def signal_handler(filename: str, *args):
+    save_exit_code(filename, INTERRUPTION)
+    sys.exit(INTERRUPTION)
 
 
 def read_patterns(
@@ -56,6 +69,11 @@ def read_patterns(
 
     # return read object
     return pattern_specs, pre_computed_patterns
+
+
+def save_exit_code(filename: str, code: int) -> None:
+    with open(filename, "w") as output_file_stream:
+        output_file_stream.write("%s\n" % code)
 
 
 def save_checkpoint(epoch: int, model: torch.nn.Module,
@@ -165,6 +183,16 @@ def train(train_data: List[Tuple[List[int], int]],
           max_doc_len: int = -1,
           word_dropout: float = 0,
           patience: int = 30) -> None:
+    # create signal handlers in case script receives termination signals
+    # adapted from: https://stackoverflow.com/a/31709094
+    for specific_signal in [
+            signal.SIGINT, signal.SIGTERM, signal.SIGHUP, signal.SIGQUIT
+    ]:
+        signal.signal(
+            specific_signal,
+            partial(signal_handler,
+                    os.path.join(model_log_directory, "exit_code")))
+
     # instantiate Adam optimizer
     optimizer = Adam(model.parameters(), lr=learning_rate)
 
@@ -351,13 +379,7 @@ def train(train_data: List[Tuple[List[int], int]],
                         (best_valid_loss_index, patience))
 
             # create hook to exit training if patience threshold reached
-            # TODO: what if index is already more than continue train patience
-            # can overcome by changing this to >= and writing note
-            # or otherwise check this before training continues
             if best_valid_loss_index == patience:
-                LOGGER.info(
-                    "%s patience epochs threshold reached, stopping training" %
-                    patience)
                 stop_training = True
 
         # find previous last checkpoint(s)
@@ -376,11 +398,23 @@ def train(train_data: List[Tuple[List[int], int]],
             os.remove(legacy_checkpoint)
 
         # hook to stop training in case patience threshold was reached
+        # and if threshold was reached strictly before the last epoch
         if stop_training:
-            return None
+            if (epoch + 1) < epochs:
+                LOGGER.info(
+                    "%s patience epoch(s) threshold reached, stopping training"
+                    % patience)
+                save_exit_code(os.path.join(model_log_directory, "exit_code"),
+                               PATIENCE_THRESHOLD_BEFORE_EPOCHS)
+                sys.exit(PATIENCE_THRESHOLD_BEFORE_EPOCHS)
 
     # log information at the end of training
-    LOGGER.info("%s training epochs completed, stopping training" % epochs)
+    LOGGER.info("%s training epoch(s) completed, stopping training" % epochs)
+
+    # save exit-code
+    save_exit_code(os.path.join(model_log_directory, "exit_code"),
+                   FINISHED_EPOCHS)
+    sys.exit(FINISHED_EPOCHS)
 
 
 def main(args: argparse.Namespace) -> None:
