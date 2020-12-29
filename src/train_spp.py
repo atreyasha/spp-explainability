@@ -4,7 +4,7 @@
 from tqdm import tqdm
 from glob import glob
 from collections import OrderedDict
-from typing import List, Union, MutableMapping, Tuple, cast
+from typing import List, Union, Tuple, cast
 from torch import LongTensor
 from torch.nn import NLLLoss, Module
 from torch.nn.functional import log_softmax
@@ -30,8 +30,8 @@ import os
 
 
 def read_patterns(
-    filename: str, pattern_specs: MutableMapping[int, int]
-) -> Tuple[MutableMapping[int, int], List[List[str]]]:
+    filename: str, pattern_specs: 'OrderedDict[int, int]'
+) -> Tuple['OrderedDict[int, int]', List[List[str]]]:
     # create new pattern_specs variable copy
     pattern_specs = pattern_specs.copy()
 
@@ -414,7 +414,7 @@ def main(args: argparse.Namespace) -> None:
     pre_computed_patterns = None
 
     # convert pattern_specs string in OrderedDict
-    pattern_specs: MutableMapping[int, int] = OrderedDict(
+    pattern_specs: 'OrderedDict[int, int]' = OrderedDict(
         sorted(
             (
                 [int(y) for y in x.split("-")]  # type: ignore

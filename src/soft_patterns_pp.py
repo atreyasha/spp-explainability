@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import List, Union, Tuple, cast, MutableMapping
+from collections import OrderedDict
+from typing import List, Union, Tuple, cast
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
 from torch.nn import Module, Parameter, ModuleList, Linear, Dropout, Embedding
 from .utils.model_utils import normalize, Semiring, Batch
@@ -55,7 +56,7 @@ class MLP(Module):
 
 class SoftPatternClassifier(Module):
     def __init__(self,
-                 pattern_specs: MutableMapping[int, int],
+                 pattern_specs: 'OrderedDict[int, int]',
                  mlp_hidden_dim: int,
                  mlp_num_layers: int,
                  num_classes: int,
@@ -222,7 +223,7 @@ class SoftPatternClassifier(Module):
 
     def load_pre_computed_patterns(
         self, pre_computed_patterns: List[List[str]], diags: torch.Tensor,
-        bias: torch.Tensor, pattern_specs: MutableMapping[int, int]
+        bias: torch.Tensor, pattern_specs: 'OrderedDict[int, int]'
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         # extract pattern length as indices with zero counts
         pattern_indices = dict(
