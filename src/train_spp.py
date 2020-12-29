@@ -521,51 +521,38 @@ def main(args: argparse.Namespace) -> None:
     LOGGER.info("Total model parameters: %s" %
                 sum(parameter.nelement() for parameter in model.parameters()))
 
-    # define model log directory
-    if args.load_model is None:
-        # create model log directory
-        os.makedirs(model_log_directory, exist_ok=True)
+    # create model log directory
+    os.makedirs(model_log_directory, exist_ok=True)
 
-        # extract relevant arguments for model and training configs
-        soft_patterns_args_dict = soft_patterns_pp_arg_parser().parse_args(
-            "").__dict__
-        remaining_args_dict = {}
-        for key in args.__dict__:
-            if key in soft_patterns_args_dict:
-                soft_patterns_args_dict[key] = getattr(args, key)
-            else:
-                remaining_args_dict[key] = getattr(args, key)
+    # extract relevant arguments for model and training configs
+    soft_patterns_args_dict = soft_patterns_pp_arg_parser().parse_args(
+        "").__dict__
+    remaining_args_dict = {}
+    for key in args.__dict__:
+        if key in soft_patterns_args_dict:
+            soft_patterns_args_dict[key] = getattr(args, key)
+        else:
+            remaining_args_dict[key] = getattr(args, key)
 
-        # dump soft patterns model arguments for posterity
-        with open(os.path.join(model_log_directory, "model_config.json"),
-                  "w") as output_file_stream:
-            json.dump(soft_patterns_args_dict,
-                      output_file_stream,
-                      ensure_ascii=False)
+    # dump soft patterns model arguments for posterity
+    with open(os.path.join(model_log_directory, "model_config.json"),
+              "w") as output_file_stream:
+        json.dump(soft_patterns_args_dict,
+                  output_file_stream,
+                  ensure_ascii=False)
 
-        # dump training arguments for posterity
-        with open(os.path.join(model_log_directory, "training_config.json"),
-                  "w") as output_file_stream:
-            json.dump(remaining_args_dict,
-                      output_file_stream,
-                      ensure_ascii=False)
+    # dump training arguments for posterity
+    with open(os.path.join(model_log_directory, "training_config.json"),
+              "w") as output_file_stream:
+        json.dump(remaining_args_dict, output_file_stream, ensure_ascii=False)
 
-        # dump vocab indices for re-use
-        with open(os.path.join(model_log_directory, "vocab.txt"),
-                  "w") as output_file_stream:
-            dict_list = [(key, value) for key, value in vocab.index.items()]
-            dict_list = sorted(dict_list, key=lambda x: x[1])
-            for item in dict_list:
-                output_file_stream.write("%s\n" % item[0])
-    else:
-        # load model if argument provided
-        # TODO: load with cpu map location -> use earlier device for this
-        state_dict = torch.load(args.load_model)
-        model.load_state_dict(state_dict)
-        # TODO: improve this workflow to borrow from input path
-        # TODO: perhaps pass this workflow directly into train
-        # and use the same directory for continuing training
-        model_log_directory = 'model_retrained'
+    # dump vocab indices for re-use
+    with open(os.path.join(model_log_directory, "vocab.txt"),
+              "w") as output_file_stream:
+        dict_list = [(key, value) for key, value in vocab.index.items()]
+        dict_list = sorted(dict_list, key=lambda x: x[1])
+        for item in dict_list:
+            output_file_stream.write("%s\n" % item[0])
 
     # send model to GPU if present
     if gpu_device is not None:
