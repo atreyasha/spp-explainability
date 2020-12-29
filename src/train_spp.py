@@ -577,8 +577,7 @@ if __name__ == '__main__':
                                          logging_arg_parser()
                                      ])
     args = parser.parse_args()
-    LOGGER = make_logger(args.logging_level,
-                         os.path.join(args.model_log_directory, "session.log"))
+    LOGGER = make_logger(args.logging_level)
     DISABLE_TQDM = args.disable_tqdm
     TQDM_UPDATE_FREQ = args.tqdm_update_freq
     main(args)

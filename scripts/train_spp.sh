@@ -26,8 +26,10 @@ check_help() {
 train_spp() {
   local model_log_directory session_logfile
   model_log_directory="./models/spp_single_train_$(date +%s)"
+  session_logfile="$model_log_directory/session.log"
+  mkdir -p "$model_log_directory"
 
-  python3 -m src.train_spp --embeddings "./data/glove_6B_uncased/glove.6B.300d.txt" --train-data "./data/facebook_multiclass_nlu/clean/train.uncased.data" --train-labels "./data/facebook_multiclass_nlu/clean/train.labels" --valid-data "./data/facebook_multiclass_nlu/clean/valid.uncased.data" --valid-labels "./data/facebook_multiclass_nlu/clean/valid.labels" --model-log-directory "$model_log_directory" --use-scheduler --dynamic-embeddings
+  python3 -m src.train_spp --train-data "./data/facebook_multiclass_nlu/clean/train.uncased.data" --train-labels "./data/facebook_multiclass_nlu/clean/train.labels" --valid-data "./data/facebook_multiclass_nlu/clean/valid.uncased.data" --valid-labels "./data/facebook_multiclass_nlu/clean/valid.labels" --model-log-directory "$model_log_directory" | tee -a "$session_logfile"
 }
 
 # execute function
