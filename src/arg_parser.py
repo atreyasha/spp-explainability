@@ -20,7 +20,7 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
     sopa.add_argument(
         "--semiring",
         help="Specify which semiring to use",
-        default="ProbSemiring",
+        default="MaxPlusSemiring",
         choices=["MaxPlusSemiring", "MaxTimesSemiring", "ProbSemiring"],
         type=str)
     sopa.add_argument("--bias-scale",
@@ -54,8 +54,8 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
                       default=2,
                       type=int)
     # boolean flags
-    sopa.add_argument("--dynamic-embeddings",
-                      help="Enable learning of token embeddings",
+    sopa.add_argument("--static-embeddings",
+                      help="Freeze learning of token embeddings",
                       action='store_true')
     sopa.add_argument("--no-self-loops",
                       help="Do not use self loops",
@@ -92,7 +92,7 @@ def training_arg_parser() -> argparse.ArgumentParser:
     train.add_argument("--embeddings",
                        help=("Path to GloVe token embeddings file. This can "
                              "be ignored if --load-model is provided"),
-                       default="./data/glove_6B/glove.6B.300d.txt",
+                       default="./data/glove_6B_uncased/glove.6B.300d.txt",
                        type=str)
     train.add_argument("--load-model",
                        help="Path to pre-trained model file. This option "
@@ -117,14 +117,14 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        type=float)
     train.add_argument("--word-dropout",
                        help="Word dropout probability",
-                       default=0,
+                       default=0.2,
                        type=float)
     train.add_argument("--clip-threshold",
                        help="Gradient clipping threshold",
                        type=float)
     train.add_argument("--dropout",
                        help="Neuron dropout probability",
-                       default=0,
+                       default=0.2,
                        type=float)
     train.add_argument("--batch-size",
                        help="Batch size for training",
@@ -144,7 +144,7 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        type=int)
     train.add_argument("--epochs",
                        help="Maximum number of training epochs",
-                       default=100,
+                       default=200,
                        type=int)
     train.add_argument("--patience",
                        help="Patience parameter for early stopping",
@@ -156,8 +156,8 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        default=None,
                        type=int)
     # boolean flags
-    train.add_argument("--use-scheduler",
-                       help=("Use learning rate scheduler to reduce "
+    train.add_argument("--disable-scheduler",
+                       help=("Disable learning rate scheduler which reduces "
                              "learning rate on performance plateau"),
                        action='store_true')
     train.add_argument("--gpu",

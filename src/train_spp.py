@@ -151,7 +151,7 @@ def train(train_data: List[Tuple[List[int], int]],
           model_log_directory: str,
           learning_rate: float,
           batch_size: int,
-          use_scheduler: bool = False,
+          disable_scheduler: bool = False,
           gpu_device: Union[torch.device, None] = None,
           clip_threshold: Union[float, None] = None,
           max_doc_len: int = -1,
@@ -170,9 +170,8 @@ def train(train_data: List[Tuple[List[int], int]],
     # initialize tensorboard writer if provided
     writer = SummaryWriter(os.path.join(model_log_directory, "events"))
 
-    # initialize learning rate scheduler if provided
-    # TODO boolean below does not correspond correctly, add verbosity flag
-    if use_scheduler:
+    # initialize learning rate scheduler if relevant
+    if not disable_scheduler:
         LOGGER.info("Initializing learning rate scheduler")
         scheduler: Union[ReduceLROnPlateau, None]
         scheduler = ReduceLROnPlateau(optimizer,
@@ -302,7 +301,7 @@ def train(train_data: List[Tuple[List[int], int]],
                 epoch + 1, epochs, mean_train_loss, train_acc * 100,
                 mean_valid_loss, valid_acc * 100))
 
-        # apply learning rate scheduler after epoc
+        # apply learning rate scheduler after epoch
         if scheduler is not None:
             scheduler.step(valid_loss)
 
@@ -506,7 +505,7 @@ def main(args: argparse.Namespace) -> None:
                                   pre_computed_patterns, args.no_self_loops,
                                   args.shared_self_loops, args.no_epsilons,
                                   args.epsilon_scale, args.self_loop_scale,
-                                  args.dropout, args.dynamic_embeddings)
+                                  args.dropout, args.static_embeddings)
 
     # log diagnostic information on parameter count
     LOGGER.info("Total model parameters: %s" %
@@ -565,7 +564,7 @@ def main(args: argparse.Namespace) -> None:
     # train SoftPatternClassifier
     train(train_data, valid_data, model, num_classes, epochs,
           model_log_directory, args.learning_rate, args.batch_size,
-          args.use_scheduler, gpu_device, args.clip_threshold,
+          args.disable_scheduler, gpu_device, args.clip_threshold,
           args.max_doc_len, args.word_dropout, args.patience)
 
 

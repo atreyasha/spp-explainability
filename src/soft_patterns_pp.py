@@ -70,7 +70,7 @@ class SoftPatternClassifier(Module):
                  epsilon_scale: Union[float, None] = None,
                  self_loop_scale: Union[torch.Tensor, float, None] = None,
                  dropout: float = 0.,
-                 dynamic_embeddings: bool = False) -> None:
+                 static_embeddings: bool = False) -> None:
         # initialize all class properties from torch.nn.Module
         super(SoftPatternClassifier, self).__init__()
 
@@ -78,7 +78,7 @@ class SoftPatternClassifier(Module):
         self.semiring = semiring
         self.vocab = vocab
         self.embeddings = Embedding.from_pretrained(
-            embeddings, freeze=not dynamic_embeddings)
+            embeddings, freeze=static_embeddings)
         self.total_num_patterns = sum(pattern_specs.values())
         self.mlp = MLP(self.total_num_patterns, mlp_hidden_dim, mlp_num_layers,
                        num_classes)
