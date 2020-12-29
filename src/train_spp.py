@@ -24,9 +24,13 @@ from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
 from .utils.logging_utils import make_logger
 import numpy as np
 import argparse
+import logging
 import torch
 import json
 import os
+
+# get root LOGGER in case script is called by another
+LOGGER = logging.getLogger(__name__)
 
 
 def read_patterns(

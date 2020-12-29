@@ -6,8 +6,8 @@ import logging
 
 
 def make_logger(level: str) -> logging.Logger:
-    # create logger
-    logger = logging.getLogger(level)
+    # get root logger
+    logger = logging.getLogger()
 
     # define logger levels
     levels = {
