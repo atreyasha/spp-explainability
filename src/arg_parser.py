@@ -93,11 +93,6 @@ def training_arg_parser() -> argparse.ArgumentParser:
     # add train group for clearer annotations
     train = parser.add_argument_group('optional training arguments')
     # numeric and character-accepting options
-    train.add_argument("--gpu-device",
-                       help=("GPU device specification in case --gpu option"
-                             " is used"),
-                       default="cuda:0",
-                       type=str)
     train.add_argument("--models-log-directory",
                        help=("Directory where all models and tensorboard logs "
                              "will be saved"),
@@ -145,19 +140,32 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        help="Patience parameter for early stopping",
                        default=30,
                        type=int)
-    train.add_argument("--num-threads",
-                       help=("Set the number of threads used for intraop "
-                             "parallelism on CPU"),
-                       default=None,
-                       type=int)
     # boolean flags
     train.add_argument("--disable-scheduler",
                        help=("Disable learning rate scheduler which reduces "
                              "learning rate on performance plateau"),
                        action='store_true')
-    train.add_argument("--gpu",
-                       help="Use GPU hardware acceleration",
-                       action='store_true')
+    return parser
+
+
+def hardware_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(add_help=False)
+    # add preprocess group
+    hardware = parser.add_argument_group(
+        'optional hardware-acceleration arguments')
+    hardware.add_argument("--gpu-device",
+                          help=("GPU device specification in case --gpu option"
+                                " is used"),
+                          default="cuda:0",
+                          type=str)
+    hardware.add_argument("--num-threads",
+                          help=("Set the number of threads used for intraop "
+                                "parallelism on CPU"),
+                          default=None,
+                          type=int)
+    hardware.add_argument("--gpu",
+                          help="Use GPU hardware acceleration",
+                          action='store_true')
     return parser
 
 

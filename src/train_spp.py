@@ -21,7 +21,8 @@ from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 LogSpaceMaxTimesSemiring, MaxPlusSemiring)
 from .soft_patterns_pp import SoftPatternClassifier
 from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
-                         logging_arg_parser, tqdm_arg_parser)
+                         logging_arg_parser, tqdm_arg_parser,
+                         hardware_arg_parser)
 from .utils.logging_utils import (stdout_root_logger, add_unique_file_handler,
                                   remove_all_file_handlers)
 import numpy as np
@@ -569,13 +570,15 @@ def main(args: argparse.Namespace) -> None:
     # extract relevant arguments for model and training configs
     soft_patterns_args_dict = soft_patterns_pp_arg_parser().parse_args(
         "").__dict__
+    hardware_args_dict = hardware_arg_parser().parse_args("").__dict__
     logging_args_dict = logging_arg_parser().parse_args("").__dict__
     tqdm_args_dict = tqdm_arg_parser().parse_args("").__dict__
     training_args_dict = {}
     for key in args.__dict__:
         if key in soft_patterns_args_dict:
             soft_patterns_args_dict[key] = getattr(args, key)
-        elif key not in logging_args_dict and key not in tqdm_args_dict:
+        elif (key not in logging_args_dict) and (
+                key not in tqdm_args_dict) and (key not in hardware_args_dict):
             training_args_dict[key] = getattr(args, key)
 
     # dump soft patterns model arguments for posterity
@@ -598,10 +601,6 @@ def main(args: argparse.Namespace) -> None:
         for item in dict_list:
             output_file_stream.write("%s\n" % item[0])
 
-    # send model to GPU if present
-    if gpu_device is not None:
-        model.to(gpu_device)  # type: ignore
-
     # train SoftPatternClassifier
     train(train_data, valid_data, model, num_classes, epochs,
           model_log_directory, args.learning_rate, args.batch_size,
@@ -613,6 +612,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=ArgparseFormatter,
                                      parents=[
                                          training_arg_parser(),
+                                         hardware_arg_parser(),
                                          soft_patterns_pp_arg_parser(),
                                          logging_arg_parser(),
                                          tqdm_arg_parser()
