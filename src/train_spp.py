@@ -22,7 +22,8 @@ from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
 from .soft_patterns_pp import SoftPatternClassifier
 from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
                          logging_arg_parser)
-from .utils.logging_utils import make_logger
+from .utils.logging_utils import (stdout_root_logger, add_unique_file_handler,
+                                  remove_all_file_handlers)
 import numpy as np
 import argparse
 import logging
@@ -192,6 +193,11 @@ def train(train_data: List[Tuple[List[int], int]],
             specific_signal,
             partial(signal_handler,
                     os.path.join(model_log_directory, "exit_code")))
+
+    # update LOGGER object with file handler
+    global LOGGER
+    LOGGER = add_unique_file_handler(
+        LOGGER, os.path.join(model_log_directory, "session.log"))
 
     # instantiate Adam optimizer
     optimizer = Adam(model.parameters(), lr=learning_rate)
@@ -404,6 +410,8 @@ def train(train_data: List[Tuple[List[int], int]],
                 LOGGER.info(
                     "%s patience epoch(s) threshold reached, stopping training"
                     % patience)
+                # update LOGGER objecobject to remove file handler
+                LOGGER = remove_all_file_handlers(LOGGER)
                 save_exit_code(os.path.join(model_log_directory, "exit_code"),
                                PATIENCE_THRESHOLD_BEFORE_EPOCHS)
                 sys.exit(PATIENCE_THRESHOLD_BEFORE_EPOCHS)
@@ -411,7 +419,8 @@ def train(train_data: List[Tuple[List[int], int]],
     # log information at the end of training
     LOGGER.info("%s training epoch(s) completed, stopping training" % epochs)
 
-    # save exit-code
+    # save exit-code and final processes
+    LOGGER = remove_all_file_handlers(LOGGER)
     save_exit_code(os.path.join(model_log_directory, "exit_code"),
                    FINISHED_EPOCHS)
     sys.exit(FINISHED_EPOCHS)
@@ -607,7 +616,7 @@ if __name__ == '__main__':
                                          logging_arg_parser()
                                      ])
     args = parser.parse_args()
-    LOGGER = make_logger(args.logging_level)
+    LOGGER = stdout_root_logger(args.logging_level)
     DISABLE_TQDM = args.disable_tqdm
     TQDM_UPDATE_FREQ = args.tqdm_update_freq
     main(args)

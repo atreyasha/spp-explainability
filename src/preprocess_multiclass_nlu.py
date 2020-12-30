@@ -4,7 +4,7 @@
 from typing import List, Dict, Any, Generator, Iterable, Tuple
 from nltk import word_tokenize
 from .utils.parser_utils import ArgparseFormatter
-from .utils.logging_utils import make_logger
+from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import unique
 from .arg_parser import preprocess_arg_parser, logging_arg_parser
 import argparse
@@ -136,5 +136,5 @@ if __name__ == '__main__':
         parents=[preprocess_arg_parser(),
                  logging_arg_parser()])
     args = parser.parse_args()
-    LOGGER = make_logger(args.logging_level)
+    LOGGER = stdout_root_logger(args.logging_level)
     main(args)
