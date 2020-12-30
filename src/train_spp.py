@@ -45,7 +45,12 @@ INTERRUPTION = 2
 
 def signal_handler(filename: str, *args):
     save_exit_code(filename, INTERRUPTION)
-    sys.exit(INTERRUPTION)
+    sys.exit()
+
+
+def save_exit_code(filename: str, code: int) -> None:
+    with open(filename, "w") as output_file_stream:
+        output_file_stream.write("%s\n" % code)
 
 
 def read_patterns(
@@ -54,7 +59,7 @@ def read_patterns(
     # create new pattern_specs variable copy
     pattern_specs = pattern_specs.copy()
 
-    # read pre_compute_patterns into a list
+    # read pre_computed_patterns into a list
     with open(filename, encoding='utf-8') as input_file_stream:
         pre_computed_patterns = [
             line.rstrip().split() for line in input_file_stream
@@ -71,11 +76,6 @@ def read_patterns(
 
     # return read object
     return pattern_specs, pre_computed_patterns
-
-
-def save_exit_code(filename: str, code: int) -> None:
-    with open(filename, "w") as output_file_stream:
-        output_file_stream.write("%s\n" % code)
 
 
 def save_checkpoint(epoch: int, model: torch.nn.Module,

@@ -69,7 +69,7 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
 def training_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add required group
-    required = parser.add_argument_group('required arguments')
+    required = parser.add_argument_group('required training arguments')
     required.add_argument("--embeddings",
                           help="Path to GloVe token embeddings file",
                           required=True,
@@ -145,6 +145,18 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        help=("Disable learning rate scheduler which reduces "
                              "learning rate on performance plateau"),
                        action='store_true')
+    return parser
+
+
+def resume_training_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(add_help=False)
+    required = parser.add_argument_group('required training arguments')
+    # add preprocess group
+    required.add_argument("--model-log-directory",
+                          help=("Base model directory containing model "
+                                "data to be resumed for training"),
+                          required=True,
+                          type=str)
     return parser
 
 

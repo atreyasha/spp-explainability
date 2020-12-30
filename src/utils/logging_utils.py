@@ -48,8 +48,8 @@ def remove_all_file_handlers(logger: logging.Logger) -> logging.Logger:
     return logger
 
 
-def add_unique_file_handler(logger: logging.Logger,
-                            filename: str) -> logging.Logger:
+def add_file_handler(logger: logging.Logger,
+                     filename: str) -> logging.Logger:
     # create formatter
     formatter = logging.Formatter(FORMAT)
 
