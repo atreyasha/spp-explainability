@@ -399,11 +399,15 @@ def train(train_data: List[Tuple[List[int], int]],
                                     "again from scratch")
         model_checkpoint = torch.load(model_checkpoint,
                                       map_location=torch.device("cpu"))
-        model.load_state_dict(model_checkpoint["model_state_dict"])
-        current_epoch = model_checkpoint["epoch"] + 1
-        best_valid_loss = model_checkpoint["best_valid_loss"]
-        best_valid_loss_index = model_checkpoint["best_valid_loss_index"]
-        best_valid_acc = model_checkpoint["best_valid_acc"]
+        model.load_state_dict(
+            model_checkpoint["model_state_dict"])  # type: ignore
+        current_epoch: int = model_checkpoint["epoch"] + 1  # type: ignore
+        best_valid_loss: float = model_checkpoint[  # type: ignore
+            "best_valid_loss"]  # type: ignore
+        best_valid_loss_index: int = model_checkpoint[  # type: ignore
+            "best_valid_loss_index"]  # type: ignore
+        best_valid_acc: float = model_checkpoint[  # type: ignore
+            "best_valid_acc"]  # type: ignore
 
         # check for edge-case failures
         if current_epoch >= epochs:
@@ -437,7 +441,8 @@ def train(train_data: List[Tuple[List[int], int]],
 
     # load optimizer state dictionary
     if resume_training:
-        optimizer.load_state_dict(model_checkpoint["optimizer_state_dict"])
+        optimizer.load_state_dict(
+            model_checkpoint["optimizer_state_dict"])  # type: ignore
 
     # instantiate negative log-likelihood loss which is summed over batch
     loss_function = NLLLoss(weight=None, reduction="sum")
@@ -458,14 +463,17 @@ def train(train_data: List[Tuple[List[int], int]],
                                       patience=10,
                                       verbose=True)
         if resume_training:
-            scheduler.load_state_dict(model_checkpoint["scheduler_state_dict"])
+            scheduler.load_state_dict(
+                model_checkpoint["scheduler_state_dict"])  # type: ignore
     else:
         scheduler = None
 
     # set numpy and torch RNG back to previous states
     if resume_training:
-        np.random.set_state(model_checkpoint["numpy_random_state"])
-        torch.random.set_rng_state(model_checkpoint["torch_random_state"])
+        np.random.set_state(
+            model_checkpoint["numpy_random_state"])  # type: ignore
+        torch.random.set_rng_state(
+            model_checkpoint["torch_random_state"])  # type: ignore
 
     # loop over epochs
     for epoch in range(current_epoch, epochs):
