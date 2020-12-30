@@ -430,9 +430,6 @@ def main(args: argparse.Namespace) -> None:
         LOGGER.info("Using specified number of CPU threads: %s" %
                     args.num_threads)
 
-    # specify cpu device
-    cpu_device = torch.device("cpu")
-
     # specify gpu device if relevant
     if args.gpu:
         gpu_device: Union[torch.device, None]
