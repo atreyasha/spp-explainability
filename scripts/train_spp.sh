@@ -5,7 +5,7 @@ set -e
 usage() {
   cat <<EOF
 Usage: train_spp.sh [-h|--help]
-Execute single SoPa++ training run using repository defaults
+Execute single SoPa++ model training run using repository defaults
 
 Optional arguments:
   -h, --help    Show this help message and exit
