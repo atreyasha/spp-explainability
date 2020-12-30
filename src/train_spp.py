@@ -14,10 +14,10 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tensorboardX import SummaryWriter
 from .utils.parser_utils import ArgparseFormatter
 from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
-                               read_embeddings)
+                               read_embeddings, Vocab)
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 to_cuda, argmax, enable_gradient_clipping,
-                                timestamp, Batch, ProbSemiring,
+                                timestamp, Batch, Semiring, ProbSemiring,
                                 LogSpaceMaxTimesSemiring, MaxPlusSemiring)
 from .utils.logging_utils import (stdout_root_logger, add_file_handler,
                                   remove_all_file_handlers)
@@ -51,6 +51,194 @@ def signal_handler(filename: str, *args):
 def save_exit_code(filename: str, code: int) -> None:
     with open(filename, "w") as output_file_stream:
         output_file_stream.write("%s\n" % code)
+
+
+def set_hardware(args: argparse.Namespace) -> Union[torch.device, None]:
+    # set torch number of threads
+    if args.num_threads is None:
+        LOGGER.info("Using default number of CPU threads: %s" %
+                    torch.get_num_threads())
+    else:
+        torch.set_num_threads(args.num_threads)
+        LOGGER.info("Using specified number of CPU threads: %s" %
+                    args.num_threads)
+
+    # specify gpu device if relevant
+    if args.gpu:
+        gpu_device: Union[torch.device, None]
+        gpu_device = torch.device(args.gpu_device)
+        LOGGER.info("Using GPU device: %s" % args.gpu_device)
+    else:
+        gpu_device = None
+
+    # return device
+    return gpu_device
+
+
+def get_patterns(
+    args: argparse.Namespace
+) -> Tuple['OrderedDict[int, int]', Union[List[List[str]], None]]:
+    # set default temporary value for pre_computed_patterns
+    pre_computed_patterns = None
+
+    # convert pattern_specs string in OrderedDict
+    pattern_specs: 'OrderedDict[int, int]' = OrderedDict(
+        sorted(
+            (
+                [int(y) for y in x.split("-")]  # type: ignore
+                for x in args.patterns.split("_")),
+            key=lambda t: t[0]))
+
+    # read pre_computed_patterns if it exists, format pattern_specs accordingly
+    if args.pre_computed_patterns is not None:
+        pattern_specs, pre_computed_patterns = read_patterns(
+            args.pre_computed_patterns, pattern_specs)
+        pattern_specs = OrderedDict(
+            sorted(pattern_specs.items(), key=lambda t: t[0]))
+
+    # log diagnositc information on input patterns
+    LOGGER.info("Patterns: %s" % pattern_specs)
+
+    # return final objects
+    return pattern_specs, pre_computed_patterns
+
+
+def set_random_seed(args: argparse.Namespace) -> None:
+    # set global random seed if specified
+    if args.seed != -1:
+        torch.manual_seed(args.seed)
+        np.random.seed(args.seed)
+
+
+def get_vocab(args: argparse.Namespace) -> Vocab:
+    # read valid and train vocabularies
+    train_vocab = vocab_from_text(args.train_data)
+    LOGGER.info("Training vocabulary size: %s" % len(train_vocab))
+    valid_vocab = vocab_from_text(args.valid_data)
+    LOGGER.info("Validation vocabulary size: %s" % len(valid_vocab))
+
+    # combine valid and train vocabularies into combined object
+    vocab_combined = valid_vocab | train_vocab
+    LOGGER.info("Combined vocabulary size: %s" % len(vocab_combined))
+
+    # return final Vocab object
+    return vocab_combined
+
+
+def get_embeddings(args: argparse.Namespace,
+                   vocab_combined: Vocab) -> Tuple[Vocab, torch.Tensor, int]:
+    # read embeddings file and output intersected vocab
+    vocab, embeddings, word_dim = read_embeddings(args.embeddings,
+                                                  vocab_combined)
+    # convert embeddings to torch FloatTensor
+    embeddings = np.vstack(embeddings).astype(np.float32)
+    embeddings = torch.from_numpy(embeddings)
+
+    # return final tuple
+    return vocab, embeddings, word_dim
+
+
+def get_vocab_diagnostics(vocab: Vocab, vocab_combined: Vocab,
+                          word_dim: int) -> None:
+    # show output of tokens lost during vocabulary extraction
+    missing = [
+        token for token in vocab_combined.names if token not in vocab.names
+    ]
+    LOGGER.info("GloVe embedding dimensions: %s" % word_dim)
+    LOGGER.info("GloVe-intersected vocabulary size: %s" % len(vocab))
+    LOGGER.info("Number of tokens not found in GloVe vocabulary: %s" %
+                len(missing))
+    LOGGER.info("Lost tokens: %s" % missing)
+
+
+def get_training_validation_data(
+    args: argparse.Namespace, pattern_specs: 'OrderedDict[int, int]',
+    vocab: Vocab, num_train_instances: int
+) -> Tuple[List[Tuple[List[int], int]], List[Tuple[List[int], int]], int]:
+    # set number of padding tokens as one less than the longest pattern length
+    num_padding_tokens = max(list(pattern_specs.keys())) - 1
+
+    # read train data
+    train_input, _ = read_docs(args.train_data,
+                               vocab,
+                               num_padding_tokens=num_padding_tokens)
+    train_input = cast(List[List[int]], train_input)
+    train_labels = read_labels(args.train_labels)
+    num_classes = len(set(train_labels))
+    train_data = list(zip(train_input, train_labels))
+
+    # read validation data
+    valid_input, _ = read_docs(args.valid_data,
+                               vocab,
+                               num_padding_tokens=num_padding_tokens)
+    valid_input = cast(List[List[int]], valid_input)
+    valid_labels = read_labels(args.valid_labels)
+    valid_data = list(zip(valid_input, valid_labels))
+
+    # truncate data if necessary
+    if num_train_instances is not None:
+        train_data = train_data[:num_train_instances]
+        valid_data = valid_data[:num_train_instances]
+
+    # log diagnostic information
+    LOGGER.info("Number of classes: %s" % num_classes)
+    LOGGER.info("Training instances: %s" % len(train_data))
+    LOGGER.info("Validation instances: %s" % len(valid_data))
+
+    # return final tuple object
+    return train_data, valid_data, num_classes
+
+
+def get_semiring(args: argparse.Namespace) -> Semiring:
+    # define semiring as per argument provided and log
+    if args.semiring == "MaxPlusSemiring":
+        semiring = MaxPlusSemiring
+    elif args.semiring == "MaxTimesSemiring":
+        semiring = LogSpaceMaxTimesSemiring
+    elif args.semiring == "ProbSemiring":
+        semiring = ProbSemiring
+    LOGGER.info("Semiring: %s" % args.semiring)
+    return semiring
+
+
+def dump_single_train_files(args: argparse.Namespace, model_log_directory: str,
+                            vocab: Vocab, word_dim: int) -> None:
+    # extract relevant arguments for model and training configs
+    soft_patterns_args_dict = soft_patterns_pp_arg_parser().parse_args(
+        "").__dict__
+    hardware_args_dict = hardware_arg_parser().parse_args("").__dict__
+    logging_args_dict = logging_arg_parser().parse_args("").__dict__
+    tqdm_args_dict = tqdm_arg_parser().parse_args("").__dict__
+    training_args_dict = {}
+    for key in args.__dict__:
+        if key in soft_patterns_args_dict:
+            soft_patterns_args_dict[key] = getattr(args, key)
+        elif (key not in logging_args_dict) and (
+                key not in tqdm_args_dict) and (key not in hardware_args_dict):
+            training_args_dict[key] = getattr(args, key)
+
+    # manually update model configuration with word_dim; it is needed later
+    soft_patterns_args_dict["word_dim"] = word_dim
+
+    # dump soft patterns model arguments for posterity
+    with open(os.path.join(model_log_directory, "model_config.json"),
+              "w") as output_file_stream:
+        json.dump(soft_patterns_args_dict,
+                  output_file_stream,
+                  ensure_ascii=False)
+
+    # dump training arguments for posterity
+    with open(os.path.join(model_log_directory, "training_config.json"),
+              "w") as output_file_stream:
+        json.dump(training_args_dict, output_file_stream, ensure_ascii=False)
+
+    # dump vocab indices for re-use
+    with open(os.path.join(model_log_directory, "vocab.txt"),
+              "w") as output_file_stream:
+        dict_list = [(key, value) for key, value in vocab.index.items()]
+        dict_list = sorted(dict_list, key=lambda x: x[1])
+        for item in dict_list:
+            output_file_stream.write("%s\n" % item[0])
 
 
 def read_patterns(
@@ -198,16 +386,60 @@ def train(train_data: List[Tuple[List[int], int]],
             partial(signal_handler,
                     os.path.join(model_log_directory, "exit_code")))
 
-    # update LOGGER object with file handler
-    global LOGGER
-    LOGGER = add_unique_file_handler(
-        LOGGER, os.path.join(model_log_directory, "session.log"))
+    # load model checkpoint if training is being resumed
+    if resume_training:
+        try:
+            model_checkpoint = glob(
+                os.path.join(model_log_directory, "*last*.pt"))[0]
+        except IndexError:
+            raise FileNotFoundError("Model log directory present, but model "
+                                    "checkpoint with '.pt' "
+                                    "extension missing. Our suggestion is to "
+                                    "train the model from "
+                                    "again from scratch")
+        model_checkpoint = torch.load(model_checkpoint,
+                                      map_location=torch.device("cpu"))
+        model.load_state_dict(model_checkpoint["model_state_dict"])
+        current_epoch = model_checkpoint["epoch"] + 1
+        best_valid_loss = model_checkpoint["best_valid_loss"]
+        best_valid_loss_index = model_checkpoint["best_valid_loss_index"]
+        best_valid_acc = model_checkpoint["best_valid_acc"]
+
+        # check for edge-case failures
+        if current_epoch >= epochs:
+            # log information at the end of training
+            LOGGER.info("%s training epoch(s) previously completed, exiting" %
+                        epochs)
+            # save exit-code and final processes
+            save_exit_code(os.path.join(model_log_directory, "exit_code"),
+                           FINISHED_EPOCHS)
+            return None
+        elif best_valid_loss_index >= patience:
+            LOGGER.info(
+                "%s patience epoch(s) threshold previously reached, exiting" %
+                patience)
+            # save exit-code and final processes
+            save_exit_code(os.path.join(model_log_directory, "exit_code"),
+                           PATIENCE_THRESHOLD_BEFORE_EPOCHS)
+            return None
+    else:
+        current_epoch = 0
+        best_valid_loss = 100000000.
+        best_valid_loss_index = 0
+        best_valid_acc = -1.
+
+    # send model to correct device
+    if gpu_device is not None:
+        model.to(gpu_device)
 
     # instantiate Adam optimizer
     optimizer = Adam(model.parameters(), lr=learning_rate)
 
-    # instantiate negative log-likelihood loss
-    # NOTE: reduce by summing over batch instead of default 'mean'
+    # load optimizer state dictionary
+    if resume_training:
+        optimizer.load_state_dict(model_checkpoint["optimizer_state_dict"])
+
+    # instantiate negative log-likelihood loss which is summed over batch
     loss_function = NLLLoss(weight=None, reduction="sum")
 
     # enable gradient clipping in-place if provided
@@ -225,16 +457,18 @@ def train(train_data: List[Tuple[List[int], int]],
                                       factor=0.1,
                                       patience=10,
                                       verbose=True)
+        if resume_training:
+            scheduler.load_state_dict(model_checkpoint["scheduler_state_dict"])
     else:
         scheduler = None
 
-    # initialize floats for re-use
-    best_valid_loss = 100000000.
-    best_valid_loss_index = 0
-    best_valid_acc = -1.
+    # set numpy and torch RNG back to previous states
+    if resume_training:
+        np.random.set_state(model_checkpoint["numpy_random_state"])
+        torch.random.set_rng_state(model_checkpoint["torch_random_state"])
 
     # loop over epochs
-    for epoch in range(epochs):
+    for epoch in range(current_epoch, epochs):
         # set model on train mode
         model.train()
 
@@ -414,143 +648,63 @@ def train(train_data: List[Tuple[List[int], int]],
                 LOGGER.info(
                     "%s patience epoch(s) threshold reached, stopping training"
                     % patience)
-                # update LOGGER objecobject to remove file handler
-                LOGGER = remove_all_file_handlers(LOGGER)
+                # save exit-code and final processes
                 save_exit_code(os.path.join(model_log_directory, "exit_code"),
                                PATIENCE_THRESHOLD_BEFORE_EPOCHS)
-                sys.exit(PATIENCE_THRESHOLD_BEFORE_EPOCHS)
+                return None
 
     # log information at the end of training
     LOGGER.info("%s training epoch(s) completed, stopping training" % epochs)
 
     # save exit-code and final processes
-    LOGGER = remove_all_file_handlers(LOGGER)
     save_exit_code(os.path.join(model_log_directory, "exit_code"),
                    FINISHED_EPOCHS)
-    sys.exit(FINISHED_EPOCHS)
 
 
 def main(args: argparse.Namespace) -> None:
+    # create model log directory
+    model_log_directory = os.path.join(args.models_log_directory,
+                                       "spp_single_train_" + timestamp())
+    os.makedirs(model_log_directory, exist_ok=True)
+
+    # update LOGGER object with file handler
+    global LOGGER
+    LOGGER = add_file_handler(LOGGER,
+                              os.path.join(model_log_directory, "session.log"))
+
     # log namespace arguments
     LOGGER.info(args)
 
-    # set torch number of threads
-    if args.num_threads is None:
-        LOGGER.info("Using default number of CPU threads: %s" %
-                    torch.get_num_threads())
-    else:
-        torch.set_num_threads(args.num_threads)
-        LOGGER.info("Using specified number of CPU threads: %s" %
-                    args.num_threads)
-
-    # specify gpu device if relevant
-    if args.gpu:
-        gpu_device: Union[torch.device, None]
-        gpu_device = torch.device(args.gpu_device)
-        LOGGER.info("Using GPU device: %s" % args.gpu_device)
-    else:
-        gpu_device = None
+    # set gpu and cpu hardware
+    gpu_device = set_hardware(args)
 
     # read important arguments and define as local variables
     num_train_instances = args.num_train_instances
     mlp_hidden_dim = args.mlp_hidden_dim
     mlp_num_layers = args.mlp_num_layers
-    models_log_directory = args.models_log_directory
     epochs = args.epochs
 
-    # set default temporary value for pre_computed_patterns
-    pre_computed_patterns = None
+    # get relevant patterns
+    pattern_specs, pre_computed_patterns = get_patterns(args)
 
-    # convert pattern_specs string in OrderedDict
-    pattern_specs: 'OrderedDict[int, int]' = OrderedDict(
-        sorted(
-            (
-                [int(y) for y in x.split("-")]  # type: ignore
-                for x in args.patterns.split("_")),
-            key=lambda t: t[0]))
+    # set initial random seeds
+    set_random_seed(args)
 
-    # read pre_computed_patterns if it exists, format pattern_specs accordingly
-    if args.pre_computed_patterns is not None:
-        pattern_specs, pre_computed_patterns = read_patterns(
-            args.pre_computed_patterns, pattern_specs)
-        pattern_specs = OrderedDict(
-            sorted(pattern_specs.items(), key=lambda t: t[0]))
+    # get input vocab
+    vocab_combined = get_vocab(args)
 
-    # log diagnositc information on input patterns
-    LOGGER.info("Patterns: %s" % pattern_specs)
+    # get final vocab, embeddings and word_dim
+    vocab, embeddings, word_dim = get_embeddings(args, vocab_combined)
 
-    # set global random seed if specified
-    if args.seed != -1:
-        torch.manual_seed(args.seed)
-        np.random.seed(args.seed)
+    # show vocabulary diagnostics
+    get_vocab_diagnostics(vocab, vocab_combined, word_dim)
 
-    # read valid and train vocabularies
-    train_vocab = vocab_from_text(args.train_data)
-    LOGGER.info("Training vocabulary size: %s" % len(train_vocab))
-    valid_vocab = vocab_from_text(args.valid_data)
-    LOGGER.info("Validation vocabulary size: %s" % len(valid_vocab))
+    # get training and validation data
+    train_data, valid_data, num_classes = get_training_validation_data(
+        args, pattern_specs, vocab, num_train_instances)
 
-    # combine valid and train vocabularies into combined object
-    vocab_combined = valid_vocab | train_vocab
-    LOGGER.info("Combined vocabulary size: %s" % len(vocab_combined))
-
-    # read embeddings file and output intersected vocab
-    # embeddings and word-vector dimensionality
-    # convert embeddings to torch FloatTensor
-    vocab, embeddings, word_dim = read_embeddings(args.embeddings,
-                                                  vocab_combined)
-    embeddings = np.vstack(embeddings).astype(np.float32)
-    embeddings = torch.from_numpy(embeddings)
-
-    # show output of tokens lost during vocabulary extraction
-    missing = [
-        token for token in vocab_combined.names if token not in vocab.names
-    ]
-    LOGGER.info("GloVe embedding dimensions: %s" % word_dim)
-    LOGGER.info("GloVe-intersected vocabulary size: %s" % len(vocab))
-    LOGGER.info("Number of tokens not found in GloVe vocabulary: %s" %
-                len(missing))
-    LOGGER.info("Lost tokens: %s" % missing)
-
-    # set number of padding tokens as one less than the longest pattern length
-    # TODO: understand why this is set and if this is necessary
-    num_padding_tokens = max(list(pattern_specs.keys())) - 1
-
-    # read train data
-    train_input, _ = read_docs(args.train_data,
-                               vocab,
-                               num_padding_tokens=num_padding_tokens)
-    train_input = cast(List[List[int]], train_input)
-    train_labels = read_labels(args.train_labels)
-    num_classes = len(set(train_labels))
-    train_data = list(zip(train_input, train_labels))
-
-    # read validation data
-    valid_input, _ = read_docs(args.valid_data,
-                               vocab,
-                               num_padding_tokens=num_padding_tokens)
-    valid_input = cast(List[List[int]], valid_input)
-    valid_labels = read_labels(args.valid_labels)
-    valid_data = list(zip(valid_input, valid_labels))
-
-    # truncate data if necessary
-    if num_train_instances is not None:
-        train_data = train_data[:num_train_instances]
-        valid_data = valid_data[:num_train_instances]
-
-    # log diagnostic information
-    LOGGER.info("Number of classes: %s" % num_classes)
-    LOGGER.info("Training instances: %s" % len(train_data))
-    LOGGER.info("Validation instances: %s" % len(valid_data))
-
-    # define semiring as per argument provided and log
-    if args.semiring == "MaxPlusSemiring":
-        semiring = MaxPlusSemiring
-    elif args.semiring == "MaxTimesSemiring":
-        semiring = LogSpaceMaxTimesSemiring
-    elif args.semiring == "ProbSemiring":
-        semiring = ProbSemiring
-    LOGGER.info("Semiring: %s" % args.semiring)
+    # get semiring
+    semiring = get_semiring(args)
 
     # create SoftPatternClassifier
     model = SoftPatternClassifier(pattern_specs, mlp_hidden_dim,
@@ -565,44 +719,8 @@ def main(args: argparse.Namespace) -> None:
     LOGGER.info("Total model parameters: %s" %
                 sum(parameter.nelement() for parameter in model.parameters()))
 
-    # create model log directory
-    model_log_directory = os.path.join(models_log_directory,
-                                       "spp_single_train_" + timestamp())
-    os.makedirs(model_log_directory, exist_ok=True)
-
-    # extract relevant arguments for model and training configs
-    soft_patterns_args_dict = soft_patterns_pp_arg_parser().parse_args(
-        "").__dict__
-    hardware_args_dict = hardware_arg_parser().parse_args("").__dict__
-    logging_args_dict = logging_arg_parser().parse_args("").__dict__
-    tqdm_args_dict = tqdm_arg_parser().parse_args("").__dict__
-    training_args_dict = {}
-    for key in args.__dict__:
-        if key in soft_patterns_args_dict:
-            soft_patterns_args_dict[key] = getattr(args, key)
-        elif (key not in logging_args_dict) and (
-                key not in tqdm_args_dict) and (key not in hardware_args_dict):
-            training_args_dict[key] = getattr(args, key)
-
-    # dump soft patterns model arguments for posterity
-    with open(os.path.join(model_log_directory, "model_config.json"),
-              "w") as output_file_stream:
-        json.dump(soft_patterns_args_dict,
-                  output_file_stream,
-                  ensure_ascii=False)
-
-    # dump training arguments for posterity
-    with open(os.path.join(model_log_directory, "training_config.json"),
-              "w") as output_file_stream:
-        json.dump(training_args_dict, output_file_stream, ensure_ascii=False)
-
-    # dump vocab indices for re-use
-    with open(os.path.join(model_log_directory, "vocab.txt"),
-              "w") as output_file_stream:
-        dict_list = [(key, value) for key, value in vocab.index.items()]
-        dict_list = sorted(dict_list, key=lambda x: x[1])
-        for item in dict_list:
-            output_file_stream.write("%s\n" % item[0])
+    # dump single training files
+    dump_single_train_files(args, model_log_directory, vocab, word_dim)
 
     # train SoftPatternClassifier
     train(train_data, valid_data, model, num_classes, epochs,
