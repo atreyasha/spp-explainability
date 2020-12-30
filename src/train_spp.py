@@ -19,12 +19,12 @@ from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 to_cuda, argmax, enable_gradient_clipping,
                                 timestamp, Batch, ProbSemiring,
                                 LogSpaceMaxTimesSemiring, MaxPlusSemiring)
-from .soft_patterns_pp import SoftPatternClassifier
+from .utils.logging_utils import (stdout_root_logger, add_file_handler,
+                                  remove_all_file_handlers)
 from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
                          logging_arg_parser, tqdm_arg_parser,
                          hardware_arg_parser)
-from .utils.logging_utils import (stdout_root_logger, add_unique_file_handler,
-                                  remove_all_file_handlers)
+from .soft_patterns_pp import SoftPatternClassifier
 import numpy as np
 import argparse
 import logging
@@ -184,7 +184,10 @@ def train(train_data: List[Tuple[List[int], int]],
           clip_threshold: Union[float, None] = None,
           max_doc_len: int = -1,
           word_dropout: float = 0,
-          patience: int = 30) -> None:
+          patience: int = 30,
+          resume_training: bool = False,
+          disable_tqdm: bool = False,
+          tqdm_update_freq: int = 1) -> None:
     # create signal handlers in case script receives termination signals
     # adapted from: https://stackoverflow.com/a/31709094
     for specific_signal in [
@@ -243,7 +246,7 @@ def train(train_data: List[Tuple[List[int], int]],
         # main training loop
         LOGGER.info("Training SoPa++ model")
         with tqdm(shuffled_chunked_sorted(train_data, batch_size),
-                  disable=DISABLE_TQDM,
+                  disable=disable_tqdm,
                   unit="batch",
                   desc="Training [Epoch %s/%s]" %
                   (epoch + 1, epochs)) as tqdm_batches:
@@ -266,7 +269,7 @@ def train(train_data: List[Tuple[List[int], int]],
                 train_loss += train_batch_loss  # type: ignore
 
                 # update tqdm progress bar
-                if (i + 1) % TQDM_UPDATE_FREQ == 0 or (i +
+                if (i + 1) % tqdm_update_freq == 0 or (i +
                                                        1) == len(tqdm_batches):
                     tqdm_batches.set_postfix(
                         batch_loss=train_batch_loss.item() / batch.size())
@@ -301,7 +304,7 @@ def train(train_data: List[Tuple[List[int], int]],
         # loop over static valid set
         LOGGER.info("Evaluating SoPa++ on validation set")
         with tqdm(chunked_sorted(valid_data, batch_size),
-                  disable=DISABLE_TQDM,
+                  disable=disable_tqdm,
                   unit="batch",
                   desc="Validating [Epoch %s/%s]" %
                   (epoch + 1, epochs)) as tqdm_batches:
@@ -322,7 +325,7 @@ def train(train_data: List[Tuple[List[int], int]],
                     # add batch loss to valid_loss
                     valid_loss += valid_batch_loss  # type: ignore
 
-                    if (i + 1) % TQDM_UPDATE_FREQ == 0 or (
+                    if (i + 1) % tqdm_update_freq == 0 or (
                             i + 1) == len(tqdm_batches):
                         tqdm_batches.set_postfix(
                             batch_loss=valid_batch_loss.item() / batch.size())
@@ -605,7 +608,11 @@ def main(args: argparse.Namespace) -> None:
     train(train_data, valid_data, model, num_classes, epochs,
           model_log_directory, args.learning_rate, args.batch_size,
           args.disable_scheduler, gpu_device, args.clip_threshold,
-          args.max_doc_len, args.word_dropout, args.patience)
+          args.max_doc_len, args.word_dropout, args.patience, False,
+          args.disable_tqdm, args.tqdm_update_freq)
+
+    # update LOGGER object to remove file handler
+    LOGGER = remove_all_file_handlers(LOGGER)
 
 
 if __name__ == '__main__':
@@ -619,6 +626,4 @@ if __name__ == '__main__':
                                      ])
     args = parser.parse_args()
     LOGGER = stdout_root_logger(args.logging_level)
-    DISABLE_TQDM = args.disable_tqdm
-    TQDM_UPDATE_FREQ = args.tqdm_update_freq
     main(args)
