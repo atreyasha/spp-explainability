@@ -70,6 +70,10 @@ def training_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add required group
     required = parser.add_argument_group('required arguments')
+    required.add_argument("--embeddings",
+                          help="Path to GloVe token embeddings file",
+                          required=True,
+                          type=str)
     required.add_argument("--train-data",
                           help="Path to train data file",
                           required=True,
@@ -89,15 +93,6 @@ def training_arg_parser() -> argparse.ArgumentParser:
     # add train group for clearer annotations
     train = parser.add_argument_group('optional training arguments')
     # numeric and character-accepting options
-    train.add_argument("--embeddings",
-                       help=("Path to GloVe token embeddings file. This can "
-                             "be ignored if --load-model is provided"),
-                       default="./data/glove_6B_uncased/glove.6B.300d.txt",
-                       type=str)
-    train.add_argument("--load-model",
-                       help="Path to pre-trained model file. This option "
-                       "makes the --embeddings option redundant",
-                       type=str)
     train.add_argument("--gpu-device",
                        help=("GPU device specification in case --gpu option"
                              " is used"),
