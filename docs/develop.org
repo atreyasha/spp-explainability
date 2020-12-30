@@ -6,25 +6,9 @@
 *** Current
 **** TODO Major changes to model
      DEADLINE: <2021-01-01 Fri>
-***** Quick changes 
-****** TODO think of robust and modular way of doing this because re-training could occur for single and grid-training scenarios and we would have to make sense of all of these factors -> ideal solution should use single train re-training and build it directly onto grid training -> maybe include a continue training flag directly inside -> perhaps add some exit hooks with exit codes to signal what happened during training
-****** TODO improve code quality with continue training workflow
-******* use cpu device to load model first on cpu before sending to gpu
-******* use train arg parser to read/overwrite arguments
-******* optimizer and scheduler state dictionaries would need to passed on via optional argument to train, maybe model can be initialized inside train function instead of in main
-******* read epoch information so training/tensorboard-logging can be done correctly -> if epochs are still remaining, train until they are finished otherwise train for another set of specified epochs
-******* settle issue of whether to use epoch index or count while saving information -> re-think and make implementation consistent most importantly
-******* test if training can be continued seamlessly with information stored in checkpoint
-******* modernize torch gradient clipping function if relevant
-******* use different workflow when loading from model since embeddings would not need to be read -> perhaps need to initialize embeddings with correct dimension and then update them later on
-******* think of effective workflow to load back random states, check if last and best checkpoints have the same random states -> test if the same training procedure is indeed returned
-******* think more about where model loading should happen since this would determine how other things go -> maybe make this into a function so this can be re-used in tests script
-******* add one tensorboard event log for each re-train iteration, so it is clear how many re-train runs there were
-******* if re-training, rename each training config with an index so it is clear which came first -> or simply append to the same training config file with different indices
-******* perhaps add workflow to know exactly when training was stopped or at which epoch -> would be easy to tell in training log which would be written, or through tensorboard logs  
-******* check patience counter before training to ensure there is no problem with hacks
-
 ***** Medium-impact changes
+****** settle issue of whether to use epoch index or count while saving information -> re-think and make implementation consistent most importantly
+****** modernize torch gradient clipping function if relevant
 ****** consider changing padding token to dedicated token instead of unknown -> these are not included within soft_pattern processing due to construction of Batch class only considering length of input sequences
 ****** maybe padding the whole dataset might make more sense than doing this repeatedly within each Batch object
 ******* combined model padding probably does not work well because of inefficiencies, Batch object helps to keep similar document lengths together to ensure most computation is used correctly for updating scores and not being ignored
@@ -36,6 +20,7 @@
 
 ***** Core modeling developments
 ****** look into ATIS dataset as replacement since it was also used by other papers, can be ported quickly
+****** create a slurm and gpu branch to make testing there easier -> adjust batch size and make other device-related optimizations there
 ****** add test evaluation workflow for the model with separate script -> this would be useful for the grid-search model selection and might need additional argument parser options -> need to set model.eval() before evaluating -> let this be completely independent and applied to all grid-search models
 ******* compute test F1 on models at the end of training for completeness
 ******* removal of predict function inside model, but could be added back if this becomes boilerplate later in testing script
@@ -47,6 +32,7 @@
 ******* think of ways to use patterns only when there are enough words in front and not to always compute, if this is possible at all
 ******* make use of torch cuda calls in improved model -> tensor.cuda() returns a copy of the tensor in the GPU while module.cuda() sends the model/parameters to the GPU -> not useful for static case since this would create memory overhaul
 ****** add thorough and efficient grid-search workflow -> emulate similar workflow from single train -> perhaps nest single train inside grid directory so everything remains modular
+****** think of robust and modular way to start and resume grid-training -> emulate from start and resume single training -> would perhaps require grid-training to initialize all internal log directories so everything is clear
 ****** think about how grid search workflow should work and which models should be saved/deleted -> good idea to keep best model checkpoints from each grid run and separate event files
 ****** think about whether loss or accuracy should be monitored for early stopping -> especially given that losses are calculated using forward without evaluation; implying that dropout could have stochastic noise impact
 ****** incremental changes with grid-search -> multiple runs of each best model with different random seeds to get standard deviation of performance -> experiment more gracious self-loops and epsilon transitions for improved generalization
@@ -80,12 +66,13 @@
 ***** tests run in paper show almost perfect accuracy, which could be a baseline to match or otherwise come close to, in order to probe explainability
 ***** improve learning rate scheduler implementation to more soft-coded than hard-coded, if possible at all
 ***** replace all legacy tensor.data calls with tensor.detach() for safety
-***** work on =slurm-s3it= branch as a mirrored branch -> keep slogs since session.log does not keep tqdm progress bar
+***** work on =slurm-s3it= branch as a mirrored branch -> keep slogs since session.log does not keep tqdm progress bar -> slurm termination appear to all be sigkills meaning no exit codes will be written
 ***** add =with torch.no_grad()= scope indicator alongside =model.eval()= to perform inference/validation correctly and efficiently -> check other areas where this can be done
 ***** check to ensure detach and clones are done together where variable is created and updated, or otherwise detach is done for variables where only data needs to be referenced
 ***** check code for =squeeze()= call which can be problematic for dim 1 tensors
 ***** make script to determine optimal batch sizes and upper bounds
 ***** add check to ensure start, end and pad tokens cannot occur inside the sequence
+***** make sure predict script which can use the model to predict on new datasets without evaluation
 **** Torch portability
 ***** check if possible to replace all Batch object internals via direct torch tensors instead of numpy -> might help with speed but not very important
 ***** maybe use dataloader/dataset torch class instead of raw data, read on memory improvements and better shuffling which saves original order

@@ -24,84 +24,20 @@
 
     **DEADLINE:** *\<2021-01-01 Fri\>*
 
-    1.  Quick changes
+    1.  Medium-impact changes
 
-        1.  **TODO** think of robust and modular way of doing
-            this because re-training could occur for single and
-            grid-training scenarios and we would have to make sense of
-            all of these factors -\> ideal solution should use single
-            train re-training and build it directly onto grid training
-            -\> maybe include a continue training flag directly inside
-            -\> perhaps add some exit hooks with exit codes to signal
-            what happened during training
+        1.  settle issue of whether to use epoch index or count while
+            saving information -\> re-think and make implementation
+            consistent most importantly
 
-        2.  **TODO** improve code quality with continue
-            training workflow
+        2.  modernize torch gradient clipping function if relevant
 
-            1.  use cpu device to load model first on cpu before sending
-                to gpu
-
-            2.  use train arg parser to read/overwrite arguments
-
-            3.  optimizer and scheduler state dictionaries would need to
-                passed on via optional argument to train, maybe model
-                can be initialized inside train function instead of in
-                main
-
-            4.  read epoch information so training/tensorboard-logging
-                can be done correctly -\> if epochs are still remaining,
-                train until they are finished otherwise train for
-                another set of specified epochs
-
-            5.  settle issue of whether to use epoch index or count
-                while saving information -\> re-think and make
-                implementation consistent most importantly
-
-            6.  test if training can be continued seamlessly with
-                information stored in checkpoint
-
-            7.  modernize torch gradient clipping function if relevant
-
-            8.  use different workflow when loading from model since
-                embeddings would not need to be read -\> perhaps need to
-                initialize embeddings with correct dimension and then
-                update them later on
-
-            9.  think of effective workflow to load back random states,
-                check if last and best checkpoints have the same random
-                states -\> test if the same training procedure is indeed
-                returned
-
-            10. think more about where model loading should happen since
-                this would determine how other things go -\> maybe make
-                this into a function so this can be re-used in tests
-                script
-
-            11. add one tensorboard event log for each re-train
-                iteration, so it is clear how many re-train runs there
-                were
-
-            12. if re-training, rename each training config with an
-                index so it is clear which came first -\> or simply
-                append to the same training config file with different
-                indices
-
-            13. perhaps add workflow to know exactly when training was
-                stopped or at which epoch -\> would be easy to tell in
-                training log which would be written, or through
-                tensorboard logs
-
-            14. check patience counter before training to ensure there
-                is no problem with hacks
-
-    2.  Medium-impact changes
-
-        1.  consider changing padding token to dedicated token instead
+        3.  consider changing padding token to dedicated token instead
             of unknown -\> these are not included within soft_pattern
             processing due to construction of Batch class only
             considering length of input sequences
 
-        2.  maybe padding the whole dataset might make more sense than
+        4.  maybe padding the whole dataset might make more sense than
             doing this repeatedly within each Batch object
 
             1.  combined model padding probably does not work well
@@ -110,14 +46,14 @@
                 computation is used correctly for updating scores and
                 not being ignored
 
-        3.  make Batch object more efficient, look at existing pytorch
+        5.  make Batch object more efficient, look at existing pytorch
             classes that could help with this -\> probably not the best
             case since the Batch class has a specific use
 
-        4.  reduce circum-padding token count to 1 instead of length of
+        6.  reduce circum-padding token count to 1 instead of length of
             longest pattern
 
-        5.  might make overall more sense to use max-\* semirings since
+        7.  might make overall more sense to use max-\* semirings since
             they are easier to interpret -\> try to replicate model from
             defaults of paper instead of code defaults during main runs
             -\> change defaults directly in argument parser -\> add
@@ -125,20 +61,24 @@
             more sensible for runs such as increasing epochs, learning
             rate etc.
 
-        6.  test out to see if scheduler works and if its state gets
+        8.  test out to see if scheduler works and if its state gets
             incremented -\> need to train single model for long period
             of time and analyze state_dict of scheduler to see what has
             been recorded
 
-        7.  address scattered TODOs in code if still remaining OR
+        9.  address scattered TODOs in code if still remaining OR
             otherwise add them to below tasks
 
-    3.  Core modeling developments
+    2.  Core modeling developments
 
         1.  look into ATIS dataset as replacement since it was also used
             by other papers, can be ported quickly
 
-        2.  add test evaluation workflow for the model with separate
+        2.  create a slurm and gpu branch to make testing there easier
+            -\> adjust batch size and make other device-related
+            optimizations there
+
+        3.  add test evaluation workflow for the model with separate
             script -\> this would be useful for the grid-search model
             selection and might need additional argument parser options
             -\> need to set model.eval() before evaluating -\> let this
@@ -164,13 +104,13 @@
             5.  test code should use model vocabulary directly -\> this
                 can be used to ensure everything is within model
 
-        3.  add temperature parameter to encourage more discrete
+        4.  add temperature parameter to encourage more discrete
             learning of pattern scores -\> or binarize patterns via
             `torch.gt` or `torch.relu` if possible which would make
             interpretation much easier -\> look into how other paper on
             RNN-FSA did this with temperature
 
-        4.  modify final layer to a general additive layer; preferably
+        5.  modify final layer to a general additive layer; preferably
             with tree structure or soft logic where possible -\>
             otherwise simple linear layer with various basis functions
             would work
@@ -185,21 +125,27 @@
                 GPU -\> not useful for static case since this would
                 create memory overhaul
 
-        5.  add thorough and efficient grid-search workflow -\> emulate
+        6.  add thorough and efficient grid-search workflow -\> emulate
             similar workflow from single train -\> perhaps nest single
             train inside grid directory so everything remains modular
 
-        6.  think about how grid search workflow should work and which
+        7.  think of robust and modular way to start and resume
+            grid-training -\> emulate from start and resume single
+            training -\> would perhaps require grid-training to
+            initialize all internal log directories so everything is
+            clear
+
+        8.  think about how grid search workflow should work and which
             models should be saved/deleted -\> good idea to keep best
             model checkpoints from each grid run and separate event
             files
 
-        7.  think about whether loss or accuracy should be monitored for
+        9.  think about whether loss or accuracy should be monitored for
             early stopping -\> especially given that losses are
             calculated using forward without evaluation; implying that
             dropout could have stochastic noise impact
 
-        8.  incremental changes with grid-search -\> multiple runs of
+        10. incremental changes with grid-search -\> multiple runs of
             each best model with different random seeds to get standard
             deviation of performance -\> experiment more gracious
             self-loops and epsilon transitions for improved
@@ -301,7 +247,9 @@
         safety
 
     4.  work on `slurm-s3it` branch as a mirrored branch -\> keep slogs
-        since session.log does not keep tqdm progress bar
+        since session.log does not keep tqdm progress bar -\> slurm
+        termination appear to all be sigkills meaning no exit codes will
+        be written
 
     5.  add `with torch.no_grad()` scope indicator alongside
         `model.eval()` to perform inference/validation correctly and
@@ -318,6 +266,9 @@
 
     9.  add check to ensure start, end and pad tokens cannot occur
         inside the sequence
+
+    10. make sure predict script which can use the model to predict on
+        new datasets without evaluation
 
 2.  Torch portability
 
