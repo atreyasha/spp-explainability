@@ -3,3 +3,4 @@ events*
 *.json
 *.txt
 *.log
+exit_code
