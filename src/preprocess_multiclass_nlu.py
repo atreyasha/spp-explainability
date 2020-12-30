@@ -13,9 +13,6 @@ import json
 import csv
 import os
 
-# get root LOGGER in case script is called by another
-LOGGER = logging.getLogger(__name__)
-
 
 def read_tsv(filename: str) -> List[Any]:
     with open(filename, 'r', encoding='utf-8') as input_file_stream:
