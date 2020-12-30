@@ -17,8 +17,8 @@ from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
                                read_embeddings)
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 to_cuda, argmax, enable_gradient_clipping,
-                                Batch, ProbSemiring, LogSpaceMaxTimesSemiring,
-                                MaxPlusSemiring)
+                                timestamp, Batch, ProbSemiring,
+                                LogSpaceMaxTimesSemiring, MaxPlusSemiring)
 from .soft_patterns_pp import SoftPatternClassifier
 from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
                          logging_arg_parser)
@@ -442,7 +442,7 @@ def main(args: argparse.Namespace) -> None:
     num_train_instances = args.num_train_instances
     mlp_hidden_dim = args.mlp_hidden_dim
     mlp_num_layers = args.mlp_num_layers
-    model_log_directory = args.model_log_directory
+    models_log_directory = args.models_log_directory
     epochs = args.epochs
 
     # set default temporary value for pre_computed_patterns
@@ -553,6 +553,8 @@ def main(args: argparse.Namespace) -> None:
                 sum(parameter.nelement() for parameter in model.parameters()))
 
     # create model log directory
+    model_log_directory = os.path.join(models_log_directory,
+                                       "spp_single_train_" + timestamp())
     os.makedirs(model_log_directory, exist_ok=True)
 
     # extract relevant arguments for model and training configs
