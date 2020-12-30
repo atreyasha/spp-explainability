@@ -21,7 +21,7 @@ from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 LogSpaceMaxTimesSemiring, MaxPlusSemiring)
 from .soft_patterns_pp import SoftPatternClassifier
 from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
-                         logging_arg_parser, tqdm_arg_parser)
+                         logging_arg_parser)
 from .utils.logging_utils import (stdout_root_logger, add_unique_file_handler,
                                   remove_all_file_handlers)
 import numpy as np
@@ -570,12 +570,11 @@ def main(args: argparse.Namespace) -> None:
     soft_patterns_args_dict = soft_patterns_pp_arg_parser().parse_args(
         "").__dict__
     logging_args_dict = logging_arg_parser().parse_args("").__dict__
-    tqdm_args_dict = tqdm_arg_parser().parse_args("").__dict__
     training_args_dict = {}
     for key in args.__dict__:
         if key in soft_patterns_args_dict:
             soft_patterns_args_dict[key] = getattr(args, key)
-        elif key not in logging_args_dict and key not in tqdm_args_dict:
+        elif key not in logging_args_dict:
             training_args_dict[key] = getattr(args, key)
 
     # dump soft patterns model arguments for posterity
@@ -614,8 +613,7 @@ if __name__ == '__main__':
                                      parents=[
                                          training_arg_parser(),
                                          soft_patterns_pp_arg_parser(),
-                                         logging_arg_parser(),
-                                         tqdm_arg_parser()
+                                         logging_arg_parser()
                                      ])
     args = parser.parse_args()
     LOGGER = stdout_root_logger(args.logging_level)
