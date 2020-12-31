@@ -389,8 +389,8 @@ def train(train_data: List[Tuple[List[int], int]],
             raise FileNotFoundError("Model log directory present, but model "
                                     "checkpoint with '.pt' "
                                     "extension missing. Our suggestion is to "
-                                    "train the model from "
-                                    "again from scratch")
+                                    "train the model again "
+                                    "from scratch")
         model_checkpoint = torch.load(model_checkpoint,
                                       map_location=torch.device("cpu"))
         model.load_state_dict(
