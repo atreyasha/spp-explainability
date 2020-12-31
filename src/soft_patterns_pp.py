@@ -194,7 +194,6 @@ class SoftPatternClassifier(Module):
         # mm: (diags_size x word_dim) @ (word_dim x batch_vocab_size)
         # transition_score: diags_size x batch_vocab_size
         # these would represent transition scores for each word in vocab
-        # TODO: understand why matrix multiplication is required here
         transition_scores = self.semiring.from_float(
             mm(self.diags, batch.local_embeddings) +
             self.bias_scale * self.bias).t()
@@ -279,7 +278,7 @@ class SoftPatternClassifier(Module):
             len(pattern), self.embeddings.embedding_dim)
         bias_subset = torch.zeros(len(pattern))
 
-        # TODO: unsure why this factor value is chosen
+        # NOTE: arbitrary choice which can be refined
         factor = 10
 
         # traversing elements of pattern.
@@ -343,9 +342,7 @@ class SoftPatternClassifier(Module):
 
         # start loop over all transition matrices
         for i, transition_matrix in enumerate(transition_matrices):
-            # retrieve all hiddens given current state
-            # TODO: modifications can be made here to work on learnable
-            # embeddings directly
+            # retrieve all hiddens given current state embeddings
             hiddens = self.transition_once(epsilon_values, hiddens,
                                            transition_matrix, zero_padding,
                                            restart_padding, self_loop_scale)
