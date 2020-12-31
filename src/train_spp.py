@@ -468,7 +468,7 @@ def train(train_data: List[Tuple[List[int], int]],
     else:
         scheduler = None
 
-    # set numpy and torch RNG back to previous states
+    # set numpy and torch RNG back to previous states before training
     if resume_training:
         np.random.set_state(
             model_checkpoint["numpy_random_state"])  # type: ignore

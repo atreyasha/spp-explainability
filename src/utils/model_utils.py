@@ -60,11 +60,10 @@ def normalize(data: torch.Tensor) -> None:
 def enable_gradient_clipping(model: torch.nn.Module,
                              clip_threshold: Union[float, None]) -> None:
     if clip_threshold is not None and clip_threshold > 0:
-        clip_function = lambda grad: grad.clamp(-clip_threshold, clip_threshold
-                                                )
         for parameter in model.parameters():
             if parameter.requires_grad:
-                parameter.register_hook(clip_function)
+                parameter.register_hook(lambda grad: torch.clamp(
+                    grad, -clip_threshold, clip_threshold))
 
 
 def neg_infinity(*sizes: int) -> torch.Tensor:
