@@ -70,6 +70,7 @@ def set_hardware(args: argparse.Namespace) -> Union[torch.device, None]:
         LOGGER.info("Using GPU device: %s" % args.gpu_device)
     else:
         gpu_device = None
+        LOGGER.info("Using CPU device")
 
     # return device
     return gpu_device
@@ -434,9 +435,11 @@ def train(train_data: List[Tuple[List[int], int]],
 
     # send model to correct device
     if gpu_device is not None:
+        LOGGER.info("Transferring model to GPU device: %s" % gpu_device)
         model.to(gpu_device)
 
     # instantiate Adam optimizer
+    LOGGER.info("Initializing Adam optimizer with LR: %s" % learning_rate)
     optimizer = Adam(model.parameters(), lr=learning_rate)
 
     # load optimizer state dictionary
@@ -445,13 +448,14 @@ def train(train_data: List[Tuple[List[int], int]],
             model_checkpoint["optimizer_state_dict"])  # type: ignore
 
     # instantiate negative log-likelihood loss which is summed over batch
+    LOGGER.info("Using NLLLoss with sum reduction")
     loss_function = NLLLoss(weight=None, reduction="sum")
 
     # enable gradient clipping in-place if provided
-    enable_gradient_clipping(model, clip_threshold)
-
-    # initialize tensorboard writer if provided
-    writer = SummaryWriter(os.path.join(model_log_directory, "events"))
+    if clip_threshold is not None and clip_threshold > 0:
+        LOGGER.info("Enabling gradient clipping with threshold: %s" %
+                    clip_threshold)
+        enable_gradient_clipping(model, clip_threshold)
 
     # initialize learning rate scheduler if relevant
     if not disable_scheduler:
@@ -467,6 +471,11 @@ def train(train_data: List[Tuple[List[int], int]],
                 model_checkpoint["scheduler_state_dict"])  # type: ignore
     else:
         scheduler = None
+
+    # initialize tensorboard writer if provided
+    LOGGER.info("Initializing tensorboard writer in directory: %s" %
+                os.path.join(model_log_directory, "events"))
+    writer = SummaryWriter(os.path.join(model_log_directory, "events"))
 
     # set numpy and torch RNG back to previous states before training
     if resume_training:
@@ -680,8 +689,9 @@ def main(args: argparse.Namespace) -> None:
     LOGGER = add_file_handler(LOGGER,
                               os.path.join(model_log_directory, "session.log"))
 
-    # log namespace arguments
+    # log namespace arguments and model directory
     LOGGER.info(args)
+    LOGGER.info("Model log directory: %s" % model_log_directory)
 
     # set gpu and cpu hardware
     gpu_device = set_hardware(args)
