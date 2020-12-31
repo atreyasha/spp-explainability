@@ -106,8 +106,8 @@ def get_patterns(
 def set_random_seed(args: argparse.Namespace) -> None:
     # set global random seed if specified
     if args.seed != -1:
-        torch.manual_seed(args.seed)
         np.random.seed(args.seed)
+        torch.manual_seed(args.seed)
 
 
 def get_vocab(args: argparse.Namespace) -> Vocab:
