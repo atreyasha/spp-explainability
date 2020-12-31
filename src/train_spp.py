@@ -156,22 +156,15 @@ def get_training_validation_data(
     args: argparse.Namespace, pattern_specs: 'OrderedDict[int, int]',
     vocab: Vocab, num_train_instances: int
 ) -> Tuple[List[Tuple[List[int], int]], List[Tuple[List[int], int]], int]:
-    # set number of padding tokens as one less than the longest pattern length
-    num_padding_tokens = max(list(pattern_specs.keys())) - 1
-
     # read train data
-    train_input, _ = read_docs(args.train_data,
-                               vocab,
-                               num_padding_tokens=num_padding_tokens)
+    train_input, _ = read_docs(args.train_data, vocab)
     train_input = cast(List[List[int]], train_input)
     train_labels = read_labels(args.train_labels)
     num_classes = len(set(train_labels))
     train_data = list(zip(train_input, train_labels))
 
     # read validation data
-    valid_input, _ = read_docs(args.valid_data,
-                               vocab,
-                               num_padding_tokens=num_padding_tokens)
+    valid_input, _ = read_docs(args.valid_data, vocab)
     valid_input = cast(List[List[int]], valid_input)
     valid_labels = read_labels(args.valid_labels)
     valid_data = list(zip(valid_input, valid_labels))
