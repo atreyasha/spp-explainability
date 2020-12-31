@@ -652,7 +652,7 @@ def train(train_data: List[Tuple[List[int], int]],
         # hook to stop training in case patience threshold was reached
         # and if threshold was reached strictly before the last epoch
         if stop_training:
-            if (epoch + 1) < epochs:
+            if epoch < max(range(epochs)):
                 LOGGER.info(
                     "%s patience epoch(s) threshold reached, stopping training"
                     % patience)
