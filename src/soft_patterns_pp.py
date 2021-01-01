@@ -352,7 +352,6 @@ class SoftPatternClassifier(Module):
                 batch_size, self.total_num_patterns)
 
             # only update score when we're not already past the end of the doc
-            # NOTE: this returns where we are not past the end of the document
             # NOTE: this is useful for mixed length documents
             active_doc_indices = torch.nonzero(torch.gt(batch.doc_lens, i),
                                                as_tuple=True)[0]
@@ -362,9 +361,7 @@ class SoftPatternClassifier(Module):
                 scores[active_doc_indices],
                 end_state_values[active_doc_indices])
 
-        # update scores to float
         # NOTE: scores represent end values on top of SoPa
-        # these are passed on to the MLP below
         scores = self.semiring.to_float(scores)
 
         # return output of MLP
