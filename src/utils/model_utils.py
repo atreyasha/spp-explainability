@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from typing import Callable, List, Union, Any, Tuple
-from .data_utils import (UNK_INDEX, START_TOKEN_INDEX, END_TOKEN_INDEX, Vocab,
-                         identity)
+from .data_utils import (PAD_TOKEN_INDEX, START_TOKEN_INDEX, END_TOKEN_INDEX,
+                         UNK_TOKEN_INDEX, Vocab, identity)
 import numpy as np
 import datetime
 import torch
@@ -78,9 +78,10 @@ class Batch:
                  word_dropout: float = 0,
                  max_doc_len: int = -1) -> None:
         mini_vocab = Vocab.from_docs(docs,
-                                     default=UNK_INDEX,
+                                     pad=PAD_TOKEN_INDEX,
                                      start=START_TOKEN_INDEX,
-                                     end=END_TOKEN_INDEX)
+                                     end=END_TOKEN_INDEX,
+                                     unknown=UNK_TOKEN_INDEX)
         # limit maximum document length (for efficiency reasons).
         if max_doc_len != -1:
             docs = [doc[:max_doc_len] for doc in docs]
@@ -89,17 +90,19 @@ class Batch:
         self.max_doc_len = max(doc_lens)
         if word_dropout:
             # for each token, with probability `word_dropout`
-            # replace word index with UNK_INDEX.
+            # replace word index with UNK_TOKEN_INDEX.
             docs = [[
-                UNK_INDEX if np.random.rand() < word_dropout else x
-                for x in doc
+                UNK_TOKEN_INDEX if (np.random.rand() < word_dropout) and
+                (x
+                 not in [START_TOKEN_INDEX, END_TOKEN_INDEX])
+                else x for x in doc
             ] for doc in docs]
         # pad docs so they all have the same length.
         # we pad with UNK, whose embedding is 0
         # so it doesn't mess up sums or averages.
         docs = [
-            right_pad(mini_vocab.numberize(doc), self.max_doc_len, UNK_INDEX)
-            for doc in docs
+            right_pad(mini_vocab.numberize(doc), self.max_doc_len,
+                      PAD_TOKEN_INDEX) for doc in docs
         ]
         self.docs = [to_cuda(torch.LongTensor(doc)) for doc in docs]
         self.local_embeddings = embeddings(

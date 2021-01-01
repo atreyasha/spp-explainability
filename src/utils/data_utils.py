@@ -7,13 +7,19 @@ from itertools import chain, islice
 import numpy as np
 import string
 
+# declare global variables
 PRINTABLE = set(string.printable)
-UNK_TOKEN = "[UNK]"
+PAD_TOKEN = "[PAD]"
 START_TOKEN = "[START]"
 END_TOKEN = "[END]"
-UNK_INDEX = 0
-START_TOKEN_INDEX = 1
-END_TOKEN_INDEX = 2
+UNK_TOKEN = "[UNK]"
+SPECIAL_TOKENS = [PAD_TOKEN, START_TOKEN, END_TOKEN, UNK_TOKEN]
+
+# infer list order
+PAD_TOKEN_INDEX = SPECIAL_TOKENS.index(PAD_TOKEN)
+START_TOKEN_INDEX = SPECIAL_TOKENS.index(START_TOKEN)
+END_TOKEN_INDEX = SPECIAL_TOKENS.index(END_TOKEN)
+UNK_TOKEN_INDEX = SPECIAL_TOKENS.index(UNK_TOKEN)
 
 
 def identity(x: Any) -> Any:
@@ -40,19 +46,20 @@ def unique_by(xs: Iterable[Any], key: Callable) -> Generator[Any, None, None]:
 class Vocab:
     def __init__(self,
                  names: Iterable[Any],
-                 default: Union[int, str] = UNK_TOKEN,
+                 pad: Union[int, str] = PAD_TOKEN,
                  start: Union[int, str] = START_TOKEN,
-                 end: Union[int, str] = END_TOKEN) -> None:
-        self.default = default
-        self.names = list(unique(chain([default, start, end], names)))
+                 end: Union[int, str] = END_TOKEN,
+                 unknown: Union[int, str] = UNK_TOKEN) -> None:
+        self.unknown = unknown
+        self.names = list(unique(chain([pad, start, end, unknown], names)))
         self.index = {name: i for i, name in enumerate(self.names)}
 
     def __getitem__(self, index: int) -> Union[int, str]:
         return self.names[index] if 0 < index < len(
-            self.names) else self.default
+            self.names) else self.unknown
 
     def __call__(self, name: Union[int, str]) -> int:
-        return self.index.get(name, UNK_INDEX)
+        return self.index.get(name, UNK_TOKEN_INDEX)
 
     def __contains__(self, item: str) -> bool:
         return item in self.index
@@ -72,29 +79,32 @@ class Vocab:
     @classmethod
     def from_docs(cls,
                   docs: Sequence[Sequence[Union[int, str]]],
-                  default: Union[int, str] = UNK_TOKEN,
+                  pad: Union[int, str] = PAD_TOKEN,
                   start: Union[int, str] = START_TOKEN,
-                  end: Union[int, str] = END_TOKEN) -> 'Vocab':
+                  end: Union[int, str] = END_TOKEN,
+                  unknown: Union[int, str] = UNK_TOKEN) -> 'Vocab':
         return cls((i for doc in docs for i in doc),
-                   default=default,
+                   pad=pad,
                    start=start,
-                   end=end)
+                   end=end,
+                   unknown=unknown)
 
     @classmethod
     def from_vocab_file(cls,
                         filename: str,
-                        default: Union[int, str] = UNK_TOKEN,
+                        pad: Union[int, str] = PAD_TOKEN,
                         start: Union[int, str] = START_TOKEN,
-                        end: Union[int, str] = END_TOKEN) -> 'Vocab':
-        vocab = cls([], default=default, start=start, end=end)
+                        end: Union[int, str] = END_TOKEN,
+                        unknown: Union[int, str] = UNK_TOKEN) -> 'Vocab':
+        vocab = cls([], pad=pad, start=start, end=end, unknown=unknown)
         with open(filename, "r") as input_file_stream:
             vocab.index = {
                 line.strip(): index
                 for index, line in enumerate(input_file_stream)
             }
-        vocab.names = list(zip(*sorted([(key, value)
-                                        for key, value in vocab.index.items()],
-                                       key=lambda x: x[1])))[0]
+        vocab.names = list(
+            zip(*sorted([(key, value) for key, value in vocab.index.items()],
+                        key=lambda x: x[1])))[0]
         return vocab
 
 
@@ -108,10 +118,11 @@ def read_embeddings(
     max_vocab_size: Union[int, None] = None
 ) -> Tuple[Vocab, List[np.ndarray], int]:
     dim, has_header = check_dim_and_header(filename)
-    # assign unknown, start and end tokens to zero vector
-    unk_vec = np.zeros(dim)
-    left_pad_vec = np.zeros(dim)
-    right_pad_vec = np.zeros(dim)
+    # assign pad, start, end and unknown vectors
+    pad_vec = np.zeros(dim)
+    start_vec = np.random.rand(dim)
+    end_vec = np.random.rand(dim)
+    unknown_vec = np.random.rand(dim)
     with open(filename, 'r', encoding='utf-8') as input_file_stream:
         if has_header:
             input_file_stream.readline()
@@ -126,7 +137,7 @@ def read_embeddings(
         word_vecs = list(word_vecs)
     vocab = Vocab((word for word, _ in word_vecs))
     # prepend special embeddings to (normalized) word embeddings
-    vecs = [unk_vec, left_pad_vec, right_pad_vec
+    vecs = [pad_vec, start_vec, end_vec, unknown_vec
             ] + [vec / np.linalg.norm(vec) for _, vec in word_vecs]
     return vocab, vecs, dim
 
