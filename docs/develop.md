@@ -22,153 +22,88 @@
 
 1.  **TODO** Major changes to model
 
-    **DEADLINE:** *\<2021-01-01 Fri\>*
+    **DEADLINE:** *\<2021-01-04 Mon\>*
 
-    1.  Medium-impact changes
+    1.  Core modeling developments
 
-        1.  settle issue of whether to use epoch index or count while
-            saving information -\> re-think and make implementation
-            consistent most importantly
+        1.  **TODO** replicate defaults of model from paper
+            -\> directly in argument parser -\> make other defaults more
+            sensible for runs such as increasing epochs, learning rate
+            etc., as well as meaning of start and end tokens
 
-        2.  modernize torch gradient clipping function if relevant
+        2.  develop robust grid-search (and resume) script which
+            leverages on the modularity of the single train scripts -\>
+            would perhaps need a base configuration and everything else
+            can run smoothly
 
-        3.  consider changing padding token to dedicated token instead
-            of unknown -\> these are not included within soft_pattern
-            processing due to construction of Batch class only
-            considering length of input sequences
+            1.  try higher precision computing in case this would help
+                with a smaller model -\> perhaps convert everything to
+                DoubleTensor if this helps later on -\> perhaps not
+                worth it
 
-        4.  maybe padding the whole dataset might make more sense than
-            doing this repeatedly within each Batch object
+            2.  create a slurm and gpu branch to make testing there
+                easier -\> adjust batch size and make other
+                device-related optimizations there -\> figure out
+                correct cpu slurm argument (cpus-per-task seems too
+                high)
 
-            1.  combined model padding probably does not work well
-                because of inefficiencies, Batch object helps to keep
-                similar document lengths together to ensure most
-                computation is used correctly for updating scores and
-                not being ignored
+        3.  modify final layer to a general additive layer
 
-        5.  make Batch object more efficient, look at existing pytorch
-            classes that could help with this -\> probably not the best
-            case since the Batch class has a specific use
+            1.  preferably with tree structure or soft logic where
+                possible -\> otherwise simple linear layer with various
+                basis functions would work, see:
+                <https://stackoverflow.com/questions/55920015/how-to-realize-a-polynomial-regression-in-pytorch-python>
 
-        6.  reduce circum-padding token count to 1 instead of length of
-            longest pattern
+            2.  add temperature parameter to encourage more discrete
+                learning of pattern scores -\> or binarize patterns via
+                `torch.gt` or `torch.relu` if possible which would make
+                interpretation much easier -\> look into how other paper
+                on RNN-FSA did this with temperature
 
-        7.  might make overall more sense to use max-\* semirings since
-            they are easier to interpret -\> try to replicate model from
-            defaults of paper instead of code defaults during main runs
-            -\> change defaults directly in argument parser -\> add
-            scheduler and other perks by default -\> make other defaults
-            more sensible for runs such as increasing epochs, learning
-            rate etc.
-
-        8.  test out to see if scheduler works and if its state gets
-            incremented -\> need to train single model for long period
-            of time and analyze state_dict of scheduler to see what has
-            been recorded
-
-        9.  address scattered TODOs in code if still remaining OR
-            otherwise add them to below tasks
-
-    2.  Core modeling developments
-
-        1.  look into ATIS dataset as replacement since it was also used
-            by other papers, can be ported quickly
-
-        2.  create a slurm and gpu branch to make testing there easier
-            -\> adjust batch size and make other device-related
-            optimizations there
-
-        3.  add test evaluation workflow for the model with separate
-            script -\> this would be useful for the grid-search model
-            selection and might need additional argument parser options
-            -\> need to set model.eval() before evaluating -\> let this
-            be completely independent and applied to all grid-search
-            models
-
-            1.  compute test F1 on models at the end of training for
-                completeness
-
-            2.  removal of predict function inside model, but could be
-                added back if this becomes boilerplate later in testing
-                script
-
-            3.  think again about adding model.eval() and model.train()
-                inside functions, or to keep outside in more global
-                context
-
-            4.  tokenizer configuration should also be saved such as
-                nltk punkt tokenizer, if something like this is present,
-                currently we use nltk tokenizer which is fixed within
-                the current nltk version
-
-            5.  test code should use model vocabulary directly -\> this
-                can be used to ensure everything is within model
-
-        4.  add temperature parameter to encourage more discrete
-            learning of pattern scores -\> or binarize patterns via
-            `torch.gt` or `torch.relu` if possible which would make
-            interpretation much easier -\> look into how other paper on
-            RNN-FSA did this with temperature
-
-        5.  modify final layer to a general additive layer; preferably
-            with tree structure or soft logic where possible -\>
-            otherwise simple linear layer with various basis functions
-            would work
-
-            1.  think of ways to use patterns only when there are enough
+            3.  think of ways to use patterns only when there are enough
                 words in front and not to always compute, if this is
                 possible at all
-
-            2.  make use of torch cuda calls in improved model -\>
-                tensor.cuda() returns a copy of the tensor in the GPU
-                while module.cuda() sends the model/parameters to the
-                GPU -\> not useful for static case since this would
-                create memory overhaul
-
-        6.  add thorough and efficient grid-search workflow -\> emulate
-            similar workflow from single train -\> perhaps nest single
-            train inside grid directory so everything remains modular
-
-        7.  think of robust and modular way to start and resume
-            grid-training -\> emulate from start and resume single
-            training -\> would perhaps require grid-training to
-            initialize all internal log directories so everything is
-            clear
-
-        8.  think about how grid search workflow should work and which
-            models should be saved/deleted -\> good idea to keep best
-            model checkpoints from each grid run and separate event
-            files
-
-        9.  think about whether loss or accuracy should be monitored for
-            early stopping -\> especially given that losses are
-            calculated using forward without evaluation; implying that
-            dropout could have stochastic noise impact
-
-        10. incremental changes with grid-search -\> multiple runs of
-            each best model with different random seeds to get standard
-            deviation of performance -\> experiment more gracious
-            self-loops and epsilon transitions for improved
-            generalization
-
-            1.  read more about cross module logger imports, fix this to
-                be done correctly and try few experiments to see how it
-                works, this will help in allowing for cross module
-                functions to be imported
-
-            2.  try higher precision computing in case this would help
-                with a smaller model -\> perhaps convert everything to
-                DoubleTensor if this helps later on
-
-            3.  try to use pure bash script for grid search instead of
-                developing another python script -\> need some way of
-                pre-determining grid search space
 
 2.  Run SoPa++ for multiple runs to survey performance -\> run on all
     variants and data-set portions with (repeated) grid-search to get
     plenty of candidates, means and standard deviations
 
     **DEADLINE:** *\<2021-02-01 Mon\>*
+
+    1.  Look into ATIS/SNIPS dataset as replacement since it was also
+        used by other papers, can be ported quickly -\> both have some
+        papers which could be cited to add some relevance
+
+    2.  Slurm: CPU reproduces the same performance when number of
+        threads are the same including for resuming training, CPU
+        performance is different between local and cluster even with
+        same seeds, GPU does not reproduce the same performance when
+        resuming, see:
+        <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
+        -\> best approach would be to use single training without
+        resuming wherever possible to allow for optimum reproducibility
+
+    3.  Add test evaluation workflow with independent script
+
+        1.  compute test F1 on models at the end of training for
+            completeness
+
+        2.  removal of predict function inside model, but could be added
+            back if this becomes boilerplate later in testing script
+
+        3.  think again about adding model.eval() and model.train()
+            inside functions, or to keep outside in more global context
+
+        4.  tokenizer configuration should also be saved such as nltk
+            punkt tokenizer, if something like this is present,
+            currently we use nltk tokenizer which is fixed within the
+            current nltk version
+
+        5.  test code should use model vocabulary directly -\> this can
+            be used to ensure everything is within model
+
+        6.  use modular loading frameworks similar to continue training
+            when loading back the model
 
 3.  With decent model performance, branch off to improve explainability
     with weighting of patterns to address other research questions
@@ -177,26 +112,28 @@
 
     1.  Mimic model
 
-        1.  final ensemble of regular expressions should give insights
+        1.  look into research for better naming for mimic/oracle
+
+        2.  final ensemble of regular expressions should give insights
             and perform similar to main SoPa++ neural model
 
-        2.  think about how to work with unknown tokens on new data for
+        3.  think about how to work with unknown tokens on new data for
             mimic model -\> maybe some mapping of embeddings to find
             closest token/pattern or mean score might help
 
-        3.  best case scenario: user should be able to transfer easily
+        4.  best case scenario: user should be able to transfer easily
             between models and regex-ensemble in both directions for
             \"human-computer interaction\"
 
-        4.  for mimic model, find best patterns that match, if not use a
+        5.  for mimic model, find best patterns that match, if not use a
             mean value for the pattern score that can be used as an
             analog -\> or try other heuristics that can bring results of
             mimic and oracle closer to each other
 
-        5.  aim to produce pretty and compact ensemble of regular
+        6.  aim to produce pretty and compact ensemble of regular
             expressions which can analyzed and manipulated by a human
 
-        6.  posted question to OP on self-loops visualization, see:
+        7.  posted question to OP on self-loops visualization, see:
             <https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-728257052>
 
     2.  Oracle model
@@ -269,6 +206,10 @@
 
     10. make sure predict script which can use the model to predict on
         new datasets without evaluation
+
+    11. consider using packed sequences to make overall batch framework
+        more efficient -\> computation on padding tokens are still done
+        in `forward` and can possibly be avoided -\> check
 
 2.  Torch portability
 
@@ -584,6 +525,18 @@
         6.  extension/recommendations -\> transducer for seq2seq tasks
 
 ## Completed
+
+**DONE** reduce circum-padding token count to 1 instead of
+length of longest pattern
+
+**CLOSED:** *\[2020-12-31 Thu 13:03\]*
+
+**DONE** test out to see if scheduler works and if its state
+gets incremented -\> need to train single model for long period of time
+and analyze state_dict of scheduler to see what has been recorded -\> it
+works well when clip threshold is set to zero and patience is observed
+
+**CLOSED:** *\[2020-12-31 Thu 13:01\]*
 
 **DONE** log model metrics with intra/inter-epoch frequency
 which can be shared with tqdm for displaying -\> would require some
