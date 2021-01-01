@@ -116,6 +116,11 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        help="Neuron dropout probability",
                        default=0.2,
                        type=float)
+    train.add_argument(
+        "--scheduler-factor",
+        help="Factor by which the learning rate will be reduced",
+        default=0.1,
+        type=float)
     train.add_argument("--batch-size",
                        help="Batch size for training",
                        default=64,
@@ -137,8 +142,14 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        default=200,
                        type=int)
     train.add_argument("--patience",
-                       help="Patience parameter for early stopping",
+                       help=("Number of epochs with no improvement after "
+                             "which training will be stopped"),
                        default=30,
+                       type=int)
+    train.add_argument("--scheduler-patience",
+                       help=("Number of epochs with no improvement after "
+                             "which learning rate will be reduced"),
+                       default=10,
                        type=int)
     # boolean flags
     train.add_argument("--disable-scheduler",

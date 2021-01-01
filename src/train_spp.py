@@ -362,6 +362,8 @@ def train(train_data: List[Tuple[List[int], int]],
           learning_rate: float,
           batch_size: int,
           disable_scheduler: bool = False,
+          scheduler_patience: int = 10,
+          scheduler_factor: float = 0.1,
           gpu_device: Union[torch.device, None] = None,
           clip_threshold: Union[float, None] = None,
           max_doc_len: int = -1,
@@ -452,12 +454,14 @@ def train(train_data: List[Tuple[List[int], int]],
 
     # initialize learning rate scheduler if relevant
     if not disable_scheduler:
-        LOGGER.info("Initializing learning rate scheduler")
+        LOGGER.info(("Initializing learning rate scheduler with "
+                     "factor=%s and patience=%s") %
+                    (scheduler_factor, scheduler_patience))
         scheduler: Union[ReduceLROnPlateau, None]
         scheduler = ReduceLROnPlateau(optimizer,
                                       mode='min',
-                                      factor=0.1,
-                                      patience=10,
+                                      factor=scheduler_factor,
+                                      patience=scheduler_patience,
                                       verbose=True)
         if resume_training:
             scheduler.load_state_dict(
@@ -721,13 +725,11 @@ def main(args: argparse.Namespace) -> None:
     semiring = get_semiring(args)
 
     # create SoftPatternClassifier
-    model = SoftPatternClassifier(pattern_specs, mlp_hidden_dim,
-                                  mlp_num_layers, num_classes, embeddings,
-                                  vocab, semiring, args.bias_scale,
-                                  pre_computed_patterns, args.no_self_loops,
-                                  args.shared_self_loops, args.no_epsilons,
-                                  args.epsilon_scale, args.self_loop_scale,
-                                  args.dropout)
+    model = SoftPatternClassifier(
+        pattern_specs, mlp_hidden_dim, mlp_num_layers, num_classes, embeddings,
+        vocab, semiring, args.bias_scale, pre_computed_patterns,
+        args.no_self_loops, args.shared_self_loops, args.no_epsilons,
+        args.epsilon_scale, args.self_loop_scale, args.dropout)
 
     # log diagnostic information on parameter count
     LOGGER.info("Total model parameters: %s" %
@@ -739,7 +741,8 @@ def main(args: argparse.Namespace) -> None:
     # train SoftPatternClassifier
     train(train_data, valid_data, model, num_classes, epochs,
           model_log_directory, args.learning_rate, args.batch_size,
-          args.disable_scheduler, gpu_device, args.clip_threshold,
+          args.disable_scheduler, args.scheduler_patience,
+          args.scheduler_factor, gpu_device, args.clip_threshold,
           args.max_doc_len, args.word_dropout, args.patience, False,
           args.disable_tqdm, args.tqdm_update_freq)
 

@@ -119,7 +119,8 @@ def main(args: argparse.Namespace) -> None:
     # train SoftPatternClassifier
     train(train_data, valid_data, model, num_classes, epochs,
           model_log_directory, args.learning_rate, args.batch_size,
-          args.disable_scheduler, gpu_device, args.clip_threshold,
+          args.disable_scheduler, args.scheduler_patience,
+          args.scheduler_factor, gpu_device, args.clip_threshold,
           args.max_doc_len, args.word_dropout, args.patience, True,
           args.disable_tqdm, args.tqdm_update_freq)
 
