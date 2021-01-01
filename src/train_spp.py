@@ -7,14 +7,14 @@ from functools import partial
 from collections import OrderedDict
 from typing import List, Union, Tuple, cast
 from torch import LongTensor
-from torch.nn import NLLLoss, Module
+from torch.nn import NLLLoss, Module, Embedding
 from torch.nn.functional import log_softmax
 from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tensorboardX import SummaryWriter
 from .utils.parser_utils import ArgparseFormatter
 from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
-                               read_embeddings, Vocab)
+                               read_embeddings, Vocab, PAD_TOKEN_INDEX)
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 to_cuda, argmax, enable_gradient_clipping,
                                 timestamp, Batch, Semiring, ProbSemiring,
@@ -706,6 +706,9 @@ def main(args: argparse.Namespace) -> None:
 
     # get final vocab, embeddings and word_dim
     vocab, embeddings, word_dim = get_embeddings(args, vocab_combined)
+    embeddings = Embedding.from_pretrained(embeddings,
+                                           freeze=args.static_embeddings,
+                                           padding_idx=PAD_TOKEN_INDEX)
 
     # show vocabulary diagnostics
     get_vocab_diagnostics(vocab, vocab_combined, word_dim)
@@ -724,7 +727,7 @@ def main(args: argparse.Namespace) -> None:
                                   pre_computed_patterns, args.no_self_loops,
                                   args.shared_self_loops, args.no_epsilons,
                                   args.epsilon_scale, args.self_loop_scale,
-                                  args.dropout, args.static_embeddings)
+                                  args.dropout)
 
     # log diagnostic information on parameter count
     LOGGER.info("Total model parameters: %s" %

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from glob import glob
-from .utils.data_utils import Vocab
+from .utils.data_utils import Vocab, PAD_TOKEN_INDEX
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import (stdout_root_logger, add_file_handler,
                                   remove_all_file_handlers)
@@ -66,10 +66,8 @@ def main(args: argparse.Namespace) -> None:
                 "Exit-code 1: patience epochs have already been reached")
             return None
         elif exit_code == 2:
-            LOGGER.info(
-                ("Exit-code 2: interruption during previous training, "
-                 "continuing training")
-            )
+            LOGGER.info(("Exit-code 2: interruption during previous training, "
+                         "continuing training"))
 
     # load configurations directly into argument namespace
     args = parse_configs_to_args(args, model_log_directory)
@@ -98,6 +96,9 @@ def main(args: argparse.Namespace) -> None:
 
     # generate embeddings to fill up correct dimensions
     embeddings = torch.zeros(len(vocab), args.word_dim)
+    embeddings = torch.nn.Embedding.from_pretrained(
+        embeddings, freeze=args.static_embeddings,
+        padding_idx=PAD_TOKEN_INDEX)
 
     # get training and validation data
     train_data, valid_data, num_classes = get_training_validation_data(
@@ -113,7 +114,7 @@ def main(args: argparse.Namespace) -> None:
                                   pre_computed_patterns, args.no_self_loops,
                                   args.shared_self_loops, args.no_epsilons,
                                   args.epsilon_scale, args.self_loop_scale,
-                                  args.dropout, args.static_embeddings)
+                                  args.dropout)
 
     # train SoftPatternClassifier
     train(train_data, valid_data, model, num_classes, epochs,
