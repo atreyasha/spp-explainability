@@ -132,7 +132,8 @@ class SoftPatternClassifier(Module):
         # normalize diagonal data tensor
         diags_size = (self.total_num_patterns * self.num_diags *
                       self.max_pattern_length)
-        diags = randn(diags_size, self.embeddings.embedding_dim)
+        diags = randn(  # type: ignore
+            diags_size, self.embeddings.embedding_dim)
         bias = randn(diags_size, 1)
         normalize(diags)
 
@@ -228,9 +229,9 @@ class SoftPatternClassifier(Module):
 
         # view diags and bias in appropriate tensor sizes
         diags_size = diags.size()[0]
-        diags = diags.view(self.total_num_patterns, self.num_diags,
-                           self.max_pattern_length,
-                           self.embeddings.embedding_dim)
+        diags = diags.view(  # type: ignore
+            self.total_num_patterns, self.num_diags, self.max_pattern_length,
+            self.embeddings.embedding_dim)
         bias = bias.view(self.total_num_patterns, self.num_diags,
                          self.max_pattern_length)
 
@@ -272,7 +273,7 @@ class SoftPatternClassifier(Module):
     def load_pattern(self,
                      pattern: List[str]) -> Tuple[torch.Tensor, torch.Tensor]:
         # initialize local variables
-        diags_subset = NUMERICAL_EPSILON * torch.randn(
+        diags_subset = NUMERICAL_EPSILON * torch.randn(  # type: ignore
             len(pattern), self.embeddings.embedding_dim)
         bias_subset = torch.zeros(len(pattern))
 
