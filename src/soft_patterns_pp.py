@@ -4,7 +4,7 @@
 from collections import OrderedDict
 from typing import List, Union, Tuple, cast
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
-from torch.nn import Module, Parameter, ModuleList, Linear, Dropout, Embedding
+from torch.nn import Module, Parameter, ModuleList, Linear, Dropout
 from .utils.model_utils import normalize, Semiring, Batch
 from .utils.data_utils import Vocab
 import torch
@@ -273,7 +273,7 @@ class SoftPatternClassifier(Module):
     def load_pattern(self,
                      pattern: List[str]) -> Tuple[torch.Tensor, torch.Tensor]:
         # initialize local variables
-        diags_subset = NUMERICAL_EPSILON * torch.randn(  # type: ignore
+        diags_subset = NUMERICAL_EPSILON * randn(  # type: ignore
             len(pattern), self.embeddings.embedding_dim)
         bias_subset = torch.zeros(len(pattern))
 
