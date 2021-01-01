@@ -157,14 +157,16 @@ def get_training_validation_data(
     vocab: Vocab, num_train_instances: int
 ) -> Tuple[List[Tuple[List[int], int]], List[Tuple[List[int], int]], int]:
     # read train data
-    train_input, _ = read_docs(args.train_data, vocab)
+    train_input, train_text = read_docs(args.train_data, vocab)
+    LOGGER.info("Sample training text: %s" % train_text[:10])
     train_input = cast(List[List[int]], train_input)
     train_labels = read_labels(args.train_labels)
     num_classes = len(set(train_labels))
     train_data = list(zip(train_input, train_labels))
 
     # read validation data
-    valid_input, _ = read_docs(args.valid_data, vocab)
+    valid_input, valid_text = read_docs(args.valid_data, vocab)
+    LOGGER.info("Sample validation text: %s" % valid_text[:10])
     valid_input = cast(List[List[int]], valid_input)
     valid_labels = read_labels(args.valid_labels)
     valid_data = list(zip(valid_input, valid_labels))
