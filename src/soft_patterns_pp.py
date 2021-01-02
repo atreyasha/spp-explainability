@@ -128,7 +128,7 @@ class SoftPatternClassifier(Module):
             # factor by which to scale epsilon parameter
             if epsilon_scale is not None:
                 self.register_buffer("epsilon_scale",
-                                     self.semiring.from_float(
+                                     self.semiring.from_outer_to_semiring(
                                          FloatTensor([epsilon_scale])),
                                      persistent=False)
             else:
@@ -156,7 +156,7 @@ class SoftPatternClassifier(Module):
                 # workflow for self-loops that are not shared
                 if self_loop_scale is not None:
                     self.register_buffer("self_loop_scale",
-                                         self.semiring.from_float(
+                                         self.semiring.from_outer_to_semiring(
                                              FloatTensor([self_loop_scale])),
                                          persistent=False)
                 else:
@@ -203,7 +203,7 @@ class SoftPatternClassifier(Module):
         # mm: (diags_size x word_dim) @ (word_dim x batch_vocab_size)
         # transition_score: diags_size x batch_vocab_size
         # these would represent transition scores for each word in vocab
-        transition_scores = self.semiring.from_float(
+        transition_scores = self.semiring.from_outer_to_semiring(
             mm(self.diags, batch.local_embeddings) +
             self.bias_scale * self.bias).t()
 
@@ -315,7 +315,8 @@ class SoftPatternClassifier(Module):
         # set self_loop_scale based on class variables
         self_loop_scale = None
         if self.shared_self_loops:
-            self_loop_scale = self.semiring.from_float(self.self_loop_scale)
+            self_loop_scale = self.semiring.from_outer_to_semiring(
+                self.self_loop_scale)
         elif not self.no_self_loops:
             self_loop_scale = self.self_loop_scale.detach().clone()
 
@@ -372,7 +373,7 @@ class SoftPatternClassifier(Module):
                 end_state_values[active_doc_indices])
 
         # NOTE: scores represent end values on top of SoPa
-        scores = self.semiring.to_float(scores)
+        scores = self.semiring.from_semiring_to_outer(scores)
 
         # return output of MLP
         return self.mlp.forward(scores)
@@ -380,7 +381,7 @@ class SoftPatternClassifier(Module):
     def get_epsilon_values(self) -> Union[torch.Tensor, None]:
         return None if self.no_epsilons else self.semiring.times(
             self.epsilon_scale.detach().clone(),  # type: ignore
-            self.semiring.from_float(self.epsilons))
+            self.semiring.from_outer_to_semiring(self.epsilons))
 
     def transition_once(
             self, epsilon_values: Union[torch.Tensor, None],

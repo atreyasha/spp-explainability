@@ -117,14 +117,14 @@ class Semiring:
                  one: Callable[..., torch.Tensor],
                  plus: Callable[..., torch.Tensor],
                  times: Callable[..., torch.Tensor],
-                 from_float: Callable[..., torch.Tensor],
-                 to_float: Callable[..., torch.Tensor]) -> None:  # yapf: disable
+                 from_outer_to_semiring: Callable[..., torch.Tensor],
+                 from_semiring_to_outer: Callable[..., torch.Tensor]) -> None:  # yapf: disable
         self.zero = zero
         self.one = one
         self.plus = plus
         self.times = times
-        self.from_float = from_float
-        self.to_float = to_float
+        self.from_outer_to_semiring = from_outer_to_semiring
+        self.from_semiring_to_outer = from_semiring_to_outer
 
 
 ProbSemiring = Semiring(torch.zeros, torch.ones, torch.add, torch.mul,
