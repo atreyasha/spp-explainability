@@ -20,7 +20,7 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
     sopa.add_argument(
         "--semiring",
         help="Specify which semiring to use",
-        default="MaxPlusSemiring",
+        default="MaxProductSemiring",
         choices=["MaxSumSemiring", "MaxProductSemiring", "ProbSemiring"],
         type=str)
     sopa.add_argument("--bias-scale",
@@ -123,7 +123,7 @@ def training_arg_parser() -> argparse.ArgumentParser:
         type=float)
     train.add_argument("--batch-size",
                        help="Batch size for training",
-                       default=64,
+                       default=128,
                        type=int)
     train.add_argument("--max-doc-len",
                        help=("Maximum document length allowed. "
