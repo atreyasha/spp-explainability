@@ -131,10 +131,10 @@ class Semiring:
 ProbSemiring = Semiring(torch.zeros, torch.ones, torch.add, torch.mul,
                         torch.sigmoid, identity)
 
-MaxPlusSemiring = Semiring(neg_infinity, torch.zeros, torch.max, torch.add,
-                           identity, identity)
+MaxSumSemiring = Semiring(neg_infinity, torch.zeros, torch.max, torch.add,
+                          identity, identity)
 
-LogSpaceMaxTimesSemiring = Semiring(neg_infinity, torch.zeros, torch.max,
-                                    torch.add,
-                                    lambda x: torch.log(torch.sigmoid(x)),
-                                    torch.exp)
+LogSpaceMaxProductSemiring = Semiring(neg_infinity, torch.zeros, torch.max,
+                                      torch.add,
+                                      lambda x: torch.log(torch.sigmoid(x)),
+                                      torch.exp)

@@ -18,7 +18,7 @@ from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 to_cuda, argmax, enable_gradient_clipping,
                                 timestamp, Batch, Semiring, ProbSemiring,
-                                LogSpaceMaxTimesSemiring, MaxPlusSemiring)
+                                LogSpaceMaxProductSemiring, MaxSumSemiring)
 from .utils.logging_utils import (stdout_root_logger, add_file_handler,
                                   remove_all_file_handlers)
 from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
@@ -187,10 +187,10 @@ def get_training_validation_data(
 
 def get_semiring(args: argparse.Namespace) -> Semiring:
     # define semiring as per argument provided and log
-    if args.semiring == "MaxPlusSemiring":
-        semiring = MaxPlusSemiring
-    elif args.semiring == "MaxTimesSemiring":
-        semiring = LogSpaceMaxTimesSemiring
+    if args.semiring == "MaxSumSemiring":
+        semiring = MaxSumSemiring
+    elif args.semiring == "MaxProductSemiring":
+        semiring = LogSpaceMaxProductSemiring
     elif args.semiring == "ProbSemiring":
         semiring = ProbSemiring
     LOGGER.info("Semiring: %s" % args.semiring)

@@ -21,7 +21,7 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
         "--semiring",
         help="Specify which semiring to use",
         default="MaxPlusSemiring",
-        choices=["MaxPlusSemiring", "MaxTimesSemiring", "ProbSemiring"],
+        choices=["MaxSumSemiring", "MaxProductSemiring", "ProbSemiring"],
         type=str)
     sopa.add_argument("--bias-scale",
                       help="Scale biases by this parameter",
