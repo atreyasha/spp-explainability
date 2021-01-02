@@ -93,9 +93,8 @@ class Batch:
             # replace word index with UNK_TOKEN_INDEX.
             docs = [[
                 UNK_TOKEN_INDEX if (np.random.rand() < word_dropout) and
-                (x
-                 not in [START_TOKEN_INDEX, END_TOKEN_INDEX])
-                else x for x in doc
+                (x not in [START_TOKEN_INDEX, END_TOKEN_INDEX]) else x
+                for x in doc
             ] for doc in docs]
         # pad docs so they all have the same length.
         # we pad with UNK, whose embedding is 0
