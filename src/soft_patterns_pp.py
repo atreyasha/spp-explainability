@@ -408,7 +408,7 @@ class SoftPatternClassifier(Module):
              self.semiring.times(after_epsilons[:, :, :-1],
                                  transition_matrix[:, :, -1, :-1])), 2)
 
-        # adding self-loops
+        # conditionally adding self-loops
         if self.no_self_loops:
             return after_main_paths
         else:

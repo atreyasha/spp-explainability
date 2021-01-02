@@ -17,12 +17,14 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
               "PatternLength1-PatternCount1_PatternLength2-PatternCount2_..."),
         default="5-50_4-50_3-50_2-50",
         type=str)
-    sopa.add_argument(
-        "--semiring",
-        help="Specify which semiring to use",
-        default="MaxProductSemiring",
-        choices=["MaxSumSemiring", "MaxProductSemiring", "ProbSemiring"],
-        type=str)
+    sopa.add_argument("--semiring",
+                      help="Specify which semiring to use",
+                      default="MaxProductSemiring",
+                      choices=[
+                          "MaxSumSemiring", "MaxProductSemiring",
+                          "ProbabilitySemiring"
+                      ],
+                      type=str)
     sopa.add_argument("--bias-scale",
                       help="Scale biases by this parameter",
                       type=float)

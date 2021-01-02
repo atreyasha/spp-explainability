@@ -127,8 +127,8 @@ class Semiring:
         self.from_semiring_to_outer = from_semiring_to_outer
 
 
-ProbSemiring = Semiring(torch.zeros, torch.ones, torch.add, torch.mul,
-                        torch.sigmoid, identity)
+ProbabilitySemiring = Semiring(torch.zeros, torch.ones, torch.add, torch.mul,
+                               torch.sigmoid, identity)
 
 MaxSumSemiring = Semiring(neg_infinity, torch.zeros, torch.max, torch.add,
                           identity, identity)
