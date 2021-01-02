@@ -87,7 +87,27 @@ class SoftPatternClassifier(Module):
         self.no_epsilons = no_epsilons
         self.no_self_loops = no_self_loops
         self.dropout = Dropout(dropout)
-        self.num_diags = 1
+        self.num_diags = 2 if (not self.no_self_loops
+                               and self.shared_self_loops == 0) else 1
+
+        # create transition matrix diagonal and bias tensors
+        diags_size = (self.total_num_patterns * self.num_diags *
+                      self.max_pattern_length)
+        diags = randn(  # type: ignore
+            diags_size, self.embeddings.embedding_dim)
+        bias = randn(diags_size, 1)
+
+        # normalize diagonal data tensor
+        normalize(diags)
+
+        # load diagonal and bias data from patterns if provided
+        if pre_computed_patterns is not None:
+            diags, bias = self.load_pre_computed_patterns(
+                pre_computed_patterns, diags, bias, pattern_specs)
+
+        # convert both diagonal and bias data into learnable parameters
+        self.diags = Parameter(diags)
+        self.bias = Parameter(bias)
 
         # assign bias_scale based on conditionals
         if bias_scale is not None:
@@ -117,51 +137,32 @@ class SoftPatternClassifier(Module):
                                      persistent=False)
 
         # assign self-loop related variables from conditionals
-        if self.shared_self_loops:
-            # shared parameters between main path and self loop
-            # 1: one parameter per state per pattern
-            # 2: a single global parameter
-            if self.shared_self_loops == SHARED_SL_PARAM_PER_STATE_PER_PATTERN:
-                # create a tensor for each pattern
-                shared_self_loop_data = randn(self.total_num_patterns,
-                                              self.max_pattern_length)
-            elif self.shared_self_loops == SHARED_SL_SINGLE_PARAM:
-                # create a single tensor
-                shared_self_loop_data = randn(1)
-            # NOTE: assign tensor to a learnable parameter
-            self.self_loop_scale = Parameter(shared_self_loop_data)
-        elif not self.no_self_loops:
-            # workflow for self-loops that are not shared
-            if self_loop_scale is not None:
-                self.register_buffer("self_loop_scale",
-                                     self.semiring.from_float(
-                                         FloatTensor([self_loop_scale])),
-                                     persistent=False)
+        if not self.no_self_loops:
+            if self.shared_self_loops != 0:
+                # shared parameters between main path and self loop
+                # 1: one parameter per state per pattern
+                if (self.shared_self_loops ==
+                        SHARED_SL_PARAM_PER_STATE_PER_PATTERN):
+                    # create a tensor for each pattern
+                    shared_self_loop_data = randn(self.total_num_patterns,
+                                                  self.max_pattern_length)
+                # 2: a single global parameter
+                elif self.shared_self_loops == SHARED_SL_SINGLE_PARAM:
+                    # create a single tensor
+                    shared_self_loop_data = randn(1)
+                # NOTE: assign tensor to a learnable parameter
+                self.self_loop_scale = Parameter(shared_self_loop_data)
             else:
-                self.register_buffer("self_loop_scale",
-                                     semiring.one(1),
-                                     persistent=False)
-            # assign two diagonals instead of default one
-            self.num_diags = 2
-
-        # create transition matrix diagonal and bias tensors
-        diags_size = (self.total_num_patterns * self.num_diags *
-                      self.max_pattern_length)
-        diags = randn(  # type: ignore
-            diags_size, self.embeddings.embedding_dim)
-        bias = randn(diags_size, 1)
-
-        # normalize diagonal data tensor
-        normalize(diags)
-
-        # load diagonal and bias data from patterns if provided
-        if pre_computed_patterns is not None:
-            diags, bias = self.load_pre_computed_patterns(
-                pre_computed_patterns, diags, bias, pattern_specs)
-
-        # convert both diagonal and bias data into learnable parameters
-        self.diags = Parameter(diags)
-        self.bias = Parameter(bias)
+                # workflow for self-loops that are not shared
+                if self_loop_scale is not None:
+                    self.register_buffer("self_loop_scale",
+                                         self.semiring.from_float(
+                                             FloatTensor([self_loop_scale])),
+                                         persistent=False)
+                else:
+                    self.register_buffer("self_loop_scale",
+                                         semiring.one(1),
+                                         persistent=False)
 
         # register end_states tensor
         self.register_buffer(
