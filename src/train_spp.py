@@ -729,8 +729,8 @@ def main(args: argparse.Namespace) -> None:
     # create SoftPatternClassifier
     model = SoftPatternClassifier(
         pattern_specs, mlp_hidden_dim, mlp_num_layers, num_classes, embeddings,
-        vocab, semiring, args.bias_scale, pre_computed_patterns,
-        args.no_self_loops, args.shared_self_loops, args.no_epsilons,
+        vocab, semiring, pre_computed_patterns, args.shared_self_loops,
+        args.no_epsilons, args.no_self_loops, args.bias_scale,
         args.epsilon_scale, args.self_loop_scale, args.dropout)
 
     # log diagnostic information on parameter count

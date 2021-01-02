@@ -97,8 +97,7 @@ def main(args: argparse.Namespace) -> None:
     # generate embeddings to fill up correct dimensions
     embeddings = torch.zeros(len(vocab), args.word_dim)
     embeddings = torch.nn.Embedding.from_pretrained(
-        embeddings, freeze=args.static_embeddings,
-        padding_idx=PAD_TOKEN_INDEX)
+        embeddings, freeze=args.static_embeddings, padding_idx=PAD_TOKEN_INDEX)
 
     # get training and validation data
     train_data, valid_data, num_classes = get_training_validation_data(
@@ -108,13 +107,11 @@ def main(args: argparse.Namespace) -> None:
     semiring = get_semiring(args)
 
     # create SoftPatternClassifier
-    model = SoftPatternClassifier(pattern_specs, mlp_hidden_dim,
-                                  mlp_num_layers, num_classes, embeddings,
-                                  vocab, semiring, args.bias_scale,
-                                  pre_computed_patterns, args.no_self_loops,
-                                  args.shared_self_loops, args.no_epsilons,
-                                  args.epsilon_scale, args.self_loop_scale,
-                                  args.dropout)
+    model = SoftPatternClassifier(
+        pattern_specs, mlp_hidden_dim, mlp_num_layers, num_classes, embeddings,
+        vocab, semiring, pre_computed_patterns, args.shared_self_loops,
+        args.no_epsilons, args.no_self_loops, args.bias_scale,
+        args.epsilon_scale, args.self_loop_scale, args.dropout)
 
     # train SoftPatternClassifier
     train(train_data, valid_data, model, num_classes, epochs,

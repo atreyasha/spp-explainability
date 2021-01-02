@@ -25,7 +25,6 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
         type=str)
     sopa.add_argument("--bias-scale",
                       help="Scale biases by this parameter",
-                      default=0.1,
                       type=float)
     sopa.add_argument("--epsilon-scale",
                       help="Scale epsilons by this parameter",
