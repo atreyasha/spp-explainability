@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import argparse
+from .utils.parser_utils import dir_path, file_path
 from .soft_patterns_pp import (SHARED_SL_PARAM_PER_STATE_PER_PATTERN,
                                SHARED_SL_SINGLE_PARAM)
+import argparse
 
 
 def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
@@ -74,23 +75,23 @@ def training_arg_parser() -> argparse.ArgumentParser:
     required.add_argument("--embeddings",
                           help="Path to GloVe token embeddings file",
                           required=True,
-                          type=str)
+                          type=file_path)
     required.add_argument("--train-data",
                           help="Path to train data file",
                           required=True,
-                          type=str)
+                          type=file_path)
     required.add_argument("--train-labels",
                           help="Path to train labels file",
                           required=True,
-                          type=str)
+                          type=file_path)
     required.add_argument("--valid-data",
                           help="Path to validation data file",
                           required=True,
-                          type=str)
+                          type=file_path)
     required.add_argument("--valid-labels",
                           help="Path to validation labels file",
                           required=True,
-                          type=str)
+                          type=file_path)
     # add train group for clearer annotations
     train = parser.add_argument_group('optional training arguments')
     # numeric and character-accepting options
@@ -98,10 +99,10 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        help=("Directory where all models and tensorboard logs "
                              "will be saved"),
                        default="./models",
-                       type=str)
+                       type=dir_path)
     train.add_argument("--pre-computed-patterns",
                        help="Path to file containing per-computed patterns",
-                       type=str)
+                       type=file_path)
     train.add_argument("--learning-rate",
                        help="Learning rate for Adam optimizer",
                        default=1e-3,
@@ -168,7 +169,7 @@ def resume_training_arg_parser() -> argparse.ArgumentParser:
                           help=("Base model directory containing model "
                                 "data to be resumed for training"),
                           required=True,
-                          type=str)
+                          type=dir_path)
     return parser
 
 
@@ -200,7 +201,7 @@ def preprocess_arg_parser() -> argparse.ArgumentParser:
     preprocess.add_argument("--data-directory",
                             help="Data directory containing clean input data",
                             default="./data/facebook_multiclass_nlu/",
-                            type=str)
+                            type=dir_path)
     preprocess.add_argument(
         "--truecase",
         help=("Retain true casing when preprocessing data. "

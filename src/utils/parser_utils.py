@@ -1,9 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Iterable
+from typing import Iterable, Union
 from operator import attrgetter
 import argparse
+import re
+import os
+
+
+def dir_path(path: str) -> Union[str, argparse.ArgumentTypeError]:
+    if os.path.isdir(path):
+        return path
+    else:
+        raise argparse.ArgumentTypeError("%s is not a valid directory" % path)
+
+
+def file_path(path: str) -> Union[str, argparse.ArgumentTypeError]:
+    if os.path.isfile(path):
+        return path
+    else:
+        raise argparse.ArgumentTypeError("%s is not a valid file" % path)
 
 
 class Sorting_Help_Formatter(argparse.HelpFormatter):
