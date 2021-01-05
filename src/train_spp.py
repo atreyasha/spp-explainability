@@ -732,10 +732,9 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                    FINISHED_EPOCHS)
 
 
-def train_outer(args: argparse.Namespace,
-                model_log_directory: str,
-                resume_training=False) -> None:
+def train_outer(args: argparse.Namespace, resume_training=False) -> None:
     # create model log directory
+    model_log_directory = args.model_log_directory
     os.makedirs(model_log_directory, exist_ok=True)
 
     # execute code while catching any errors
@@ -886,11 +885,11 @@ def main(args: argparse.Namespace) -> None:
 
     # loop and train
     for i, args in enumerate(args_superset):
-        model_log_directory = os.path.join(
+        args.model_log_directory = os.path.join(
             args.models_directory, "spp_single_train_" +
             timestamp() if not args.grid_training else "spp_single_train_" +
             str(i))
-        train_outer(args, model_log_directory, resume_training=False)
+        train_outer(args, resume_training=False)
 
 
 if __name__ == '__main__':
