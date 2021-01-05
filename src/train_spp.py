@@ -265,29 +265,18 @@ def dump_vocab(vocab: Vocab, model_log_directory: str) -> None:
 
 def dump_configs(args: argparse.Namespace,
                  model_log_directory: str,
-                 prefix: str = "",
-                 word_dim: Union[int, None] = None) -> None:
-    # extract relevant arguments for model and training configs
-    soft_patterns_args_dict = soft_patterns_pp_arg_parser().parse_args(
-        "").__dict__
-    grid_training_args_dict = grid_training_arg_parser().parse_args(
-        "").__dict__
-    hardware_args_dict = hardware_arg_parser().parse_args("").__dict__
-    logging_args_dict = logging_arg_parser().parse_args("").__dict__
-    tqdm_args_dict = tqdm_arg_parser().parse_args("").__dict__
+                 prefix: str = "") -> None:
+    # create dictionaries to fill up
+    soft_patterns_args_dict = {}
     training_args_dict = {}
-    for key in args.__dict__:
-        if key in soft_patterns_args_dict:
-            soft_patterns_args_dict[key] = getattr(args, key)
-        elif (key
-              not in logging_args_dict) and (key not in tqdm_args_dict) and (
-                  key not in hardware_args_dict) and (
-                      key not in grid_training_args_dict):
-            training_args_dict[key] = getattr(args, key)
 
-    if word_dim is not None:
-        # manually update model configuration with word_dim; it is needed later
-        soft_patterns_args_dict["word_dim"] = word_dim
+    # extract real arguments and fill up model dictionary
+    for action in soft_patterns_pp_arg_parser()._actions:
+        soft_patterns_args_dict[action.dest] = getattr(args, action.dest)
+
+    # extract real arguments and fill up training dictionary
+    for action in training_arg_parser()._actions:
+        training_args_dict[action.dest] = getattr(args, action.dest)
 
     # dump soft patterns model arguments for posterity
     with open(os.path.join(model_log_directory, prefix + "model_config.json"),
@@ -822,6 +811,8 @@ def train_outer(args: argparse.Namespace,
             vocab_combined = get_vocab(args)
             # get final vocab, embeddings and word_dim
             vocab, embeddings, word_dim = get_embeddings(args, vocab_combined)
+            # add word_dim into arguments
+            args.word_dim = word_dim
             # show vocabulary diagnostics
             get_vocab_diagnostics(vocab, vocab_combined, word_dim)
             # get embeddings as torch Module
@@ -852,7 +843,7 @@ def train_outer(args: argparse.Namespace,
             LOGGER.info("Total model parameters: %s" %
                         sum(parameter.nelement()
                             for parameter in model.parameters()))
-            dump_configs(args, model_log_directory, "", word_dim)
+            dump_configs(args, model_log_directory)
             dump_vocab(vocab, model_log_directory)
 
         train_inner(train_data, valid_data, model, num_classes, epochs,
@@ -875,7 +866,7 @@ def main(args: argparse.Namespace) -> None:
         os.makedirs(args.models_directory, exist_ok=True)
 
         # dump current training configs
-        dump_configs(args, args.models_directory, "base_", None)
+        dump_configs(args, args.models_directory, "base_")
 
         # get grid config and add random iterations to it
         grid_dict = get_grid_config(args.grid_config)

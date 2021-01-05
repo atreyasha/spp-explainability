@@ -47,6 +47,10 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
             0, SHARED_SL_PARAM_PER_STATE_PER_PATTERN, SHARED_SL_SINGLE_PARAM
         ],
         type=int)
+    sopa.add_argument(
+        "--word-dim",
+        help=argparse.SUPPRESS,
+        type=int)
     sopa.add_argument("--mlp-hidden-dim",
                       help="MLP hidden dimension",
                       default=25,
