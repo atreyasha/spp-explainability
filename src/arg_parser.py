@@ -20,7 +20,7 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
         type=str)
     sopa.add_argument("--semiring",
                       help="Specify which semiring to use",
-                      default="MaxProductSemiring",
+                      default="MaxSumSemiring",
                       choices=[
                           "MaxSumSemiring", "MaxProductSemiring",
                           "ProbabilitySemiring"
