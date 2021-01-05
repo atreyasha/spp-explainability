@@ -95,9 +95,8 @@ def training_arg_parser() -> argparse.ArgumentParser:
     # add train group for clearer annotations
     train = parser.add_argument_group('optional training arguments')
     # numeric and character-accepting options
-    train.add_argument("--models-log-directory",
-                       help=("Directory where all models and tensorboard logs "
-                             "will be saved"),
+    train.add_argument("--models-directory",
+                       help="Base directory where all models will be saved",
                        default="./models",
                        type=dir_path)
     train.add_argument("--pre-computed-patterns",
@@ -161,10 +160,27 @@ def training_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def grid_training_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(add_help=False)
+    grid = parser.add_argument_group('optional grid-training arguments')
+    grid.add_argument("--grid-config",
+                      help="Path to grid configuration file",
+                      default="./src/resources/flat_grid_config.json",
+                      type=file_path)
+    grid.add_argument(
+        "--num-random-iterations",
+        help="Number of random iteration(s) for each grid instance",
+        default=1,
+        type=int)
+    grid.add_argument("--grid-training",
+                      help="Use grid-training instead of single-training",
+                      action="store_true")
+    return parser
+
+
 def resume_training_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     required = parser.add_argument_group('required training arguments')
-    # add preprocess group
     required.add_argument("--model-log-directory",
                           help=("Base model directory containing model "
                                 "data to be resumed for training"),
@@ -175,7 +191,6 @@ def resume_training_arg_parser() -> argparse.ArgumentParser:
 
 def hardware_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    # add preprocess group
     hardware = parser.add_argument_group(
         'optional hardware-acceleration arguments')
     hardware.add_argument("--gpu-device",
@@ -196,7 +211,6 @@ def hardware_arg_parser() -> argparse.ArgumentParser:
 
 def preprocess_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    # add preprocess group
     preprocess = parser.add_argument_group('optional preprocessing arguments')
     preprocess.add_argument("--data-directory",
                             help="Data directory containing clean input data",
@@ -212,7 +226,6 @@ def preprocess_arg_parser() -> argparse.ArgumentParser:
 
 def logging_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    # add logging group
     logging = parser.add_argument_group('optional logging arguments')
     logging.add_argument(
         "--logging-level",
@@ -225,7 +238,6 @@ def logging_arg_parser() -> argparse.ArgumentParser:
 
 def tqdm_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    # add tqdm group
     tqdm = parser.add_argument_group('optional progress-bar arguments')
     tqdm.add_argument(
         "--tqdm-update-freq",

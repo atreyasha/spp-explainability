@@ -24,13 +24,15 @@ from .utils.logging_utils import (stdout_root_logger, add_file_handler,
                                   remove_all_file_handlers)
 from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
                          logging_arg_parser, tqdm_arg_parser,
-                         hardware_arg_parser)
+                         hardware_arg_parser, grid_training_arg_parser)
 from .soft_patterns_pp import SoftPatternClassifier
+from sklearn.model_selection import ParameterGrid
 import numpy as np
 import argparse
 import logging
 import signal
 import torch
+import copy
 import json
 import sys
 import os
@@ -54,6 +56,34 @@ def save_exit_code(filename: str, code: int) -> None:
         output_file_stream.write("%s\n" % code)
 
 
+def get_exit_code(filename: str) -> int:
+    with open(filename, "r") as input_file_stream:
+        exit_code = int(input_file_stream.readline().strip())
+    return exit_code
+
+
+def parse_configs_to_args(args: argparse.Namespace,
+                          model_log_directory: str,
+                          prefix: str = "") -> argparse.Namespace:
+    # check for json configs and add them to list
+    json_files = []
+    json_files.append(
+        os.path.join(model_log_directory, prefix + "model_config.json"))
+    json_files.append(
+        os.path.join(model_log_directory, prefix + "training_config.json"))
+
+    # raise error if any of them are missing
+    for json_file in json_files:
+        if not os.path.exists(json_file):
+            raise FileNotFoundError("%s is missing" % json_file)
+
+    # update argument namespace with information from json files
+    for json_file in json_files:
+        with open(json_file, "r") as input_file_stream:
+            args.__dict__.update(json.load(input_file_stream))
+    return args
+
+
 def set_hardware(args: argparse.Namespace) -> Union[torch.device, None]:
     # set torch number of threads
     if args.num_threads is None:
@@ -75,6 +105,31 @@ def set_hardware(args: argparse.Namespace) -> Union[torch.device, None]:
 
     # return device
     return gpu_device
+
+
+def get_grid_config(filename: str) -> dict:
+    with open(filename, "r") as input_file_stream:
+        grid_dict = json.load(input_file_stream)
+    return grid_dict
+
+
+def get_grid_args_superset(
+        args: argparse.Namespace,
+        param_grid_mapping: dict) -> List[argparse.Namespace]:
+    args_superset = []
+    # ensure param_grid_mapping keys are integers
+    param_grid_mapping = {
+        int(key): value
+        for key, value in param_grid_mapping.items()
+    }
+    for i in sorted(param_grid_mapping.keys()):
+        param_grid_instance = param_grid_mapping[i]
+        args_copy = copy.deepcopy(args)
+        for key in param_grid_instance:
+            if key in args.__dict__:
+                setattr(args_copy, key, param_grid_instance[key])
+        args_superset.append(args_copy)
+    return args_superset
 
 
 def get_patterns(
@@ -198,10 +253,24 @@ def get_semiring(args: argparse.Namespace) -> Semiring:
     return semiring
 
 
-def dump_single_train_files(args: argparse.Namespace, model_log_directory: str,
-                            vocab: Vocab, word_dim: int) -> None:
+def dump_vocab(vocab: Vocab, model_log_directory: str) -> None:
+    # dump vocab indices for re-use
+    with open(os.path.join(model_log_directory, "vocab.txt"),
+              "w") as output_file_stream:
+        dict_list = [(key, value) for key, value in vocab.index.items()]
+        dict_list = sorted(dict_list, key=lambda x: x[1])
+        for item in dict_list:
+            output_file_stream.write("%s\n" % item[0])
+
+
+def dump_configs(args: argparse.Namespace,
+                 model_log_directory: str,
+                 prefix: str = "",
+                 word_dim: Union[int, None] = None) -> None:
     # extract relevant arguments for model and training configs
     soft_patterns_args_dict = soft_patterns_pp_arg_parser().parse_args(
+        "").__dict__
+    grid_training_args_dict = grid_training_arg_parser().parse_args(
         "").__dict__
     hardware_args_dict = hardware_arg_parser().parse_args("").__dict__
     logging_args_dict = logging_arg_parser().parse_args("").__dict__
@@ -210,32 +279,28 @@ def dump_single_train_files(args: argparse.Namespace, model_log_directory: str,
     for key in args.__dict__:
         if key in soft_patterns_args_dict:
             soft_patterns_args_dict[key] = getattr(args, key)
-        elif (key not in logging_args_dict) and (
-                key not in tqdm_args_dict) and (key not in hardware_args_dict):
+        elif (key
+              not in logging_args_dict) and (key not in tqdm_args_dict) and (
+                  key not in hardware_args_dict) and (
+                      key not in grid_training_args_dict):
             training_args_dict[key] = getattr(args, key)
 
-    # manually update model configuration with word_dim; it is needed later
-    soft_patterns_args_dict["word_dim"] = word_dim
+    if word_dim is not None:
+        # manually update model configuration with word_dim; it is needed later
+        soft_patterns_args_dict["word_dim"] = word_dim
 
     # dump soft patterns model arguments for posterity
-    with open(os.path.join(model_log_directory, "model_config.json"),
+    with open(os.path.join(model_log_directory, prefix + "model_config.json"),
               "w") as output_file_stream:
         json.dump(soft_patterns_args_dict,
                   output_file_stream,
                   ensure_ascii=False)
 
     # dump training arguments for posterity
-    with open(os.path.join(model_log_directory, "training_config.json"),
-              "w") as output_file_stream:
+    with open(
+            os.path.join(model_log_directory, prefix + "training_config.json"),
+            "w") as output_file_stream:
         json.dump(training_args_dict, output_file_stream, ensure_ascii=False)
-
-    # dump vocab indices for re-use
-    with open(os.path.join(model_log_directory, "vocab.txt"),
-              "w") as output_file_stream:
-        dict_list = [(key, value) for key, value in vocab.index.items()]
-        dict_list = sorted(dict_list, key=lambda x: x[1])
-        for item in dict_list:
-            output_file_stream.write("%s\n" % item[0])
 
 
 def read_patterns(
@@ -356,25 +421,25 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
     return correct / number_data_points
 
 
-def train(train_data: List[Tuple[List[int], int]],
-          valid_data: List[Tuple[List[int], int]],
-          model: Module,
-          num_classes: int,
-          epochs: int,
-          model_log_directory: str,
-          learning_rate: float,
-          batch_size: int,
-          disable_scheduler: bool = False,
-          scheduler_patience: int = 10,
-          scheduler_factor: float = 0.1,
-          gpu_device: Union[torch.device, None] = None,
-          clip_threshold: Union[float, None] = None,
-          max_doc_len: int = -1,
-          word_dropout: float = 0,
-          patience: int = 30,
-          resume_training: bool = False,
-          disable_tqdm: bool = False,
-          tqdm_update_freq: int = 1) -> None:
+def train_inner(train_data: List[Tuple[List[int], int]],
+                valid_data: List[Tuple[List[int], int]],
+                model: Module,
+                num_classes: int,
+                epochs: int,
+                model_log_directory: str,
+                learning_rate: float,
+                batch_size: int,
+                disable_scheduler: bool = False,
+                scheduler_patience: int = 10,
+                scheduler_factor: float = 0.1,
+                gpu_device: Union[torch.device, None] = None,
+                clip_threshold: Union[float, None] = None,
+                max_doc_len: int = -1,
+                word_dropout: float = 0,
+                patience: int = 30,
+                resume_training: bool = False,
+                disable_tqdm: bool = False,
+                tqdm_update_freq: int = 1) -> None:
     # create signal handlers in case script receives termination signals
     # adapted from: https://stackoverflow.com/a/31709094
     for specific_signal in [
@@ -678,85 +743,175 @@ def train(train_data: List[Tuple[List[int], int]],
                    FINISHED_EPOCHS)
 
 
-def main(args: argparse.Namespace) -> None:
+def train_outer(args: argparse.Namespace,
+                resume_training=False,
+                index: int = 0) -> None:
+    # load model directory
+    if resume_training:
+        model_log_directory = args.model_log_directory
+    else:
+        model_log_directory = os.path.join(
+            args.models_directory, "spp_single_train_" +
+            timestamp() if not args.grid_training else "spp_single_train_" +
+            str(index))
+
     # create model log directory
-    model_log_directory = os.path.join(args.models_log_directory,
-                                       "spp_single_train_" + timestamp())
     os.makedirs(model_log_directory, exist_ok=True)
 
-    # update LOGGER object with file handler
-    global LOGGER
-    LOGGER = add_file_handler(LOGGER,
-                              os.path.join(model_log_directory, "session.log"))
+    # execute code while catching any errors
+    try:
+        # update LOGGER object with file handler
+        global LOGGER
+        LOGGER = add_file_handler(
+            LOGGER, os.path.join(model_log_directory, "session.log"))
 
-    # log namespace arguments and model directory
-    LOGGER.info(args)
-    LOGGER.info("Model log directory: %s" % model_log_directory)
+        if resume_training:
+            args = parse_configs_to_args(args, model_log_directory)
+            exit_code_file = os.path.join(model_log_directory, "exit_code")
+            if not os.path.exists(exit_code_file):
+                LOGGER.info("Exit-code file not found, continuing training")
+            else:
+                exit_code = get_exit_code(exit_code_file)
+                if exit_code == 0:
+                    LOGGER.info(("Exit-code 0: training epochs have already "
+                                 "been reached"))
+                    return None
+                elif exit_code == 1:
+                    LOGGER.info(("Exit-code 1: patience epochs have already "
+                                 "been reached"))
+                    return None
+                elif exit_code == 2:
+                    LOGGER.info(
+                        ("Exit-code 2: interruption during previous training, "
+                         "continuing training"))
 
-    # set gpu and cpu hardware
-    gpu_device = set_hardware(args)
+        # log namespace arguments and model directory
+        LOGGER.info(args)
+        LOGGER.info("Model log directory: %s" % model_log_directory)
 
-    # read important arguments and define as local variables
-    num_train_instances = args.num_train_instances
-    mlp_hidden_dim = args.mlp_hidden_dim
-    mlp_num_layers = args.mlp_num_layers
-    epochs = args.epochs
+        # set gpu and cpu hardware
+        gpu_device = set_hardware(args)
 
-    # get relevant patterns
-    pattern_specs, pre_computed_patterns = get_patterns(args)
+        # read important arguments and define as local variables
+        num_train_instances = args.num_train_instances
+        mlp_hidden_dim = args.mlp_hidden_dim
+        mlp_num_layers = args.mlp_num_layers
+        epochs = args.epochs
 
-    # set initial random seeds
-    set_random_seed(args)
+        # get relevant patterns
+        pattern_specs, pre_computed_patterns = get_patterns(args)
 
-    # get input vocab
-    vocab_combined = get_vocab(args)
+        # set initial random seeds
+        set_random_seed(args)
 
-    # get final vocab, embeddings and word_dim
-    vocab, embeddings, word_dim = get_embeddings(args, vocab_combined)
-    embeddings = Embedding.from_pretrained(embeddings,
-                                           freeze=args.static_embeddings,
-                                           padding_idx=PAD_TOKEN_INDEX)
+        if resume_training:
+            vocab_file = os.path.join(model_log_directory, "vocab.txt")
+            if os.path.exists(vocab_file):
+                vocab = Vocab.from_vocab_file(
+                    os.path.join(model_log_directory, "vocab.txt"))
+            else:
+                raise FileNotFoundError("%s is missing" % vocab_file)
+            # generate embeddings to fill up correct dimensions
+            embeddings = torch.zeros(len(vocab), args.word_dim)
+            embeddings = Embedding.from_pretrained(
+                embeddings,
+                freeze=args.static_embeddings,
+                padding_idx=PAD_TOKEN_INDEX)
+        else:
+            # get input vocab
+            vocab_combined = get_vocab(args)
+            # get final vocab, embeddings and word_dim
+            vocab, embeddings, word_dim = get_embeddings(args, vocab_combined)
+            # show vocabulary diagnostics
+            get_vocab_diagnostics(vocab, vocab_combined, word_dim)
+            # get embeddings as torch Module
+            embeddings = Embedding.from_pretrained(
+                embeddings,
+                freeze=args.static_embeddings,
+                padding_idx=PAD_TOKEN_INDEX)
 
-    # show vocabulary diagnostics
-    get_vocab_diagnostics(vocab, vocab_combined, word_dim)
+        # get training and validation data
+        train_data, valid_data, num_classes = get_training_validation_data(
+            args, pattern_specs, vocab, num_train_instances)
 
-    # get training and validation data
-    train_data, valid_data, num_classes = get_training_validation_data(
-        args, pattern_specs, vocab, num_train_instances)
+        # get semiring
+        semiring = get_semiring(args)
 
-    # get semiring
-    semiring = get_semiring(args)
+        # create SoftPatternClassifier
+        model = SoftPatternClassifier(pattern_specs, mlp_hidden_dim,
+                                      mlp_num_layers, num_classes,
+                                      embeddings,
+                                      vocab, semiring, pre_computed_patterns,
+                                      args.shared_self_loops, args.no_epsilons,
+                                      args.no_self_loops, args.bias_scale,
+                                      args.epsilon_scale, args.self_loop_scale,
+                                      args.dropout)
 
-    # create SoftPatternClassifier
-    model = SoftPatternClassifier(
-        pattern_specs, mlp_hidden_dim, mlp_num_layers, num_classes, embeddings,
-        vocab, semiring, pre_computed_patterns, args.shared_self_loops,
-        args.no_epsilons, args.no_self_loops, args.bias_scale,
-        args.epsilon_scale, args.self_loop_scale, args.dropout)
+        if not resume_training:
+            # print model diagnostics and dump files
+            LOGGER.info("Total model parameters: %s" %
+                        sum(parameter.nelement()
+                            for parameter in model.parameters()))
+            dump_configs(args, model_log_directory, "", word_dim)
+            dump_vocab(vocab, model_log_directory)
 
-    # log diagnostic information on parameter count
-    LOGGER.info("Total model parameters: %s" %
-                sum(parameter.nelement() for parameter in model.parameters()))
+        train_inner(train_data, valid_data, model, num_classes, epochs,
+                    model_log_directory, args.learning_rate, args.batch_size,
+                    args.disable_scheduler, args.scheduler_patience,
+                    args.scheduler_factor, gpu_device, args.clip_threshold,
+                    args.max_doc_len, args.word_dropout, args.patience,
+                    resume_training, args.disable_tqdm, args.tqdm_update_freq)
+    finally:
+        # update LOGGER object to remove file handler
+        LOGGER = remove_all_file_handlers(LOGGER)
 
-    # dump single training files
-    dump_single_train_files(args, model_log_directory, vocab, word_dim)
 
-    # train SoftPatternClassifier
-    train(train_data, valid_data, model, num_classes, epochs,
-          model_log_directory, args.learning_rate, args.batch_size,
-          args.disable_scheduler, args.scheduler_patience,
-          args.scheduler_factor, gpu_device, args.clip_threshold,
-          args.max_doc_len, args.word_dropout, args.patience, False,
-          args.disable_tqdm, args.tqdm_update_freq)
+def main(args: argparse.Namespace) -> None:
+    # depending on training type, create appropriate argparse namespaces
+    if args.grid_training:
+        # redefine models log directory
+        args.models_directory = os.path.join(args.models_directory,
+                                             "spp_grid_train_" + timestamp())
+        os.makedirs(args.models_directory, exist_ok=True)
 
-    # update LOGGER object to remove file handler
-    LOGGER = remove_all_file_handlers(LOGGER)
+        # dump current training configs
+        dump_configs(args, args.models_directory, "base_", None)
+
+        # get grid config and add random iterations to it
+        grid_dict = get_grid_config(args.grid_config)
+
+        # add random seed into grid if necessary
+        if args.num_random_iterations > 1:
+            seed = list(range(0, args.num_random_iterations))
+            grid_dict["seed"] = seed
+
+        # dump parameter grid to file for re-use
+        param_grid_mapping = {
+            i: param_grid_instance
+            for i, param_grid_instance in enumerate(ParameterGrid(grid_dict))
+        }
+        with open(os.path.join(args.models_directory, "grid_config.json"),
+                  "w") as output_file_stream:
+            json.dump(param_grid_mapping,
+                      output_file_stream,
+                      ensure_ascii=False)
+
+        # process new args superset
+        args_superset = get_grid_args_superset(args, param_grid_mapping)
+    else:
+        # make trivial superset
+        args_superset = [args]
+
+    # loop and train
+    for i, args in enumerate(args_superset):
+        train_outer(args, resume_training=False, index=i)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=ArgparseFormatter,
                                      parents=[
                                          training_arg_parser(),
+                                         grid_training_arg_parser(),
                                          hardware_arg_parser(),
                                          soft_patterns_pp_arg_parser(),
                                          logging_arg_parser(),
