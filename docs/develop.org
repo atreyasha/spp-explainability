@@ -4,110 +4,75 @@
 
 ** Tasks
 *** Current
-**** TODO Major changes to model
-     DEADLINE: <2021-01-04 Mon>
-***** Core modeling developments
-****** TODO replicate defaults of model from paper -> directly in argument parser -> make other defaults more sensible for runs such as increasing epochs, learning rate etc., as well as meaning of start and end tokens
-****** develop robust grid-search (and resume) script which leverages on the modularity of the single train scripts -> would perhaps need a base configuration and everything else can run smoothly
-******* try higher precision computing in case this would help with a smaller model -> perhaps convert everything to DoubleTensor if this helps later on -> perhaps not worth it
-******* create a slurm and gpu branch to make testing there easier -> adjust batch size and make other device-related optimizations there -> figure out correct cpu slurm argument (cpus-per-task seems too high)
-****** modify final layer to a general additive layer
-******* preferably with tree structure or soft logic where possible -> otherwise simple linear layer with various basis functions would work, see: https://stackoverflow.com/questions/55920015/how-to-realize-a-polynomial-regression-in-pytorch-python
-******* add temperature parameter to encourage more discrete learning of pattern scores -> or binarize patterns via =torch.gt= or =torch.relu= if possible which would make interpretation much easier -> look into how other paper on RNN-FSA did this with temperature
-******* think of ways to use patterns only when there are enough words in front and not to always compute, if this is possible at all
+**** TODO Complete model improvements and run SoPa++ for grid runs
+     DEADLINE: <2021-01-07 Thu>
+***** Modify final layer to a general additive layer
+****** construct various basis functions such as linear, polynomial etc; see: https://stackoverflow.com/questions/55920015/how-to-realize-a-polynomial-regression-in-pytorch-python
+****** binarize patterns via =torch.gt= or =torch.relu= if possible which would make interpretation much easier
+****** think of ways to use patterns only when there are enough words in front and not to always compute, if this is possible at all
+***** Make separate shell scripts for single, grid, resume single and resume grid
+***** Create =slurm-s3it= and =gpu= branches -> adjust batch sizes and other parameters for system-level optimizations
 
-**** Run SoPa++ for multiple runs to survey performance -> run on all variants and data-set portions with (repeated) grid-search to get plenty of candidates, means and standard deviations
-     DEADLINE: <2021-02-01 Mon>
-***** Look into ATIS/SNIPS dataset as replacement since it was also used by other papers, can be ported quickly -> both have some papers which could be cited to add some relevance
-***** Slurm: CPU reproduces the same performance when number of threads are the same including for resuming training, CPU performance is different between local and cluster even with same seeds, GPU does not reproduce the same performance when resuming, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility -> best approach would be to use single training without resuming wherever possible to allow for optimum reproducibility
-***** Add test evaluation workflow with independent script
-****** compute test F1 on models at the end of training for completeness
-****** removal of predict function inside model, but could be added back if this becomes boilerplate later in testing script
-****** think again about adding model.eval() and model.train() inside functions, or to keep outside in more global context
-****** tokenizer configuration should also be saved such as nltk punkt tokenizer, if something like this is present, currently we use nltk tokenizer which is fixed within the current nltk version
-****** test code should use model vocabulary directly -> this can be used to ensure everything is within model
-****** use modular loading frameworks similar to continue training when loading back the model
+**** Add test evaluation workflow with independent script
+     DEADLINE: <2021-01-10 Sun>
+***** Compute test F1 on models at the end of training for completeness
+***** Removal of predict function inside model, but could be added back if this becomes boilerplate later in testing script
+***** Think again about adding model.eval() and model.train() inside functions, or to keep outside in more global context
+***** Tokenizer configuration should also be saved such as nltk punkt tokenizer, if something like this is present, currently we use nltk tokenizer which is fixed within the current nltk version
+***** Test code should use model vocabulary directly -> this can be used to ensure everything is within model
+***** Use modular loading frameworks similar to continue training when loading back the model
 
 **** With decent model performance, branch off to improve explainability with weighting of patterns to address other research questions
-     DEADLINE: <2021-02-01 Mon>
+     DEADLINE: <2021-02-12 Fri>
+***** Oracle model
+****** refactor =visualization= and =interpretation= (two of highest priority) and understand their internal mechanisms
+****** why are =[START]= and =[END]= tokens repeated before and after?
+******* overfitting that occurs to extra =[START]= and =[END]= tokens would be transferred to epsilon transitions if replaced with single padding instead of multiple
+******* posted as question to OP, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695
 ***** Mimic model
-****** look into research for better naming for mimic/oracle
+****** find better naming for mimic/oracle from papers
 ****** final ensemble of regular expressions should give insights and perform similar to main SoPa++ neural model
 ****** think about how to work with unknown tokens on new data for mimic model -> maybe some mapping of embeddings to find closest token/pattern or mean score might help
 ****** best case scenario: user should be able to transfer easily between models and regex-ensemble in both directions for "human-computer interaction" 
 ****** for mimic model, find best patterns that match, if not use a mean value for the pattern score that can be used as an analog -> or try other heuristics that can bring results of mimic and oracle closer to each other
 ****** aim to produce pretty and compact ensemble of regular expressions which can analyzed and manipulated by a human
 ****** posted question to OP on self-loops visualization, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-728257052
-***** Oracle model
-****** refactor =soft_patterns_rnn= (if necessary), =visualization=, =interpretation= (two of highest priority) and =testing= scripts from git backlog to repository
-****** why are =[START]= and =[END]= tokens repeated before and after, and why is =[UNK]= used for padding when a separate =[PAD]= token could be used?
-******* overfitting that occurs to extra =[START]= and =[END]= tokens would be transferred to epsilon transitions if replaced with single padding instead of multiple
-******* posted as question to OP, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695
 ***** Distance between oracle and mimic
 ****** it would still be useful to show when mimic and oracle align and when they don't -> with some kind of distance measurement between their output scores
 ****** compare confusion matrices between orace and mimic and compute euclidean distances on scores or binary predictions
-***** Test out scripts for loading pre-computed-patterns to ensure they work without bugs -> especially torch segment with data sharing -> missing load information for self-loops -> might bug out for case with no self_loops because of index 1 of =diags= and =bias= being updated which is only present with self_loops, perhaps replace with index of -1
+***** Look into ATIS/SNIPS dataset as additional data-sets
+****** re-use preprocessing functions by sending them to utils and perhaps make them more general where possible
+****** both have some papers which could be cited to add some relevance
+***** Test workflow for loading pre-computed-patterns to ensure they work without bugs -> missing load information for self-loops, might bug out for case with no self_loops because of index 1 of =diags= and =bias= being updated which is only present with self_loops, perhaps replace with index of -1
  
 *** Long-term
 **** Performance
-***** tests run in paper show almost perfect accuracy, which could be a baseline to match or otherwise come close to, in order to probe explainability
-***** improve learning rate scheduler implementation to more soft-coded than hard-coded, if possible at all
-***** replace all legacy tensor.data calls with tensor.detach() for safety
-***** work on =slurm-s3it= branch as a mirrored branch -> keep slogs since session.log does not keep tqdm progress bar -> slurm termination appear to all be sigkills meaning no exit codes will be written
+***** add check to ensure start, end and pad tokens don't occur adversarially inside sequence -> need to have the vocabulary object catch such an error
+***** add predict function for both mimic and oracle model which does not need extra data to be loaded
+***** check if packed sequences could be incoporated into model
+**** Re-check potential pitfalls
 ***** add =with torch.no_grad()= scope indicator alongside =model.eval()= to perform inference/validation correctly and efficiently -> check other areas where this can be done
 ***** check to ensure detach and clones are done together where variable is created and updated, or otherwise detach is done for variables where only data needs to be referenced
+***** replace all legacy tensor.data calls with tensor.detach() for safety
 ***** check code for =squeeze()= call which can be problematic for dim 1 tensors
-***** make script to determine optimal batch sizes and upper bounds
-***** add check to ensure start, end and pad tokens cannot occur inside the sequence
-***** make sure predict script which can use the model to predict on new datasets without evaluation
-***** consider using packed sequences to make overall batch framework more efficient -> computation on padding tokens are still done in =forward= and can possibly be avoided -> check 
-**** Torch portability
-***** check if possible to replace all Batch object internals via direct torch tensors instead of numpy -> might help with speed but not very important
-***** maybe use dataloader/dataset torch class instead of raw data, read on memory improvements and better shuffling which saves original order
-***** consider using a torch vocabulary class instead where applicable
-**** Visualization
-***** remember that tensorboard events start at epoch index 0, which means after the first epoch of training
-***** if necessary, the x-axis should be scaled forward by 1 to give the correct training epochs
-**** Dynamic and sub-word embeddings (optional)
-***** use both word and sub-word tokenizers such as nltk or sentencepiece tokenizer
-****** sub-word non-contextual embeddings: fastText or https://nlp.h-its.org/bpemb/#cite
-****** word-level non-contextual embeddings: stick to GloVe
-***** use both static and dynamic token embeddings
-****** dynamic: start, end and padding tokens should be fixed, while unknown and others could be learned
-****** dynamic: can use a lower learning rate for embeddings to reduce overfitting as much as possible
-****** dynamic: convert embeddings into a tensor and register as parameter inside model which gets saved with state dictionary object -> not useful for static case since this would create memory overhaul
-**** Argparse, logging and dependencies
-***** consider whether to pass =logger=, =disable_tqdm= and =tqdm_update_freq= variables directly via functions
+**** Dependencies, typing and testing
 ***** use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
-***** perform sanity check to ensure cross-module imports are not affected by presence of =logger=, or otherwise use root logger in case it cannot be imported
-***** make argparse metavariable for file path, which can check if it exists (if it is existing file/dir type, otherwise just a path)
-***** test download and all other scripts to ensure they work
-***** *extra:* pass tqdm directly to logger instead of directly to stdout: see https://github.com/tqdm/tqdm/issues/313
-***** *brainstorm:* replace input arg namespace with explicit arguments, OR possible to make separate argparse Namespace which can be passed to main, this could help with portability (needs brainstorming since there are tradeoffs between argparse Namespace and explicit variable definitions)
-**** Typing and testing
-***** remove cast calls and replace with direct declaration as long as variable was not defined earlier, otherwise must use cast
-***** fine-tune exact typing of pre-computed pattern loading functions inside model source code -> test this out to clarify everything
 ***** include test code by instantiating class and/or other simple methods which are inherent to the workflow
-***** ensure that redefined variables are given all possible unioned types used inside code
-***** add mypy as a test case suite, design new and improved test cases using pytest after understanding code completely
+***** add mypy as an explicit part of testing the source code
 ***** consider adding Optional type to all optional arguments
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List)
 **** Documentation
-***** improve cryptic parts of code to be more easily readable, such as workflow for loading pre-computed patterns inside the soft patterns classifier and model checkpointing -> it can only be understood by studying the code whereas it should be more structured with clear conditionals
-***** ensure consistent variable names for variables used in different scopes 
-***** ensure consistent variable names for reading/writing such as =filename=, =*_file_stream=
-***** reduce source code chunk newlines to no newlines -> this makes things slightly more concise given the existence of multiple comments in between -> also remove unnecessary comments
-***** consider changing default helpers in readme to python helpers instead of those from shell scripts, 
-***** where applicable, improve documentation of argparse variables within argparse script
-***** update metadata in scripts later with new workflows, eg. with help scripts, comments describing functionality and readme descriptions for git hooks
-***** add pydocstrings to all functions for improved documentation -> plus comments where relevant
+***** improve cryptic parts of code such as issue with loading patterns inside torch model
+***** reduce source code lines, chunking and comments -> pretty sort python code and functions
+***** consider re-ordering functions/classes by length of each function so code flows naturally downwards
+***** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
+***** add pydocstrings to all functions and improve argparse documentation
 ***** provide description of data structures (eg. data, labels) required for training processes
-***** shuffling inside of model_utils.py function will always produce the same output given the same input -> this is because sorting order is always preserved in python's sorted function
-****** shuffling the data outside creates noise by shuffling the order of sorting ties, which would ultimately cause their order to be perturbed in the sort process as well, although there is no clear-cut answer whether this introduce cross-batch variance (perhaps for small batches and not necessarily for large ones)
-****** change involves internal flat shuffling happening inside function which ensures outside variables are the same, which means random states can be reverted consistently
 ***** make list of all useful commands for slurm -> useful to re-use later on
+***** test download and all other scripts to ensure they work
+***** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility
 ***** add MIT license when made public
-       
+      
 ** Notes
 *** Research
 **** SoPa++
@@ -165,6 +130,7 @@
 ****** how to evaluate improved explainability -> make hierarchy for local vs. global explainability -> also explainability is only relevant if the oracle and mimic models both *perform competitively and have similar confusion matrix profiles* (both conditions must be satisfied)
 ****** further work: porting this technique to a transformer where possible
 ***** Self-thoughts
+****** compare oracle performance with those from other papers
 ****** semirings, abstract algebra and how they are used for finite-state machines in Forward and Viterbi algorithms -> go deeper into this to get some background
 ****** use more appropriate and generalized semiring terminology from Peng et al. 2019 -> more generalized compared to SoPa paper
 ****** Chomsky hierarchy of languages -> might be relevant especially relating to CFGs
@@ -173,6 +139,8 @@
 ****** extension/recommendations -> transducer for seq2seq tasks
        
 ** Completed
+***** DONE defaults from paper: semiring -> max-product, batch-size -> 128 (cpu), epochs -> 200, patience -> 30, word_dim -> 300
+      CLOSED: [2021-01-02 Sat 14:23]
 ***** DONE reduce circum-padding token count to 1 instead of length of longest pattern
       CLOSED: [2020-12-31 Thu 13:03]
 ***** DONE test out to see if scheduler works and if its state gets incremented -> need to train single model for long period of time and analyze state_dict of scheduler to see what has been recorded -> it works well when clip threshold is set to zero and patience is observed
