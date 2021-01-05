@@ -840,7 +840,7 @@ def train_outer(args: argparse.Namespace,
         # create SoftPatternClassifier
         model = SoftPatternClassifier(pattern_specs, mlp_hidden_dim,
                                       mlp_num_layers, num_classes,
-                                      embeddings,
+                                      embeddings,  # type:ignore
                                       vocab, semiring, pre_computed_patterns,
                                       args.shared_self_loops, args.no_epsilons,
                                       args.no_self_loops, args.bias_scale,
