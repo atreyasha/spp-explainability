@@ -18,7 +18,6 @@ def main(args: argparse.Namespace) -> None:
     if args.grid_training:
         # parse base configs into args and update models_directory
         args = parse_configs_to_args(args, args.model_log_directory, "base_")
-        model_log_directory = args.model_log_directory
 
         # read grid_config into param_grid_mapping
         with open(os.path.join(args.model_log_directory, "grid_config.json"),
@@ -31,17 +30,19 @@ def main(args: argparse.Namespace) -> None:
         # update all model_log_directory variables with indices
         for i, args in enumerate(args_superset):
             args.model_log_directory = os.path.join(
-                model_log_directory, "spp_single_train_" + str(i))
+                args.model_log_directory, "spp_single_train_" + str(i))
     else:
         args_superset = [args]
 
     # loop and resume training
-    for i, args in enumerate(args_superset):
+    for args in args_superset:
         try:
-            train_outer(args, resume_training=True, index=i)
+            train_outer(args, args.model_log_directory, resume_training=True)
         except FileNotFoundError:
             if args.grid_training:
-                train_outer(args, resume_training=False, index=i)
+                train_outer(args,
+                            args.model_log_directory,
+                            resume_training=False)
             else:
                 raise
 

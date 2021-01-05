@@ -733,17 +733,8 @@ def train_inner(train_data: List[Tuple[List[int], int]],
 
 
 def train_outer(args: argparse.Namespace,
-                resume_training=False,
-                index: int = 0) -> None:
-    # load model directory
-    if resume_training:
-        model_log_directory = args.model_log_directory
-    else:
-        model_log_directory = os.path.join(
-            args.models_directory, "spp_single_train_" +
-            timestamp() if not args.grid_training else "spp_single_train_" +
-            str(index))
-
+                model_log_directory: str,
+                resume_training=False) -> None:
     # create model log directory
     os.makedirs(model_log_directory, exist_ok=True)
 
@@ -895,7 +886,11 @@ def main(args: argparse.Namespace) -> None:
 
     # loop and train
     for i, args in enumerate(args_superset):
-        train_outer(args, resume_training=False, index=i)
+        model_log_directory = os.path.join(
+            args.models_directory, "spp_single_train_" +
+            timestamp() if not args.grid_training else "spp_single_train_" +
+            str(i))
+        train_outer(args, model_log_directory, resume_training=False)
 
 
 if __name__ == '__main__':
