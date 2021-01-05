@@ -1,40 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import List, Dict, Any, Generator, Iterable, Tuple
-from nltk import word_tokenize
+from typing import Dict, Generator, Tuple
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
-from .utils.data_utils import unique
+from .utils.data_utils import (unique, read_tsv, mapping, serialize, lowercase,
+                               tokenize)
 from .arg_parser import preprocess_arg_parser, logging_arg_parser
 import argparse
-import logging
 import json
-import csv
 import os
-
-
-def read_tsv(filename: str) -> List[Any]:
-    with open(filename, 'r', encoding='utf-8') as input_file_stream:
-        raw_list = list(csv.reader(input_file_stream, delimiter='\t'))
-    return raw_list
-
-
-def mapping(classes: List[str]) -> Dict[str, int]:
-    return {element: i for i, element in enumerate(sorted(set(classes)))}
-
-
-def serialize(data: Iterable[str],
-              mapping: Dict[str, int]) -> Generator[int, None, None]:
-    return (mapping[element] for element in data)
-
-
-def tokenize(data: Iterable[str]) -> Generator[str, None, None]:
-    return (" ".join(word_tokenize(element)) for element in data)
-
-
-def lowercase(data: Iterable[str]) -> Generator[str, None, None]:
-    return (element.lower() for element in data)
 
 
 def write_file(full_data: Generator[Tuple[str, int], None,
