@@ -4,7 +4,7 @@
 from collections import OrderedDict
 from typing import List, Union, Tuple, cast
 from torch import FloatTensor, LongTensor, cat, mm, randn, relu
-from torch.nn import Module, Parameter, ModuleList, Linear, Dropout
+from torch.nn import Module, Parameter, ModuleList, Linear, Dropout, LayerNorm, BatchNorm1d
 from .utils.model_utils import normalize, Semiring, Batch
 from .utils.data_utils import Vocab
 import torch
@@ -54,6 +54,19 @@ class MLP(Module):
         return res
 
 
+class LinearRegressor(Module):
+    def __init__(self, input_dim: int, num_classes: int) -> None:
+        # initialize all class properties from torch.nn.Module
+        super(LinearRegressor, self).__init__()
+
+        # register layers as a class specific variable
+        self.layers = ModuleList([Linear(input_dim, num_classes)])
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # return final output
+        return self.layers[0](x)
+
+
 class SoftPatternClassifier(Module):
     def __init__(self,
                  pattern_specs: 'OrderedDict[int, int]',
@@ -78,8 +91,8 @@ class SoftPatternClassifier(Module):
         self.pattern_specs = pattern_specs
         self.max_pattern_length = max(list(pattern_specs.keys()))
         self.total_num_patterns = sum(pattern_specs.values())
-        self.mlp = MLP(self.total_num_patterns, mlp_hidden_dim, mlp_num_layers,
-                       num_classes)
+        self.final_layer = LinearRegressor(self.total_num_patterns,
+                                           num_classes)
         self.embeddings = embeddings
         self.vocab = vocab
         self.semiring = semiring
@@ -89,6 +102,8 @@ class SoftPatternClassifier(Module):
         self.dropout = Dropout(dropout)
         self.num_diags = 2 if (not self.no_self_loops
                                and self.shared_self_loops == 0) else 1
+        self.binarize_scores = True
+        self.normalizer = BatchNorm1d(self.total_num_patterns)
 
         # create transition matrix diagonal and bias tensors
         diags_size = (self.total_num_patterns * self.num_diags *
@@ -375,8 +390,15 @@ class SoftPatternClassifier(Module):
         # NOTE: scores represent end values on top of SoPa
         scores = self.semiring.from_semiring_to_outer(scores)
 
+        # execute normalization of scores
+        scores = self.normalizer(scores)
+
+        # binarize scores for downstream explainability
+        if self.binarize_scores:
+            scores = torch.sign(torch.relu(scores))
+
         # return output of MLP
-        return self.mlp.forward(scores)
+        return self.final_layer.forward(scores)
 
     def get_epsilon_values(self) -> Union[torch.Tensor, None]:
         return None if self.no_epsilons else self.semiring.times(
