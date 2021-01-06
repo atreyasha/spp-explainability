@@ -65,8 +65,8 @@ class SoftPatternClassifier(Module):
         self.dropout = Dropout(dropout)
         self.num_diags = 2 if (not self.no_self_loops
                                and self.shared_self_loops == 0) else 1
-        self.binarize_scores = True
-        self.normalizer = BatchNorm1d(self.total_num_patterns)
+        self.normalizer = LayerNorm(self.total_num_patterns)
+        self.binarize_scores = False
 
         # create transition matrix diagonal and bias tensors
         diags_size = (self.total_num_patterns * self.num_diags *
@@ -356,11 +356,10 @@ class SoftPatternClassifier(Module):
         # execute normalization of scores
         scores = self.normalizer(scores)
 
-        # binarize scores for downstream explainability
         if self.binarize_scores:
-            scores = torch.sign(torch.relu(scores))
+            scores = sign(relu(scores))
 
-        # return output of MLP
+        # return output of final layer
         return self.final_layer.forward(scores)
 
     def get_epsilon_values(self) -> Union[torch.Tensor, None]:
