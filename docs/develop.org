@@ -4,12 +4,13 @@
 
 ** Tasks
 *** Current
-**** TODO Complete model improvements and run SoPa++ for grid runs
+**** Complete model improvements and run SoPa++ for grid runs
      DEADLINE: <2021-01-07 Thu>
-***** Modify final layer to a general additive layer
-****** construct various basis functions such as linear, polynomial etc; see: https://stackoverflow.com/questions/55920015/how-to-realize-a-polynomial-regression-in-pytorch-python
-****** binarize patterns via =torch.gt= or =torch.relu= if possible which would make interpretation much easier
+***** TODO Modify final layer to a general additive layer
+****** binarize scores by using a normalization technique for scores and then taking the relu + sign
+****** remove mlp from source code and from argument parser as well
 ****** think of ways to use patterns only when there are enough words in front and not to always compute, if this is possible at all
+****** construct more complicated basis functions, such as polynomials if applicable; see: https://stackoverflow.com/questions/55920015/how-to-realize-a-polynomial-regression-in-pytorch-python
 ***** Make separate shell scripts for single, grid, resume single and resume grid
 ***** Create =slurm-s3it= and =gpu= branches -> adjust batch sizes and other parameters for system-level optimizations
 
@@ -44,6 +45,7 @@
 ****** re-use preprocessing functions by sending them to utils and perhaps make them more general where possible
 ****** both have some papers which could be cited to add some relevance
 ***** Test workflow for loading pre-computed-patterns to ensure they work without bugs -> missing load information for self-loops, might bug out for case with no self_loops because of index 1 of =diags= and =bias= being updated which is only present with self_loops, perhaps replace with index of -1
+***** Improve cryptic parts of code eg. loading internal model patterns with CW token and numerical epsilon
  
 *** Long-term
 **** Performance
@@ -62,7 +64,6 @@
 ***** consider adding Optional type to all optional arguments
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List)
 **** Documentation
-***** improve cryptic parts of code such as issue with loading patterns inside torch model
 ***** reduce source code lines, chunking and comments -> pretty sort python code and functions
 ***** consider re-ordering functions/classes by length of each function so code flows naturally downwards
 ***** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks

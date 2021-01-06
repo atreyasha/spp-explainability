@@ -20,23 +20,25 @@
 
 ### Current
 
-1.  **TODO** Complete model improvements and run SoPa++ for
-    grid runs
+1.  Complete model improvements and run SoPa++ for grid runs
 
     **DEADLINE:** *\<2021-01-07 Thu\>*
 
-    1.  Modify final layer to a general additive layer
+    1.  **TODO** Modify final layer to a general additive
+        layer
 
-        1.  construct various basis functions such as linear, polynomial
-            etc; see:
-            <https://stackoverflow.com/questions/55920015/how-to-realize-a-polynomial-regression-in-pytorch-python>
+        1.  binarize scores by using a normalization technique for
+            scores and then taking the relu + sign
 
-        2.  binarize patterns via `torch.gt` or `torch.relu` if possible
-            which would make interpretation much easier
+        2.  remove mlp from source code and from argument parser as well
 
         3.  think of ways to use patterns only when there are enough
             words in front and not to always compute, if this is
             possible at all
+
+        4.  construct more complicated basis functions, such as
+            polynomials if applicable; see:
+            <https://stackoverflow.com/questions/55920015/how-to-realize-a-polynomial-regression-in-pytorch-python>
 
     2.  Make separate shell scripts for single, grid, resume single and
         resume grid
@@ -136,6 +138,9 @@
         `diags` and `bias` being updated which is only present with
         self_loops, perhaps replace with index of -1
 
+    6.  Improve cryptic parts of code eg. loading internal model
+        patterns with CW token and numerical epsilon
+
 ### Long-term
 
 1.  Performance
@@ -183,35 +188,32 @@
 
 4.  Documentation
 
-    1.  improve cryptic parts of code such as issue with loading
-        patterns inside torch model
-
-    2.  reduce source code lines, chunking and comments -\> pretty sort
+    1.  reduce source code lines, chunking and comments -\> pretty sort
         python code and functions
 
-    3.  consider re-ordering functions/classes by length of each
+    2.  consider re-ordering functions/classes by length of each
         function so code flows naturally downwards
 
-    4.  update metadata eg. with comprehensive python/shell help
+    3.  update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    5.  add pydocstrings to all functions and improve argparse
+    4.  add pydocstrings to all functions and improve argparse
         documentation
 
-    6.  provide description of data structures (eg. data, labels)
+    5.  provide description of data structures (eg. data, labels)
         required for training processes
 
-    7.  make list of all useful commands for slurm -\> useful to re-use
+    6.  make list of all useful commands for slurm -\> useful to re-use
         later on
 
-    8.  test download and all other scripts to ensure they work
+    7.  test download and all other scripts to ensure they work
 
-    9.  GPU/CPU runs not always reproducible depending on
+    8.  GPU/CPU runs not always reproducible depending on
         multi-threading, see:
         <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    10. add MIT license when made public
+    9.  add MIT license when made public
 
 ## Notes
 
