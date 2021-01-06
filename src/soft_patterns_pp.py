@@ -3,8 +3,8 @@
 
 from collections import OrderedDict
 from typing import List, Union, Tuple, cast
-from torch import FloatTensor, LongTensor, cat, mm, randn, relu
-from torch.nn import Module, Parameter, ModuleList, Linear, Dropout, LayerNorm, BatchNorm1d
+from torch import FloatTensor, LongTensor, cat, mm, randn, relu, sign
+from torch.nn import Module, Parameter, ModuleList, Linear, Dropout, LayerNorm
 from .utils.model_utils import normalize, Semiring, Batch
 from .utils.data_utils import Vocab
 import torch
@@ -17,41 +17,6 @@ NUMERICAL_EPSILON = 1e-10
 SHARED_SL_PARAM_PER_STATE_PER_PATTERN = 1
 # shared_sl value for global learnable self-loop parameter
 SHARED_SL_SINGLE_PARAM = 2
-
-
-class MLP(Module):
-    def __init__(self, input_dim: int, mlp_hidden_dim: int,
-                 mlp_num_layers: int, num_classes: int) -> None:
-        # initialize all class properties from torch.nn.Module
-        super(MLP, self).__init__()
-
-        # set up class variables
-        self.mlp_num_layers = mlp_num_layers
-
-        # create MLP structure based on input variables
-        layers = []
-        for i in range(mlp_num_layers):
-            d1 = input_dim if i == 0 else mlp_hidden_dim
-            d2 = mlp_hidden_dim if i < (mlp_num_layers - 1) else num_classes
-            layer = Linear(d1, d2)
-            layers.append(layer)
-
-        # register layers as a class specific variable
-        # ModuleList registers submodules in a list
-        self.layers = ModuleList(layers)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # get output of first layer without relu
-        # must be excluded from loop below to prevent
-        # relu being applied to input
-        res = self.layers[0](x)
-
-        # loop over remaining layer with relu
-        for i in range(1, len(self.layers)):
-            res = self.layers[i](relu(res))
-
-        # return final output
-        return res
 
 
 class LinearRegressor(Module):
@@ -70,8 +35,6 @@ class LinearRegressor(Module):
 class SoftPatternClassifier(Module):
     def __init__(self,
                  pattern_specs: 'OrderedDict[int, int]',
-                 mlp_hidden_dim: int,
-                 mlp_num_layers: int,
                  num_classes: int,
                  embeddings: Module,
                  vocab: Vocab,

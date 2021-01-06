@@ -51,14 +51,6 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
         "--word-dim",
         help=argparse.SUPPRESS,
         type=int)
-    sopa.add_argument("--mlp-hidden-dim",
-                      help="MLP hidden dimension",
-                      default=25,
-                      type=int)
-    sopa.add_argument("--mlp-num-layers",
-                      help="Number of MLP layers",
-                      default=2,
-                      type=int)
     # boolean flags
     sopa.add_argument("--static-embeddings",
                       help="Freeze learning of token embeddings",

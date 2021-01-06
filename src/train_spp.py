@@ -773,8 +773,6 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
 
         # read important arguments and define as local variables
         num_train_instances = args.num_train_instances
-        mlp_hidden_dim = args.mlp_hidden_dim
-        mlp_num_layers = args.mlp_num_layers
         epochs = args.epochs
 
         # get relevant patterns
@@ -819,8 +817,7 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         semiring = get_semiring(args)
 
         # create SoftPatternClassifier
-        model = SoftPatternClassifier(pattern_specs, mlp_hidden_dim,
-                                      mlp_num_layers, num_classes,
+        model = SoftPatternClassifier(pattern_specs, num_classes,
                                       embeddings,  # type:ignore
                                       vocab, semiring, pre_computed_patterns,
                                       args.shared_self_loops, args.no_epsilons,
