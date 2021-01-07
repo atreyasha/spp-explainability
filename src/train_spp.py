@@ -399,7 +399,7 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
         output = model.forward(batch)  # type: ignore
 
         # get predicted classes from raw output
-        predicted = [int(x) for x in torch.argmax(output, 1)]
+        predicted = torch.argmax(output, 1).tolist()
 
         # find number of correctly predicted data points
         correct += sum(1 for pred, gold in zip(predicted, gold)
