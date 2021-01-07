@@ -20,12 +20,12 @@ SHARED_SL_SINGLE_PARAM = 2
 
 class STEHeavisideFunction(torch.autograd.Function):
     @staticmethod
-    def forward(ctx: Any, input: Any) -> Any:
+    def forward(ctx: Any, input: Any) -> Any:  # type: ignore
         ctx.save_for_backward(input)
         return (input > 0).float()
 
     @staticmethod
-    def backward(ctx: Any, grad_output: Any) -> Any:
+    def backward(ctx: Any, grad_output: Any) -> Any:  # type: ignore
         input, = ctx.saved_tensors
         grad_input = grad_output.clone()
         grad_output[input > 1] = 0
