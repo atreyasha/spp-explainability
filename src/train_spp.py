@@ -15,7 +15,7 @@ from .utils.parser_utils import ArgparseFormatter
 from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
                                read_embeddings, Vocab, PAD_TOKEN_INDEX)
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
-                                to_cuda, argmax, enable_gradient_clipping,
+                                to_cuda, enable_gradient_clipping,
                                 timestamp, Batch, Semiring,
                                 ProbabilitySemiring,
                                 LogSpaceMaxProductSemiring, MaxSumSemiring)
@@ -399,7 +399,7 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
         output = model.forward(batch)  # type: ignore
 
         # get predicted classes from raw output
-        predicted = [int(x) for x in argmax(output)]
+        predicted = [int(x) for x in torch.argmax(output, 1)]
 
         # find number of correctly predicted data points
         correct += sum(1 for pred, gold in zip(predicted, gold)

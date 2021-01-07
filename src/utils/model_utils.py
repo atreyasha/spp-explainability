@@ -46,11 +46,6 @@ def to_cuda(gpu_device: Union[torch.device, None]) -> Callable:
     return (lambda v: v.to(gpu_device)) if gpu_device is not None else identity
 
 
-def argmax(output: torch.Tensor) -> torch.Tensor:
-    _, am = torch.max(output, 1)
-    return am
-
-
 def normalize(data: torch.Tensor) -> None:
     length = data.size()[0]
     for i in range(length):
