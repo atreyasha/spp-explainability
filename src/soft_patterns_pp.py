@@ -3,7 +3,6 @@
 
 from collections import OrderedDict
 from typing import List, Union, Tuple, cast, Any
-from torch import FloatTensor, LongTensor, cat, mm, randn
 from torch.nn import Module, Parameter, Linear, Dropout, LayerNorm
 from .utils.model_utils import normalize, Semiring, Batch
 from .utils.data_utils import Vocab
@@ -81,9 +80,9 @@ class SoftPatternClassifier(Module):
         # create transition matrix diagonal and bias tensors
         diags_size = (self.total_num_patterns * self.num_diags *
                       self.max_pattern_length)
-        diags = randn(  # type: ignore
+        diags = torch.randn(  # type: ignore
             diags_size, self.embeddings.embedding_dim)
-        bias = randn(diags_size, 1)
+        bias = torch.randn(diags_size, 1)
 
         # normalize diagonal data tensor
         normalize(diags)
@@ -100,24 +99,25 @@ class SoftPatternClassifier(Module):
         # assign bias_scale based on conditionals
         if bias_scale is not None:
             self.register_buffer("bias_scale",
-                                 FloatTensor([bias_scale]),
+                                 torch.FloatTensor([bias_scale]),
                                  persistent=False)
         else:
             self.register_buffer("bias_scale",
-                                 FloatTensor([1.]),
+                                 torch.FloatTensor([1.]),
                                  persistent=False)
 
         # assign epsilon-related variables from conditionals
         if not self.no_epsilons:
             # NOTE: this parameter is learned
             self.epsilons = Parameter(
-                randn(self.total_num_patterns, self.max_pattern_length - 1))
+                torch.randn(self.total_num_patterns,
+                            self.max_pattern_length - 1))
 
             # factor by which to scale epsilon parameter
             if epsilon_scale is not None:
                 self.register_buffer("epsilon_scale",
                                      self.semiring.from_outer_to_semiring(
-                                         FloatTensor([epsilon_scale])),
+                                         torch.FloatTensor([epsilon_scale])),
                                      persistent=False)
             else:
                 self.register_buffer("epsilon_scale",
@@ -132,12 +132,12 @@ class SoftPatternClassifier(Module):
                 if (self.shared_self_loops ==
                         SHARED_SL_PARAM_PER_STATE_PER_PATTERN):
                     # create a tensor for each pattern
-                    shared_self_loop_data = randn(self.total_num_patterns,
-                                                  self.max_pattern_length)
+                    shared_self_loop_data = torch.randn(
+                        self.total_num_patterns, self.max_pattern_length)
                 # 2: a single global parameter
                 elif self.shared_self_loops == SHARED_SL_SINGLE_PARAM:
                     # create a single tensor
-                    shared_self_loop_data = randn(1)
+                    shared_self_loop_data = torch.randn(1)
                 # NOTE: assign tensor to a learnable parameter
                 self.self_loop_scale = Parameter(shared_self_loop_data)
             else:
@@ -145,7 +145,8 @@ class SoftPatternClassifier(Module):
                 if self_loop_scale is not None:
                     self.register_buffer("self_loop_scale",
                                          self.semiring.from_outer_to_semiring(
-                                             FloatTensor([self_loop_scale])),
+                                             torch.FloatTensor(
+                                                 [self_loop_scale])),
                                          persistent=False)
                 else:
                     self.register_buffer("self_loop_scale",
@@ -155,7 +156,7 @@ class SoftPatternClassifier(Module):
         # register end_states tensor
         self.register_buffer(
             "end_states",
-            LongTensor(
+            torch.LongTensor(
                 [[end]
                  for pattern_len, num_patterns in self.pattern_specs.items()
                  for end in num_patterns * [pattern_len - 1]]),
@@ -192,7 +193,7 @@ class SoftPatternClassifier(Module):
         # transition_score: diags_size x batch_vocab_size
         # these would represent transition scores for each word in vocab
         transition_scores = self.semiring.from_outer_to_semiring(
-            mm(self.diags, batch.local_embeddings) +
+            torch.mm(self.diags, batch.local_embeddings) +
             self.bias_scale * self.bias).t()
 
         # apply registered dropout
@@ -271,7 +272,7 @@ class SoftPatternClassifier(Module):
     def load_pattern(self,
                      pattern: List[str]) -> Tuple[torch.Tensor, torch.Tensor]:
         # initialize local variables
-        diags_subset = NUMERICAL_EPSILON * randn(  # type: ignore
+        diags_subset = NUMERICAL_EPSILON * torch.randn(  # type: ignore
             len(pattern), self.embeddings.embedding_dim)
         bias_subset = torch.zeros(len(pattern))
 
@@ -289,9 +290,9 @@ class SoftPatternClassifier(Module):
                 # if we have a word vector for this element
                 # update the diagonal value with specific vector
                 if element in self.vocab:
-                    diags_subset[i] = FloatTensor(
+                    diags_subset[i] = torch.FloatTensor(
                         factor *
-                        self.embeddings(LongTensor(self.vocab(element))))
+                        self.embeddings(torch.LongTensor(self.vocab(element))))
 
         # return updated tensors
         return diags_subset, bias_subset
@@ -392,12 +393,13 @@ class SoftPatternClassifier(Module):
             # doesn't depend on token, just state
             after_epsilons = self.semiring.plus(
                 hiddens,
-                cat((zero_padding,
+                torch.cat(
+                    (zero_padding,
                      self.semiring.times(hiddens[:, :, :-1], epsilon_values)),
                     2))
 
         # adding the start state
-        after_main_paths = cat(
+        after_main_paths = torch.cat(
             (restart_padding,
              self.semiring.times(after_epsilons[:, :, :-1],
                                  transition_matrix[:, :, -1, :-1])), 2)

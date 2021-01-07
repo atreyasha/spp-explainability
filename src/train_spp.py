@@ -6,10 +6,9 @@ from glob import glob
 from functools import partial
 from collections import OrderedDict
 from typing import List, Union, Tuple, cast
-from torch import LongTensor
+from torch.optim import Adam
 from torch.nn import NLLLoss, Module, Embedding
 from torch.nn.functional import log_softmax
-from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tensorboardX import SummaryWriter
 from .utils.parser_utils import ArgparseFormatter
@@ -378,7 +377,7 @@ def compute_loss(model: Module, batch: Batch, num_classes: int,
     # return loss over output and gold
     return loss_function(
         log_softmax(output, dim=1).view(batch.size(), num_classes),
-        to_cuda(gpu_device)(LongTensor(gold)))
+        to_cuda(gpu_device)(torch.LongTensor(gold)))
 
 
 def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
@@ -817,13 +816,20 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         semiring = get_semiring(args)
 
         # create SoftPatternClassifier
-        model = SoftPatternClassifier(pattern_specs, num_classes,
-                                      embeddings,  # type:ignore
-                                      vocab, semiring, pre_computed_patterns,
-                                      args.shared_self_loops, args.no_epsilons,
-                                      args.no_self_loops, args.bias_scale,
-                                      args.epsilon_scale, args.self_loop_scale,
-                                      args.dropout)
+        model = SoftPatternClassifier(
+            pattern_specs,
+            num_classes,
+            embeddings,  # type:ignore
+            vocab,
+            semiring,
+            pre_computed_patterns,
+            args.shared_self_loops,
+            args.no_epsilons,
+            args.no_self_loops,
+            args.bias_scale,
+            args.epsilon_scale,
+            args.self_loop_scale,
+            args.dropout)
 
         if not resume_training:
             # print model diagnostics and dump files
