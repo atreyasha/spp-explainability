@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from collections import OrderedDict
-from typing import List, Union, Tuple, cast
-from torch import FloatTensor, LongTensor, cat, mm, randn, relu, sign
-from torch.nn import Module, Parameter, ModuleList, Linear, Dropout, LayerNorm
+from typing import List, Union, Tuple, cast, Any
+from torch import FloatTensor, LongTensor, cat, mm, randn
+from torch.nn import Module, Parameter, Linear, Dropout, LayerNorm
 from .utils.model_utils import normalize, Semiring, Batch
 from .utils.data_utils import Vocab
 import torch
@@ -19,17 +19,28 @@ SHARED_SL_PARAM_PER_STATE_PER_PATTERN = 1
 SHARED_SL_SINGLE_PARAM = 2
 
 
-class LinearRegressor(Module):
-    def __init__(self, input_dim: int, num_classes: int) -> None:
-        # initialize all class properties from torch.nn.Module
-        super(LinearRegressor, self).__init__()
+class STEHeavisideFunction(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx: Any, input: Any) -> Any:
+        ctx.save_for_backward(input)
+        return (input > 0).float()
 
-        # register layers as a class specific variable
-        self.layers = ModuleList([Linear(input_dim, num_classes)])
+    @staticmethod
+    def backward(ctx: Any, grad_output: Any) -> Any:
+        input, = ctx.saved_tensors
+        grad_input = grad_output.clone()
+        grad_output[input > 1] = 0
+        grad_output[input < -1] = 0
+        return grad_input
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # return final output
-        return self.layers[0](x)
+
+class STEHeaviside(Module):
+    def __init__(self) -> None:
+        super(STEHeaviside, self).__init__()
+
+    def forward(self, batch: torch.Tensor) -> torch.Tensor:
+        batch = STEHeavisideFunction.apply(batch)
+        return batch
 
 
 class SoftPatternClassifier(Module):
@@ -54,8 +65,7 @@ class SoftPatternClassifier(Module):
         self.pattern_specs = pattern_specs
         self.max_pattern_length = max(list(pattern_specs.keys()))
         self.total_num_patterns = sum(pattern_specs.values())
-        self.final_layer = LinearRegressor(self.total_num_patterns,
-                                           num_classes)
+        self.linear = Linear(self.total_num_patterns, num_classes)
         self.embeddings = embeddings
         self.vocab = vocab
         self.semiring = semiring
@@ -66,7 +76,7 @@ class SoftPatternClassifier(Module):
         self.num_diags = 2 if (not self.no_self_loops
                                and self.shared_self_loops == 0) else 1
         self.normalizer = LayerNorm(self.total_num_patterns)
-        self.binarize_scores = False
+        self.binarizer = STEHeaviside()
 
         # create transition matrix diagonal and bias tensors
         diags_size = (self.total_num_patterns * self.num_diags *
@@ -356,11 +366,11 @@ class SoftPatternClassifier(Module):
         # execute normalization of scores
         scores = self.normalizer(scores)
 
-        if self.binarize_scores:
-            scores = sign(relu(scores))
+        # binarize scores using STEHeaviside
+        scores = self.binarizer(scores)
 
         # return output of final layer
-        return self.final_layer.forward(scores)
+        return self.linear.forward(scores)
 
     def get_epsilon_values(self) -> Union[torch.Tensor, None]:
         return None if self.no_epsilons else self.semiring.times(
