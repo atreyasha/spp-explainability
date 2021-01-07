@@ -5,7 +5,8 @@ set -e
 usage() {
   cat <<EOF
 Usage: test_typecheck.sh [-h|--help]
-Test source code with mypy to ensure consistent data typing
+
+Test source code typing consistency with mypy
 
 Optional arguments:
   -h, --help    Show this help message and exit
@@ -17,7 +18,7 @@ check_help() {
   for arg; do
     if [ "$arg" == "--help" ] || [ "$arg" == "-h" ]; then
       usage
-      exit 1
+      exit 0
     fi
   done
 }

@@ -5,6 +5,7 @@ set -e
 usage() {
   cat <<EOF
 Usage: prepare_data.sh [-h|--help]
+
 Download and prepare data sets for SoPa++
 
 Optional arguments:
@@ -17,7 +18,7 @@ check_help() {
   for arg; do
     if [ "$arg" == "--help" ] || [ "$arg" == "-h" ]; then
       usage
-      exit 1
+      exit 0
     fi
   done
 }
