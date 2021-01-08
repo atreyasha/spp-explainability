@@ -63,13 +63,15 @@ def get_exit_code(filename: str) -> int:
 
 def parse_configs_to_args(args: argparse.Namespace,
                           model_log_directory: str,
-                          prefix: str = "") -> argparse.Namespace:
+                          prefix: str = "",
+                          training: bool = True) -> argparse.Namespace:
     # check for json configs and add them to list
     json_files = []
     json_files.append(
         os.path.join(model_log_directory, prefix + "model_config.json"))
-    json_files.append(
-        os.path.join(model_log_directory, prefix + "training_config.json"))
+    if training:
+        json_files.append(
+            os.path.join(model_log_directory, prefix + "training_config.json"))
 
     # raise error if any of them are missing
     for json_file in json_files:
@@ -132,7 +134,7 @@ def get_grid_args_superset(
 
 
 def get_patterns(
-    args: argparse.Namespace
+    patterns: str, pre_computed_patterns: Union[str, None]
 ) -> Tuple['OrderedDict[int, int]', Union[List[List[str]], None]]:
     # set default temporary value for pre_computed_patterns
     pre_computed_patterns = None
@@ -142,13 +144,13 @@ def get_patterns(
         sorted(
             (
                 [int(y) for y in x.split("-")]  # type: ignore
-                for x in args.patterns.split("_")),
+                for x in patterns.split("_")),
             key=lambda t: t[0]))
 
     # read pre_computed_patterns if it exists, format pattern_specs accordingly
-    if args.pre_computed_patterns is not None:
+    if pre_computed_patterns is not None:
         pattern_specs, pre_computed_patterns = read_patterns(
-            args.pre_computed_patterns, pattern_specs)
+            pre_computed_patterns, pattern_specs)
         pattern_specs = OrderedDict(
             sorted(pattern_specs.items(), key=lambda t: t[0]))
 
@@ -380,13 +382,9 @@ def compute_loss(model: Module, batch: Batch, num_classes: int,
         to_cuda(gpu_device)(torch.LongTensor(gold)))
 
 
-def evaluate_metric(
-        model: Module,
-        data: List[Tuple[List[int], int]],
-        batch_size: int,
-        gpu_device: Union[torch.device, None],
-        metric: Callable[[List[int], List[int]],
-                         Any]) -> float:
+def evaluate_metric(model: Module, data: List[Tuple[List[int], int]],
+                    batch_size: int, gpu_device: Union[torch.device, None],
+                    metric: Callable[[List[int], List[int]], Any]) -> float:
     # instantiate local storage variable
     predicted = []
     aggregate_gold = []
@@ -776,7 +774,8 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         epochs = args.epochs
 
         # get relevant patterns
-        pattern_specs, pre_computed_patterns = get_patterns(args)
+        pattern_specs, pre_computed_patterns = get_patterns(
+            args.patterns, args.pre_computed_patterns)
 
         # set initial random seeds
         set_random_seed(args)

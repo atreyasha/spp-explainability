@@ -47,10 +47,7 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
             0, SHARED_SL_PARAM_PER_STATE_PER_PATTERN, SHARED_SL_SINGLE_PARAM
         ],
         type=int)
-    sopa.add_argument(
-        "--word-dim",
-        help=argparse.SUPPRESS,
-        type=int)
+    sopa.add_argument("--word-dim", help=argparse.SUPPRESS, type=int)
     # boolean flags
     sopa.add_argument("--static-embeddings",
                       help="Freeze learning of token embeddings",
@@ -153,6 +150,38 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        help=("Disable learning rate scheduler which reduces "
                              "learning rate on performance plateau"),
                        action='store_true')
+    return parser
+
+
+def evaluation_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(add_help=False)
+    # add required group
+    required = parser.add_argument_group('required evaluation arguments')
+    required.add_argument("--eval-data",
+                          help="Path to evaluation data file",
+                          required=True,
+                          type=file_path)
+    required.add_argument("--eval-labels",
+                          help="Path to evaluation labels file",
+                          required=True,
+                          type=file_path)
+    required.add_argument("--model-checkpoint",
+                          help=("Path to model checkpoint with '.pt' "
+                                "extension. Note that 'model_config.json' "
+                                "must be in the same directory level as the "
+                                "model checkpoint file"),
+                          required=True,
+                          type=file_path)
+    # add evaluate group for optional arguments
+    evaluate = parser.add_argument_group('optional evaluation arguments')
+    evaluate.add_argument("--output-prefix",
+                          help="Prefix for output classification report",
+                          default="test",
+                          type=str)
+    evaluate.add_argument("--batch-size",
+                          help="Batch size for training",
+                          default=256,
+                          type=int)
     return parser
 
 
