@@ -404,7 +404,7 @@ def evaluate_metric(model: Module, data: List[Tuple[List[int], int]],
         predicted.extend(torch.argmax(output, 1).tolist())
         aggregate_gold.extend(gold)
 
-    # return raw accuracy float
+    # return output of metric
     return metric(aggregate_gold, predicted)
 
 
