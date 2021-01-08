@@ -33,19 +33,19 @@ train_spp_grid_gpu() {
   if [ -z "$grid_config" ]; then
     python3 -m src.train_spp \
       --embeddings "./data/glove_6B_uncased/glove.6B.300d.txt" \
-      --train-data "./data/facebook_multiclass_nlu/clean/train.uncased.data" \
-      --train-labels "./data/facebook_multiclass_nlu/clean/train.labels" \
-      --valid-data "./data/facebook_multiclass_nlu/clean/valid.uncased.data" \
-      --valid-labels "./data/facebook_multiclass_nlu/clean/valid.labels" \
-      --grid-training --gpu
+      --train-data "./data/facebook_multiclass_nlu/clean/train.upsampled.uncased.data" \
+      --train-labels "./data/facebook_multiclass_nlu/clean/train.upsampled.labels" \
+      --valid-data "./data/facebook_multiclass_nlu/clean/valid.upsampled.uncased.data" \
+      --valid-labels "./data/facebook_multiclass_nlu/clean/valid.upsampled.labels"
+    --grid-training --gpu
   else
     python3 -m src.train_spp \
       --embeddings "./data/glove_6B_uncased/glove.6B.300d.txt" \
-      --train-data "./data/facebook_multiclass_nlu/clean/train.uncased.data" \
-      --train-labels "./data/facebook_multiclass_nlu/clean/train.labels" \
-      --valid-data "./data/facebook_multiclass_nlu/clean/valid.uncased.data" \
-      --valid-labels "./data/facebook_multiclass_nlu/clean/valid.labels" \
-      --grid-training --grid-config "$grid_config" --gpu
+      --train-data "./data/facebook_multiclass_nlu/clean/train.upsampled.uncased.data" \
+      --train-labels "./data/facebook_multiclass_nlu/clean/train.upsampled.labels" \
+      --valid-data "./data/facebook_multiclass_nlu/clean/valid.upsampled.uncased.data" \
+      --valid-labels "./data/facebook_multiclass_nlu/clean/valid.upsampled.labels"
+    --grid-training --grid-config "$grid_config" --gpu
   fi
 }
 
