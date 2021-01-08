@@ -1,0 +1,1 @@
+{"patterns": ["7-50_6-50_5-50_4-50_3-50_2-50", "7-25_6-25_5-25_4-25_3-25_2-25", "6-50_5-50_4-50_3-50_2-50", "6-25_5-25_4-25_3-25_2-25"], "semiring": ["MaxProductSemiring", "MaxSumSemiring", "ProbabilitySemiring"], "learning_rate": [1e-2, 1e-3]}

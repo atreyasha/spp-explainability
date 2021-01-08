@@ -161,7 +161,7 @@ def grid_training_arg_parser() -> argparse.ArgumentParser:
     grid = parser.add_argument_group('optional grid-training arguments')
     grid.add_argument("--grid-config",
                       help="Path to grid configuration file",
-                      default="./src/resources/flat_grid_config.json",
+                      default="./src/resources/flat_grid_config_light.json",
                       type=file_path)
     grid.add_argument(
         "--num-random-iterations",
