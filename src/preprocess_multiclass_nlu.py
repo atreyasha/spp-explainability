@@ -2,48 +2,15 @@
 # -*- coding: utf-8 -*-
 
 from typing import Dict, Tuple, List
+from .utils.data_utils import unique
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
-from .utils.data_utils import (unique, read_tsv, mapping, serialize, lowercase,
-                               tokenize)
+from .utils.preprocess_utils import (read_tsv, mapping, serialize,
+                                     lowercase, tokenize, upsample)
 from .arg_parser import preprocess_arg_parser, logging_arg_parser
 import argparse
 import json
 import os
-
-
-def repeat_items(data: List[str], count: int) -> List[str]:
-    # source: https://stackoverflow.com/a/54864336
-    return data * (count // len(data)) + data[:(count % len(data))]
-
-
-def categorize_by_label(
-        full_data: List[Tuple[str, int]]) -> Dict[int, List[str]]:
-    label_data_mapping = {}
-    for data, label in full_data:
-        if label not in label_data_mapping:
-            label_data_mapping[label] = [data]
-        else:
-            label_data_mapping[label].append(data)
-    return label_data_mapping
-
-
-def upsample(full_data: List[Tuple[str, int]]) -> List[Tuple[str, int]]:
-    # create label to data mapping
-    label_data_mapping = categorize_by_label(full_data)
-
-    # find maximum length to upsample
-    maximum_length = max([len(value) for value in label_data_mapping.values()])
-
-    # loop through each key and upsample to maximum length
-    for key in label_data_mapping.keys():
-        if len(label_data_mapping[key]) < maximum_length:
-            label_data_mapping[key] = repeat_items(label_data_mapping[key],
-                                                   maximum_length)
-
-    # convert dicionary back to list of tuples and return it
-    return [(text, key) for key, value in label_data_mapping.items()
-            for text in value]
 
 
 def write_file(full_data: List[Tuple[str, int]], mapping: Dict[str, int],

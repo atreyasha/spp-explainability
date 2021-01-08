@@ -2,12 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from typing import (Any, Iterable, Callable, Generator, List, Union, Tuple,
-                    Sequence, overload, Dict)
+                    Sequence, overload)
 from itertools import chain, islice
-from nltk import word_tokenize
 import numpy as np
 import string
-import csv
 
 # declare global variables
 PRINTABLE = set(string.printable)
@@ -202,26 +200,3 @@ def pad(doc: Sequence[Union[int, str]],
         END: Union[int, str] = END_TOKEN_INDEX) -> Sequence[Union[int, str]]:
     return ([START] * num_padding_tokens) + list(doc) + ([END] *
                                                          num_padding_tokens)
-
-
-def read_tsv(filename: str) -> List[Any]:
-    with open(filename, 'r', encoding='utf-8') as input_file_stream:
-        raw_list = list(csv.reader(input_file_stream, delimiter='\t'))
-    return raw_list
-
-
-def mapping(classes: List[str]) -> Dict[str, int]:
-    return {element: i for i, element in enumerate(sorted(set(classes)))}
-
-
-def serialize(data: Iterable[str],
-              mapping: Dict[str, int]) -> Generator[int, None, None]:
-    return (mapping[element] for element in data)
-
-
-def tokenize(data: Iterable[str]) -> Generator[str, None, None]:
-    return (" ".join(word_tokenize(element)) for element in data)
-
-
-def lowercase(data: Iterable[str]) -> Generator[str, None, None]:
-    return (element.lower() for element in data)
