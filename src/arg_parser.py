@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from .utils.parser_utils import dir_path, file_path
+from .utils.parser_utils import dir_path, file_path, glob_path
 from .soft_patterns_pp import (SHARED_SL_PARAM_PER_STATE_PER_PATTERN,
                                SHARED_SL_SINGLE_PARAM)
 import argparse
@@ -166,12 +166,12 @@ def evaluation_arg_parser() -> argparse.ArgumentParser:
                           required=True,
                           type=file_path)
     required.add_argument("--model-checkpoint",
-                          help=("Path to model checkpoint with '.pt' "
+                          help=("Glob path to model checkpoint with '.pt' "
                                 "extension. Note that 'model_config.json' "
                                 "must be in the same directory level as the "
                                 "model checkpoint file"),
                           required=True,
-                          type=file_path)
+                          type=glob_path)
     # add evaluate group for optional arguments
     evaluate = parser.add_argument_group('optional evaluation arguments')
     evaluate.add_argument("--output-prefix",
