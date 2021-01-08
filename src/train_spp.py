@@ -5,19 +5,18 @@ from tqdm import tqdm
 from glob import glob
 from functools import partial
 from collections import OrderedDict
-from typing import List, Union, Tuple, cast
 from torch.optim import Adam
 from torch.nn import NLLLoss, Module, Embedding
 from torch.nn.functional import log_softmax
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tensorboardX import SummaryWriter
+from typing import List, Union, Tuple, cast, Any, Callable
 from .utils.parser_utils import ArgparseFormatter
 from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
                                read_embeddings, Vocab, PAD_TOKEN_INDEX)
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
-                                to_cuda, enable_gradient_clipping,
-                                timestamp, Batch, Semiring,
-                                ProbabilitySemiring,
+                                to_cuda, enable_gradient_clipping, timestamp,
+                                Batch, Semiring, ProbabilitySemiring,
                                 LogSpaceMaxProductSemiring, MaxSumSemiring)
 from .utils.logging_utils import (stdout_root_logger, add_file_handler,
                                   remove_all_file_handlers)
@@ -26,6 +25,7 @@ from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
                          hardware_arg_parser, grid_training_arg_parser)
 from .soft_patterns_pp import SoftPatternClassifier
 from sklearn.model_selection import ParameterGrid
+from sklearn.metrics import accuracy_score
 import numpy as np
 import argparse
 import logging
@@ -380,12 +380,16 @@ def compute_loss(model: Module, batch: Batch, num_classes: int,
         to_cuda(gpu_device)(torch.LongTensor(gold)))
 
 
-def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
-                      batch_size: int, gpu_device: Union[torch.device,
-                                                         None]) -> float:
-    # instantiate local variables
-    number_data_points = float(len(data))
-    correct = 0
+def evaluate_metric(
+        model: Module,
+        data: List[Tuple[List[int], int]],
+        batch_size: int,
+        gpu_device: Union[torch.device, None],
+        metric: Callable[[List[int], List[int]],
+                         Any]) -> float:
+    # instantiate local storage variable
+    predicted = []
+    aggregate_gold = []
 
     # chunk data into sorted batches and iterate
     for batch in chunked_sorted(data, batch_size):
@@ -399,14 +403,11 @@ def evaluate_accuracy(model: Module, data: List[Tuple[List[int], int]],
         output = model.forward(batch)  # type: ignore
 
         # get predicted classes from raw output
-        predicted = torch.argmax(output, 1).tolist()
-
-        # find number of correctly predicted data points
-        correct += sum(1 for pred, gold in zip(predicted, gold)
-                       if pred == gold)
+        predicted.extend(torch.argmax(output, 1).tolist())
+        aggregate_gold.extend(gold)
 
     # return raw accuracy float
-    return correct / number_data_points
+    return metric(aggregate_gold, predicted)
 
 
 def train_inner(train_data: List[Tuple[List[int], int]],
@@ -586,8 +587,8 @@ def train_inner(train_data: List[Tuple[List[int], int]],
         LOGGER.info("Evaluating SoPa++ on training set")
         mean_train_loss = train_loss / len(train_data)
         with torch.no_grad():
-            train_acc = evaluate_accuracy(model, train_data, batch_size,
-                                          gpu_device)
+            train_acc = evaluate_metric(model, train_data, batch_size,
+                                        gpu_device, accuracy_score)
 
         # add training loss data
         writer.add_scalar("loss/train_loss", mean_train_loss, epoch)
@@ -637,8 +638,8 @@ def train_inner(train_data: List[Tuple[List[int], int]],
         # compute mean valid loss over epoch and accuracy
         mean_valid_loss = valid_loss / len(valid_data)
         with torch.no_grad():
-            valid_acc = evaluate_accuracy(model, valid_data, batch_size,
-                                          gpu_device)
+            valid_acc = evaluate_metric(model, valid_data, batch_size,
+                                        gpu_device, accuracy_score)
 
         # add valid loss data to tensorboard
         writer.add_scalar("loss/valid_loss", mean_valid_loss, epoch)
