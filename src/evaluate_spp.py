@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from glob import glob
 from functools import partial
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
@@ -112,9 +113,11 @@ def evaluate_outer(args: argparse.Namespace, model_log_directory: str) -> None:
 
 
 def main(args: argparse.Namespace) -> None:
-    model_log_directory = os.path.dirname(args.model_checkpoint)
-    args = parse_configs_to_args(args, model_log_directory, training=False)
-    evaluate_outer(args, model_log_directory)
+    for model_checkpoint in glob(args.model_checkpoint):
+        args.model_checkpoint = model_checkpoint
+        model_log_directory = os.path.dirname(args.model_checkpoint)
+        args = parse_configs_to_args(args, model_log_directory, training=False)
+        evaluate_outer(args, model_log_directory)
 
 
 if __name__ == '__main__':
