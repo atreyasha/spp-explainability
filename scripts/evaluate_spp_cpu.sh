@@ -12,7 +12,7 @@ Optional arguments:
   -h, --help                    Show this help message and exit
 
 Required arguments:
-  model_checkpoint <file_path>  Path to model checkpoint with '.pt'
+  model_checkpoint <glob_path>  Glob path to model checkpoint with '.pt'
                                 extension. Note that 'model_config.json'
                                 must be in the same directory level as
                                 the model checkpoint file
