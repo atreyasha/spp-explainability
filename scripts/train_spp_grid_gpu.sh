@@ -37,7 +37,7 @@ train_spp_grid_gpu() {
       --train-labels "./data/facebook_multiclass_nlu/clean/train.labels" \
       --valid-data "./data/facebook_multiclass_nlu/clean/valid.uncased.data" \
       --valid-labels "./data/facebook_multiclass_nlu/clean/valid.labels" \
-      --grid-training --gpu --batch-size 256
+      --grid-training --gpu
   else
     python3 -m src.train_spp \
       --embeddings "./data/glove_6B_uncased/glove.6B.300d.txt" \
@@ -45,7 +45,7 @@ train_spp_grid_gpu() {
       --train-labels "./data/facebook_multiclass_nlu/clean/train.labels" \
       --valid-data "./data/facebook_multiclass_nlu/clean/valid.uncased.data" \
       --valid-labels "./data/facebook_multiclass_nlu/clean/valid.labels" \
-      --grid-training --grid-config "$grid_config" --gpu --batch-size 256
+      --grid-training --grid-config "$grid_config" --gpu
   fi
 }
 

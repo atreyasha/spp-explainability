@@ -32,7 +32,7 @@ train_spp_gpu() {
     --train-labels "./data/facebook_multiclass_nlu/clean/train.labels" \
     --valid-data "./data/facebook_multiclass_nlu/clean/valid.uncased.data" \
     --valid-labels "./data/facebook_multiclass_nlu/clean/valid.labels" \
-    --batch-size 256 --gpu
+    --gpu
 }
 
 # execute function

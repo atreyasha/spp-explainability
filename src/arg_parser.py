@@ -120,7 +120,7 @@ def training_arg_parser() -> argparse.ArgumentParser:
         type=float)
     train.add_argument("--batch-size",
                        help="Batch size for training",
-                       default=128,
+                       default=256,
                        type=int)
     train.add_argument("--max-doc-len",
                        help=("Maximum document length allowed. "
