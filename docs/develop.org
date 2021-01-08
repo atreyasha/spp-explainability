@@ -4,25 +4,13 @@
 
 ** Tasks
 *** Current
-**** Complete model improvements and run SoPa++ for grid runs
-     DEADLINE: <2021-01-07 Thu>
-***** TODO Modify final layer to a general additive layer
-****** binarize scores by using a normalization technique for scores and then taking the relu + sign
-****** remove mlp from source code and from argument parser as well
-****** think of ways to use patterns only when there are enough words in front and not to always compute, if this is possible at all
-****** construct more complicated basis functions, such as polynomials if applicable; see: https://stackoverflow.com/questions/55920015/how-to-realize-a-polynomial-regression-in-pytorch-python
-***** Make separate shell scripts for single, grid, resume single and resume grid
-***** Create =slurm-s3it= and =gpu= branches -> adjust batch sizes and other parameters for system-level optimizations
-
-**** Add test evaluation workflow with independent script
+**** Add evaluation/prediction workflow with independent script and run grid-search(es) 
      DEADLINE: <2021-01-10 Sun>
-***** Compute test F1 on models at the end of training for completeness
-***** Removal of predict function inside model, but could be added back if this becomes boilerplate later in testing script
-***** Think again about adding model.eval() and model.train() inside functions, or to keep outside in more global context
-***** Tokenizer configuration should also be saved such as nltk punkt tokenizer, if something like this is present, currently we use nltk tokenizer which is fixed within the current nltk version
-***** Test code should use model vocabulary directly -> this can be used to ensure everything is within model
-***** Use modular loading frameworks similar to continue training when loading back the model
-
+***** Training workflow
+****** TODO add some basic help scripts to fill up readme and increase morale
+****** conduct single/grid normal/resume tests to ensure training procedures work smoothly before running
+****** run grid-search with single random-seed first
+       
 **** With decent model performance, branch off to improve explainability with weighting of patterns to address other research questions
      DEADLINE: <2021-02-12 Fri>
 ***** Oracle model
@@ -46,17 +34,20 @@
 ****** both have some papers which could be cited to add some relevance
 ***** Test workflow for loading pre-computed-patterns to ensure they work without bugs -> missing load information for self-loops, might bug out for case with no self_loops because of index 1 of =diags= and =bias= being updated which is only present with self_loops, perhaps replace with index of -1
 ***** Improve cryptic parts of code eg. loading internal model patterns with CW token and numerical epsilon
+***** Think of ways to use patterns only when there are enough words in front and not to always compute, if this is possible at all
  
 *** Long-term
 **** Performance
+***** create =slurm-s3it= branch later on if it is really necessary
 ***** add check to ensure start, end and pad tokens don't occur adversarially inside sequence -> need to have the vocabulary object catch such an error
-***** add predict function for both mimic and oracle model which does not need extra data to be loaded
+***** add predict function for both mimic and oracle model which does not need extra data to be loaded -> can also accept stdin as unix pipe
 ***** check if packed sequences could be incoporated into model
 **** Re-check potential pitfalls
-***** add =with torch.no_grad()= scope indicator alongside =model.eval()= to perform inference/validation correctly and efficiently -> check other areas where this can be done
+***** add =with torch.no_grad()= scope indicator alongside =model.eval()= to perform inference/validation correctly and efficiently -> add =model.train()= back when evaluation is done and training is needed
 ***** check to ensure detach and clones are done together where variable is created and updated, or otherwise detach is done for variables where only data needs to be referenced
 ***** replace all legacy tensor.data calls with tensor.detach() for safety
 ***** check code for =squeeze()= call which can be problematic for dim 1 tensors
+***** tokenizer configuration should be saved if it is special, nltk tokenizer is probably the same given upstream nltk version
 **** Dependencies, typing and testing
 ***** use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
 ***** include test code by instantiating class and/or other simple methods which are inherent to the workflow
@@ -64,6 +55,7 @@
 ***** consider adding Optional type to all optional arguments
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List)
 **** Documentation
+***** consider renaming =soft_patterns_pp= to more elegant term such as =spp=
 ***** reduce source code lines, chunking and comments -> pretty sort python code and functions
 ***** consider re-ordering functions/classes by length of each function so code flows naturally downwards
 ***** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
@@ -125,6 +117,7 @@
 ****** improve capitalization with braces in bibtex file
 ***** Concept-related feedback
 ****** clarify meaning and concept of "occlusion" as leave-one-out perturbation analysis
+****** cite and explain straight-through estimation (STE) with Heaviside variant
 ****** improve arbitrary vs. contrained oracle phrasing -> perhaps black-box vs. white-box but more specific
 ****** expound on trade-off between performance and explainability and process of mimic extraction
 ****** add more information on what competitive performance means (eg. within few F_1 points)

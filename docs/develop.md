@@ -20,56 +20,22 @@
 
 ### Current
 
-1.  Complete model improvements and run SoPa++ for grid runs
-
-    **DEADLINE:** *\<2021-01-07 Thu\>*
-
-    1.  **TODO** Modify final layer to a general additive
-        layer
-
-        1.  binarize scores by using a normalization technique for
-            scores and then taking the relu + sign
-
-        2.  remove mlp from source code and from argument parser as well
-
-        3.  think of ways to use patterns only when there are enough
-            words in front and not to always compute, if this is
-            possible at all
-
-        4.  construct more complicated basis functions, such as
-            polynomials if applicable; see:
-            <https://stackoverflow.com/questions/55920015/how-to-realize-a-polynomial-regression-in-pytorch-python>
-
-    2.  Make separate shell scripts for single, grid, resume single and
-        resume grid
-
-    3.  Create `slurm-s3it` and `gpu` branches -\> adjust batch sizes
-        and other parameters for system-level optimizations
-
-2.  Add test evaluation workflow with independent script
+1.  Add evaluation/prediction workflow with independent script and run
+    grid-search(es)
 
     **DEADLINE:** *\<2021-01-10 Sun\>*
 
-    1.  Compute test F1 on models at the end of training for
-        completeness
+    1.  Training workflow
 
-    2.  Removal of predict function inside model, but could be added
-        back if this becomes boilerplate later in testing script
+        1.  **TODO** add some basic help scripts to fill up
+            readme and increase morale
 
-    3.  Think again about adding model.eval() and model.train() inside
-        functions, or to keep outside in more global context
+        2.  conduct single/grid normal/resume tests to ensure training
+            procedures work smoothly before running
 
-    4.  Tokenizer configuration should also be saved such as nltk punkt
-        tokenizer, if something like this is present, currently we use
-        nltk tokenizer which is fixed within the current nltk version
+        3.  run grid-search with single random-seed first
 
-    5.  Test code should use model vocabulary directly -\> this can be
-        used to ensure everything is within model
-
-    6.  Use modular loading frameworks similar to continue training when
-        loading back the model
-
-3.  With decent model performance, branch off to improve explainability
+2.  With decent model performance, branch off to improve explainability
     with weighting of patterns to address other research questions
 
     **DEADLINE:** *\<2021-02-12 Fri\>*
@@ -141,24 +107,31 @@
     6.  Improve cryptic parts of code eg. loading internal model
         patterns with CW token and numerical epsilon
 
+    7.  Think of ways to use patterns only when there are enough words
+        in front and not to always compute, if this is possible at all
+
 ### Long-term
 
 1.  Performance
 
-    1.  add check to ensure start, end and pad tokens don\'t occur
+    1.  create `slurm-s3it` branch later on if it is really necessary
+
+    2.  add check to ensure start, end and pad tokens don\'t occur
         adversarially inside sequence -\> need to have the vocabulary
         object catch such an error
 
-    2.  add predict function for both mimic and oracle model which does
-        not need extra data to be loaded
+    3.  add predict function for both mimic and oracle model which does
+        not need extra data to be loaded -\> can also accept stdin as
+        unix pipe
 
-    3.  check if packed sequences could be incoporated into model
+    4.  check if packed sequences could be incoporated into model
 
 2.  Re-check potential pitfalls
 
     1.  add `with torch.no_grad()` scope indicator alongside
         `model.eval()` to perform inference/validation correctly and
-        efficiently -\> check other areas where this can be done
+        efficiently -\> add `model.train()` back when evaluation is done
+        and training is needed
 
     2.  check to ensure detach and clones are done together where
         variable is created and updated, or otherwise detach is done for
@@ -169,6 +142,9 @@
 
     4.  check code for `squeeze()` call which can be problematic for dim
         1 tensors
+
+    5.  tokenizer configuration should be saved if it is special, nltk
+        tokenizer is probably the same given upstream nltk version
 
 3.  Dependencies, typing and testing
 
@@ -188,32 +164,35 @@
 
 4.  Documentation
 
-    1.  reduce source code lines, chunking and comments -\> pretty sort
+    1.  consider renaming `soft_patterns_pp` to more elegant term such
+        as `spp`
+
+    2.  reduce source code lines, chunking and comments -\> pretty sort
         python code and functions
 
-    2.  consider re-ordering functions/classes by length of each
+    3.  consider re-ordering functions/classes by length of each
         function so code flows naturally downwards
 
-    3.  update metadata eg. with comprehensive python/shell help
+    4.  update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    4.  add pydocstrings to all functions and improve argparse
+    5.  add pydocstrings to all functions and improve argparse
         documentation
 
-    5.  provide description of data structures (eg. data, labels)
+    6.  provide description of data structures (eg. data, labels)
         required for training processes
 
-    6.  make list of all useful commands for slurm -\> useful to re-use
+    7.  make list of all useful commands for slurm -\> useful to re-use
         later on
 
-    7.  test download and all other scripts to ensure they work
+    8.  test download and all other scripts to ensure they work
 
-    8.  GPU/CPU runs not always reproducible depending on
+    9.  GPU/CPU runs not always reproducible depending on
         multi-threading, see:
         <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    9.  add MIT license when made public
+    10. add MIT license when made public
 
 ## Notes
 
@@ -343,22 +322,25 @@
         1.  clarify meaning and concept of \"occlusion\" as
             leave-one-out perturbation analysis
 
-        2.  improve arbitrary vs. contrained oracle phrasing -\> perhaps
+        2.  cite and explain straight-through estimation (STE) with
+            Heaviside variant
+
+        3.  improve arbitrary vs. contrained oracle phrasing -\> perhaps
             black-box vs. white-box but more specific
 
-        3.  expound on trade-off between performance and explainability
+        4.  expound on trade-off between performance and explainability
             and process of mimic extraction
 
-        4.  add more information on what competitive performance means
+        5.  add more information on what competitive performance means
             (eg. within few F_1 points)
 
-        5.  how to evaluate improved explainability -\> make hierarchy
+        6.  how to evaluate improved explainability -\> make hierarchy
             for local vs. global explainability -\> also explainability
             is only relevant if the oracle and mimic models both
             **perform competitively and have similar confusion matrix
             profiles** (both conditions must be satisfied)
 
-        6.  further work: porting this technique to a transformer where
+        7.  further work: porting this technique to a transformer where
             possible
 
     3.  Self-thoughts
