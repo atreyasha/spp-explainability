@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Dict, Generator, Tuple
+from typing import Dict, Tuple, List
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import (unique, read_tsv, mapping, serialize, lowercase,
@@ -12,8 +12,41 @@ import json
 import os
 
 
-def write_file(full_data: Generator[Tuple[str, int], None,
-                                    None], mapping: Dict[str, int],
+def repeat_items(data: List[str], count: int) -> List[str]:
+    # source: https://stackoverflow.com/a/54864336
+    return data * (count // len(data)) + data[:(count % len(data))]
+
+
+def categorize_by_label(
+        full_data: List[Tuple[str, int]]) -> Dict[int, List[str]]:
+    label_data_mapping = {}
+    for data, label in full_data:
+        if label not in label_data_mapping:
+            label_data_mapping[label] = [data]
+        else:
+            label_data_mapping[label].append(data)
+    return label_data_mapping
+
+
+def upsample(full_data: List[Tuple[str, int]]) -> List[Tuple[str, int]]:
+    # create label to data mapping
+    label_data_mapping = categorize_by_label(full_data)
+
+    # find maximum length to upsample
+    maximum_length = max([len(value) for value in label_data_mapping.values()])
+
+    # loop through each key and upsample to maximum length
+    for key in label_data_mapping.keys():
+        if len(label_data_mapping[key]) < maximum_length:
+            label_data_mapping[key] = repeat_items(label_data_mapping[key],
+                                                   maximum_length)
+
+    # convert dicionary back to list of tuples and return it
+    return [(text, key) for key, value in label_data_mapping.items()
+            for text in value]
+
+
+def write_file(full_data: List[Tuple[str, int]], mapping: Dict[str, int],
                prefix: str, suffix: str, write_directory: str) -> None:
     # make write directory if it does not exist
     os.makedirs(write_directory, exist_ok=True)
@@ -84,11 +117,11 @@ def main(args: argparse.Namespace) -> None:
 
     # make everything unique
     LOGGER.info("Making training data unique")
-    train = unique(zip(train_data, train_labels))
+    train = list(unique(zip(train_data, train_labels)))
     LOGGER.info("Making validation data unique")
-    valid = unique(zip(valid_data, valid_labels))
+    valid = list(unique(zip(valid_data, valid_labels)))
     LOGGER.info("Making test data unique")
-    test = unique(zip(test_data, test_labels))
+    test = list(unique(zip(test_data, test_labels)))
 
     # write main files
     LOGGER.info("Sorting and writing data")
@@ -100,6 +133,17 @@ def main(args: argparse.Namespace) -> None:
     with open(os.path.join(write_directory, "class_mapping.json"),
               'w') as output_file_stream:
         json.dump(class_mapping, output_file_stream, ensure_ascii=False)
+
+    # upsample training and validation data if allowed
+    if not args.no_upsampling:
+        LOGGER.info("Upsampling training and validation data")
+        train = upsample(train)
+        valid = upsample(valid)
+        LOGGER.info("Sorting and writing upsampled data")
+        write_file(train, class_mapping, "train.upsampled", suffix,
+                   write_directory)
+        write_file(valid, class_mapping, "valid.upsampled", suffix,
+                   write_directory)
 
 
 if __name__ == '__main__':

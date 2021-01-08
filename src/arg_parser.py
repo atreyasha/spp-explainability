@@ -246,6 +246,11 @@ def preprocess_arg_parser() -> argparse.ArgumentParser:
         help=("Retain true casing when preprocessing data. "
               "Otherwise data will be lowercased by default"),
         action="store_true")
+    preprocess.add_argument(
+        "--no-upsampling",
+        help=("Disable upsampling on the train and validation "
+              "data sets"),
+        action="store_true")
     return parser
 
 
