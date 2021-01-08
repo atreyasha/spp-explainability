@@ -102,7 +102,7 @@ def main(args: argparse.Namespace) -> None:
         json.dump(class_mapping, output_file_stream, ensure_ascii=False)
 
     # upsample training and validation data if allowed
-    if not args.no_upsampling:
+    if not args.disable_upsampling:
         LOGGER.info("Upsampling training and validation data")
         train = upsample(train)
         valid = upsample(valid)
