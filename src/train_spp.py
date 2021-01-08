@@ -384,7 +384,7 @@ def compute_loss(model: Module, batch: Batch, num_classes: int,
 
 def evaluate_metric(model: Module, data: List[Tuple[List[int], int]],
                     batch_size: int, gpu_device: Union[torch.device, None],
-                    metric: Callable[[List[int], List[int]], Any]) -> float:
+                    metric: Callable[[List[int], List[int]], Any]) -> Any:
     # instantiate local storage variable
     predicted = []
     aggregate_gold = []
