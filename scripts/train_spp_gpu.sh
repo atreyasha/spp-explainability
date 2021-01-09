@@ -31,8 +31,8 @@ train_spp_gpu() {
     --train-data "./data/facebook_multiclass_nlu/clean/train.upsampled.uncased.data" \
     --train-labels "./data/facebook_multiclass_nlu/clean/train.upsampled.labels" \
     --valid-data "./data/facebook_multiclass_nlu/clean/valid.upsampled.uncased.data" \
-    --valid-labels "./data/facebook_multiclass_nlu/clean/valid.upsampled.labels"
-  --gpu
+    --valid-labels "./data/facebook_multiclass_nlu/clean/valid.upsampled.labels" \
+    --gpu
 }
 
 # execute function

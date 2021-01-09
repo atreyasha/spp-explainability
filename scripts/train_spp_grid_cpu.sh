@@ -36,16 +36,16 @@ train_spp_grid_cpu() {
       --train-data "./data/facebook_multiclass_nlu/clean/train.upsampled.uncased.data" \
       --train-labels "./data/facebook_multiclass_nlu/clean/train.upsampled.labels" \
       --valid-data "./data/facebook_multiclass_nlu/clean/valid.upsampled.uncased.data" \
-      --valid-labels "./data/facebook_multiclass_nlu/clean/valid.upsampled.labels"
-    --grid-training
+      --valid-labels "./data/facebook_multiclass_nlu/clean/valid.upsampled.labels" \
+      --grid-training
   else
     python3 -m src.train_spp \
       --embeddings "./data/glove_6B_uncased/glove.6B.300d.txt" \
       --train-data "./data/facebook_multiclass_nlu/clean/train.upsampled.uncased.data" \
       --train-labels "./data/facebook_multiclass_nlu/clean/train.upsampled.labels" \
       --valid-data "./data/facebook_multiclass_nlu/clean/valid.upsampled.uncased.data" \
-      --valid-labels "./data/facebook_multiclass_nlu/clean/valid.upsampled.labels"
-    --grid-training --grid-config "$grid_config"
+      --valid-labels "./data/facebook_multiclass_nlu/clean/valid.upsampled.labels" \
+      --grid-training --grid-config "$grid_config"
   fi
 }
 
