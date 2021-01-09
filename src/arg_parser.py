@@ -185,18 +185,21 @@ def evaluation_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def grid_training_arg_parser() -> argparse.ArgumentParser:
+def grid_training_arg_parser(
+        resume_training: bool = False) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     grid = parser.add_argument_group('optional grid-training arguments')
-    grid.add_argument("--grid-config",
-                      help="Path to grid configuration file",
-                      default="./src/resources/flat_grid_light_config.json",
-                      type=file_path)
-    grid.add_argument(
-        "--num-random-iterations",
-        help="Number of random iteration(s) for each grid instance",
-        default=1,
-        type=int)
+    if not resume_training:
+        grid.add_argument(
+            "--grid-config",
+            help="Path to grid configuration file",
+            default="./src/resources/flat_grid_light_config.json",
+            type=file_path)
+        grid.add_argument(
+            "--num-random-iterations",
+            help="Number of random iteration(s) for each grid instance",
+            default=1,
+            type=int)
     grid.add_argument("--grid-training",
                       help="Use grid-training instead of single-training",
                       action="store_true")

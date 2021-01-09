@@ -46,14 +46,15 @@ def main(args: argparse.Namespace) -> None:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(formatter_class=ArgparseFormatter,
-                                     parents=[
-                                         resume_training_arg_parser(),
-                                         grid_training_arg_parser(),
-                                         hardware_arg_parser(),
-                                         logging_arg_parser(),
-                                         tqdm_arg_parser()
-                                     ])
+    parser = argparse.ArgumentParser(
+        formatter_class=ArgparseFormatter,
+        parents=[
+            resume_training_arg_parser(),
+            grid_training_arg_parser(resume_training=True),
+            hardware_arg_parser(),
+            logging_arg_parser(),
+            tqdm_arg_parser()
+        ])
     args = parser.parse_args()
     LOGGER = stdout_root_logger(args.logging_level)
     main(args)
