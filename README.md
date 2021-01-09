@@ -239,48 +239,41 @@ For resuming the aforementioned training workflow in case of interruptions, we u
 ```
 usage: train_resume_spp.py [-h] --model-log-directory <dir_path>
                            [--disable-tqdm] [--gpu] [--gpu-device <str>]
-                           [--grid-config <file_path>] [--grid-training]
+                           [--grid-training]
                            [--logging-level {debug,info,warning,error,critical}]
-                           [--num-random-iterations <int>]
                            [--num-threads <int>] [--tqdm-update-freq <int>]
 
 optional arguments:
-  -h, --help               show this help message and exit
+  -h, --help             show this help message and exit
 
 required training arguments:
-  --model-log-directory    <dir_path>
-                           Base model directory containing model data to be
-                           resumed for training (default: None)
+  --model-log-directory  <dir_path>
+                         Base model directory containing model data to be
+                         resumed for training (default: None)
 
 optional grid-training arguments:
-  --grid-config            <file_path>
-                           Path to grid configuration file (default:
-                           ./src/resources/flat_grid_light_config.json)
-  --grid-training          Use grid-training instead of single-training
-                           (default: False)
-  --num-random-iterations  <int>
-                           Number of random iteration(s) for each grid
-                           instance (default: 1)
+  --grid-training        Use grid-training instead of single-training
+                         (default: False)
 
 optional hardware-acceleration arguments:
-  --gpu                    Use GPU hardware acceleration (default: False)
-  --gpu-device             <str>
-                           GPU device specification in case --gpu option is
-                           used (default: cuda:0)
-  --num-threads            <int>
-                           Set the number of threads used for intraop
-                           parallelism on CPU (default: None)
+  --gpu                  Use GPU hardware acceleration (default: False)
+  --gpu-device           <str>
+                         GPU device specification in case --gpu option is used
+                         (default: cuda:0)
+  --num-threads          <int>
+                         Set the number of threads used for intraop
+                         parallelism on CPU (default: None)
 
 optional logging arguments:
-  --logging-level          {debug,info,warning,error,critical}
-                           Set logging level (default: info)
+  --logging-level        {debug,info,warning,error,critical}
+                         Set logging level (default: info)
 
 optional progress-bar arguments:
-  --disable-tqdm           Disable tqdm progress bars (default: False)
-  --tqdm-update-freq       <int>
-                           Specify after how many training updates should the
-                           tqdm progress bar be updated with model diagnostics
-                           (default: 1)
+  --disable-tqdm         Disable tqdm progress bars (default: False)
+  --tqdm-update-freq     <int>
+                         Specify after how many training updates should the
+                         tqdm progress bar be updated with model diagnostics
+                         (default: 1)
 ```
 
 #### Resume single SoPa++ model training
