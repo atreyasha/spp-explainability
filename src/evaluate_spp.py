@@ -106,6 +106,9 @@ def evaluate_outer(args: argparse.Namespace, model_log_directory: str) -> None:
         args.self_loop_scale,
         0.)
 
+    # log information about model
+    LOGGER.info("Model: %s" % model)
+
     # execute inner evaluation workflow
     evaluate_inner(eval_data, model, args.model_checkpoint,
                    model_log_directory, num_classes, args.batch_size,

@@ -831,6 +831,9 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
             args.self_loop_scale,
             args.dropout)
 
+        # log information about model
+        LOGGER.info("Model: %s" % model)
+
         if not resume_training:
             # print model diagnostics and dump files
             LOGGER.info("Total model parameters: %s" %
