@@ -20,30 +20,15 @@
 
 ### Current
 
-1.  Add evaluation/prediction workflow with independent script and run
-    grid-search(es)
+1.  Focus on deriving explainability from trained SoPa++ model(s)
 
-    **DEADLINE:** *\<2021-01-10 Sun\>*
-
-    1.  Training workflow
-
-        1.  **TODO** add some basic help scripts to fill up
-            readme and increase morale
-
-        2.  conduct single/grid normal/resume tests to ensure training
-            procedures work smoothly before running
-
-        3.  run grid-search with single random-seed first
-
-2.  With decent model performance, branch off to improve explainability
-    with weighting of patterns to address other research questions
-
-    **DEADLINE:** *\<2021-02-12 Fri\>*
+    **DEADLINE:** *\<2021-02-14 Sun\>*
 
     1.  Oracle model
 
-        1.  refactor `visualization` and `interpretation` (two of
-            highest priority) and understand their internal mechanisms
+        1.  **TODO** refactor `visualization` and
+            `interpretation` (two of highest priority) and understand
+            their internal mechanisms
 
         2.  why are `[START]` and `[END]` tokens repeated before and
             after?
@@ -90,29 +75,39 @@
         2.  compare confusion matrices between orace and mimic and
             compute euclidean distances on scores or binary predictions
 
-    4.  Look into ATIS/SNIPS dataset as additional data-sets
+    4.  Considerations post-explainability
 
-        1.  re-use preprocessing functions by sending them to utils and
-            perhaps make them more general where possible
+        1.  look into ATIS/SNIPS dataset as additional data-sets
 
-        2.  both have some papers which could be cited to add some
-            relevance
+            1.  re-use preprocessing functions by sending them to utils
+                and perhaps make them more general where possible
 
-    5.  Test workflow for loading pre-computed-patterns to ensure they
-        work without bugs -\> missing load information for self-loops,
-        might bug out for case with no self_loops because of index 1 of
-        `diags` and `bias` being updated which is only present with
-        self_loops, perhaps replace with index of -1
+            2.  both have some papers which could be cited to add some
+                relevance
 
-    6.  Improve cryptic parts of code eg. loading internal model
-        patterns with CW token and numerical epsilon
+        2.  repeat grid-search with multiple random seeds later when
+            explainability process is clearer -\> possibly with more
+            parallelized computations to fill up all GPU memory -\>
+            would require reading-up on how to do this
 
-    7.  Think of ways to use patterns only when there are enough words
-        in front and not to always compute, if this is possible at all
+        3.  test workflow for loading pre-computed-patterns to ensure
+            they work without bugs -\> missing load information for
+            self-loops, might bug out for case with no self_loops
+            because of index 1 of `diags` and `bias` being updated which
+            is only present with self_loops, perhaps replace with index
+            of -1 -\> perhaps can take out numerical epsilon as there
+            are probably some workarounds for this
+
+        4.  improve cryptic parts of code eg. loading internal model
+            patterns with CW token and numerical epsilon
+
+        5.  think of ways to use patterns only when there are enough
+            words in front and not to always compute, if this is
+            possible at all
 
 ### Long-term
 
-1.  Performance
+1.  Performance and explainability
 
     1.  create `slurm-s3it` branch later on if it is really necessary
 
@@ -125,6 +120,12 @@
         unix pipe
 
     4.  check if packed sequences could be incoporated into model
+
+    5.  when comparing model performance with other studies, consider
+        only lowercasing and not making unique the test set
+
+    6.  think more about issues related to using layer normalization of
+        scores -\> this could be problematic if all scores are large
 
 2.  Re-check potential pitfalls
 
@@ -162,20 +163,22 @@
         this can be changed or understood to keep consistency (ie. keep
         everything to List)
 
+    6.  install torch for cuda 10.1 on upstream servers, ie.
+        `pip install torch==1.7.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html`
+
 4.  Documentation
 
     1.  consider renaming `soft_patterns_pp` to more elegant term such
         as `spp`
 
     2.  reduce source code lines, chunking and comments -\> pretty sort
-        python code and functions
+        python code and function/class orders perhaps by length
 
-    3.  consider re-ordering functions/classes by length of each
-        function so code flows naturally downwards
-
-    4.  update metadata eg. with comprehensive python/shell help
+    3.  update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
         descriptions for git hooks
+
+    4.  add information on best model downloads and preparation
 
     5.  add pydocstrings to all functions and improve argparse
         documentation
@@ -183,16 +186,13 @@
     6.  provide description of data structures (eg. data, labels)
         required for training processes
 
-    7.  make list of all useful commands for slurm -\> useful to re-use
-        later on
+    7.  test download and all other scripts to ensure they work
 
-    8.  test download and all other scripts to ensure they work
-
-    9.  GPU/CPU runs not always reproducible depending on
+    8.  GPU/CPU runs not always reproducible depending on
         multi-threading, see:
         <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    10. add MIT license when made public
+    9.  add MIT license when made public
 
 ## Notes
 
@@ -294,7 +294,7 @@
 
     4.  Topic registration: **01.02.2021**
 
-    5.  Manuscript submission: **18.03.2021**
+    5.  Manuscript submission: **31.03.2021**
 
 2.  Manuscript notes
 
@@ -306,16 +306,13 @@
         2.  make abstract more specific in terms of \"highly
             performant\"
 
-        3.  sub-word embeddings are both useful for performance and
-            explainability
-
-        4.  fix absolute terms such as \"automated reasoning\", or quote
+        3.  fix absolute terms such as \"automated reasoning\", or quote
             directly from paper
 
-        5.  re-consider reference to Transformers for dynamic sub-word
+        4.  re-consider reference to Transformers for dynamic sub-word
             level word-embeddings
 
-        6.  improve capitalization with braces in bibtex file
+        5.  improve capitalization with braces in bibtex file
 
     2.  Concept-related feedback
 
@@ -340,7 +337,19 @@
             **perform competitively and have similar confusion matrix
             profiles** (both conditions must be satisfied)
 
-        7.  further work: porting this technique to a transformer where
+        7.  how does binarizing help with explainability?
+
+        8.  how does this new framework improve explainability over the
+            previous baseline? explain either via hierarchies, metrics
+            or tangible task-based insights
+
+        9.  how can a user make use of the mimic model and what benefits
+            are there for the user in terms of security/safety/etc?
+
+        10. think more about points to include or mention weakly instead
+            of strongly in paper such as something is better or worse
+
+        11. further work: porting this technique to a transformer where
             possible
 
     3.  Self-thoughts

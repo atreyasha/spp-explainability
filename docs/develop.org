@@ -1,20 +1,13 @@
 #+STARTUP: overview
 #+OPTIONS: ^:nil
 #+OPTIONS: p:t
-
+  
 ** Tasks
 *** Current
-**** Add evaluation/prediction workflow with independent script and run grid-search(es) 
-     DEADLINE: <2021-01-10 Sun>
-***** Training workflow
-****** TODO add some basic help scripts to fill up readme and increase morale
-****** conduct single/grid normal/resume tests to ensure training procedures work smoothly before running
-****** run grid-search with single random-seed first
-       
-**** With decent model performance, branch off to improve explainability with weighting of patterns to address other research questions
-     DEADLINE: <2021-02-12 Fri>
+**** Focus on deriving explainability from trained SoPa++ model(s)
+     DEADLINE: <2021-02-14 Sun>
 ***** Oracle model
-****** refactor =visualization= and =interpretation= (two of highest priority) and understand their internal mechanisms
+****** TODO refactor =visualization= and =interpretation= (two of highest priority) and understand their internal mechanisms
 ****** why are =[START]= and =[END]= tokens repeated before and after?
 ******* overfitting that occurs to extra =[START]= and =[END]= tokens would be transferred to epsilon transitions if replaced with single padding instead of multiple
 ******* posted as question to OP, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695
@@ -29,19 +22,23 @@
 ***** Distance between oracle and mimic
 ****** it would still be useful to show when mimic and oracle align and when they don't -> with some kind of distance measurement between their output scores
 ****** compare confusion matrices between orace and mimic and compute euclidean distances on scores or binary predictions
-***** Look into ATIS/SNIPS dataset as additional data-sets
-****** re-use preprocessing functions by sending them to utils and perhaps make them more general where possible
-****** both have some papers which could be cited to add some relevance
-***** Test workflow for loading pre-computed-patterns to ensure they work without bugs -> missing load information for self-loops, might bug out for case with no self_loops because of index 1 of =diags= and =bias= being updated which is only present with self_loops, perhaps replace with index of -1
-***** Improve cryptic parts of code eg. loading internal model patterns with CW token and numerical epsilon
-***** Think of ways to use patterns only when there are enough words in front and not to always compute, if this is possible at all
+***** Considerations post-explainability
+****** look into ATIS/SNIPS dataset as additional data-sets
+******* re-use preprocessing functions by sending them to utils and perhaps make them more general where possible
+******* both have some papers which could be cited to add some relevance
+****** repeat grid-search with multiple random seeds later when explainability process is clearer -> possibly with more parallelized computations to fill up all GPU memory -> would require reading-up on how to do this
+****** test workflow for loading pre-computed-patterns to ensure they work without bugs -> missing load information for self-loops, might bug out for case with no self_loops because of index 1 of =diags= and =bias= being updated which is only present with self_loops, perhaps replace with index of -1 -> perhaps can take out numerical epsilon as there are probably some workarounds for this
+****** improve cryptic parts of code eg. loading internal model patterns with CW token and numerical epsilon
+****** think of ways to use patterns only when there are enough words in front and not to always compute, if this is possible at all
  
 *** Long-term
-**** Performance
+**** Performance and explainability
 ***** create =slurm-s3it= branch later on if it is really necessary
 ***** add check to ensure start, end and pad tokens don't occur adversarially inside sequence -> need to have the vocabulary object catch such an error
 ***** add predict function for both mimic and oracle model which does not need extra data to be loaded -> can also accept stdin as unix pipe
 ***** check if packed sequences could be incoporated into model
+***** when comparing model performance with other studies, consider only lowercasing and not making unique the test set
+***** think more about issues related to using layer normalization of scores -> this could be problematic if all scores are large
 **** Re-check potential pitfalls
 ***** add =with torch.no_grad()= scope indicator alongside =model.eval()= to perform inference/validation correctly and efficiently -> add =model.train()= back when evaluation is done and training is needed
 ***** check to ensure detach and clones are done together where variable is created and updated, or otherwise detach is done for variables where only data needs to be referenced
@@ -54,14 +51,14 @@
 ***** add mypy as an explicit part of testing the source code
 ***** consider adding Optional type to all optional arguments
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List)
+***** install torch for cuda 10.1 on upstream servers, ie. =pip install torch==1.7.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html=
 **** Documentation
 ***** consider renaming =soft_patterns_pp= to more elegant term such as =spp=
-***** reduce source code lines, chunking and comments -> pretty sort python code and functions
-***** consider re-ordering functions/classes by length of each function so code flows naturally downwards
+***** reduce source code lines, chunking and comments -> pretty sort python code and function/class orders perhaps by length
 ***** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
+***** add information on best model downloads and preparation
 ***** add pydocstrings to all functions and improve argparse documentation
 ***** provide description of data structures (eg. data, labels) required for training processes
-***** make list of all useful commands for slurm -> useful to re-use later on
 ***** test download and all other scripts to ensure they work
 ***** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility
 ***** add MIT license when made public
@@ -105,13 +102,12 @@
 ***** +Topic proposal draft: *06.11.2020*+
 ***** +Topic proposal final: *15.11.2020*+
 ***** Topic registration: *01.02.2021* 
-***** Manuscript submission: *18.03.2021* 
+***** Manuscript submission: *31.03.2021* 
 
 **** Manuscript notes
 ***** Text-related feedback
 ****** 20-90 pages thesis length -> try to keep ideas well-motivated yet succinct
 ****** make abstract more specific in terms of "highly performant"
-****** sub-word embeddings are both useful for performance and explainability
 ****** fix absolute terms such as "automated reasoning", or quote directly from paper
 ****** re-consider reference to Transformers for dynamic sub-word level word-embeddings
 ****** improve capitalization with braces in bibtex file
@@ -122,6 +118,10 @@
 ****** expound on trade-off between performance and explainability and process of mimic extraction
 ****** add more information on what competitive performance means (eg. within few F_1 points)
 ****** how to evaluate improved explainability -> make hierarchy for local vs. global explainability -> also explainability is only relevant if the oracle and mimic models both *perform competitively and have similar confusion matrix profiles* (both conditions must be satisfied)
+****** how does binarizing help with explainability?
+****** how does this new framework improve explainability over the previous baseline? explain either via hierarchies, metrics or tangible task-based insights
+****** how can a user make use of the mimic model and what benefits are there for the user in terms of security/safety/etc?
+****** think more about points to include or mention weakly instead of strongly in paper such as something is better or worse
 ****** further work: porting this technique to a transformer where possible
 ***** Self-thoughts
 ****** compare oracle performance with those from other papers
