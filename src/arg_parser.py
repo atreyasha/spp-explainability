@@ -229,7 +229,6 @@ def hardware_arg_parser() -> argparse.ArgumentParser:
     hardware.add_argument("--num-threads",
                           help=("Set the number of threads used for intraop "
                                 "parallelism on CPU"),
-                          default=None,
                           type=int)
     hardware.add_argument("--gpu",
                           help="Use GPU hardware acceleration",
