@@ -120,9 +120,9 @@ def read_embeddings(
     dim, has_header = check_dim_and_header(filename)
     # assign pad, start, end and unknown vectors
     pad_vec = np.zeros(dim)
-    start_vec = np.random.rand(dim)
-    end_vec = np.random.rand(dim)
-    unknown_vec = np.random.rand(dim)
+    start_vec = np.random.randn(dim)
+    end_vec = np.random.randn(dim)
+    unknown_vec = np.random.randn(dim)
     with open(filename, 'r', encoding='utf-8') as input_file_stream:
         if has_header:
             input_file_stream.readline()
