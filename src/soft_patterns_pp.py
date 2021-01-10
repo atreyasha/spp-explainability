@@ -3,7 +3,7 @@
 
 from collections import OrderedDict
 from typing import List, Union, Tuple, cast, Any
-from torch.nn import Module, Parameter, Linear, Dropout, LayerNorm
+from torch.nn import Module, Parameter, Linear, Dropout, LayerNorm, init
 from .utils.model_utils import Semiring, Batch
 from .utils.data_utils import Vocab
 import torch
@@ -80,12 +80,13 @@ class SoftPatternClassifier(Module):
         # create transition matrix diagonal and bias tensors
         diags_size = (self.total_num_patterns * self.num_diags *
                       self.max_pattern_length)
-        diags = torch.randn(  # type: ignore
+        diags = torch.Tensor(  # type: ignore
             diags_size, self.embeddings.embedding_dim)
-        bias = torch.randn(diags_size, 1)
+        bias = torch.Tensor(diags_size, 1)
 
-        # normalize diagonal data tensor
-        diags = diags / torch.linalg.norm(diags, dim=1)[:, None]
+        # initialize diags and bias using glorot initialization
+        init.xavier_normal_(diags)
+        init.xavier_normal_(bias)
 
         # load diagonal and bias data from patterns if provided
         if pre_computed_patterns is not None:
@@ -108,10 +109,11 @@ class SoftPatternClassifier(Module):
 
         # assign epsilon-related variables from conditionals
         if not self.no_epsilons:
-            # NOTE: this parameter is learned
-            self.epsilons = Parameter(
-                torch.randn(self.total_num_patterns,
-                            self.max_pattern_length - 1))
+            # initialize epsilons and store it as a parameter
+            epsilons = torch.Tensor(self.total_num_patterns,
+                                    self.max_pattern_length - 1)
+            init.xavier_normal_(epsilons)
+            self.epsilons = Parameter(epsilons)
 
             # factor by which to scale epsilon parameter
             if epsilon_scale is not None:
@@ -132,8 +134,9 @@ class SoftPatternClassifier(Module):
                 if (self.shared_self_loops ==
                         SHARED_SL_PARAM_PER_STATE_PER_PATTERN):
                     # create a tensor for each pattern
-                    shared_self_loop_data = torch.randn(
+                    shared_self_loop_data = torch.Tensor(
                         self.total_num_patterns, self.max_pattern_length)
+                    init.xavier_normal_(shared_self_loop_data)
                 # 2: a single global parameter
                 elif self.shared_self_loops == SHARED_SL_SINGLE_PARAM:
                     # create a single tensor
