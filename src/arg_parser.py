@@ -16,7 +16,7 @@ def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
         "--patterns",
         help=("Pattern lengths and counts with the following syntax: " +
               "PatternLength1-PatternCount1_PatternLength2-PatternCount2_..."),
-        default="7-10_6-10_5-10_4-10_3-10_2-10",
+        default="7-25_6-25_5-25_4-25_3-25_2-25",
         type=str)
     sopa.add_argument("--semiring",
                       help="Specify which semiring to use",
