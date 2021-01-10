@@ -272,10 +272,10 @@ def tqdm_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     tqdm = parser.add_argument_group('optional progress-bar arguments')
     tqdm.add_argument(
-        "--tqdm-update-freq",
+        "--tqdm-update-period",
         help=("Specify after how many training updates should "
               "the tqdm progress bar be updated with model diagnostics"),
-        default=1,
+        default=5,
         type=int)
     tqdm.add_argument("--disable-tqdm",
                       help="Disable tqdm progress bars",

@@ -426,7 +426,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                 patience: int = 30,
                 resume_training: bool = False,
                 disable_tqdm: bool = False,
-                tqdm_update_freq: int = 1) -> None:
+                tqdm_update_period: int = 1) -> None:
     # create signal handlers in case script receives termination signals
     # adapted from: https://stackoverflow.com/a/31709094
     for specific_signal in [
@@ -572,8 +572,8 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                 train_loss += train_batch_loss  # type: ignore
 
                 # update tqdm progress bar
-                if (i + 1) % tqdm_update_freq == 0 or (i +
-                                                       1) == len(tqdm_batches):
+                if (i + 1) % tqdm_update_period == 0 or (
+                        i + 1) == len(tqdm_batches):
                     tqdm_batches.set_postfix(
                         batch_loss=train_batch_loss.item() / batch.size())
 
@@ -628,7 +628,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                     # add batch loss to valid_loss
                     valid_loss += valid_batch_loss  # type: ignore
 
-                    if (i + 1) % tqdm_update_freq == 0 or (
+                    if (i + 1) % tqdm_update_period == 0 or (
                             i + 1) == len(tqdm_batches):
                         tqdm_batches.set_postfix(
                             batch_loss=valid_batch_loss.item() / batch.size())
@@ -847,7 +847,8 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
                     args.disable_scheduler, args.scheduler_patience,
                     args.scheduler_factor, gpu_device, args.clip_threshold,
                     args.max_doc_len, args.word_dropout, args.patience,
-                    resume_training, args.disable_tqdm, args.tqdm_update_freq)
+                    resume_training, args.disable_tqdm,
+                    args.tqdm_update_period)
     finally:
         # update LOGGER object to remove file handler
         LOGGER = remove_all_file_handlers(LOGGER)
