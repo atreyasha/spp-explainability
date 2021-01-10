@@ -137,8 +137,10 @@ def read_embeddings(
         word_vecs = list(word_vecs)
     vocab = Vocab((word for word, _ in word_vecs))
     # prepend special embeddings to (normalized) word embeddings
-    vecs = [pad_vec, start_vec, end_vec, unknown_vec
-            ] + [vec / np.linalg.norm(vec) for _, vec in word_vecs]
+    vecs = [
+        pad_vec, start_vec / np.linalg.norm(start_vec), end_vec /
+        np.linalg.norm(end_vec), unknown_vec / np.linalg.norm(unknown_vec)
+    ] + [vec / np.linalg.norm(vec) for _, vec in word_vecs]
     return vocab, vecs, dim
 
 

@@ -46,12 +46,6 @@ def to_cuda(gpu_device: Union[torch.device, None]) -> Callable:
     return (lambda v: v.to(gpu_device)) if gpu_device is not None else identity
 
 
-def normalize(data: torch.Tensor) -> None:
-    length = data.size()[0]
-    for i in range(length):
-        data[i] = data[i] / torch.norm(data[i])
-
-
 def enable_gradient_clipping(model: torch.nn.Module,
                              clip_threshold: Union[float, None]) -> None:
     if clip_threshold is not None and clip_threshold > 0:

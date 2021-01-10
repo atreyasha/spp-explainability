@@ -4,7 +4,7 @@
 from collections import OrderedDict
 from typing import List, Union, Tuple, cast, Any
 from torch.nn import Module, Parameter, Linear, Dropout, LayerNorm
-from .utils.model_utils import normalize, Semiring, Batch
+from .utils.model_utils import Semiring, Batch
 from .utils.data_utils import Vocab
 import torch
 
@@ -85,7 +85,7 @@ class SoftPatternClassifier(Module):
         bias = torch.randn(diags_size, 1)
 
         # normalize diagonal data tensor
-        normalize(diags)
+        diags = diags / torch.linalg.norm(diags, dim=1)[:, None]
 
         # load diagonal and bias data from patterns if provided
         if pre_computed_patterns is not None:
