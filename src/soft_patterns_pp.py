@@ -11,7 +11,7 @@ import torch
 # CW token refers to an arbitrary token with high bias
 CW_TOKEN = "CW"
 # factor to keep matrix values small but nonzero
-NUMERICAL_EPSILON = 1e-10
+PATTERN_EPSILON = 1e-10
 # shared_sl value for greedily learnable self-loop paramaters
 SHARED_SL_PARAM_PER_STATE_PER_PATTERN = 1
 # shared_sl value for global learnable self-loop parameter
@@ -275,7 +275,7 @@ class SoftPatternClassifier(Module):
     def load_pattern(self,
                      pattern: List[str]) -> Tuple[torch.Tensor, torch.Tensor]:
         # initialize local variables
-        diags_subset = NUMERICAL_EPSILON * torch.randn(  # type: ignore
+        diags_subset = PATTERN_EPSILON * torch.randn(  # type: ignore
             len(pattern), self.embeddings.embedding_dim)
         bias_subset = torch.zeros(len(pattern))
 
