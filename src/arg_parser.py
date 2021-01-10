@@ -133,17 +133,17 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        type=int)
     train.add_argument("--epochs",
                        help="Maximum number of training epochs",
-                       default=200,
+                       default=50,
                        type=int)
     train.add_argument("--patience",
                        help=("Number of epochs with no improvement after "
                              "which training will be stopped"),
-                       default=30,
+                       default=10,
                        type=int)
     train.add_argument("--scheduler-patience",
                        help=("Number of epochs with no improvement after "
                              "which learning rate will be reduced"),
-                       default=10,
+                       default=5,
                        type=int)
     # boolean flags
     train.add_argument("--disable-scheduler",
