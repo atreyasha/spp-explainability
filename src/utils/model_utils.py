@@ -8,6 +8,9 @@ import numpy as np
 import datetime
 import torch
 
+# define numerical epsilon to prevent negative log values
+LOG_EPSILON = 1e-6
+
 
 def timestamp() -> str:
     return str(int(datetime.datetime.now().timestamp()))
@@ -122,7 +125,6 @@ ProbabilitySemiring = Semiring(torch.zeros, torch.ones, torch.add, torch.mul,
 MaxSumSemiring = Semiring(neg_infinity, torch.zeros, torch.max, torch.add,
                           identity, identity)
 
-LogSpaceMaxProductSemiring = Semiring(neg_infinity, torch.zeros, torch.max,
-                                      torch.add,
-                                      lambda x: torch.log(torch.sigmoid(x)),
-                                      torch.exp)
+LogSpaceMaxProductSemiring = Semiring(
+    neg_infinity, torch.zeros, torch.max, torch.add,
+    lambda x: torch.log(torch.sigmoid(x) + LOG_EPSILON), torch.exp)
