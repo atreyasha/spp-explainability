@@ -86,7 +86,7 @@ usage: train_spp.py [-h] --embeddings <file_path> --train-data <file_path>
                     [--seed <int>] [--self-loop-scale <float>]
                     [--semiring {MaxSumSemiring,MaxProductSemiring,ProbabilitySemiring}]
                     [--shared-self-loops {0,1,2}] [--static-embeddings]
-                    [--tqdm-update-freq <int>] [--word-dropout <float>]
+                    [--tqdm-update-period <int>] [--word-dropout <float>]
 
 optional arguments:
   -h, --help               show this help message and exit
@@ -114,7 +114,7 @@ optional training arguments:
   --dropout                <float>
                            Neuron dropout probability (default: 0.2)
   --epochs                 <int>
-                           Maximum number of training epochs (default: 200)
+                           Maximum number of training epochs (default: 50)
   --learning-rate          <float>
                            Learning rate for Adam optimizer (default: 0.001)
   --max-doc-len            <int>
@@ -128,7 +128,7 @@ optional training arguments:
                            None)
   --patience               <int>
                            Number of epochs with no improvement after which
-                           training will be stopped (default: 30)
+                           training will be stopped (default: 10)
   --pre-computed-patterns  <file_path>
                            Path to file containing per-computed patterns
                            (default: None)
@@ -137,7 +137,7 @@ optional training arguments:
                            (default: 0.1)
   --scheduler-patience     <int>
                            Number of epochs with no improvement after which
-                           learning rate will be reduced (default: 10)
+                           learning rate will be reduced (default: 5)
   --seed                   <int>
                            Global random seed for numpy and torch (default:
                            42)
@@ -174,7 +174,7 @@ optional sopa-architecture arguments:
                            Pattern lengths and counts with the following
                            syntax: PatternLength1-PatternCount1_PatternLength2
                            -PatternCount2_... (default:
-                           7-10_6-10_5-10_4-10_3-10_2-10)
+                           7-25_6-25_5-25_4-25_3-25_2-25)
   --self-loop-scale        <float>
                            Scale self-loops by this parameter (default: None)
   --semiring               {MaxSumSemiring,MaxProductSemiring,ProbabilitySemiring}
@@ -194,10 +194,10 @@ optional logging arguments:
 
 optional progress-bar arguments:
   --disable-tqdm           Disable tqdm progress bars (default: False)
-  --tqdm-update-freq       <int>
+  --tqdm-update-period     <int>
                            Specify after how many training updates should the
                            tqdm progress bar be updated with model diagnostics
-                           (default: 1)
+                           (default: 5)
 ```
 
 #### Single SoPa++ model training
@@ -241,7 +241,7 @@ usage: train_resume_spp.py [-h] --model-log-directory <dir_path>
                            [--disable-tqdm] [--gpu] [--gpu-device <str>]
                            [--grid-training]
                            [--logging-level {debug,info,warning,error,critical}]
-                           [--num-threads <int>] [--tqdm-update-freq <int>]
+                           [--num-threads <int>] [--tqdm-update-period <int>]
 
 optional arguments:
   -h, --help             show this help message and exit
@@ -270,10 +270,10 @@ optional logging arguments:
 
 optional progress-bar arguments:
   --disable-tqdm         Disable tqdm progress bars (default: False)
-  --tqdm-update-freq     <int>
+  --tqdm-update-period   <int>
                          Specify after how many training updates should the
                          tqdm progress bar be updated with model diagnostics
-                         (default: 1)
+                         (default: 5)
 ```
 
 #### Resume single SoPa++ model training
