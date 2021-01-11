@@ -118,6 +118,6 @@ if __name__ == '__main__':
         formatter_class=ArgparseFormatter,
         parents=[preprocess_arg_parser(),
                  logging_arg_parser()])
-    args = parser.parse_args()
-    LOGGER = stdout_root_logger(args.logging_level)
-    main(args)
+    LOGGER = stdout_root_logger(
+        logging_arg_parser().parse_known_args()[0].logging_level)
+    main(parser.parse_args())

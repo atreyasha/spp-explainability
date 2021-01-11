@@ -282,9 +282,7 @@ def dump_configs(args: argparse.Namespace,
     # dump soft patterns model arguments for posterity
     with open(os.path.join(model_log_directory, prefix + "model_config.json"),
               "w") as output_file_stream:
-        json.dump(spp_model_args_dict,
-                  output_file_stream,
-                  ensure_ascii=False)
+        json.dump(spp_model_args_dict, output_file_stream, ensure_ascii=False)
 
     # dump training arguments for posterity
     with open(
@@ -909,6 +907,6 @@ if __name__ == '__main__':
                                          logging_arg_parser(),
                                          tqdm_arg_parser()
                                      ])
-    args = parser.parse_args()
-    LOGGER = stdout_root_logger(args.logging_level)
-    main(args)
+    LOGGER = stdout_root_logger(
+        logging_arg_parser().parse_known_args()[0].logging_level)
+    main(parser.parse_args())
