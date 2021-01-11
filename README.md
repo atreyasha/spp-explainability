@@ -371,13 +371,13 @@ bash scripts/evaluate_spp_gpu.sh /path/to/model/checkpoint
 To evaluate grid-based SoPa++ models using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/evaluate_spp_cpu.sh "/glob/to/model/checkpoints"
+bash scripts/evaluate_spp_cpu.sh "/glob/to/model/*/checkpoints"
 ```
 
 To evaluate grid-based SoPa++ models using our defaults on a single GPU, execute:
 
 ```shell
-bash scripts/evaluate_spp_gpu.sh "/glob/to/model/checkpoints"
+bash scripts/evaluate_spp_gpu.sh "/glob/to/model/*/checkpoints"
 ```
 
 </p>
