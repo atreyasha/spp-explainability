@@ -20,10 +20,10 @@ from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 LogSpaceMaxProductSemiring, MaxSumSemiring)
 from .utils.logging_utils import (stdout_root_logger, add_file_handler,
                                   remove_all_file_handlers)
-from .arg_parser import (soft_patterns_pp_arg_parser, training_arg_parser,
+from .arg_parser import (spp_model_arg_parser, training_arg_parser,
                          logging_arg_parser, tqdm_arg_parser,
                          hardware_arg_parser, grid_training_arg_parser)
-from .soft_patterns_pp import SoftPatternClassifier
+from .spp_model import SoftPatternClassifier
 from sklearn.model_selection import ParameterGrid
 from sklearn.metrics import accuracy_score
 import numpy as np
@@ -268,12 +268,12 @@ def dump_configs(args: argparse.Namespace,
                  model_log_directory: str,
                  prefix: str = "") -> None:
     # create dictionaries to fill up
-    soft_patterns_args_dict = {}
+    spp_model_args_dict = {}
     training_args_dict = {}
 
     # extract real arguments and fill up model dictionary
-    for action in soft_patterns_pp_arg_parser()._actions:
-        soft_patterns_args_dict[action.dest] = getattr(args, action.dest)
+    for action in spp_model_arg_parser()._actions:
+        spp_model_args_dict[action.dest] = getattr(args, action.dest)
 
     # extract real arguments and fill up training dictionary
     for action in training_arg_parser()._actions:
@@ -282,7 +282,7 @@ def dump_configs(args: argparse.Namespace,
     # dump soft patterns model arguments for posterity
     with open(os.path.join(model_log_directory, prefix + "model_config.json"),
               "w") as output_file_stream:
-        json.dump(soft_patterns_args_dict,
+        json.dump(spp_model_args_dict,
                   output_file_stream,
                   ensure_ascii=False)
 
@@ -905,7 +905,7 @@ if __name__ == '__main__':
                                          training_arg_parser(),
                                          grid_training_arg_parser(),
                                          hardware_arg_parser(),
-                                         soft_patterns_pp_arg_parser(),
+                                         spp_model_arg_parser(),
                                          logging_arg_parser(),
                                          tqdm_arg_parser()
                                      ])

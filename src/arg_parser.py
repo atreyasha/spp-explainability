@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from .utils.parser_utils import dir_path, file_path, glob_path
-from .soft_patterns_pp import (SHARED_SL_PARAM_PER_STATE_PER_PATTERN,
-                               SHARED_SL_SINGLE_PARAM)
+from .spp_model import (SHARED_SL_PARAM_PER_STATE_PER_PATTERN,
+                        SHARED_SL_SINGLE_PARAM)
 import argparse
 
 
-def soft_patterns_pp_arg_parser() -> argparse.ArgumentParser:
+def spp_model_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add sopa group
     sopa = parser.add_argument_group('optional sopa-architecture arguments')

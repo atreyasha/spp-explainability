@@ -10,7 +10,7 @@ from .arg_parser import (logging_arg_parser, hardware_arg_parser,
                          evaluation_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_patterns,
                         get_semiring, evaluate_metric)
-from .soft_patterns_pp import SoftPatternClassifier
+from .spp_model import SoftPatternClassifier
 from sklearn.metrics import classification_report
 from typing import cast, List, Tuple, Union
 from torch.nn import Embedding, Module
