@@ -334,7 +334,7 @@ required evaluation arguments:
 
 optional evaluation arguments:
   --batch-size        <int>
-                      Batch size for training (default: 256)
+                      Batch size for evaluation (default: 256)
   --output-prefix     <str>
                       Prefix for output classification report (default: test)
 
