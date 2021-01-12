@@ -178,7 +178,7 @@ def evaluation_arg_parser() -> argparse.ArgumentParser:
                           default="test",
                           type=str)
     evaluate.add_argument("--batch-size",
-                          help="Batch size for training",
+                          help="Batch size for evaluation",
                           default=256,
                           type=int)
     return parser
