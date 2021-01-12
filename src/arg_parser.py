@@ -9,7 +9,6 @@ import argparse
 
 def spp_model_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    # add sopa group
     sopa = parser.add_argument_group('optional sopa-architecture arguments')
     # numeric and character-accepting options
     sopa.add_argument(
@@ -63,7 +62,7 @@ def spp_model_arg_parser() -> argparse.ArgumentParser:
 
 def training_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    # add required group
+    # add group for required arguments
     required = parser.add_argument_group('required training arguments')
     required.add_argument("--embeddings",
                           help="Path to GloVe token embeddings file",
@@ -85,7 +84,7 @@ def training_arg_parser() -> argparse.ArgumentParser:
                           help="Path to validation labels file",
                           required=True,
                           type=file_path)
-    # add train group for clearer annotations
+    # add group for optional arguments
     train = parser.add_argument_group('optional training arguments')
     # numeric and character-accepting options
     train.add_argument("--models-directory",
@@ -155,7 +154,7 @@ def training_arg_parser() -> argparse.ArgumentParser:
 
 def evaluation_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    # add required group
+    # add group for required arguments
     required = parser.add_argument_group('required evaluation arguments')
     required.add_argument("--eval-data",
                           help="Path to evaluation data file",
@@ -172,7 +171,7 @@ def evaluation_arg_parser() -> argparse.ArgumentParser:
                                 "model checkpoint file"),
                           required=True,
                           type=glob_path)
-    # add evaluate group for optional arguments
+    # add group for optional arguments
     evaluate = parser.add_argument_group('optional evaluation arguments')
     evaluate.add_argument("--output-prefix",
                           help="Prefix for output classification report",
