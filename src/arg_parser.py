@@ -152,6 +152,47 @@ def training_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def explain_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(add_help=False)
+    # add group for required arguments
+    required = parser.add_argument_group('required explainability arguments')
+    required.add_argument("--train-data",
+                          help="Path to train data file",
+                          required=True,
+                          type=file_path)
+    required.add_argument("--train-labels",
+                          help="Path to train labels file",
+                          required=True,
+                          type=file_path)
+    required.add_argument("--valid-data",
+                          help="Path to validation data file",
+                          required=True,
+                          type=file_path)
+    required.add_argument("--valid-labels",
+                          help="Path to validation labels file",
+                          required=True,
+                          type=file_path)
+    required.add_argument("--model-checkpoint",
+                          help=("Glob path to model checkpoint with '.pt' "
+                                "extension. Note that 'model_config.json' "
+                                "must be in the same directory level as the "
+                                "model checkpoint file"),
+                          required=True,
+                          type=glob_path)
+    # add group for optional arguments
+    explain = parser.add_argument_group('optional explainability arguments')
+    explain.add_argument("--k-best",
+                         help=("Extract 'k' best matching words for "
+                               "each transition in patterns"),
+                         default=5,
+                         type=int)
+    explain.add_argument("--batch-size",
+                         help="Batch size for explainability",
+                         default=256,
+                         type=int)
+    return parser
+
+
 def evaluation_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add group for required arguments
