@@ -190,6 +190,9 @@ def explain_arg_parser() -> argparse.ArgumentParser:
                          help="Batch size for explainability",
                          default=256,
                          type=int)
+    explain.add_argument("--num-train-instances",
+                         help="Maximum number of training instances",
+                         type=int)
     return parser
 
 
