@@ -209,14 +209,15 @@ def get_vocab_diagnostics(vocab: Vocab, vocab_combined: Vocab,
     LOGGER.info("Lost tokens: %s" % missing)
 
 
-def get_training_validation_data(
-    args: argparse.Namespace, pattern_specs: 'OrderedDict[int, int]',
-    vocab: Vocab, num_train_instances: int
-) -> Tuple[List[Tuple[List[int], int]], List[Tuple[List[int], int]], int]:
+def get_train_valid_data(
+    args: argparse.Namespace, vocab: Vocab
+) -> Tuple[List[List[str]], List[List[str]], List[Tuple[List[int], int]],
+           List[Tuple[List[int], int]], int]:
     # read train data
     train_input, train_text = read_docs(args.train_data, vocab)
     LOGGER.info("Sample training text: %s" % train_text[:10])
     train_input = cast(List[List[int]], train_input)
+    train_text = cast(List[List[str]], train_text)
     train_labels = read_labels(args.train_labels)
     num_classes = len(set(train_labels))
     train_data = list(zip(train_input, train_labels))
@@ -225,13 +226,14 @@ def get_training_validation_data(
     valid_input, valid_text = read_docs(args.valid_data, vocab)
     LOGGER.info("Sample validation text: %s" % valid_text[:10])
     valid_input = cast(List[List[int]], valid_input)
+    valid_text = cast(List[List[str]], valid_text)
     valid_labels = read_labels(args.valid_labels)
     valid_data = list(zip(valid_input, valid_labels))
 
     # truncate data if necessary
-    if num_train_instances is not None:
-        train_data = train_data[:num_train_instances]
-        valid_data = valid_data[:num_train_instances]
+    if args.num_train_instances is not None:
+        train_data = train_data[:args.num_train_instances]
+        valid_data = valid_data[:args.num_train_instances]
 
     # log diagnostic information
     LOGGER.info("Number of classes: %s" % num_classes)
@@ -239,7 +241,7 @@ def get_training_validation_data(
     LOGGER.info("Validation instances: %s" % len(valid_data))
 
     # return final tuple object
-    return train_data, valid_data, num_classes
+    return train_text, valid_text, train_data, valid_data, num_classes
 
 
 def get_semiring(args: argparse.Namespace) -> Semiring:
@@ -767,10 +769,6 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         # set gpu and cpu hardware
         gpu_device = set_hardware(args)
 
-        # read important arguments and define as local variables
-        num_train_instances = args.num_train_instances
-        epochs = args.epochs
-
         # get relevant patterns
         pattern_specs, pre_computed_patterns = get_patterns(
             args.patterns, args.pre_computed_patterns)
@@ -807,8 +805,8 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
                 padding_idx=PAD_TOKEN_INDEX)
 
         # get training and validation data
-        train_data, valid_data, num_classes = get_training_validation_data(
-            args, pattern_specs, vocab, num_train_instances)
+        _, _, train_data, valid_data, num_classes = get_train_valid_data(
+            args, vocab)
 
         # get semiring
         semiring = get_semiring(args)
@@ -840,7 +838,7 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
             dump_configs(args, model_log_directory)
             dump_vocab(vocab, model_log_directory)
 
-        train_inner(train_data, valid_data, model, num_classes, epochs,
+        train_inner(train_data, valid_data, model, num_classes, args.epochs,
                     model_log_directory, args.learning_rate, args.batch_size,
                     args.disable_scheduler, args.scheduler_patience,
                     args.scheduler_factor, gpu_device, args.clip_threshold,
