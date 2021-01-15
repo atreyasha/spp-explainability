@@ -6,9 +6,10 @@ from functools import total_ordering
 import torch
 
 
-def get_nearest_neighbors(weights: torch.Tensor, embeddings: torch.Tensor,
-                          k_best: int) -> torch.Tensor:
-    return torch.argmax(torch.mm(weights, embeddings[:k_best, :]))
+def get_nearest_neighbors(weights: torch.Tensor,
+                          embeddings: torch.Tensor,
+                          threshold: int = 1000) -> torch.Tensor:
+    return torch.argmax(torch.mm(weights, embeddings[:threshold, :]), dim=1)
 
 
 def zip_lambda_2d(function: Callable, input_a: Any,
@@ -53,19 +54,29 @@ class BackPointer:
                                             self.start_token_idx,
                                             self.end_token_idx)
 
-    def display(self, doc_text: List[str], extra: str = "",
+    def display(self,
+                doc_text: List[str],
+                extra: str = "",
                 num_padding_tokens: int = 0) -> str:
         if self.previous is None:
             return extra
         if self.transition == "self-loop":
-            extra = "SL {:<15}".format(
-                doc_text[self.end_token_idx - 1 - num_padding_tokens]) + extra
+            if self.end_token_idx >= len(doc_text):
+                extra = "SL {:<15}".format(doc_text[-1]) + extra
+            else:
+                extra = "SL {:<15}".format(
+                    doc_text[self.end_token_idx - 1 -
+                             num_padding_tokens]) + extra
             return self.previous.display(doc_text,
                                          extra=extra,
                                          num_padding_tokens=num_padding_tokens)
         if self.transition == "happy path":
-            extra = "HP {:<15}".format(
-                doc_text[self.end_token_idx - 1 - num_padding_tokens]) + extra
+            if self.end_token_idx >= len(doc_text):
+                extra = "HP {:<15}".format(doc_text[-1]) + extra
+            else:
+                extra = "HP {:<15}".format(
+                    doc_text[self.end_token_idx - 1 -
+                             num_padding_tokens]) + extra
             return self.previous.display(doc_text,
                                          extra=extra,
                                          num_padding_tokens=num_padding_tokens)

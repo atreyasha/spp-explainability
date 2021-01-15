@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import List, Tuple, Any, Generator
+from typing import List, Tuple, Any, Union
+from tqdm import tqdm
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import PAD_TOKEN_INDEX, Vocab
-from .utils.model_utils import decreasing_length, Batch
-from .utils.explain_utils import (BackPointer, cat_2d, zip_ap_2d,
+from .utils.model_utils import decreasing_length, to_cuda, Batch
+from .utils.explain_utils import (BackPointer, cat_2d, zip_lambda_2d,
                                   get_nearest_neighbors)
 from .arg_parser import (explain_arg_parser, hardware_arg_parser,
                          logging_arg_parser)
@@ -19,29 +20,41 @@ import torch
 import os
 
 
-def get_top_scoring_sequences(
-        model: Module, dev_set: List[Tuple[List[int], int]],
-        max_doc_len: int) -> Generator[List[BackPointer], None, None]:
-    for doc_idx, doc in enumerate(dev_set):
-        yield get_top_scoring_spans_for_doc(model, doc, max_doc_len)
+def semiring_times_from_float(model: Module, input_a: float,
+                              input_b: float) -> torch.Tensor:
+    return model.semiring.times(torch.FloatTensor([input_a]),
+                                torch.FloatTensor([input_b])).squeeze()
 
 
-def transition_once_with_trace(
-        model: Module, token_idx: int, eps_value: torch.Tensor,
-        back_pointers: List[List[Any]], transition_matrix_val: torch.Tensor,
-        restart_padding: List[BackPointer]) -> List[List[Any]]:
-    def times(a, b):
-        # wildly inefficient, oh well
-        return model.semiring.times(torch.FloatTensor([a]),
-                                    torch.FloatTensor([b]))[0]
+def restart_padding(model: Module, token_index: int, num_patterns: int):
+    return [
+        BackPointer(score=x,
+                    previous=None,
+                    transition=None,
+                    start_token_idx=token_index,
+                    end_token_idx=token_index)
+        for x in model.semiring.one(num_patterns)
+    ]
 
-    # Epsilon transitions (don't consume a token, move forward one state)
-    # We do this before self-loops and single-steps.
-    # We only allow one epsilon transition in a row.
+
+def transition_str(model: Module, norm: torch.Tensor, neighb: int,
+                   bias: torch.Tensor) -> str:
+    return "{:5.2f} * {:<15} + {:5.2f}".format(norm, model.vocab[neighb], bias)
+
+
+def transition_once_with_trace(model: Module, token_idx: int,
+                               eps_value: torch.Tensor,
+                               back_pointers: List[List[Any]],
+                               transition_matrix_val: torch.Tensor,
+                               num_patterns: int) -> List[List[Any]]:
+
+    # NOTE: epsilon transitions (don't consume a token, move forward one state)
+    # we only allow one epsilon transition in a row.
     epsilons = cat_2d(
-        restart_padding(token_idx),
-        zip_ap_2d(
-            lambda bp, e: BackPointer(score=times(bp.score, e),
+        restart_padding(model, token_idx, num_patterns),
+        zip_lambda_2d(
+            lambda bp, e: BackPointer(score=semiring_times_from_float(
+                model, bp.score, e),
                                       previous=bp,
                                       transition="epsilon-transition",
                                       start_token_idx=bp.start_token_idx,
@@ -49,13 +62,14 @@ def transition_once_with_trace(
             [xs[:-1] for xs in back_pointers],
             eps_value  # doesn't depend on token, just state
         ))
+    epsilons = zip_lambda_2d(max, back_pointers, epsilons)
 
-    epsilons = zip_ap_2d(max, back_pointers, epsilons)
-
+    # Adding main loops (consume a token, move state)
     happy_paths = cat_2d(
-        restart_padding(token_idx),
-        zip_ap_2d(
-            lambda bp, t: BackPointer(score=times(bp.score, t),
+        restart_padding(model, token_idx, num_patterns),
+        zip_lambda_2d(
+            lambda bp, t: BackPointer(score=semiring_times_from_float(
+                model, bp.score, t),
                                       previous=bp,
                                       transition="happy path",
                                       start_token_idx=bp.start_token_idx,
@@ -63,38 +77,31 @@ def transition_once_with_trace(
             [xs[:-1] for xs in epsilons], transition_matrix_val[:, 1, :-1]))
 
     # Adding self loops (consume a token, stay in same state)
-    self_loops = zip_ap_2d(
-        lambda bp, sl: BackPointer(score=times(bp.score, sl),
+    self_loops = zip_lambda_2d(
+        lambda bp, sl: BackPointer(score=semiring_times_from_float(
+            model, bp.score, sl),
                                    previous=bp,
                                    transition="self-loop",
                                    start_token_idx=bp.start_token_idx,
                                    end_token_idx=token_idx + 1), epsilons,
         transition_matrix_val[:, 0, :])
-    return zip_ap_2d(max, happy_paths, self_loops)
+
+    # return final object
+    return zip_lambda_2d(max, happy_paths, self_loops)
 
 
-def get_top_scoring_spans_for_doc(model: Module, doc: List[str],
-                                  max_doc_len: int) -> List[BackPointer]:
-    batch = Batch([doc[0]], model.embeddings, model.to_cuda, 0,
+def get_top_scoring_spans_for_doc(
+        model: Module, doc: List[str], max_doc_len: int,
+        gpu_device: Union[torch.device, None]) -> List[BackPointer]:
+    batch = Batch([doc[0]], model.embeddings, to_cuda(gpu_device), 0,
                   max_doc_len)  # single doc
     transition_matrices = model.get_transition_matrices(batch)
     num_patterns = model.total_num_patterns
     end_states = model.end_states.data.view(num_patterns)
-
-    def restart_padding(t):
-        return [
-            BackPointer(score=x,
-                        previous=None,
-                        transition=None,
-                        start_token_idx=t,
-                        end_token_idx=t)
-            for x in model.semiring.one(num_patterns)
-        ]
-
-    eps_value = model.get_eps_value().data
+    eps_value = model.get_epsilon_values().data
     hiddens = model.semiring.zero(num_patterns, model.max_pattern_length)
-    # set start state activation to 1 for each pattern in each doc
-    hiddens[:, 0] = model.semiring.one(num_patterns, 1)
+    # set start state activation to 1 for each pattern in each dc
+    hiddens[:, 0] = model.semiring.one(num_patterns)
     # convert to back-pointers
     hiddens = \
         [
@@ -118,7 +125,7 @@ def get_top_scoring_spans_for_doc(model: Module, doc: List[str],
         transition_matrix = transition_matrix[0, :, :, :].data
         hiddens = transition_once_with_trace(model, token_idx, eps_value,
                                              hiddens, transition_matrix,
-                                             restart_padding)
+                                             num_patterns)
         # extract end-states and max with current bests
         end_state_back_pointers = [
             max(best_bp, hidden_bps[end_state]) for best_bp, hidden_bps,
@@ -127,36 +134,54 @@ def get_top_scoring_spans_for_doc(model: Module, doc: List[str],
     return end_state_back_pointers
 
 
-def explain_inner(model: Module,
-                  dev_set: List[Tuple[List[int], int]],
+def explain_inner(dev_set: List[Tuple[List[int], int]],
                   dev_text: List[List[str]],
+                  model: Module,
+                  model_checkpoint: str,
+                  model_log_directory: str,
                   k_best: int,
+                  batch_size: int,
+                  gpu_device: Union[torch.device, None],
                   max_doc_len: int = -1,
-                  num_padding_tokens: int = 0) -> None:
+                  num_padding_tokens: int = 1) -> None:
+    # load model checkpoint
+    model_checkpoint = torch.load(model_checkpoint,
+                                  map_location=torch.device("cpu"))
+    model.load_state_dict(model_checkpoint["model_state_dict"])  # type: ignore
+
+    # send model to correct device
+    if gpu_device is not None:
+        LOGGER.info("Transferring model to GPU device: %s" % gpu_device)
+        model.to(gpu_device)
+
+    # set model on eval mode
+    model.eval()
+
+    # TODO: look into better practices for accessing model data with detach
     dev_sorted = decreasing_length(zip(dev_set, dev_text))
     dev_labels = [label for _, label in dev_set]
     dev_set = [doc for doc, _ in dev_sorted]
     dev_text = [text for _, text in dev_sorted]
     num_patterns = model.total_num_patterns
     pattern_length = model.max_pattern_length
-    back_pointers = list(get_top_scoring_sequences(model, dev_set,
-                                                   max_doc_len))
+    back_pointers = [
+        get_top_scoring_spans_for_doc(model, doc, max_doc_len, gpu_device)
+        for doc in tqdm(dev_set)
+    ]
 
     # TODO: understand what this does in terms of frequent words
-    # TODO: look into better practices for accessing model data with detach
-    # TODO: consider issues with no loops policy and how it affects this
     # not sure where the exact sorting happenes as per docstring
     nearest_neighbors = \
         get_nearest_neighbors(
             model.diags.data,
-            model.to_cuda(torch.FloatTensor(model.embeddings).t())
+            model.embeddings.weight.t()
         ).view(
             num_patterns,
             model.num_diags,
             pattern_length
         )
     diags = model.diags.view(num_patterns, model.num_diags, pattern_length,
-                             model.word_dim).data
+                             model.embeddings.embedding_dim).data
     biases = model.bias.view(num_patterns, model.num_diags,
                              pattern_length).data
     self_loop_norms = torch.norm(diags[:, 0, :, :], 2, 2)
@@ -165,7 +190,7 @@ def explain_inner(model: Module,
     fwd_one_norms = torch.norm(diags[:, 1, :, :], 2, 2)
     fwd_one_biases = biases[:, 1, :]
     fwd_one_neighbs = nearest_neighbors[:, 1, :]
-    epsilons = model.get_eps_value().data
+    epsilons = model.get_epsilon_values().data
 
     for p in range(num_patterns):
         p_len = model.end_states[p].data[0] + 1
@@ -176,31 +201,23 @@ def explain_inner(model: Module,
                 reverse=True  # high-scores first
             )[:k_best]
 
-        def span_text(doc_idx):
-            back_pointer = back_pointers[doc_idx][p]
-            return back_pointer.score, back_pointer.display(
-                dev_text[doc_idx], '#label={}'.format(dev_labels[doc_idx]),
-                num_padding_tokens)
-
         print("Pattern:", p, "of length", p_len)
         print("Highest scoring spans:")
         for k, d in enumerate(k_best_doc_idxs):
-            score, text = span_text(d)
+            back_pointer = back_pointers[d][p]
+            score, text = back_pointer.score, back_pointer.display(
+                dev_text[d], '#label={}'.format(dev_labels[d]),
+                num_padding_tokens)
             print("{} {:2.3f}  {}".format(k, score, text.encode('utf-8')))
-
-        def transition_str(norm, neighb, bias):
-            return "{:5.2f} * {:<15} + {:5.2f}".format(norm,
-                                                       model.vocab[neighb],
-                                                       bias)
 
         print(
             "self-loops: ", ", ".join(
-                transition_str(norm, neighb, bias) for norm, neighb, bias in
+                transition_str(model, norm, neighb, bias) for norm, neighb, bias in
                 zip(self_loop_norms[p, :p_len], self_loop_neighbs[p, :p_len],
                     self_loop_biases[p, :p_len])))
         print(
             "fwd 1s:     ", ", ".join(
-                transition_str(norm, neighb, bias)
+                transition_str(model, norm, neighb, bias)
                 for norm, neighb, bias in zip(fwd_one_norms[
                     p, :p_len -
                     1], fwd_one_neighbs[p, :p_len -
