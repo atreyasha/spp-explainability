@@ -134,8 +134,8 @@ def get_top_scoring_spans_for_doc(
     return end_state_back_pointers
 
 
-def explain_inner(dev_set: List[Tuple[List[int], int]],
-                  dev_text: List[List[str]],
+def explain_inner(explain_set: List[Tuple[List[int], int]],
+                  explain_text: List[List[str]],
                   model: Module,
                   model_checkpoint: str,
                   model_log_directory: str,
@@ -160,15 +160,15 @@ def explain_inner(dev_set: List[Tuple[List[int], int]],
     # disable autograd for explainability
     with torch.no_grad():
         # TODO: look into better practices for accessing model data with detach
-        dev_sorted = decreasing_length(zip(dev_set, dev_text))
-        dev_labels = [label for _, label in dev_set]
-        dev_set = [doc for doc, _ in dev_sorted]
-        dev_text = [text for _, text in dev_sorted]
+        explain_sorted = decreasing_length(zip(explain_set, explain_text))
+        explain_labels = [label for _, label in explain_set]
+        explain_set = [doc for doc, _ in explain_sorted]
+        explain_text = [text for _, text in explain_sorted]
         num_patterns = model.total_num_patterns
         pattern_length = model.max_pattern_length
         back_pointers = [
             get_top_scoring_spans_for_doc(model, doc, max_doc_len, gpu_device)
-            for doc in tqdm(dev_set)
+            for doc in tqdm(explain_set)
         ]
 
         # TODO: understand what this does in terms of frequent words
@@ -198,7 +198,7 @@ def explain_inner(dev_set: List[Tuple[List[int], int]],
             p_len = model.end_states[p].data[0] + 1
             k_best_doc_idxs = \
                 sorted(
-                    range(len(dev_set)),
+                    range(len(explain_set)),
                     key=lambda doc_idx: back_pointers[doc_idx][p].score,
                     reverse=True  # high-scores first
                 )[:k_best]
@@ -208,7 +208,7 @@ def explain_inner(dev_set: List[Tuple[List[int], int]],
             for k, d in enumerate(k_best_doc_idxs):
                 back_pointer = back_pointers[d][p]
                 score, text = back_pointer.score, back_pointer.display(
-                    dev_text[d], '#label={}'.format(dev_labels[d]),
+                    explain_text[d], '#label={}'.format(explain_labels[d]),
                     num_padding_tokens)
                 print("{} {:2.3f}  {}".format(k, score, text.encode('utf-8')))
 
