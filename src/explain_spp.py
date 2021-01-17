@@ -134,7 +134,7 @@ def get_top_scoring_spans_for_doc(
     return end_state_back_pointers
 
 
-def explain_inner(explain_set: List[Tuple[List[int], int]],
+def explain_inner(explain_data: List[Tuple[List[int], int]],
                   explain_text: List[List[str]],
                   model: Module,
                   model_checkpoint: str,
@@ -160,15 +160,17 @@ def explain_inner(explain_set: List[Tuple[List[int], int]],
     # disable autograd for explainability
     with torch.no_grad():
         # TODO: look into better practices for accessing model data with detach
-        explain_sorted = decreasing_length(zip(explain_set, explain_text))
-        explain_labels = [label for _, label in explain_set]
-        explain_set = [doc for doc, _ in explain_sorted]
+        explain_sorted = decreasing_length(zip(explain_data, explain_text))
+        explain_labels = [label for _, label in explain_data]
+        explain_data = [doc for doc, _ in explain_sorted]
         explain_text = [text for _, text in explain_sorted]
         num_patterns = model.total_num_patterns
         pattern_length = model.max_pattern_length
+
+        # NOTE: most time is taken in computing this step
         back_pointers = [
             get_top_scoring_spans_for_doc(model, doc, max_doc_len, gpu_device)
-            for doc in tqdm(explain_set)
+            for doc in tqdm(explain_data)
         ]
 
         # TODO: understand what this does in terms of frequent words
@@ -198,7 +200,7 @@ def explain_inner(explain_set: List[Tuple[List[int], int]],
             p_len = model.end_states[p].data[0] + 1
             k_best_doc_idxs = \
                 sorted(
-                    range(len(explain_set)),
+                    range(len(explain_data)),
                     key=lambda doc_idx: back_pointers[doc_idx][p].score,
                     reverse=True  # high-scores first
                 )[:k_best]
