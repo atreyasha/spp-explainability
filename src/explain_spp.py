@@ -157,74 +157,76 @@ def explain_inner(dev_set: List[Tuple[List[int], int]],
     # set model on eval mode
     model.eval()
 
-    # TODO: look into better practices for accessing model data with detach
-    dev_sorted = decreasing_length(zip(dev_set, dev_text))
-    dev_labels = [label for _, label in dev_set]
-    dev_set = [doc for doc, _ in dev_sorted]
-    dev_text = [text for _, text in dev_sorted]
-    num_patterns = model.total_num_patterns
-    pattern_length = model.max_pattern_length
-    back_pointers = [
-        get_top_scoring_spans_for_doc(model, doc, max_doc_len, gpu_device)
-        for doc in tqdm(dev_set)
-    ]
+    # disable autograd for explainability
+    with torch.no_grad():
+        # TODO: look into better practices for accessing model data with detach
+        dev_sorted = decreasing_length(zip(dev_set, dev_text))
+        dev_labels = [label for _, label in dev_set]
+        dev_set = [doc for doc, _ in dev_sorted]
+        dev_text = [text for _, text in dev_sorted]
+        num_patterns = model.total_num_patterns
+        pattern_length = model.max_pattern_length
+        back_pointers = [
+            get_top_scoring_spans_for_doc(model, doc, max_doc_len, gpu_device)
+            for doc in tqdm(dev_set)
+        ]
 
-    # TODO: understand what this does in terms of frequent words
-    # not sure where the exact sorting happenes as per docstring
-    nearest_neighbors = \
-        get_nearest_neighbors(
-            model.diags.data,
-            model.embeddings.weight.t()
-        ).view(
-            num_patterns,
-            model.num_diags,
-            pattern_length
-        )
-    diags = model.diags.view(num_patterns, model.num_diags, pattern_length,
-                             model.embeddings.embedding_dim).data
-    biases = model.bias.view(num_patterns, model.num_diags,
-                             pattern_length).data
-    self_loop_norms = torch.norm(diags[:, 0, :, :], 2, 2)
-    self_loop_neighbs = nearest_neighbors[:, 0, :]
-    self_loop_biases = biases[:, 0, :]
-    fwd_one_norms = torch.norm(diags[:, 1, :, :], 2, 2)
-    fwd_one_biases = biases[:, 1, :]
-    fwd_one_neighbs = nearest_neighbors[:, 1, :]
-    epsilons = model.get_epsilon_values().data
+        # TODO: understand what this does in terms of frequent words
+        # not sure where the exact sorting happenes as per docstring
+        nearest_neighbors = \
+            get_nearest_neighbors(
+                model.diags.data,
+                model.embeddings.weight.t()
+            ).view(
+                num_patterns,
+                model.num_diags,
+                pattern_length
+            )
+        diags = model.diags.view(num_patterns, model.num_diags, pattern_length,
+                                 model.embeddings.embedding_dim).data
+        biases = model.bias.view(num_patterns, model.num_diags,
+                                 pattern_length).data
+        self_loop_norms = torch.norm(diags[:, 0, :, :], 2, 2)
+        self_loop_neighbs = nearest_neighbors[:, 0, :]
+        self_loop_biases = biases[:, 0, :]
+        fwd_one_norms = torch.norm(diags[:, 1, :, :], 2, 2)
+        fwd_one_biases = biases[:, 1, :]
+        fwd_one_neighbs = nearest_neighbors[:, 1, :]
+        epsilons = model.get_epsilon_values().data
 
-    for p in range(num_patterns):
-        p_len = model.end_states[p].data[0] + 1
-        k_best_doc_idxs = \
-            sorted(
-                range(len(dev_set)),
-                key=lambda doc_idx: back_pointers[doc_idx][p].score,
-                reverse=True  # high-scores first
-            )[:k_best]
+        for p in range(num_patterns):
+            p_len = model.end_states[p].data[0] + 1
+            k_best_doc_idxs = \
+                sorted(
+                    range(len(dev_set)),
+                    key=lambda doc_idx: back_pointers[doc_idx][p].score,
+                    reverse=True  # high-scores first
+                )[:k_best]
 
-        print("Pattern:", p, "of length", p_len)
-        print("Highest scoring spans:")
-        for k, d in enumerate(k_best_doc_idxs):
-            back_pointer = back_pointers[d][p]
-            score, text = back_pointer.score, back_pointer.display(
-                dev_text[d], '#label={}'.format(dev_labels[d]),
-                num_padding_tokens)
-            print("{} {:2.3f}  {}".format(k, score, text.encode('utf-8')))
+            print("Pattern:", p, "of length", p_len)
+            print("Highest scoring spans:")
+            for k, d in enumerate(k_best_doc_idxs):
+                back_pointer = back_pointers[d][p]
+                score, text = back_pointer.score, back_pointer.display(
+                    dev_text[d], '#label={}'.format(dev_labels[d]),
+                    num_padding_tokens)
+                print("{} {:2.3f}  {}".format(k, score, text.encode('utf-8')))
 
-        print(
-            "self-loops: ", ", ".join(
-                transition_str(model, norm, neighb, bias) for norm, neighb, bias in
-                zip(self_loop_norms[p, :p_len], self_loop_neighbs[p, :p_len],
-                    self_loop_biases[p, :p_len])))
-        print(
-            "fwd 1s:     ", ", ".join(
-                transition_str(model, norm, neighb, bias)
-                for norm, neighb, bias in zip(fwd_one_norms[
-                    p, :p_len -
-                    1], fwd_one_neighbs[p, :p_len -
-                                        1], fwd_one_biases[p, :p_len - 1])))
-        print("epsilons:   ",
-              ", ".join("{:31.2f}".format(x) for x in epsilons[p, :p_len - 1]))
-        print()
+            print(
+                "self-loops: ", ", ".join(
+                    transition_str(model, norm, neighb, bias) for norm, neighb,
+                    bias in zip(self_loop_norms[p, :p_len], self_loop_neighbs[
+                        p, :p_len], self_loop_biases[p, :p_len])))
+            print(
+                "fwd 1s:     ", ", ".join(
+                    transition_str(model, norm, neighb, bias)
+                    for norm, neighb, bias in zip(
+                        fwd_one_norms[p, :p_len - 1], fwd_one_neighbs[
+                            p, :p_len - 1], fwd_one_biases[p, :p_len - 1])))
+            print(
+                "epsilons:   ", ", ".join("{:31.2f}".format(x)
+                                          for x in epsilons[p, :p_len - 1]))
+            print()
 
 
 def explain_outer(args: argparse.Namespace, model_log_directory: str) -> None:
