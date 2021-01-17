@@ -97,8 +97,8 @@ def get_top_scoring_spans_for_doc(
                   max_doc_len)  # single doc
     transition_matrices = model.get_transition_matrices(batch)
     num_patterns = model.total_num_patterns
-    end_states = model.end_states.data.view(num_patterns)
-    eps_value = model.get_epsilon_values().data
+    end_states = model.end_states.detach().clone().view(num_patterns)
+    eps_value = model.get_epsilon_values().detach().clone()
     hiddens = model.semiring.zero(num_patterns, model.max_pattern_length)
     # set start state activation to 1 for each pattern in each dc
     hiddens[:, 0] = model.semiring.one(num_patterns)
@@ -122,7 +122,7 @@ def get_top_scoring_spans_for_doc(
         bp[end_state] for bp, end_state in zip(hiddens, end_states)
     ]
     for token_idx, transition_matrix in enumerate(transition_matrices):
-        transition_matrix = transition_matrix[0, :, :, :].data
+        transition_matrix = transition_matrix[0, :, :, :].detach().clone()
         hiddens = transition_once_with_trace(model, token_idx, eps_value,
                                              hiddens, transition_matrix,
                                              num_patterns)
@@ -177,27 +177,28 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
         # not sure where the exact sorting happenes as per docstring
         nearest_neighbors = \
             get_nearest_neighbors(
-                model.diags.data,
+                model.diags.detach().clone(),
                 model.embeddings.weight.t()
             ).view(
                 num_patterns,
                 model.num_diags,
                 pattern_length
             )
-        diags = model.diags.view(num_patterns, model.num_diags, pattern_length,
-                                 model.embeddings.embedding_dim).data
+        diags = model.diags.view(
+            num_patterns, model.num_diags, pattern_length,
+            model.embeddings.embedding_dim).detach().clone()
         biases = model.bias.view(num_patterns, model.num_diags,
-                                 pattern_length).data
+                                 pattern_length).detach().clone()
         self_loop_norms = torch.norm(diags[:, 0, :, :], 2, 2)
         self_loop_neighbs = nearest_neighbors[:, 0, :]
         self_loop_biases = biases[:, 0, :]
         fwd_one_norms = torch.norm(diags[:, 1, :, :], 2, 2)
         fwd_one_biases = biases[:, 1, :]
         fwd_one_neighbs = nearest_neighbors[:, 1, :]
-        epsilons = model.get_epsilon_values().data
+        epsilons = model.get_epsilon_values().detach().clone()
 
         for p in range(num_patterns):
-            p_len = model.end_states[p].data[0] + 1
+            p_len = model.end_states[p].item() + 1
             k_best_doc_idxs = \
                 sorted(
                     range(len(explain_data)),
