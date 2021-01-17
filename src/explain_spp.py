@@ -231,7 +231,10 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
             print()
 
 
-def explain_outer(args: argparse.Namespace, model_log_directory: str) -> None:
+def explain_outer(args: argparse.Namespace) -> None:
+    # create local model_log_directory variable
+    model_log_directory = args.model_log_directory
+
     # log namespace arguments and model directory
     LOGGER.info(args)
     LOGGER.info("Model log directory: %s" % model_log_directory)
@@ -289,9 +292,9 @@ def explain_outer(args: argparse.Namespace, model_log_directory: str) -> None:
 
 
 def main(args: argparse.Namespace) -> None:
-    model_log_directory = os.path.dirname(args.model_checkpoint)
-    args = parse_configs_to_args(args, model_log_directory, training=False)
-    explain_outer(args, model_log_directory)
+    args.model_log_directory = os.path.dirname(args.model_checkpoint)
+    args = parse_configs_to_args(args, training=False)
+    explain_outer(args)
 
 
 if __name__ == '__main__':

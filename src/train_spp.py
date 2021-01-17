@@ -62,16 +62,16 @@ def get_exit_code(filename: str) -> int:
 
 
 def parse_configs_to_args(args: argparse.Namespace,
-                          model_log_directory: str,
                           prefix: str = "",
                           training: bool = True) -> argparse.Namespace:
     # check for json configs and add them to list
     json_files = []
     json_files.append(
-        os.path.join(model_log_directory, prefix + "model_config.json"))
+        os.path.join(args.model_log_directory, prefix + "model_config.json"))
     if training:
         json_files.append(
-            os.path.join(model_log_directory, prefix + "training_config.json"))
+            os.path.join(args.model_log_directory,
+                         prefix + "training_config.json"))
 
     # raise error if any of them are missing
     for json_file in json_files:
@@ -108,8 +108,8 @@ def set_hardware(args: argparse.Namespace) -> Union[torch.device, None]:
     return gpu_device
 
 
-def get_grid_config(filename: str) -> dict:
-    with open(filename, "r") as input_file_stream:
+def get_grid_config(args: argparse.Namespace) -> dict:
+    with open(args.grid_config, "r") as input_file_stream:
         grid_dict = json.load(input_file_stream)
     return grid_dict
 
@@ -706,7 +706,7 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
             LOGGER, os.path.join(model_log_directory, "session.log"))
 
         if resume_training:
-            args = parse_configs_to_args(args, model_log_directory)
+            args = parse_configs_to_args(args)
             exit_code_file = os.path.join(model_log_directory, "exit_code")
             if not os.path.exists(exit_code_file):
                 LOGGER.info("Exit-code file not found, continuing training")
@@ -823,7 +823,7 @@ def main(args: argparse.Namespace) -> None:
         dump_configs(args, args.models_directory, "base_")
 
         # get grid config and add random iterations to it
-        grid_dict = get_grid_config(args.grid_config)
+        grid_dict = get_grid_config(args)
 
         # add random seed into grid if necessary
         if args.num_random_iterations > 1:

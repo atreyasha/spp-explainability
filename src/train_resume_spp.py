@@ -17,7 +17,7 @@ def main(args: argparse.Namespace) -> None:
     # Continue grid-training:
     if args.grid_training:
         # parse base configs into args and update models_directory
-        args = parse_configs_to_args(args, args.model_log_directory, "base_")
+        args = parse_configs_to_args(args, "base_")
 
         # read grid_config into param_grid_mapping
         with open(os.path.join(args.model_log_directory, "grid_config.json"),

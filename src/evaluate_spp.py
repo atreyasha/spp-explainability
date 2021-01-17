@@ -55,7 +55,10 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
         json.dump(clf_report, output_file_stream)
 
 
-def evaluate_outer(args: argparse.Namespace, model_log_directory: str) -> None:
+def evaluate_outer(args: argparse.Namespace) -> None:
+    # create local model_log_directory variable
+    model_log_directory = args.model_log_directory
+
     # log namespace arguments and model directory
     LOGGER.info(args)
     LOGGER.info("Model log directory: %s" % model_log_directory)
@@ -117,9 +120,9 @@ def evaluate_outer(args: argparse.Namespace, model_log_directory: str) -> None:
 def main(args: argparse.Namespace) -> None:
     for model_checkpoint in glob(args.model_checkpoint):
         args.model_checkpoint = model_checkpoint
-        model_log_directory = os.path.dirname(args.model_checkpoint)
-        args = parse_configs_to_args(args, model_log_directory, training=False)
-        evaluate_outer(args, model_log_directory)
+        args.model_log_directory = os.path.dirname(args.model_checkpoint)
+        args = parse_configs_to_args(args, training=False)
+        evaluate_outer(args)
 
 
 if __name__ == '__main__':
