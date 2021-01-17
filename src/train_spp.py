@@ -133,32 +133,20 @@ def get_grid_args_superset(
     return args_superset
 
 
-def get_patterns(
-    patterns: str, pre_computed_patterns: Union[str, None]
-) -> Tuple['OrderedDict[int, int]', Union[List[List[str]], None]]:
-    # set default temporary value for pre_computed_patterns
-    pre_computed_patterns = None
-
+def get_pattern_specs(args: argparse.Namespace) -> 'OrderedDict[int, int]':
     # convert pattern_specs string in OrderedDict
     pattern_specs: 'OrderedDict[int, int]' = OrderedDict(
         sorted(
             (
                 [int(y) for y in x.split("-")]  # type: ignore
-                for x in patterns.split("_")),
+                for x in args.patterns.split("_")),
             key=lambda t: t[0]))
-
-    # read pre_computed_patterns if it exists, format pattern_specs accordingly
-    if pre_computed_patterns is not None:
-        pattern_specs, pre_computed_patterns = read_patterns(
-            pre_computed_patterns, pattern_specs)
-        pattern_specs = OrderedDict(
-            sorted(pattern_specs.items(), key=lambda t: t[0]))
 
     # log diagnositc information on input patterns
     LOGGER.info("Patterns: %s" % pattern_specs)
 
     # return final objects
-    return pattern_specs, pre_computed_patterns
+    return pattern_specs
 
 
 def set_random_seed(args: argparse.Namespace) -> None:
@@ -291,31 +279,6 @@ def dump_configs(args: argparse.Namespace,
             os.path.join(model_log_directory, prefix + "training_config.json"),
             "w") as output_file_stream:
         json.dump(training_args_dict, output_file_stream, ensure_ascii=False)
-
-
-def read_patterns(
-    filename: str, pattern_specs: 'OrderedDict[int, int]'
-) -> Tuple['OrderedDict[int, int]', List[List[str]]]:
-    # create new pattern_specs variable copy
-    pattern_specs = pattern_specs.copy()
-
-    # read pre_computed_patterns into a list
-    with open(filename, encoding='utf-8') as input_file_stream:
-        pre_computed_patterns = [
-            line.rstrip().split() for line in input_file_stream
-            if len(line.rstrip())
-        ]
-
-    # update pattern_specs object with patterns metadata
-    for pattern in pre_computed_patterns:
-        lookup_length = len(pattern) + 1
-        if lookup_length not in pattern_specs:
-            pattern_specs[lookup_length] = 1
-        else:
-            pattern_specs[lookup_length] += 1
-
-    # return read object
-    return pattern_specs, pre_computed_patterns
 
 
 def save_checkpoint(epoch: int, model: torch.nn.Module,
@@ -770,8 +733,7 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         gpu_device = set_hardware(args)
 
         # get relevant patterns
-        pattern_specs, pre_computed_patterns = get_patterns(
-            args.patterns, args.pre_computed_patterns)
+        pattern_specs = get_pattern_specs(args)
 
         # set initial random seeds
         set_random_seed(args)
@@ -818,7 +780,6 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
             embeddings,  # type:ignore
             vocab,
             semiring,
-            pre_computed_patterns,
             args.shared_self_loops,
             args.no_epsilons,
             args.no_self_loops,

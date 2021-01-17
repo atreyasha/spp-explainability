@@ -2,16 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from collections import OrderedDict
-from typing import List, Union, Tuple, cast, Any
+from typing import List, Union, cast, Any
 from torch.nn import Module, Parameter, Linear, Dropout, LayerNorm, init
 from .utils.model_utils import Semiring, Batch
 from .utils.data_utils import Vocab
 import torch
 
-# CW token refers to an arbitrary token with high bias
-CW_TOKEN = "CW"
-# factor to keep matrix values small but nonzero
-PATTERN_EPSILON = 1e-10
 # shared_sl value for greedily learnable self-loop paramaters
 SHARED_SL_PARAM_PER_STATE_PER_PATTERN = 1
 # shared_sl value for global learnable self-loop parameter
@@ -49,7 +45,6 @@ class SoftPatternClassifier(Module):
                  embeddings: Module,
                  vocab: Vocab,
                  semiring: Semiring,
-                 pre_computed_patterns: Union[List[List[str]], None] = None,
                  shared_self_loops: int = 0,
                  no_epsilons: bool = False,
                  no_self_loops: bool = False,
@@ -87,11 +82,6 @@ class SoftPatternClassifier(Module):
         # initialize diags and bias using glorot initialization
         init.xavier_normal_(diags)
         init.xavier_normal_(bias)
-
-        # load diagonal and bias data from patterns if provided
-        if pre_computed_patterns is not None:
-            diags, bias = self.load_pre_computed_patterns(
-                pre_computed_patterns, diags, bias, pattern_specs)
 
         # convert both diagonal and bias data into learnable parameters
         self.diags = Parameter(diags)
@@ -220,85 +210,6 @@ class SoftPatternClassifier(Module):
 
         # finally return transition matrices for all tokens
         return transition_matrices
-
-    def load_pre_computed_patterns(
-        self, pre_computed_patterns: List[List[str]], diags: torch.Tensor,
-        bias: torch.Tensor, pattern_specs: 'OrderedDict[int, int]'
-    ) -> Tuple[torch.Tensor, torch.Tensor]:
-        # extract pattern length as indices with zero counts
-        pattern_indices = dict(
-            (pattern_length, 0) for pattern_length in pattern_specs)
-
-        # view diags and bias in appropriate tensor sizes
-        diags_size = diags.size()[0]
-        diags = diags.view(  # type: ignore
-            self.total_num_patterns, self.num_diags, self.max_pattern_length,
-            self.embeddings.embedding_dim)
-        bias = bias.view(self.total_num_patterns, self.num_diags,
-                         self.max_pattern_length)
-
-        # initialize counter
-        count = 0
-
-        # pattern indices: which patterns are we loading?
-        # the pattern index from which we start loading each pattern length
-        # NOTE: offset probably to get pattern index in diagonal data
-        for (i, pattern_length) in enumerate(pattern_specs.keys()):
-            pattern_indices[pattern_length] = count
-            count += pattern_specs[pattern_length]
-
-        # loading all pre-computed patterns
-        for pattern in pre_computed_patterns:
-            pattern_length = len(pattern) + 1
-
-            # getting pattern index in diagonal data
-            # NOTE: this is why previous workflow is present
-            index = pattern_indices[pattern_length]
-
-            # loading diagonal and bias for pattern
-            diags_subset, bias_subset = self.load_pattern(pattern)
-
-            # updating diagonal and bias
-            # NOTE: this is why reformatting was necessary
-            diags[index, 1, :(pattern_length - 1), :] = diags_subset
-            bias[index, 1, :(pattern_length - 1)] = bias_subset
-
-            # updating pattern_indices
-            # NOTE: this ensures next update does not override current
-            pattern_indices[pattern_length] += 1
-
-        # return tensors in appropriate data format
-        return diags.view(diags_size,
-                          self.embeddings.embedding_dim), bias.view(
-                              diags_size, 1)
-
-    def load_pattern(self,
-                     pattern: List[str]) -> Tuple[torch.Tensor, torch.Tensor]:
-        # initialize local variables
-        diags_subset = PATTERN_EPSILON * torch.randn(  # type: ignore
-            len(pattern), self.embeddings.embedding_dim)
-        bias_subset = torch.zeros(len(pattern))
-
-        # NOTE: arbitrary choice which can be refined
-        factor = 10
-
-        # traversing elements of pattern.
-        for (i, element) in enumerate(pattern):
-            # CW: high bias (we don't care about the identity of the token
-            if element == CW_TOKEN:
-                bias_subset[i] = factor
-            else:
-                # concrete word: we do care about the token (low bias).
-                bias_subset[i] = -factor
-                # if we have a word vector for this element
-                # update the diagonal value with specific vector
-                if element in self.vocab:
-                    diags_subset[i] = torch.FloatTensor(
-                        factor *
-                        self.embeddings(torch.LongTensor(self.vocab(element))))
-
-        # return updated tensors
-        return diags_subset, bias_subset
 
     def forward(self, batch: Batch) -> torch.Tensor:
         # start timer and get transition matrices

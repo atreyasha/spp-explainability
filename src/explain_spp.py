@@ -12,7 +12,7 @@ from .utils.explain_utils import (BackPointer, cat_2d, zip_lambda_2d,
 from .arg_parser import (explain_arg_parser, hardware_arg_parser,
                          logging_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_semiring,
-                        get_train_valid_data, get_patterns)
+                        get_train_valid_data, get_pattern_specs)
 from .spp_model import SoftPatternClassifier
 from torch.nn import Embedding, Module
 import argparse
@@ -240,7 +240,7 @@ def explain_outer(args: argparse.Namespace, model_log_directory: str) -> None:
     gpu_device = set_hardware(args)
 
     # get relevant patterns
-    pattern_specs, pre_computed_patterns = get_patterns(args.patterns, None)
+    pattern_specs = get_pattern_specs(args)
 
     # load vocab and embeddings
     vocab_file = os.path.join(model_log_directory, "vocab.txt")
@@ -271,7 +271,6 @@ def explain_outer(args: argparse.Namespace, model_log_directory: str) -> None:
         embeddings,  # type:ignore
         vocab,
         semiring,
-        pre_computed_patterns,
         args.shared_self_loops,
         args.no_epsilons,
         args.no_self_loops,
