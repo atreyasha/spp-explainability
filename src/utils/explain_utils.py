@@ -70,17 +70,17 @@ class BackPointer:
             return self.previous.display(doc_text,
                                          extra=extra,
                                          num_padding_tokens=num_padding_tokens)
-        if self.transition == "happy path":
+        if self.transition == "main-path":
             if self.end_token_idx >= len(doc_text):
-                extra = "HP {:<15}".format(doc_text[-1]) + extra
+                extra = "MP {:<15}".format(doc_text[-1]) + extra
             else:
-                extra = "HP {:<15}".format(
+                extra = "MP {:<15}".format(
                     doc_text[self.end_token_idx - 1 -
                              num_padding_tokens]) + extra
             return self.previous.display(doc_text,
                                          extra=extra,
                                          num_padding_tokens=num_padding_tokens)
-        extra = "ep {:<15}".format("") + extra
+        extra = "EP {:<15}".format("") + extra
         return self.previous.display(doc_text,
                                      extra=extra,
                                      num_padding_tokens=num_padding_tokens)

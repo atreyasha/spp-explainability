@@ -65,13 +65,13 @@ def transition_once_with_trace(model: Module, token_idx: int,
     epsilons = zip_lambda_2d(max, back_pointers, epsilons)
 
     # Adding main loops (consume a token, move state)
-    happy_paths = cat_2d(
+    main_paths = cat_2d(
         restart_padding(model, token_idx, num_patterns),
         zip_lambda_2d(
             lambda bp, t: BackPointer(score=semiring_times_from_float(
                 model, bp.score, t),
                                       previous=bp,
-                                      transition="happy path",
+                                      transition="main-path",
                                       start_token_idx=bp.start_token_idx,
                                       end_token_idx=token_idx + 1),
             [xs[:-1] for xs in epsilons], transition_matrix_val[:, 1, :-1]))
@@ -87,7 +87,7 @@ def transition_once_with_trace(model: Module, token_idx: int,
         transition_matrix_val[:, 0, :])
 
     # return final object
-    return zip_lambda_2d(max, happy_paths, self_loops)
+    return zip_lambda_2d(max, main_paths, self_loops)
 
 
 def get_top_scoring_spans_for_doc(
