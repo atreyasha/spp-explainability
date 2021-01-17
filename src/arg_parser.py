@@ -181,9 +181,12 @@ def explain_arg_parser() -> argparse.ArgumentParser:
                           type=glob_path)
     # add group for optional arguments
     explain = parser.add_argument_group('optional explainability arguments')
+    explain.add_argument("--output-prefix",
+                         help="Prefix for output patterns file",
+                         type=str)
     explain.add_argument("--k-best",
-                         help=("Extract 'k' best matching words for "
-                               "each transition in patterns"),
+                         help=("Use 'k' best document scores for extracting "
+                               "patterns"),
                          default=5,
                          type=int)
     explain.add_argument("--batch-size",
