@@ -57,7 +57,7 @@ class BackPointer:
     def display(self,
                 doc_text: List[str],
                 extra: str = "",
-                num_padding_tokens: int = 0) -> str:
+                num_padding_tokens: int = 1) -> str:
         if self.previous is None:
             return extra
         if self.transition == "self-loop":

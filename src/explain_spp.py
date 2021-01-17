@@ -91,7 +91,7 @@ def transition_once_with_trace(model: Module, token_idx: int,
 
 
 def get_top_scoring_spans_for_doc(
-        model: Module, doc: List[str], max_doc_len: int,
+        model: Module, doc: Tuple[List[int], int], max_doc_len: int,
         gpu_device: Union[torch.device, None]) -> List[BackPointer]:
     batch = Batch([doc[0]], model.embeddings, to_cuda(gpu_device), 0,
                   max_doc_len)  # single doc
@@ -161,7 +161,6 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     with torch.no_grad():
         # TODO: look into better practices for accessing model data with detach
         explain_sorted = decreasing_length(zip(explain_data, explain_text))
-        explain_labels = [label for _, label in explain_data]
         explain_data = [doc for doc, _ in explain_sorted]
         explain_text = [text for _, text in explain_sorted]
         num_patterns = model.total_num_patterns
@@ -211,10 +210,10 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
             for k, d in enumerate(k_best_doc_idxs):
                 back_pointer = back_pointers[d][p]
                 score, text = back_pointer.score, back_pointer.display(
-                    explain_text[d], '#label={}'.format(explain_labels[d]),
-                    num_padding_tokens)
-                print("{} {:2.3f}  {}".format(k, score, text.encode('utf-8')))
+                    explain_text[d], num_padding_tokens=num_padding_tokens)
+                print("{} {:2.3f}  {}".format(k, score, text))
 
+            # TODO: unsure what these segments below print, perhaps not needed
             print(
                 "self-loops: ", ", ".join(
                     transition_str(model, norm, neighb, bias) for norm, neighb,
