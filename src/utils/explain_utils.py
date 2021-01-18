@@ -16,10 +16,15 @@ def cat_2d(padding: Any, data: Any) -> List[List[Any]]:
     return [[p] + x for p, x in zip(padding, data)]
 
 
+def torch_apply_float_function(function: Callable[..., torch.Tensor],
+                               input_a: float, input_b: float) -> float:
+    return function(torch.FloatTensor([input_a]),
+                    torch.FloatTensor([input_b])).item()
+
+
 @total_ordering
 class BackPointer:
-    def __init__(self, score: torch.Tensor, previous: Union['BackPointer',
-                                                            None],
+    def __init__(self, score: float, previous: Union['BackPointer', None],
                  transition: Union[str, None], start_token_idx: int,
                  end_token_idx: int) -> None:
         self.score = score

@@ -6,7 +6,8 @@ from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import PAD_TOKEN_INDEX, Vocab
 from .utils.model_utils import decreasing_length, to_cuda, Batch
-from .utils.explain_utils import cat_2d, zip_lambda_2d, BackPointer
+from .utils.explain_utils import (cat_2d, zip_lambda_2d,
+                                  torch_apply_float_function, BackPointer)
 from .arg_parser import (explain_arg_parser, hardware_arg_parser,
                          logging_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_semiring,
@@ -19,16 +20,9 @@ import torch
 import os
 
 
-def get_nearest_neighbors(weights: torch.Tensor,
-                          embeddings: torch.Tensor,
-                          threshold: int = 1000) -> torch.Tensor:
-    return torch.argmax(torch.mm(weights, embeddings[:threshold, :]), dim=1)
-
-
-def semiring_times_from_float(model: Module, input_a: float,
-                              input_b: float) -> torch.Tensor:
-    return model.semiring.times(torch.FloatTensor([input_a]),
-                                torch.FloatTensor([input_b])).squeeze()
+def transition_str(model: Module, norm: torch.Tensor, neighb: int,
+                   bias: torch.Tensor) -> str:
+    return "{:5.2f} * {:<15} + {:5.2f}".format(norm, model.vocab[neighb], bias)
 
 
 def restart_padding(model: Module, token_index: int, num_patterns: int):
@@ -42,11 +36,6 @@ def restart_padding(model: Module, token_index: int, num_patterns: int):
     ]
 
 
-def transition_str(model: Module, norm: torch.Tensor, neighb: int,
-                   bias: torch.Tensor) -> str:
-    return "{:5.2f} * {:<15} + {:5.2f}".format(norm, model.vocab[neighb], bias)
-
-
 def transition_once_with_trace(model: Module, token_idx: int,
                                eps_value: torch.Tensor,
                                back_pointers: List[List[Any]],
@@ -58,8 +47,8 @@ def transition_once_with_trace(model: Module, token_idx: int,
     epsilons = cat_2d(
         restart_padding(model, token_idx, num_patterns),
         zip_lambda_2d(
-            lambda bp, e: BackPointer(score=semiring_times_from_float(
-                model, bp.score, e),
+            lambda bp, e: BackPointer(score=torch_apply_float_function(
+                model.semiring.times, bp.score, e),
                                       previous=bp,
                                       transition="epsilon-transition",
                                       start_token_idx=bp.start_token_idx,
@@ -73,8 +62,8 @@ def transition_once_with_trace(model: Module, token_idx: int,
     main_paths = cat_2d(
         restart_padding(model, token_idx, num_patterns),
         zip_lambda_2d(
-            lambda bp, t: BackPointer(score=semiring_times_from_float(
-                model, bp.score, t),
+            lambda bp, t: BackPointer(score=torch_apply_float_function(
+                model.semiring.times, bp.score, t),
                                       previous=bp,
                                       transition="main-path",
                                       start_token_idx=bp.start_token_idx,
@@ -83,8 +72,8 @@ def transition_once_with_trace(model: Module, token_idx: int,
 
     # Adding self loops (consume a token, stay in same state)
     self_loops = zip_lambda_2d(
-        lambda bp, sl: BackPointer(score=semiring_times_from_float(
-            model, bp.score, sl),
+        lambda bp, sl: BackPointer(score=torch_apply_float_function(
+            model.semiring.times, bp.score, sl),
                                    previous=bp,
                                    transition="self-loop",
                                    start_token_idx=bp.start_token_idx,
@@ -143,7 +132,8 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
                   batch_size: int,
                   gpu_device: Union[torch.device, None],
                   max_doc_len: int = -1,
-                  num_padding_tokens: int = 1) -> None:
+                  num_padding_tokens: int = 1,
+                  threshold: int = 1000) -> None:
     # load model checkpoint
     model_checkpoint = torch.load(model_checkpoint,
                                   map_location=torch.device("cpu"))
@@ -173,10 +163,12 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
 
         # TODO: understand what this does in terms of frequent words
         # not sure where the exact sorting happenes as per docstring
-        nearest_neighbors = get_nearest_neighbors(
-            model.diags.detach().clone(),
-            model.embeddings.weight.t()).view(num_patterns, model.num_diags,
-                                              pattern_length)
+        nearest_neighbors = torch.argmax(
+            torch.mm(model.diags.detach().clone(),
+                     model.embeddings.weight.t()[:threshold, :]),
+            dim=1).view(num_patterns, model.num_diags, pattern_length)
+
+        # create slices and views
         diags = model.diags.view(
             num_patterns, model.num_diags, pattern_length,
             model.embeddings.embedding_dim).detach().clone()
