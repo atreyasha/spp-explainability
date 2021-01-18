@@ -4,7 +4,7 @@
     -   [Long-term](#long-term)
 -   [Notes](#notes)
     -   [Research](#research)
-    -   [Admin](#admin)
+    -   [Administrative](#administrative)
 -   [Completed](#completed)
 -   [Legacy](#legacy)
     -   [Interpretable RNN
@@ -20,62 +20,192 @@
 
 ### Current
 
-1.  Focus on deriving explainability from trained SoPa++ model(s)
-
-    **DEADLINE:** *\<2021-02-14 Sun\>*
+1.  Explainability from trained SoPa++ model
 
     1.  Oracle model
 
-        1.  **TODO** refactor `visualization` and
-            `interpretation` (two of highest priority) and understand
-            their internal mechanisms
+        **DEADLINE:** *\<2021-02-04 Thu\>*
 
-        2.  why are `[START]` and `[END]` tokens repeated before and
-            after?
+        1.  Quick changes
 
-            1.  overfitting that occurs to extra `[START]` and `[END]`
-                tokens would be transferred to epsilon transitions if
-                replaced with single padding instead of multiple
+            1.  **TODO** clean out data type of explain_data
+                and other variables -\> use consistent variable namings
+                across script and training as well
 
-            2.  posted as question to OP, see:
-                <https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695>
+            2.  **TODO** consider modifying model forward to
+                conditionally return scores and other tensors before
+                linear layer -\> preferably as a concatenated tensor
+
+            3.  start understanding and debugging functions -\>
+                understand their relationship to the model\'s scores and
+                refactor them using a deeper understanding -\> modify
+                SoPa++ model based on what is learned from
+                explainability and keep this process harmonious
+
+            4.  clean out source code with newer and more efficient
+                workflows, variable namings and function definitions
+                on-the-fly
+
+            5.  precisely type functions and classes on-the-fly
+
+        2.  Medium-level changes
+
+            1.  **TODO** think whether binarizer and layer
+                normalization should be considered to check for pattern
+                activations -\> this might be important to ignore
+                patterns with 0 binarized scores and to only work with
+                those that have scores of 1 -\> which refer to higher
+                than all other scores
+
+            2.  **TODO** figure out why many end tokens occur
+                after each other in output patterns and how to remedy
+                these illogical pattern types -\> seems to be fixed by
+                `reducing num_padding_tokens` to `0` so it seems
+                something is off with offsetting technique used in
+                backpointer display
+
+            3.  modify `get_nearest_neighbors` to use full embeddings
+                and to use biases as well -\> if this is indeed
+                necessary after understanding
+
+            4.  look into to/from-semiring functions are not used,
+                especially for log-space semiring
+
+        3.  Core explainability changes
+
+            1.  improve speed of execution with parallelization and
+                other efficiencies -\> use tqdm to help with estimations
+                -\> look into torch semiring times function which could
+                be a bottleneck or otherwise use timing analysis to find
+                bottleneck
+
+            2.  consider conditional with no self loops policy and how
+                it affects explainability process
+
+            3.  possibly use beam search in getting nearest neighbours,
+                or just brute force since vocabulary is quite small
+
+            4.  utilize output-prefix argument when dumping output
+                patterns file
+
+            5.  consider removing `ProbabilitySemiring` if it does not
+                make sense with the visualization scheme -\> or check it
+                through thoroughly to make sure it does make sense -\>
+                might be problematic since we already use `max` with
+                `zip_lambda_2d`
+
+            6.  consider keeping `explain_labels` or removing these
+                altogether -\> not sure how they could still be of use
+                later on in explainability
+
+            7.  look into `visualize_efficiently` and
+                `interpret_classification_results` scripts for possible
+                workflows to adopt
+
+        4.  Overspilling patterns
+
+            1.  check if it is possible to port the entire backpointer
+                concept inside the sopa model as an exec-mode
+
+            2.  issue with printing of backpointers for text shorter
+                than pattern length -\> addresses question below and why
+                strong padding was done -\> could be substituted with
+                something else such as printing the final token and
+                ignoring all else, or assigning everything else as an
+                epsilon in a regular expression
+
+            3.  consider if epsilon endings can be hard-coded into the
+                neural model instead
+
+            4.  think of ways to use patterns only when there are enough
+                words in front and not to always compute
+
+            5.  if overpadding is necessary, then we need to save this
+                under the model configuration for this to be re-used
+
+            6.  consider otherwise what to do with `num_padding_tokens`
+                argument inside script, whether to keep or remove it for
+                good
+
+            7.  why are `[START]` and `[END]` tokens repeated before and
+                after?
+
+                1.  overfitting that occurs to extra `[START]` and
+                    `[END]` tokens would be transferred to epsilon
+                    transitions if replaced with single padding instead
+                    of multiple
+
+                2.  posted as question to OP, see:
+                    <https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695>
 
     2.  Mimic model
 
-        1.  find better naming for mimic/oracle from papers
+        **DEADLINE:** *\<2021-02-14 Sun\>*
 
-        2.  final ensemble of regular expressions should give insights
-            and perform similar to main SoPa++ neural model
+        1.  find better naming for mimic/oracle models which is based on
+            research terminology
 
-        3.  think about how to work with unknown tokens on new data for
+        2.  think about how to work with unknown tokens on new data for
             mimic model -\> maybe some mapping of embeddings to find
-            closest token/pattern or mean score might help
+            closest token/pattern or mean score using heuristics
 
-        4.  best case scenario: user should be able to transfer easily
-            between models and regex-ensemble in both directions for
-            \"human-computer interaction\"
+        3.  introduce new function for loading and dumping patterns to
+            intercommunicate between mimic/oracle models
 
-        5.  for mimic model, find best patterns that match, if not use a
-            mean value for the pattern score that can be used as an
-            analog -\> or try other heuristics that can bring results of
-            mimic and oracle closer to each other
-
-        6.  aim to produce pretty and compact ensemble of regular
-            expressions which can analyzed and manipulated by a human
-
-        7.  posted question to OP on self-loops visualization, see:
+        4.  posted question to OP on self-loops visualization, see:
             <https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-728257052>
 
-    3.  Distance between oracle and mimic
+        5.  envisioned mimic model
 
-        1.  it would still be useful to show when mimic and oracle align
-            and when they don\'t -\> with some kind of distance
-            measurement between their output scores
+            1.  pretty and compact ensemble of regular expressions which
+                can analyzed and manipulated by a human
 
-        2.  compare confusion matrices between orace and mimic and
-            compute euclidean distances on scores or binary predictions
+            2.  final ensemble of regular expressions should give
+                insights and perform similar to main SoPa++ neural model
 
-    4.  Considerations post-explainability
+            3.  best case scenario: user should be able to transfer
+                easily between models and regex-ensemble in both
+                directions for \"human-computer interaction\"
+
+    3.  Distance between oracle and mimic models
+
+        1.  compare confusion matrices between oracle and mimic and
+            compute euclidean distances over raw softmax predictions
+
+        2.  it would still be useful to show when mimic and oracle align
+            and when they don\'t
+
+    4.  Modelling post-explainability
+
+        1.  change frequency of tensorboard, evaluation and model saving
+            to update-level
+
+        2.  lower learning rate further for grid training since training
+            tends to converge fast
+
+        3.  repeat grid-search with multiple random seeds
+
+        4.  use parallelized computations to fill up all GPU memory -\>
+            would require reading-up on how to do this safely for a
+            single GPU
+
+        5.  add dedicated argument to evaluation for grid search where
+            all results are centrally summarized in base grid directory
+            -\> use `grid_training_arg_parser` with discriminating
+            boolean and rename it to the something other than
+            `resume_training`
+
+        6.  replace all arg parser options that have `-1` with `None`
+            for consistency -\> replace `-1` checks inside main scripts
+            and replace these with `None` as well
+
+        7.  remove all instances of `max_doc_len` -\> replace all readme
+            usage scripts to reflect all of the above changes
+
+        8.  consider changing `torch.no_grad` scope command to easy
+            in-place mode command `torch.autograd.set_grad_enabled`
+
+    5.  Post-processing extensions
 
         1.  look into ATIS/SNIPS dataset as additional data-sets
 
@@ -85,47 +215,22 @@
             2.  both have some papers which could be cited to add some
                 relevance
 
-        2.  repeat grid-search with multiple random seeds later when
-            explainability process is clearer -\> possibly with more
-            parallelized computations to fill up all GPU memory -\>
-            would require reading-up on how to do this
-
-        3.  test workflow for loading pre-computed-patterns to ensure
-            they work without bugs -\> missing load information for
-            self-loops, might bug out for case with no self_loops
-            because of index 1 of `diags` and `bias` being updated which
-            is only present with self_loops, perhaps replace with index
-            of -1 -\> perhaps can take out numerical epsilon as there
-            are probably some workarounds for this
-
-        4.  improve cryptic parts of code eg. loading internal model
-            patterns with CW token and numerical epsilon
-
-        5.  think of ways to use patterns only when there are enough
-            words in front and not to always compute, if this is
-            possible at all
-
 ### Long-term
 
 1.  Performance and explainability
 
-    1.  create `slurm-s3it` branch later on if it is really necessary
-
-    2.  add check to ensure start, end and pad tokens don\'t occur
+    1.  add check to ensure start, end and pad tokens don\'t occur
         adversarially inside sequence -\> need to have the vocabulary
         object catch such an error
 
-    3.  add predict function for both mimic and oracle model which does
+    2.  add predict function for both mimic and oracle model which does
         not need extra data to be loaded -\> can also accept stdin as
         unix pipe
 
-    4.  check if packed sequences could be incoporated into model
-
-    5.  when comparing model performance with other studies, consider
+    3.  when comparing model performance with other studies, consider
         only lowercasing and not making unique the test set
 
-    6.  think more about issues related to using layer normalization of
-        scores -\> this could be problematic if all scores are large
+    4.  check if packed sequences could be incoporated into model
 
 2.  Re-check potential pitfalls
 
@@ -144,53 +249,49 @@
     4.  check code for `squeeze()` call which can be problematic for dim
         1 tensors
 
-    5.  tokenizer configuration should be saved if it is special, nltk
-        tokenizer is probably the same given upstream nltk version
-
 3.  Dependencies, typing and testing
 
     1.  use `renv` for managing and shipping R dependencies -\> keep
         just `renv.lock` for easier shipping and ignore other files
 
-    2.  include test code by instantiating class and/or other simple
-        methods which are inherent to the workflow
+    2.  include basic test code by instantiating class and/or other
+        simple methods which are inherent to the workflow
 
     3.  add mypy as an explicit part of testing the source code
 
-    4.  consider adding Optional type to all optional arguments
+    4.  consider adding Optional type to all optional arguments instead
+        of Union + None
 
     5.  look into cases where List was replaced by Sequential and how
         this can be changed or understood to keep consistency (ie. keep
         everything to List)
 
-    6.  install torch for cuda 10.1 on upstream servers, ie.
-        `pip install torch==1.7.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html`
-
 4.  Documentation
 
-    1.  consider renaming `soft_patterns_pp` to more elegant term such
-        as `spp`
+    1.  GPU/CPU runs not always reproducible depending on
+        multi-threading, see:
+        <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    2.  reduce source code lines, chunking and comments -\> pretty sort
+    2.  consider renaming `soft_patterns_pp` to more elegant name
+        without special symbols such as `spp` or better -\> be useful to
+        think of this before registering topic
+
+    3.  reduce source code lines, chunking and comments -\> pretty sort
         python code and function/class orders perhaps by length
 
-    3.  update metadata eg. with comprehensive python/shell help
+    4.  update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    4.  add information on best model downloads and preparation
+    5.  add information on best model downloads and preparation
 
-    5.  add pydocstrings to all functions and improve argparse
+    6.  add pydocstrings to all functions and improve argparse
         documentation
 
-    6.  provide description of data structures (eg. data, labels)
+    7.  provide description of data structures (eg. data, labels)
         required for training processes
 
-    7.  test download and all other scripts to ensure they work
-
-    8.  GPU/CPU runs not always reproducible depending on
-        multi-threading, see:
-        <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
+    8.  test download and all other scripts to ensure they work
 
     9.  add MIT license when made public
 
@@ -282,7 +383,7 @@
     3.  What interesting and relevant explanations does SoPa++ provide
         on NLU task(s)?
 
-### Admin
+### Administrative
 
 1.  Timeline
 
@@ -354,26 +455,29 @@
 
     3.  Self-thoughts
 
-        1.  compare oracle performance with those from other papers
+        1.  add visualization of in-depth computational graph in paper
+            for clarity
 
-        2.  semirings, abstract algebra and how they are used for
+        2.  compare oracle performance with those from other papers
+
+        3.  semirings, abstract algebra and how they are used for
             finite-state machines in Forward and Viterbi algorithms -\>
             go deeper into this to get some background
 
-        3.  use more appropriate and generalized semiring terminology
+        4.  use more appropriate and generalized semiring terminology
             from Peng et al. 2019 -\> more generalized compared to SoPa
             paper
 
-        4.  Chomsky hierarchy of languages -\> might be relevant
+        5.  Chomsky hierarchy of languages -\> might be relevant
             especially relating to CFGs
 
-        5.  FSA/WFSAs -\> input theoretical CS, mathematics background
+        6.  FSA/WFSAs -\> input theoretical CS, mathematics background
             to describe these
 
-        6.  ANN\'s historical literature -\> describe how ANNs
+        7.  ANN\'s historical literature -\> describe how ANNs
             approximate symbolic representations
 
-        7.  extension/recommendations -\> transducer for seq2seq tasks
+        8.  extension/recommendations -\> transducer for seq2seq tasks
 
 ## Completed
 
