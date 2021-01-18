@@ -6,12 +6,6 @@ from functools import total_ordering
 import torch
 
 
-def get_nearest_neighbors(weights: torch.Tensor,
-                          embeddings: torch.Tensor,
-                          threshold: int = 1000) -> torch.Tensor:
-    return torch.argmax(torch.mm(weights, embeddings[:threshold, :]), dim=1)
-
-
 def zip_lambda_2d(function: Callable, input_a: Any,
                   input_b: Any) -> List[List[Any]]:
     return [[function(x, y) for x, y in zip(X, Y)]

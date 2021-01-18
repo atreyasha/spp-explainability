@@ -2,22 +2,27 @@
 # -*- coding: utf-8 -*-
 
 from typing import List, Tuple, Any, Union
-from tqdm import tqdm
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import PAD_TOKEN_INDEX, Vocab
 from .utils.model_utils import decreasing_length, to_cuda, Batch
-from .utils.explain_utils import (BackPointer, cat_2d, zip_lambda_2d,
-                                  get_nearest_neighbors)
+from .utils.explain_utils import cat_2d, zip_lambda_2d, BackPointer
 from .arg_parser import (explain_arg_parser, hardware_arg_parser,
                          logging_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_semiring,
                         get_train_valid_data, get_pattern_specs)
 from .spp_model import SoftPatternClassifier
 from torch.nn import Embedding, Module
+from tqdm import tqdm
 import argparse
 import torch
 import os
+
+
+def get_nearest_neighbors(weights: torch.Tensor,
+                          embeddings: torch.Tensor,
+                          threshold: int = 1000) -> torch.Tensor:
+    return torch.argmax(torch.mm(weights, embeddings[:threshold, :]), dim=1)
 
 
 def semiring_times_from_float(model: Module, input_a: float,
@@ -100,23 +105,18 @@ def get_top_scoring_spans_for_doc(
     end_states = model.end_states.detach().clone().view(num_patterns)
     eps_value = model.get_epsilon_values().detach().clone()
     hiddens = model.semiring.zero(num_patterns, model.max_pattern_length)
+
     # set start state activation to 1 for each pattern in each dc
     hiddens[:, 0] = model.semiring.one(num_patterns)
     # convert to back-pointers
-    hiddens = \
-        [
-            [
-                BackPointer(
-                    score=state_activation,
+    hiddens = [[
+        BackPointer(score=state_activation,
                     previous=None,
                     transition=None,
                     start_token_idx=0,
-                    end_token_idx=0
-                )
-                for state_activation in pattern
-            ]
-            for pattern in hiddens
-        ]
+                    end_token_idx=0) for state_activation in pattern
+    ] for pattern in hiddens]
+
     # extract end-states
     end_state_back_pointers = [
         bp[end_state] for bp, end_state in zip(hiddens, end_states)
@@ -159,7 +159,6 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
 
     # disable autograd for explainability
     with torch.no_grad():
-        # TODO: look into better practices for accessing model data with detach
         explain_sorted = decreasing_length(zip(explain_data, explain_text))
         explain_data = [doc for doc, _ in explain_sorted]
         explain_text = [text for _, text in explain_sorted]
@@ -174,15 +173,10 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
 
         # TODO: understand what this does in terms of frequent words
         # not sure where the exact sorting happenes as per docstring
-        nearest_neighbors = \
-            get_nearest_neighbors(
-                model.diags.detach().clone(),
-                model.embeddings.weight.t()
-            ).view(
-                num_patterns,
-                model.num_diags,
-                pattern_length
-            )
+        nearest_neighbors = get_nearest_neighbors(
+            model.diags.detach().clone(),
+            model.embeddings.weight.t()).view(num_patterns, model.num_diags,
+                                              pattern_length)
         diags = model.diags.view(
             num_patterns, model.num_diags, pattern_length,
             model.embeddings.embedding_dim).detach().clone()
@@ -198,12 +192,11 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
 
         for p in range(num_patterns):
             p_len = model.end_states[p].item() + 1
-            k_best_doc_idxs = \
-                sorted(
-                    range(len(explain_data)),
-                    key=lambda doc_idx: back_pointers[doc_idx][p].score,
-                    reverse=True  # high-scores first
-                )[:k_best]
+            k_best_doc_idxs = sorted(
+                range(len(explain_data)),
+                key=lambda doc_idx: back_pointers[doc_idx][p].score,
+                reverse=True  # high-scores first
+            )[:k_best]
 
             print("Pattern:", p, "of length", p_len)
             print("Highest scoring spans:")
