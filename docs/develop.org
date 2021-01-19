@@ -1,32 +1,24 @@
 #+STARTUP: overview
 #+OPTIONS: ^:nil
 #+OPTIONS: p:t
-
+       
 ** Tasks
 *** Current
-**** Explainability from trained SoPa++ model
-***** Oracle model
-       DEADLINE: <2021-02-04 Thu>
-****** Quick changes
-******* TODO clean out data type of explain_data and other variables -> use consistent variable namings across script and training as well
-******* TODO consider modifying model forward to conditionally return scores and other tensors before linear layer -> preferably as a concatenated tensor
-******* start understanding and debugging functions -> understand their relationship to the model's scores and refactor them using a deeper understanding -> modify SoPa++ model based on what is learned from explainability and keep this process harmonious 
-******* clean out source code with newer and more efficient workflows, variable namings and function definitions on-the-fly
-******* precisely type functions and classes on-the-fly
-****** Medium-level changes
-******* TODO think whether binarizer and layer normalization should be considered to check for pattern activations -> this might be important to ignore patterns with 0 binarized scores and to only work with those that have scores of 1 -> which refer to higher than all other scores
-******* TODO figure out why many end tokens occur after each other in output patterns and how to remedy these illogical pattern types -> seems to be fixed by =reducing num_padding_tokens= to =0= so it seems something is off with offsetting technique used in backpointer display
-******* modify =get_nearest_neighbors= to use full embeddings and to use biases as well -> if this is indeed necessary after understanding
-******* look into to/from-semiring functions are not used, especially for log-space semiring
-****** Core explainability changes
-******* improve speed of execution with parallelization and other efficiencies -> use tqdm to help with estimations -> look into torch semiring times function which could be a bottleneck or otherwise use timing analysis to find bottleneck
-******* consider conditional with no self loops policy and how it affects explainability process
-******* possibly use beam search in getting nearest neighbours, or just brute force since vocabulary is quite small
-******* utilize output-prefix argument when dumping output patterns file
-******* consider removing =ProbabilitySemiring= if it does not make sense with the visualization scheme -> or check it through thoroughly to make sure it does make sense -> might be problematic since we already use =max= with =zip_lambda_2d=
-******* consider keeping =explain_labels= or removing these altogether -> not sure how they could still be of use later on in explainability
-******* look into =visualize_efficiently= and =interpret_classification_results= scripts for possible workflows to adopt
-****** Overspilling patterns
+**** Core explainability by simplification framework
+***** Quick changes
+      DEADLINE: <2021-01-22 Fri>
+****** TODO start understanding and debugging functions -> understand their relationship to the model's scores and refactor model/explainability -> start with =utils= functions and then proceed to main script 
+****** clean out source code with newer and more efficient workflows, consistent variable namings and function definitions on-the-fly -> start off with =explain_data=
+****** precisely type functions and classes on-the-fly
+***** Medium-level changes
+      DEADLINE: <2021-01-26 Tue>
+****** consider modifying model forward to conditionally return scores and other tensors before linear layer -> preferably as a concatenated tensor
+****** think whether binarizer and layer normalization should be considered to check for pattern activations -> this might be important to ignore patterns with 0 binarized scores and to only work with those that have scores of 1 -> which refer to higher than all other scores
+****** figure out why many end tokens occur after each other in output patterns and how to remedy these illogical pattern types -> seems to be fixed by =reducing num_padding_tokens= to =0= so it seems something is off with offsetting technique used in backpointer display
+
+***** Core explainability changes
+     DEADLINE: <2021-02-04 Thu>
+****** overspilling patterns
 ******* check if it is possible to port the entire backpointer concept inside the sopa model as an exec-mode
 ******* issue with printing of backpointers for text shorter than pattern length -> addresses question below and why strong padding was done -> could be substituted with something else such as printing the final token and ignoring all else, or assigning everything else as an epsilon in a regular expression
 ******* consider if epsilon endings can be hard-coded into the neural model instead
@@ -36,9 +28,26 @@
 ******* why are =[START]= and =[END]= tokens repeated before and after?
 ******** overfitting that occurs to extra =[START]= and =[END]= tokens would be transferred to epsilon transitions if replaced with single padding instead of multiple
 ******** posted as question to OP, see: https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695
+****** compatibility issues
+******* look into legacy =visualization*= scripts to ensure no workarounds during debugging were transferred causing wrong indices 
+******* modify =get_nearest_neighbors= to use full embeddings and to use biases as well -> if this is indeed necessary after understanding
+******* look into to/from-semiring functions are not used, especially for log-space semiring
+******* consider conditional with no self loops policy and how it affects explainability process
+******* consider removing =ProbabilitySemiring= if it does not make sense with the visualization scheme -> or check it through thoroughly to make sure it does make sense -> might be problematic since we already use =max= with =zip_lambda_2d=
+****** execution speed
+******* use tqdm to help with estimations
+******* consider using parallelization using multiple pooling threads
+******* look into torch semiring times function which could be a bottleneck or otherwise use timing analysis to find bottleneck
+******* merge efficiencies from =visualize_efficiently= script
+******* possibly use beam search in getting nearest neighbours, or just brute force since vocabulary is quite small
+******* consider keeping =explain_labels= or removing these altogether -> not sure how they could still be of use later on in explainability
+****** miscellaneous
+******* look into =visualize_efficiently= and =interpret_classification_results= scripts for possible workflows to adopt*
+******* utilize output-prefix argument when dumping output patterns file
 
-***** Mimic model
+**** Fine-tune explainability and modelling framework
      DEADLINE: <2021-02-14 Sun>
+***** Mimic model
 ****** find better naming for mimic/oracle models which is based on research terminology
 ****** think about how to work with unknown tokens on new data for mimic model -> maybe some mapping of embeddings to find closest token/pattern or mean score using heuristics
 ****** introduce new function for loading and dumping patterns to intercommunicate between mimic/oracle models
@@ -59,6 +68,7 @@
 ****** replace all arg parser options that have =-1= with =None= for consistency -> replace =-1= checks inside main scripts and replace these with =None= as well
 ****** remove all instances of =max_doc_len= -> replace all readme usage scripts to reflect all of the above changes
 ****** consider changing =torch.no_grad= scope command to easy in-place mode command =torch.autograd.set_grad_enabled=
+****** consider adding softmax to model forward if this is of any use
 ***** Post-processing extensions
 ****** look into ATIS/SNIPS dataset as additional data-sets
 ******* re-use preprocessing functions by sending them to utils and perhaps make them more general where possible
@@ -71,9 +81,8 @@
 ***** when comparing model performance with other studies, consider only lowercasing and not making unique the test set
 ***** check if packed sequences could be incoporated into model
 **** Re-check potential pitfalls
-***** add =with torch.no_grad()= scope indicator alongside =model.eval()= to perform inference/validation correctly and efficiently -> add =model.train()= back when evaluation is done and training is needed
-***** check to ensure detach and clones are done together where variable is created and updated, or otherwise detach is done for variables where only data needs to be referenced
-***** replace all legacy tensor.data calls with tensor.detach() for safety
+***** add =with torch.no_grad()= scope indicator alongside =model.eval()= to perform inference/validation correctly and efficiently
+***** replace all legacy =tensor.data= calls with =tensor.detach()= for safety and =tensor.detach().clone()= for cases where data is being updated
 ***** check code for =squeeze()= call which can be problematic for dim 1 tensors
 **** Dependencies, typing and testing
 ***** use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files

@@ -20,89 +20,48 @@
 
 ### Current
 
-1.  Explainability from trained SoPa++ model
+1.  Core explainability by simplification framework
 
-    1.  Oracle model
+    1.  Quick changes
+
+        **DEADLINE:** *\<2021-01-22 Fri\>*
+
+        1.  **TODO** start understanding and debugging
+            functions -\> understand their relationship to the model\'s
+            scores and refactor model/explainability -\> start with
+            `utils` functions and then proceed to main script
+
+        2.  clean out source code with newer and more efficient
+            workflows, consistent variable namings and function
+            definitions on-the-fly -\> start off with `explain_data`
+
+        3.  precisely type functions and classes on-the-fly
+
+    2.  Medium-level changes
+
+        **DEADLINE:** *\<2021-01-26 Tue\>*
+
+        1.  consider modifying model forward to conditionally return
+            scores and other tensors before linear layer -\> preferably
+            as a concatenated tensor
+
+        2.  think whether binarizer and layer normalization should be
+            considered to check for pattern activations -\> this might
+            be important to ignore patterns with 0 binarized scores and
+            to only work with those that have scores of 1 -\> which
+            refer to higher than all other scores
+
+        3.  figure out why many end tokens occur after each other in
+            output patterns and how to remedy these illogical pattern
+            types -\> seems to be fixed by `reducing num_padding_tokens`
+            to `0` so it seems something is off with offsetting
+            technique used in backpointer display
+
+    3.  Core explainability changes
 
         **DEADLINE:** *\<2021-02-04 Thu\>*
 
-        1.  Quick changes
-
-            1.  **TODO** clean out data type of explain_data
-                and other variables -\> use consistent variable namings
-                across script and training as well
-
-            2.  **TODO** consider modifying model forward to
-                conditionally return scores and other tensors before
-                linear layer -\> preferably as a concatenated tensor
-
-            3.  start understanding and debugging functions -\>
-                understand their relationship to the model\'s scores and
-                refactor them using a deeper understanding -\> modify
-                SoPa++ model based on what is learned from
-                explainability and keep this process harmonious
-
-            4.  clean out source code with newer and more efficient
-                workflows, variable namings and function definitions
-                on-the-fly
-
-            5.  precisely type functions and classes on-the-fly
-
-        2.  Medium-level changes
-
-            1.  **TODO** think whether binarizer and layer
-                normalization should be considered to check for pattern
-                activations -\> this might be important to ignore
-                patterns with 0 binarized scores and to only work with
-                those that have scores of 1 -\> which refer to higher
-                than all other scores
-
-            2.  **TODO** figure out why many end tokens occur
-                after each other in output patterns and how to remedy
-                these illogical pattern types -\> seems to be fixed by
-                `reducing num_padding_tokens` to `0` so it seems
-                something is off with offsetting technique used in
-                backpointer display
-
-            3.  modify `get_nearest_neighbors` to use full embeddings
-                and to use biases as well -\> if this is indeed
-                necessary after understanding
-
-            4.  look into to/from-semiring functions are not used,
-                especially for log-space semiring
-
-        3.  Core explainability changes
-
-            1.  improve speed of execution with parallelization and
-                other efficiencies -\> use tqdm to help with estimations
-                -\> look into torch semiring times function which could
-                be a bottleneck or otherwise use timing analysis to find
-                bottleneck
-
-            2.  consider conditional with no self loops policy and how
-                it affects explainability process
-
-            3.  possibly use beam search in getting nearest neighbours,
-                or just brute force since vocabulary is quite small
-
-            4.  utilize output-prefix argument when dumping output
-                patterns file
-
-            5.  consider removing `ProbabilitySemiring` if it does not
-                make sense with the visualization scheme -\> or check it
-                through thoroughly to make sure it does make sense -\>
-                might be problematic since we already use `max` with
-                `zip_lambda_2d`
-
-            6.  consider keeping `explain_labels` or removing these
-                altogether -\> not sure how they could still be of use
-                later on in explainability
-
-            7.  look into `visualize_efficiently` and
-                `interpret_classification_results` scripts for possible
-                workflows to adopt
-
-        4.  Overspilling patterns
+        1.  overspilling patterns
 
             1.  check if it is possible to port the entire backpointer
                 concept inside the sopa model as an exec-mode
@@ -138,9 +97,62 @@
                 2.  posted as question to OP, see:
                     <https://github.com/Noahs-ARK/soft_patterns/issues/8#issuecomment-746797695>
 
-    2.  Mimic model
+        2.  compatibility issues
 
-        **DEADLINE:** *\<2021-02-14 Sun\>*
+            1.  look into legacy `visualization*` scripts to ensure no
+                workarounds during debugging were transferred causing
+                wrong indices
+
+            2.  modify `get_nearest_neighbors` to use full embeddings
+                and to use biases as well -\> if this is indeed
+                necessary after understanding
+
+            3.  look into to/from-semiring functions are not used,
+                especially for log-space semiring
+
+            4.  consider conditional with no self loops policy and how
+                it affects explainability process
+
+            5.  consider removing `ProbabilitySemiring` if it does not
+                make sense with the visualization scheme -\> or check it
+                through thoroughly to make sure it does make sense -\>
+                might be problematic since we already use `max` with
+                `zip_lambda_2d`
+
+        3.  execution speed
+
+            1.  use tqdm to help with estimations
+
+            2.  consider using parallelization using multiple pooling
+                threads
+
+            3.  look into torch semiring times function which could be a
+                bottleneck or otherwise use timing analysis to find
+                bottleneck
+
+            4.  merge efficiencies from `visualize_efficiently` script
+
+            5.  possibly use beam search in getting nearest neighbours,
+                or just brute force since vocabulary is quite small
+
+            6.  consider keeping `explain_labels` or removing these
+                altogether -\> not sure how they could still be of use
+                later on in explainability
+
+        4.  miscellaneous
+
+            1.  look into `visualize_efficiently` and
+                `interpret_classification_results` scripts for possible
+                workflows to adopt\*
+
+            2.  utilize output-prefix argument when dumping output
+                patterns file
+
+2.  Fine-tune explainability and modelling framework
+
+    **DEADLINE:** *\<2021-02-14 Sun\>*
+
+    1.  Mimic model
 
         1.  find better naming for mimic/oracle models which is based on
             research terminology
@@ -167,7 +179,7 @@
                 easily between models and regex-ensemble in both
                 directions for \"human-computer interaction\"
 
-    3.  Distance between oracle and mimic models
+    2.  Distance between oracle and mimic models
 
         1.  compare confusion matrices between oracle and mimic and
             compute euclidean distances over raw softmax predictions
@@ -175,7 +187,7 @@
         2.  it would still be useful to show when mimic and oracle align
             and when they don\'t
 
-    4.  Modelling post-explainability
+    3.  Modelling post-explainability
 
         1.  change frequency of tensorboard, evaluation and model saving
             to update-level
@@ -205,7 +217,10 @@
         8.  consider changing `torch.no_grad` scope command to easy
             in-place mode command `torch.autograd.set_grad_enabled`
 
-    5.  Post-processing extensions
+        9.  consider adding softmax to model forward if this is of any
+            use
+
+    4.  Post-processing extensions
 
         1.  look into ATIS/SNIPS dataset as additional data-sets
 
@@ -236,17 +251,13 @@
 
     1.  add `with torch.no_grad()` scope indicator alongside
         `model.eval()` to perform inference/validation correctly and
-        efficiently -\> add `model.train()` back when evaluation is done
-        and training is needed
+        efficiently
 
-    2.  check to ensure detach and clones are done together where
-        variable is created and updated, or otherwise detach is done for
-        variables where only data needs to be referenced
+    2.  replace all legacy `tensor.data` calls with `tensor.detach()`
+        for safety and `tensor.detach().clone()` for cases where data is
+        being updated
 
-    3.  replace all legacy tensor.data calls with tensor.detach() for
-        safety
-
-    4.  check code for `squeeze()` call which can be problematic for dim
+    3.  check code for `squeeze()` call which can be problematic for dim
         1 tensors
 
 3.  Dependencies, typing and testing
