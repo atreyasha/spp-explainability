@@ -44,6 +44,11 @@ def transition_once_with_trace(model: Module, token_idx: int,
 
     # NOTE: epsilon transitions (don't consume a token, move forward one state)
     # we only allow one epsilon transition in a row.
+    # TODO: why are token_idx and bp.start_token_idx different?
+    # TODO: long computation times appear to be recorded here
+    # TODO: unmix tensors and floats, might help with speed, eg. eps_value
+
+    # NOTE: new start_token_idx is transferred from previous padding
     epsilons = cat_2d(
         restart_padding(model, token_idx, num_patterns),
         zip_lambda_2d(
@@ -59,6 +64,7 @@ def transition_once_with_trace(model: Module, token_idx: int,
     epsilons = zip_lambda_2d(max, back_pointers, epsilons)
 
     # Adding main loops (consume a token, move state)
+    # TODO: look into issue of 0 to 2 transitions occuring at pattern state 1
     main_paths = cat_2d(
         restart_padding(model, token_idx, num_patterns),
         zip_lambda_2d(
@@ -67,7 +73,7 @@ def transition_once_with_trace(model: Module, token_idx: int,
                                       previous=bp,
                                       transition="main-path",
                                       start_token_idx=bp.start_token_idx,
-                                      end_token_idx=token_idx + 1),
+                                      end_token_idx=bp.end_token_idx + 1),
             [xs[:-1] for xs in epsilons], transition_matrix_val[:, 1, :-1]))
 
     # Adding self loops (consume a token, stay in same state)
@@ -77,8 +83,8 @@ def transition_once_with_trace(model: Module, token_idx: int,
                                    previous=bp,
                                    transition="self-loop",
                                    start_token_idx=bp.start_token_idx,
-                                   end_token_idx=token_idx + 1), epsilons,
-        transition_matrix_val[:, 0, :])
+                                   end_token_idx=bp.end_token_idx + 1),
+        epsilons, transition_matrix_val[:, 0, :])
 
     # return final object
     return zip_lambda_2d(max, main_paths, self_loops)
@@ -91,6 +97,7 @@ def get_top_scoring_spans_for_doc(
                   max_doc_len)  # single doc
     transition_matrices = model.get_transition_matrices(batch)
     num_patterns = model.total_num_patterns
+    # TODO: check if end states need to be expanded by batch dimension
     end_states = model.end_states.detach().clone().view(num_patterns)
     eps_value = model.get_epsilon_values().detach().clone()
     hiddens = model.semiring.zero(num_patterns, model.max_pattern_length)
@@ -98,6 +105,7 @@ def get_top_scoring_spans_for_doc(
     # set start state activation to 1 for each pattern in each dc
     hiddens[:, 0] = model.semiring.one(num_patterns)
     # convert to back-pointers
+    # TODO: issue with leftover tensors instead of floats
     hiddens = [[
         BackPointer(score=state_activation,
                     previous=None,
@@ -106,10 +114,14 @@ def get_top_scoring_spans_for_doc(
                     end_token_idx=0) for state_activation in pattern
     ] for pattern in hiddens]
 
-    # extract end-states
+    # create end-states
+    # TODO: can remove zip/list-comprehension and keep it simple
+    # NOTE: this might help improve speed
     end_state_back_pointers = [
         bp[end_state] for bp, end_state in zip(hiddens, end_states)
     ]
+
+    # iterate over sequence
     for token_idx, transition_matrix in enumerate(transition_matrices):
         transition_matrix = transition_matrix[0, :, :, :].detach().clone()
         hiddens = transition_once_with_trace(model, token_idx, eps_value,
@@ -156,19 +168,19 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
         pattern_length = model.max_pattern_length
 
         # NOTE: most time is taken in computing this step
+        # this is the most important part to understand
         back_pointers = [
             get_top_scoring_spans_for_doc(model, doc, max_doc_len, gpu_device)
             for doc in tqdm(explain_data)
         ]
 
         # TODO: understand what this does in terms of frequent words
+        # NOTE: this chunk only relats with superfluous segment
         # not sure where the exact sorting happenes as per docstring
         nearest_neighbors = torch.argmax(
             torch.mm(model.diags.detach().clone(),
                      model.embeddings.weight.t()[:threshold, :]),
             dim=1).view(num_patterns, model.num_diags, pattern_length)
-
-        # create slices and views
         diags = model.diags.view(
             num_patterns, model.num_diags, pattern_length,
             model.embeddings.embedding_dim).detach().clone()

@@ -60,22 +60,14 @@ class BackPointer:
         if self.previous is None:
             return extra
         if self.transition == "self-loop":
-            if self.end_token_idx >= len(doc_text):
-                extra = "SL {:<15}".format(doc_text[-1]) + extra
-            else:
-                extra = "SL {:<15}".format(
-                    doc_text[self.end_token_idx - 1 -
-                             num_padding_tokens]) + extra
+            extra = "SL {:<15}".format(
+                doc_text[self.end_token_idx - 1 - num_padding_tokens]) + extra
             return self.previous.display(doc_text,
                                          extra=extra,
                                          num_padding_tokens=num_padding_tokens)
         if self.transition == "main-path":
-            if self.end_token_idx >= len(doc_text):
-                extra = "MP {:<15}".format(doc_text[-1]) + extra
-            else:
-                extra = "MP {:<15}".format(
-                    doc_text[self.end_token_idx - 1 -
-                             num_padding_tokens]) + extra
+            extra = "MP {:<15}".format(
+                doc_text[self.end_token_idx - 1 - num_padding_tokens]) + extra
             return self.previous.display(doc_text,
                                          extra=extra,
                                          num_padding_tokens=num_padding_tokens)
