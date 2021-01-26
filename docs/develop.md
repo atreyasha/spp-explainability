@@ -20,52 +20,71 @@
 
 ### Current
 
-1.  Modelling changes to be synchronized later with explainability
+1.  Mixed modelling and explainability
 
-    1.  Quick changes
+    1.  Dedicated modelling framework
 
-        1.  clean out source code with newer and more efficient
-            workflows, consistent variable namings and function
-            definitions on-the-fly -\> start off with `explain_data`
+        1.  **TODO** change spp model word index to token
+            index
 
-        2.  precisely type functions and classes on-the-fly
+        2.  **TODO** replace all arg parser options that have
+            `-1` with `None` for consistency -\> replace `-1` checks
+            inside main scripts and replace these with `None` as well
 
-        3.  sort out scattered TODOs later on
+        3.  **TODO** remove all instances of `max_doc_len`
+            -\> replace all readme usage scripts to reflect all of the
+            above changes
 
-    2.  Key changes
+        4.  **TODO** consider changing `torch.no_grad` scope
+            command to easy in-place mode command
+            `torch.autograd.set_grad_enabled`
 
-        1.  add explicit state transitions inside sopa model which
-            appears to be missing at the current stage
+        5.  change frequency of tensorboard, evaluation and model saving
+            to update-level -\> would require significant refactoring
 
-        2.  check whether transition_once transitions all text from
-            starting point or just one token\'s worth
+        6.  consider removing unnecessary bias scales such as bias
+            scaling and others
 
-        3.  EITHER only use pattern if it is shorter than or equal to
-            sequence (assign 0 for non-fits) OR pad back of states with
-            epsilons to allow for pattern fitting shorter sequences
+        7.  add dedicated argument to evaluation for grid search where
+            all results are centrally summarized in base grid directory
+            -\> use `grid_training_arg_parser` with discriminating
+            boolean and rename it to the something other than
+            `resume_training`
 
-            1.  need to think this point out very clearly in regards to
-                how it will affect pure explainability
+        8.  lower learning rate further for grid training since training
+            tends to converge fast
 
-            2.  need to think how to encode this into neural model,
-                since it is not difficult to do this inside the mimic
-                model
+        9.  repeat grid-search with multiple random seeds
 
-        4.  consider replacing self-loops with wildcards similar to
-            epsilon transitions -\> keeps sequence/pattern lengths with
-            a fixed upper bound instead of possibly very long
+        10. **extra:** use parallelized computations to fill up all GPU
+            memory -\> would require reading-up on how to do this safely
+            for a single GPU
 
-        5.  consider modifying model forward to conditionally return
-            scores and other tensors before linear layer -\> preferably
-            as a concatenated tensor
+    2.  Mixed tasks
 
-        6.  figure out why `epsilons` have length one shorter than
-            maximum pattern length -\> epsilon transition cannot occur
-            on the last state apparently
+        1.  remove both epsilon/self-loops and replace with simple
+            transitions and hard wild cards -\> pattern with d states
+            will fit exactly to d-1 tokens
 
-    3.  Compatibility issues
+        2.  encourage learning of wildcards by increasing its scale
+            factor default
 
-        1.  consider otherwise what to do with `num_padding_tokens`
+        3.  increase default minimum pattern length to 3 and reduce
+            maximum pattern length to allow for generalization
+
+        4.  consider converting transition matrices to tensor instead of
+            list
+
+        5.  think whether scale options should be simply multiplied or
+            whether it should use the semiring
+
+        6.  only use pattern if it fits at least d-1 tokens ahead
+            (assign 0 for non-fits automatically)
+
+        7.  consider removing `ProbabilitySemiring` since most
+            explainability frameworks focus on max-based semirings
+
+        8.  consider otherwise what to do with `num_padding_tokens`
             argument inside script
 
             1.  whether to keep or remove it for good (or default to 1)
@@ -73,24 +92,32 @@
             2.  if overpadding is necessary, then we need to save this
                 under the model configuration for this to be re-used
 
-        2.  consider removing `ProbabilitySemiring` since most
-            explainability frameworks focus on max-based semirings
+2.  Dedicated explainability
 
-2.  Pure explainability
+    1.  Generic changes
 
-    1.  Global explainability
+        1.  clean out source code with newer and more efficient
+            workflows, consistent variable namings and function
+            definitions on-the-fly -\> start off with `explain_data`
+
+        2.  precisely type functions and classes on-the-fly -\>
+            especially for explainability scripts which are still new
+
+        3.  sort out scattered TODOs later on
+
+    2.  Global explainability
 
         1.  compatibility issues
 
-            1.  figure out why many end tokens occur after each other in
+            1.  synchronize all changes in the oracle model into the
+                mimic model
+
+            2.  figure out why many end tokens occur after each other in
                 output patterns and how to remedy these illogical
                 pattern types -\> seems to be fixed by
                 `reducing num_padding_tokens` to `0` so it seems
                 something is off with offsetting technique used in
                 backpointer display
-
-            2.  consider conditional with no self loops policy and how
-                it affects explainability process
 
             3.  look into to/from-semiring functions are not used,
                 especially for log-space semiring
@@ -113,40 +140,57 @@
                 `zip_lambda_2d` function -\> perhaps same for `cat_2d`
                 function
 
-        2.  synchronize all changes in the oracle model into the mimic
-            model
+            9.  add all conditionals related to epsilons and SL (or
+                wildcards) to explainability script as per
+                `visualize_efficiently`
 
-        3.  check if it is possible to port the entire backpointer
+        2.  check if it is possible to port the entire backpointer
             concept inside the sopa model as an exec-mode
 
-        4.  binarizer and layer normalization output should be used for
+        3.  consider modifying model forward to conditionally return
+            scores and other tensors before linear layer -\> preferably
+            as a concatenated tensor -\> then can simply use model
+            outputs instead of computing them from scratch as is
+            currently done in explain script
+
+        4.  consider adding softmax to model forward if this is of any
+            use
+
+        5.  consider adding NullPointer instead of padding -\> might
+            help distinguish
+
+        6.  zero and restart padding used in model, but only restart
+            padding used in explain script -\> incompatibilities between
+            transitons_once functions
+
+        7.  binarizer and layer normalization output should be used for
             explainability to ignore all other patterns -\> might help
             with explainability
 
-        5.  think about how to work with unknown tokens on new data for
+        8.  think about how to work with unknown tokens on new data for
             mimic model
 
-        6.  perhaps keep the existing nearest neighbours functionality
-            to deal with unmatching patterns
+        9.  perhaps keep the existing nearest neighbours functionality
+            to deal with similar patterns with different tokens
 
-        7.  introduce new function for loading and dumping patterns to
+        10. introduce new function for loading and dumping patterns to
             intercommunicate between mimic/oracle models -\> utilize
             output-prefix argument when dumping output patterns file
 
-        8.  look into `visualize_efficiently` and
+        11. look into `visualize_efficiently` and
             `interpret_classification_results` scripts for possible
             workflows to adopt
 
-        9.  develop merging framework where regular expressions are
+        12. develop merging framework where regular expressions are
             generalized from all the best patterns available -\> produce
-            pretty and compact ensembe of regular expressions, perhaps
+            pretty and compact ensemble of regular expressions, perhaps
             with graphviz
 
-    2.  Execution speed
+    3.  Execution speed
 
-        1.  search for more efficient back-pointer python implementation
+        1.  use tqdm to help with estimations
 
-        2.  use tqdm to help with estimations
+        2.  search for more efficient back-pointer python implementation
 
         3.  look into torch semiring times function which could be a
             bottleneck or otherwise use timing analysis to find
@@ -159,24 +203,31 @@
         5.  check if batch-level processing is possible as per training
             workflow
 
-        6.  merge efficiencies from `visualize_efficiently` script
+        6.  merge efficiencies from `visualize_efficiently` script, for
+            example using `heapq` for binary search tree
 
         7.  consider keeping `explain_labels` or removing these
             altogether -\> not sure how they could still be of use later
             on in explainability
 
-    3.  Quantification of global explainability potential
+    4.  Quantification of global explainability potential
 
-        1.  compare confusion matrices between oracle and mimic and
+        1.  perhaps do a check between model forward and explain forward
+            to ensure they are the same as a failsafe
+
+        2.  compare confusion matrices between oracle and mimic and
             compute euclidean distances over raw softmax predictions
 
-        2.  it would still be useful to show when mimic and oracle align
-            and when they don\'t
+        3.  demonstrate when global explainability aligns well and when
+            it does not
 
-        3.  can be done for both the train and test partitions to check
+        4.  can be done for both the train and test partitions to check
             for extrapolation potential for explainability
 
-    4.  Local explainability as a failsafe
+        5.  find tricks which help to increase generalization -\> or at
+            least discuss them
+
+    5.  Local explainability as a failsafe
 
         1.  in cases where global explainability cannot be deciphered,
             we can provide a failsafe of local explainability
@@ -186,46 +237,7 @@
 
 3.  Post explainability
 
-    1.  Modelling framework
-
-        1.  change frequency of tensorboard, evaluation and model saving
-            to update-level
-
-        2.  encourage learning of wildcards and epsilons by increasing
-            their scale factor defaults
-
-        3.  consider removing bias scaling since it seems to not be very
-            useful
-
-        4.  lower learning rate further for grid training since training
-            tends to converge fast
-
-        5.  repeat grid-search with multiple random seeds
-
-        6.  use parallelized computations to fill up all GPU memory -\>
-            would require reading-up on how to do this safely for a
-            single GPU
-
-        7.  add dedicated argument to evaluation for grid search where
-            all results are centrally summarized in base grid directory
-            -\> use `grid_training_arg_parser` with discriminating
-            boolean and rename it to the something other than
-            `resume_training`
-
-        8.  replace all arg parser options that have `-1` with `None`
-            for consistency -\> replace `-1` checks inside main scripts
-            and replace these with `None` as well
-
-        9.  remove all instances of `max_doc_len` -\> replace all readme
-            usage scripts to reflect all of the above changes
-
-        10. consider changing `torch.no_grad` scope command to easy
-            in-place mode command `torch.autograd.set_grad_enabled`
-
-        11. consider adding softmax to model forward if this is of any
-            use
-
-    2.  Extension to new data sets
+    1.  Extension to new data sets
 
         1.  consider extending workflow to ATIS and/or SNIPS
 
