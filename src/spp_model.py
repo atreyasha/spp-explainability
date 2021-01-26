@@ -181,10 +181,8 @@ class SoftPatternClassifier(Module):
         batch_size = batch.size()
         max_doc_len = batch.max_doc_len
 
-        # load transition scores
-        # mm: (diags_size x word_dim) @ (word_dim x batch_vocab_size)
-        # transition_score: batch_vocab_size x diag_size
-        # these would represent transition scores for each word in vocab
+        # compute transition scores which document transition scores
+        # into each state given the current token
         transition_scores = self.semiring.from_outer_to_semiring(
             torch.mm(self.diags, batch.local_embeddings) +
             self.bias_scale * self.bias).t()
@@ -204,8 +202,8 @@ class SoftPatternClassifier(Module):
 
         # get transition matrix for each token
         transition_matrices = [
-            batched_transition_scores[:, word_index, :, :, :]
-            for word_index in range(max_doc_len)
+            batched_transition_scores[:, token_index, :, :, :]
+            for token_index in range(max_doc_len)
         ]
 
         # finally return transition matrices for all tokens
@@ -254,20 +252,19 @@ class SoftPatternClassifier(Module):
         epsilon_values = self.get_epsilon_values()
 
         # start loop over all transition matrices
-        for i, transition_matrix in enumerate(transition_matrices):
+        for token_index, transition_matrix in enumerate(transition_matrices):
             # retrieve all hiddens given current state embeddings
             hiddens = self.transition_once(epsilon_values, hiddens,
                                            transition_matrix, zero_padding,
                                            restart_padding, self_loop_scale)
 
             # look at the end state for each pattern, and "add" it into score
-            # NOTE: torch.gather helps to extract values at indices
             end_state_values = torch.gather(hiddens, 2, end_states).view(
                 batch_size, self.total_num_patterns)
 
             # only update score when we're not already past the end of the doc
-            # NOTE: this is useful for mixed length documents
-            active_doc_indices = torch.nonzero(torch.gt(batch.doc_lens, i),
+            active_doc_indices = torch.nonzero(torch.gt(
+                batch.doc_lens, token_index),
                                                as_tuple=True)[0]
 
             # update scores with relevant tensor values
@@ -275,7 +272,7 @@ class SoftPatternClassifier(Module):
                 scores[active_doc_indices],
                 end_state_values[active_doc_indices])
 
-        # NOTE: scores represent end values on top of SoPa
+        # extract scores from semiring to outer set
         scores = self.semiring.from_semiring_to_outer(scores)
 
         # execute normalization of scores
