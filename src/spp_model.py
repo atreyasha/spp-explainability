@@ -176,35 +176,30 @@ class SoftPatternClassifier(Module):
                                                 self.max_pattern_length),
                              persistent=False)
 
-    def get_transition_matrices(self, batch: Batch) -> List[torch.Tensor]:
+    def get_transition_matrices(self, batch: Batch) -> torch.Tensor:
         # initialize local variables
         batch_size = batch.size()
         max_doc_len = batch.max_doc_len
 
         # compute transition scores which document transition scores
         # into each state given the current token
-        transition_scores = self.semiring.from_outer_to_semiring(
+        transition_matrices = self.semiring.from_outer_to_semiring(
             torch.mm(self.diags, batch.local_embeddings) +
             self.bias_scale * self.bias).t()
 
         # apply registered dropout
-        transition_scores = self.dropout(transition_scores)
+        transition_matrices = self.dropout(transition_matrices)
 
-        # indexes transition scores for each doc in batch
-        batched_transition_scores = [
-            torch.index_select(transition_scores, 0, doc) for doc in batch.docs
+        # index transition scores for each doc in batch
+        transition_matrices = [
+            torch.index_select(transition_matrices, 0, doc)
+            for doc in batch.docs
         ]
 
-        # reformats transition scores
-        batched_transition_scores = torch.cat(batched_transition_scores).view(
+        # reformat transition scores
+        transition_matrices = torch.cat(transition_matrices).view(
             batch_size, max_doc_len, self.total_num_patterns, self.num_diags,
             self.max_pattern_length)
-
-        # get transition matrix for each token
-        transition_matrices = [
-            batched_transition_scores[:, token_index, :, :, :]
-            for token_index in range(max_doc_len)
-        ]
 
         # finally return transition matrices for all tokens
         return transition_matrices
@@ -252,7 +247,10 @@ class SoftPatternClassifier(Module):
         epsilon_values = self.get_epsilon_values()
 
         # start loop over all transition matrices
-        for token_index, transition_matrix in enumerate(transition_matrices):
+        for token_index in range(transition_matrices.size(1)):
+            # extract current transition matrix
+            transition_matrix = transition_matrices[:, token_index, :, :, :]
+
             # retrieve all hiddens given current state embeddings
             hiddens = self.transition_once(epsilon_values, hiddens,
                                            transition_matrix, zero_padding,
