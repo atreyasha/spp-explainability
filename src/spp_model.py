@@ -183,7 +183,7 @@ class SoftPatternClassifier(Module):
 
         # load transition scores
         # mm: (diags_size x word_dim) @ (word_dim x batch_vocab_size)
-        # transition_score: diags_size x batch_vocab_size
+        # transition_score: batch_vocab_size x diag_size
         # these would represent transition scores for each word in vocab
         transition_scores = self.semiring.from_outer_to_semiring(
             torch.mm(self.diags, batch.local_embeddings) +
@@ -246,7 +246,7 @@ class SoftPatternClassifier(Module):
         end_states = self.end_states.expand(  # type: ignore
             batch_size, self.total_num_patterns, -1).detach().clone()
 
-        # set start state (0) to 1 for each pattern in each doc
+        # set start state (0) to semiring 1 for each pattern in each doc
         hiddens[:, :, 0] = self.semiring.one(batch_size,
                                              self.total_num_patterns)
 

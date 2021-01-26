@@ -50,6 +50,8 @@ def transition_once_with_trace(model: Module, token_idx: int,
 
     # NOTE: new start_token_idx is transferred from previous padding
     epsilons = cat_2d(
+        # TODO should be zero padding instead
+        # TODO revert back end token index here
         restart_padding(model, token_idx, num_patterns),
         zip_lambda_2d(
             lambda bp, e: BackPointer(score=torch_apply_float_function(
@@ -65,6 +67,7 @@ def transition_once_with_trace(model: Module, token_idx: int,
 
     # Adding main loops (consume a token, move state)
     # TODO: look into issue of 0 to 2 transitions occuring at pattern state 1
+    # TODO maybe end token idx should stay current token index + 1
     main_paths = cat_2d(
         restart_padding(model, token_idx, num_patterns),
         zip_lambda_2d(
@@ -73,7 +76,7 @@ def transition_once_with_trace(model: Module, token_idx: int,
                                       previous=bp,
                                       transition="main-path",
                                       start_token_idx=bp.start_token_idx,
-                                      end_token_idx=bp.end_token_idx + 1),
+                                      end_token_idx=token_idx + 1),
             [xs[:-1] for xs in epsilons], transition_matrix_val[:, 1, :-1]))
 
     # Adding self loops (consume a token, stay in same state)
@@ -83,7 +86,7 @@ def transition_once_with_trace(model: Module, token_idx: int,
                                    previous=bp,
                                    transition="self-loop",
                                    start_token_idx=bp.start_token_idx,
-                                   end_token_idx=bp.end_token_idx + 1),
+                                   end_token_idx=token_idx + 1),
         epsilons, transition_matrix_val[:, 0, :])
 
     # return final object
