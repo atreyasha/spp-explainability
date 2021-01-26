@@ -16,8 +16,8 @@ from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
                                read_embeddings, Vocab, PAD_TOKEN_INDEX)
 from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 to_cuda, enable_gradient_clipping, timestamp,
-                                Batch, Semiring, ProbabilitySemiring,
-                                LogSpaceMaxProductSemiring, MaxSumSemiring)
+                                Batch, Semiring, LogSpaceMaxProductSemiring,
+                                MaxSumSemiring)
 from .utils.logging_utils import (stdout_root_logger, add_file_handler,
                                   remove_all_file_handlers)
 from .arg_parser import (spp_model_arg_parser, training_arg_parser,
@@ -237,8 +237,6 @@ def get_semiring(args: argparse.Namespace) -> Semiring:
         semiring = MaxSumSemiring
     elif args.semiring == "MaxProductSemiring":
         semiring = LogSpaceMaxProductSemiring
-    elif args.semiring == "ProbabilitySemiring":
-        semiring = ProbabilitySemiring
     LOGGER.info("Semiring: %s" % args.semiring)
     return semiring
 

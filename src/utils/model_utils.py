@@ -81,16 +81,13 @@ class Batch:
         self.doc_lens = to_cuda(torch.LongTensor(doc_lens))
         self.max_doc_len = max(doc_lens)
         if word_dropout:
-            # for each token, with probability `word_dropout`
-            # replace word index with UNK_TOKEN_INDEX.
+            # replace word index with UNK_TOKEN_INDEX
             docs = [[
                 UNK_TOKEN_INDEX if (np.random.rand() < word_dropout) and
                 (x not in [START_TOKEN_INDEX, END_TOKEN_INDEX]) else x
                 for x in doc
             ] for doc in docs]
         # pad docs so they all have the same length.
-        # we pad with UNK, whose embedding is 0
-        # so it doesn't mess up sums or averages.
         docs = [
             right_pad(mini_vocab.numberize(doc), self.max_doc_len,
                       PAD_TOKEN_INDEX) for doc in docs
@@ -118,9 +115,6 @@ class Semiring:
         self.from_outer_to_semiring = from_outer_to_semiring
         self.from_semiring_to_outer = from_semiring_to_outer
 
-
-ProbabilitySemiring = Semiring(torch.zeros, torch.ones, torch.add, torch.mul,
-                               torch.sigmoid, identity)
 
 MaxSumSemiring = Semiring(neg_infinity, torch.zeros, torch.max, torch.add,
                           identity, identity)

@@ -20,10 +20,7 @@ def spp_model_arg_parser() -> argparse.ArgumentParser:
     sopa.add_argument("--semiring",
                       help="Specify which semiring to use",
                       default="MaxSumSemiring",
-                      choices=[
-                          "MaxSumSemiring", "MaxProductSemiring",
-                          "ProbabilitySemiring"
-                      ],
+                      choices=["MaxSumSemiring", "MaxProductSemiring"],
                       type=str)
     sopa.add_argument("--bias-scale",
                       help="Scale biases by this parameter",
