@@ -50,7 +50,7 @@ def to_cuda(gpu_device: Union[torch.device, None]) -> Callable:
 
 
 def neg_infinity(*sizes: int) -> torch.Tensor:
-    return -100 * torch.ones(*sizes)
+    return float("-inf") * torch.ones(*sizes)
 
 
 def enable_gradient_clipping(model: torch.nn.Module,
