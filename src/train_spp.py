@@ -503,8 +503,9 @@ def train_inner(train_data: List[Tuple[List[int], int]],
 
     # loop over epochs
     for epoch in range(current_epoch, epochs):
-        # set model on train mode
+        # set model on train mode and enable autograd
         model.train()
+        torch.autograd.set_grad_enabled(True)
 
         # initialize training and valid loss, and hook to stop training
         train_loss = 0.
@@ -542,17 +543,16 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                     tqdm_batches.set_postfix(
                         batch_loss=train_batch_loss.item() / batch.size())
 
-        # set model on eval mode
+        # set model on eval mode and disable autograd
         model.eval()
+        torch.autograd.set_grad_enabled(False)
 
         # compute mean train loss over epoch and accuracy
         # NOTE: mean_train_loss contains stochastic noise due to dropout
         LOGGER.info("Evaluating SoPa++ on training set")
         mean_train_loss = train_loss / len(train_data)
-        with torch.no_grad():
-            train_acc = evaluate_metric(model, train_data, batch_size,
-                                        gpu_device, accuracy_score,
-                                        max_doc_len)
+        train_acc = evaluate_metric(model, train_data, batch_size, gpu_device,
+                                    accuracy_score, max_doc_len)
 
         # add training loss data
         writer.add_scalar("loss/train_loss", mean_train_loss, epoch)
@@ -577,36 +577,32 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                   unit="batch",
                   desc="Validating [Epoch %s/%s]" %
                   (epoch + 1, epochs)) as tqdm_batches:
-            # disable autograd since we are inferring here
-            with torch.no_grad():
-                for i, batch in enumerate(tqdm_batches):
-                    # create batch object and parse out gold labels
-                    batch, gold = Batch(
-                        [x[0] for x in batch],
-                        model.embeddings,  # type: ignore
-                        to_cuda(gpu_device),
-                        0.,
-                        max_doc_len), [x[1] for x in batch]
+            for i, batch in enumerate(tqdm_batches):
+                # create batch object and parse out gold labels
+                batch, gold = Batch(
+                    [x[0] for x in batch],
+                    model.embeddings,  # type: ignore
+                    to_cuda(gpu_device),
+                    0.,
+                    max_doc_len), [x[1] for x in batch]
 
-                    # find aggregate loss across valid samples in batch
-                    valid_batch_loss = compute_loss(model, batch, num_classes,
-                                                    gold, loss_function,
-                                                    gpu_device)
+                # find aggregate loss across valid samples in batch
+                valid_batch_loss = compute_loss(model, batch, num_classes,
+                                                gold, loss_function,
+                                                gpu_device)
 
-                    # add batch loss to valid_loss
-                    valid_loss += valid_batch_loss  # type: ignore
+                # add batch loss to valid_loss
+                valid_loss += valid_batch_loss  # type: ignore
 
-                    if (i + 1) % tqdm_update_period == 0 or (
-                            i + 1) == len(tqdm_batches):
-                        tqdm_batches.set_postfix(
-                            batch_loss=valid_batch_loss.item() / batch.size())
+                if (i + 1) % tqdm_update_period == 0 or (
+                        i + 1) == len(tqdm_batches):
+                    tqdm_batches.set_postfix(
+                        batch_loss=valid_batch_loss.item() / batch.size())
 
         # compute mean valid loss over epoch and accuracy
         mean_valid_loss = valid_loss / len(valid_data)
-        with torch.no_grad():
-            valid_acc = evaluate_metric(model, valid_data, batch_size,
-                                        gpu_device, accuracy_score,
-                                        max_doc_len)
+        valid_acc = evaluate_metric(model, valid_data, batch_size, gpu_device,
+                                    accuracy_score, max_doc_len)
 
         # add valid loss data to tensorboard
         writer.add_scalar("loss/valid_loss", mean_valid_loss, epoch)

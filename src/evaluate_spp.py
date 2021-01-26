@@ -39,15 +39,14 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
         LOGGER.info("Transferring model to GPU device: %s" % gpu_device)
         model.to(gpu_device)
 
-    # set model on eval mode
+    # set model on eval mode and disable autograd
     model.eval()
+    torch.autograd.set_grad_enabled(False)
 
     # compute f1 classification report as python dictionary
-    with torch.no_grad():
-        clf_report = evaluate_metric(
-            model, eval_data, batch_size, gpu_device,
-            partial(classification_report, output_dict=True),
-            max_doc_len)
+    clf_report = evaluate_metric(
+        model, eval_data, batch_size, gpu_device,
+        partial(classification_report, output_dict=True), max_doc_len)
 
     # dump json report in model_log_directory
     with open(
