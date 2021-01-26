@@ -67,15 +67,15 @@ class Batch:
                  docs: List[List[int]],
                  embeddings: torch.nn.Module,
                  to_cuda: Callable,
-                 word_dropout: float = 0,
-                 max_doc_len: int = -1) -> None:
+                 word_dropout: float = 0.,
+                 max_doc_len: Union[int, None] = None) -> None:
         mini_vocab = Vocab.from_docs(docs,
                                      pad=PAD_TOKEN_INDEX,
                                      start=START_TOKEN_INDEX,
                                      end=END_TOKEN_INDEX,
                                      unknown=UNK_TOKEN_INDEX)
         # limit maximum document length (for efficiency reasons).
-        if max_doc_len != -1:
+        if max_doc_len is not None:
             docs = [doc[:max_doc_len] for doc in docs]
         doc_lens = [len(doc) for doc in docs]
         self.doc_lens = to_cuda(torch.LongTensor(doc_lens))

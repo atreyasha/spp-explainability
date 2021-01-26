@@ -118,17 +118,9 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        help="Batch size for training",
                        default=256,
                        type=int)
-    train.add_argument("--max-doc-len",
-                       help=("Maximum document length allowed. "
-                             "-1 refers to no length restriction"),
-                       default=-1,
-                       type=int)
     train.add_argument("--seed",
                        help="Global random seed for numpy and torch",
                        default=42,
-                       type=int)
-    train.add_argument("--num-train-instances",
-                       help="Maximum number of training instances",
                        type=int)
     train.add_argument("--epochs",
                        help="Maximum number of training epochs",
@@ -143,6 +135,12 @@ def training_arg_parser() -> argparse.ArgumentParser:
                        help=("Number of epochs with no improvement after "
                              "which learning rate will be reduced"),
                        default=5,
+                       type=int)
+    train.add_argument("--max-doc-len",
+                       help="Maximum document length allowed",
+                       type=int)
+    train.add_argument("--num-train-instances",
+                       help="Maximum number of training instances",
                        type=int)
     # boolean flags
     train.add_argument("--disable-scheduler",
@@ -227,6 +225,9 @@ def evaluation_arg_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--batch-size",
                           help="Batch size for evaluation",
                           default=256,
+                          type=int)
+    evaluate.add_argument("--max-doc-len",
+                          help="Maximum document length allowed",
                           type=int)
     return parser
 

@@ -151,9 +151,8 @@ def get_pattern_specs(args: argparse.Namespace) -> 'OrderedDict[int, int]':
 
 def set_random_seed(args: argparse.Namespace) -> None:
     # set global random seed if specified
-    if args.seed != -1:
-        np.random.seed(args.seed)
-        torch.manual_seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
 
 
 def get_vocab(args: argparse.Namespace) -> Vocab:
@@ -345,9 +344,12 @@ def compute_loss(model: Module, batch: Batch, num_classes: int,
         to_cuda(gpu_device)(torch.LongTensor(gold)))
 
 
-def evaluate_metric(model: Module, data: List[Tuple[List[int], int]],
-                    batch_size: int, gpu_device: Union[torch.device, None],
-                    metric: Callable[[List[int], List[int]], Any]) -> Any:
+def evaluate_metric(model: Module,
+                    data: List[Tuple[List[int], int]],
+                    batch_size: int,
+                    gpu_device: Union[torch.device, None],
+                    metric: Callable[[List[int], List[int]], Any],
+                    max_doc_len: Union[int, None] = None) -> Any:
     # instantiate local storage variable
     predicted = []
     aggregate_gold = []
@@ -358,7 +360,9 @@ def evaluate_metric(model: Module, data: List[Tuple[List[int], int]],
         batch, gold = Batch(  # type: ignore
             [x for x, y in batch],
             model.embeddings,  # type: ignore
-            to_cuda(gpu_device)), [y for x, y in batch]
+            to_cuda(gpu_device),
+            0.,
+            max_doc_len), [y for x, y in batch]
 
         # get raw output using model
         output = model.forward(batch)  # type: ignore
@@ -384,7 +388,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                 scheduler_factor: float = 0.1,
                 gpu_device: Union[torch.device, None] = None,
                 clip_threshold: Union[float, None] = None,
-                max_doc_len: int = -1,
+                max_doc_len: Union[int, None] = None,
                 word_dropout: float = 0,
                 patience: int = 30,
                 resume_training: bool = False,
@@ -549,7 +553,8 @@ def train_inner(train_data: List[Tuple[List[int], int]],
         mean_train_loss = train_loss / len(train_data)
         with torch.no_grad():
             train_acc = evaluate_metric(model, train_data, batch_size,
-                                        gpu_device, accuracy_score)
+                                        gpu_device, accuracy_score,
+                                        max_doc_len)
 
         # add training loss data
         writer.add_scalar("loss/train_loss", mean_train_loss, epoch)
@@ -581,7 +586,9 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                     batch, gold = Batch(
                         [x[0] for x in batch],
                         model.embeddings,  # type: ignore
-                        to_cuda(gpu_device)), [x[1] for x in batch]
+                        to_cuda(gpu_device),
+                        0.,
+                        max_doc_len), [x[1] for x in batch]
 
                     # find aggregate loss across valid samples in batch
                     valid_batch_loss = compute_loss(model, batch, num_classes,
@@ -600,7 +607,8 @@ def train_inner(train_data: List[Tuple[List[int], int]],
         mean_valid_loss = valid_loss / len(valid_data)
         with torch.no_grad():
             valid_acc = evaluate_metric(model, valid_data, batch_size,
-                                        gpu_device, accuracy_score)
+                                        gpu_device, accuracy_score,
+                                        max_doc_len)
 
         # add valid loss data to tensorboard
         writer.add_scalar("loss/valid_loss", mean_valid_loss, epoch)

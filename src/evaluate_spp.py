@@ -27,7 +27,8 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
                    num_classes: int,
                    batch_size: int,
                    output_prefix: str,
-                   gpu_device: Union[torch.device, None] = None) -> None:
+                   gpu_device: Union[torch.device, None] = None,
+                   max_doc_len: Union[int, None] = None) -> None:
     # load model checkpoint
     model_checkpoint = torch.load(model_checkpoint,
                                   map_location=torch.device("cpu"))
@@ -45,7 +46,8 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
     with torch.no_grad():
         clf_report = evaluate_metric(
             model, eval_data, batch_size, gpu_device,
-            partial(classification_report, output_dict=True))
+            partial(classification_report, output_dict=True),
+            max_doc_len)
 
     # dump json report in model_log_directory
     with open(
@@ -114,7 +116,7 @@ def evaluate_outer(args: argparse.Namespace) -> None:
     # execute inner evaluation workflow
     evaluate_inner(eval_data, model, args.model_checkpoint,
                    model_log_directory, num_classes, args.batch_size,
-                   args.output_prefix, gpu_device)
+                   args.output_prefix, gpu_device, args.max_doc_len)
 
 
 def main(args: argparse.Namespace) -> None:

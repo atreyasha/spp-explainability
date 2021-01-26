@@ -86,18 +86,19 @@ def transition_once_with_trace(model: Module, token_idx: int,
                                    previous=bp,
                                    transition="self-loop",
                                    start_token_idx=bp.start_token_idx,
-                                   end_token_idx=token_idx + 1),
-        epsilons, transition_matrix_val[:, 0, :])
+                                   end_token_idx=token_idx + 1), epsilons,
+        transition_matrix_val[:, 0, :])
 
     # return final object
     return zip_lambda_2d(max, main_paths, self_loops)
 
 
 def get_top_scoring_spans_for_doc(
-        model: Module, doc: Tuple[List[int], int], max_doc_len: int,
+        model: Module, doc: Tuple[List[int], int], max_doc_len: Union[int,
+                                                                      None],
         gpu_device: Union[torch.device, None]) -> List[BackPointer]:
     batch = Batch([doc[0]], model.embeddings, to_cuda(gpu_device), 0,
-                  max_doc_len)  # single doc
+                  max_doc_len)
     transition_matrices = model.get_transition_matrices(batch)
     num_patterns = model.total_num_patterns
     # TODO: check if end states need to be expanded by batch dimension
@@ -146,7 +147,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
                   k_best: int,
                   batch_size: int,
                   gpu_device: Union[torch.device, None],
-                  max_doc_len: int = -1,
+                  max_doc_len: Union[int, None] = None,
                   num_padding_tokens: int = 1,
                   threshold: int = 1000) -> None:
     # load model checkpoint
