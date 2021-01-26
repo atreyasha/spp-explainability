@@ -444,9 +444,9 @@ def train_inner(train_data: List[Tuple[List[int], int]],
             return None
     else:
         current_epoch = 0
+        best_valid_loss_index = 0
         best_valid_loss = float("inf")
         best_valid_acc = float("-inf")
-        best_valid_loss_index = 0
 
     # send model to correct device
     if gpu_device is not None:
