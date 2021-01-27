@@ -57,7 +57,8 @@ class SoftPatternClassifier(Module):
         self.semiring = semiring
         self.no_wildcards = no_wildcards
         self.dropout = Dropout(dropout)
-        self.normalizer = LayerNorm(self.total_num_patterns)
+        self.normalizer = LayerNorm(self.total_num_patterns,
+                                    elementwise_affine=False)
         self.binarizer = STEHeaviside()
 
         # create transition matrix diagonal and bias tensors
@@ -211,6 +212,19 @@ class SoftPatternClassifier(Module):
 
         # extract scores from semiring to outer set
         scores = self.semiring.from_semiring_to_outer(scores)
+
+        # extract all infinite indices
+        inf_indices = torch.where(scores == float("-inf"))
+
+        # temporarily replace all negative infinities by positive infinities
+        scores[inf_indices] = float("inf")
+
+        # find the minimum of all original scores and replace infinite by this
+        batch_minima = torch.min(scores, 1)[0]
+
+        # assing batch-level minima to infinity indices
+        scores[inf_indices] = torch.repeat_interleave(
+            batch_minima, torch.sum(scores.isinf(), 1))
 
         # execute normalization of scores
         scores = self.normalizer(scores)
