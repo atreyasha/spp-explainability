@@ -101,7 +101,7 @@ class SoftPatternClassifier(Module):
                                      persistent=False)
             else:
                 self.register_buffer("wildcard_scale",
-                                     semiring.one(1),
+                                     self.semiring.one(1),
                                      persistent=False)
 
         # register end_states tensor
