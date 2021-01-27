@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from .utils.parser_utils import dir_path, file_path, glob_path
-from .spp_model import (SHARED_SL_PARAM_PER_STATE_PER_PATTERN,
-                        SHARED_SL_SINGLE_PARAM)
 import argparse
 
 
@@ -25,34 +23,16 @@ def spp_model_arg_parser() -> argparse.ArgumentParser:
     sopa.add_argument("--bias-scale",
                       help="Scale biases by this parameter",
                       type=float)
-    sopa.add_argument("--epsilon-scale",
-                      help="Scale epsilons by this parameter",
+    sopa.add_argument("--wildcard-scale",
+                      help="Scale wildcard(s) by this parameter",
                       type=float)
-    sopa.add_argument("--self-loop-scale",
-                      help="Scale self-loops by this parameter",
-                      type=float)
-    sopa.add_argument(
-        "--shared-self-loops",
-        help=("Option to share main path and self loop parameters. " +
-              "0: do not share parameters, " +
-              str(SHARED_SL_PARAM_PER_STATE_PER_PATTERN) +
-              ": share one parameter per state per pattern, " +
-              str(SHARED_SL_SINGLE_PARAM) + ": share one global parameter"),
-        default=0,
-        choices=[
-            0, SHARED_SL_PARAM_PER_STATE_PER_PATTERN, SHARED_SL_SINGLE_PARAM
-        ],
-        type=int)
     sopa.add_argument("--word-dim", help=argparse.SUPPRESS, type=int)
     # boolean flags
+    sopa.add_argument("--no-wildcards",
+                      help="Do not use wildcard transitions",
+                      action='store_true')
     sopa.add_argument("--static-embeddings",
                       help="Freeze learning of token embeddings",
-                      action='store_true')
-    sopa.add_argument("--no-self-loops",
-                      help="Do not use self loops",
-                      action='store_true')
-    sopa.add_argument("--no-epsilons",
-                      help="Do not use epsilon transitions",
                       action='store_true')
     return parser
 

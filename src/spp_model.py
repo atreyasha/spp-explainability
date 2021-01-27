@@ -8,11 +8,6 @@ from collections import OrderedDict
 from typing import Union, Any
 import torch
 
-# shared_sl value for greedily learnable self-loop paramaters
-SHARED_SL_PARAM_PER_STATE_PER_PATTERN = 1
-# shared_sl value for global learnable self-loop parameter
-SHARED_SL_SINGLE_PARAM = 2
-
 
 class STEHeavisideFunction(torch.autograd.Function):
     @staticmethod
@@ -45,12 +40,9 @@ class SoftPatternClassifier(Module):
                  embeddings: Module,
                  vocab: Vocab,
                  semiring: Semiring,
-                 shared_self_loops: int = 0,
-                 no_epsilons: bool = False,
-                 no_self_loops: bool = False,
+                 no_wildcards: bool = False,
                  bias_scale: Union[float, None] = None,
-                 epsilon_scale: Union[float, None] = None,
-                 self_loop_scale: Union[float, None] = None,
+                 wildcard_scale: Union[float, None] = None,
                  dropout: float = 0.) -> None:
         # initialize all class properties from torch.nn.Module
         super(SoftPatternClassifier, self).__init__()
@@ -63,18 +55,13 @@ class SoftPatternClassifier(Module):
         self.embeddings = embeddings
         self.vocab = vocab
         self.semiring = semiring
-        self.shared_self_loops = shared_self_loops
-        self.no_epsilons = no_epsilons
-        self.no_self_loops = no_self_loops
+        self.no_wildcards = no_wildcards
         self.dropout = Dropout(dropout)
-        self.num_diags = 2 if (not self.no_self_loops
-                               and self.shared_self_loops == 0) else 1
         self.normalizer = LayerNorm(self.total_num_patterns)
         self.binarizer = STEHeaviside()
 
         # create transition matrix diagonal and bias tensors
-        diags_size = (self.total_num_patterns * self.num_diags *
-                      self.max_pattern_length)
+        diags_size = (self.total_num_patterns * self.max_pattern_length)
         diags = torch.Tensor(  # type: ignore
             diags_size, self.embeddings.embedding_dim)
         bias = torch.Tensor(diags_size, 1)
@@ -97,54 +84,24 @@ class SoftPatternClassifier(Module):
                                  torch.FloatTensor([1.]),
                                  persistent=False)
 
-        # assign epsilon-related variables from conditionals
-        if not self.no_epsilons:
-            # initialize epsilons and store it as a parameter
-            epsilons = torch.Tensor(self.total_num_patterns,
-                                    self.max_pattern_length - 1)
-            init.xavier_normal_(epsilons)
-            self.epsilons = Parameter(epsilons)
+        # assign wildcard-related variables from conditionals
+        if not self.no_wildcards:
+            # initialize wildcards and store it as a parameter
+            wildcards = torch.Tensor(self.total_num_patterns,
+                                     self.max_pattern_length - 1)
+            init.xavier_normal_(wildcards)
+            self.wildcards = Parameter(wildcards)
 
-            # factor by which to scale epsilon parameter
-            if epsilon_scale is not None:
-                self.register_buffer("epsilon_scale",
+            # factor by which to scale wildcard parameter
+            if wildcard_scale is not None:
+                self.register_buffer("wildcard_scale",
                                      self.semiring.from_outer_to_semiring(
-                                         torch.FloatTensor([epsilon_scale])),
+                                         torch.FloatTensor([wildcard_scale])),
                                      persistent=False)
             else:
-                self.register_buffer("epsilon_scale",
+                self.register_buffer("wildcard_scale",
                                      semiring.one(1),
                                      persistent=False)
-
-        # assign self-loop related variables from conditionals
-        if not self.no_self_loops:
-            if self.shared_self_loops != 0:
-                # shared parameters between main path and self loop
-                # 1: one parameter per state per pattern
-                if (self.shared_self_loops ==
-                        SHARED_SL_PARAM_PER_STATE_PER_PATTERN):
-                    # create a tensor for each pattern
-                    shared_self_loop_data = torch.Tensor(
-                        self.total_num_patterns, self.max_pattern_length)
-                    init.xavier_normal_(shared_self_loop_data)
-                # 2: a single global parameter
-                elif self.shared_self_loops == SHARED_SL_SINGLE_PARAM:
-                    # create a single tensor
-                    shared_self_loop_data = torch.randn(1)
-                # NOTE: assign tensor to a learnable parameter
-                self.self_loop_scale = Parameter(shared_self_loop_data)
-            else:
-                # workflow for self-loops that are not shared
-                if self_loop_scale is not None:
-                    self.register_buffer("self_loop_scale",
-                                         self.semiring.from_outer_to_semiring(
-                                             torch.FloatTensor(
-                                                 [self_loop_scale])),
-                                         persistent=False)
-                else:
-                    self.register_buffer("self_loop_scale",
-                                         semiring.one(1),
-                                         persistent=False)
 
         # register end_states tensor
         self.register_buffer(
@@ -163,11 +120,6 @@ class SoftPatternClassifier(Module):
         # register restart_padding tensor
         self.register_buffer("restart_padding",
                              self.semiring.one(self.total_num_patterns, 1),
-                             persistent=False)
-
-        # register zero_padding tensor
-        self.register_buffer("zero_padding",
-                             self.semiring.zero(self.total_num_patterns, 1),
                              persistent=False)
 
         # register hiddens tensor
@@ -198,7 +150,7 @@ class SoftPatternClassifier(Module):
 
         # reformat transition scores
         transition_matrices = torch.cat(transition_matrices).view(
-            batch_size, max_doc_len, self.total_num_patterns, self.num_diags,
+            batch_size, max_doc_len, self.total_num_patterns,
             self.max_pattern_length)
 
         # finally return transition matrices for all tokens
@@ -207,14 +159,6 @@ class SoftPatternClassifier(Module):
     def forward(self, batch: Batch) -> torch.Tensor:
         # start timer and get transition matrices
         transition_matrices = self.get_transition_matrices(batch)
-
-        # set self_loop_scale based on class variables
-        self_loop_scale = None
-        if self.shared_self_loops:
-            self_loop_scale = self.semiring.from_outer_to_semiring(
-                self.self_loop_scale)
-        elif not self.no_self_loops:
-            self_loop_scale = self.self_loop_scale.detach().clone()
 
         # assign batch_size
         batch_size = batch.size()
@@ -225,10 +169,6 @@ class SoftPatternClassifier(Module):
 
         # clone restart_padding tensor to add start state for each word
         restart_padding = self.restart_padding.expand(  # type: ignore
-            batch_size, -1, -1).detach().clone()
-
-        # clone zero_padding tensor
-        zero_padding = self.zero_padding.expand(  # type: ignore
             batch_size, -1, -1).detach().clone()
 
         # initialize hiddens tensor
@@ -243,18 +183,17 @@ class SoftPatternClassifier(Module):
         hiddens[:, :, 0] = self.semiring.one(batch_size,
                                              self.total_num_patterns)
 
-        # get epsilon_values based on previous class settings
-        epsilon_values = self.get_epsilon_values()
+        # get wildcard_values based on previous class settings
+        wildcard_values = self.get_wildcard_values()
 
         # start loop over all transition matrices
         for token_index in range(transition_matrices.size(1)):
             # extract current transition matrix
-            transition_matrix = transition_matrices[:, token_index, :, :, :]
+            transition_matrix = transition_matrices[:, token_index, :, :]
 
             # retrieve all hiddens given current state embeddings
-            hiddens = self.transition_once(epsilon_values, hiddens,
-                                           transition_matrix, zero_padding,
-                                           restart_padding, self_loop_scale)
+            hiddens = self.transition_once(wildcard_values, hiddens,
+                                           transition_matrix, restart_padding)
 
             # look at the end state for each pattern, and "add" it into score
             end_state_values = torch.gather(hiddens, 2, end_states).view(
@@ -282,54 +221,27 @@ class SoftPatternClassifier(Module):
         # return output of final layer
         return self.linear.forward(scores)
 
-    def get_epsilon_values(self) -> Union[torch.Tensor, None]:
-        return None if self.no_epsilons else self.semiring.times(
-            self.epsilon_scale.detach().clone(),  # type: ignore
-            self.semiring.from_outer_to_semiring(self.epsilons))
+    def get_wildcard_values(self) -> Union[torch.Tensor, None]:
+        return None if self.no_wildcards else self.semiring.times(
+            self.wildcard_scale.detach().clone(),  # type: ignore
+            self.semiring.from_outer_to_semiring(self.wildcards))
 
-    def transition_once(
-            self, epsilon_values: Union[torch.Tensor, None],
-            hiddens: torch.Tensor, transition_matrix: torch.Tensor,
-            zero_padding: torch.Tensor, restart_padding: torch.Tensor,
-            self_loop_scale: Union[torch.Tensor, None]) -> torch.Tensor:
-        # adding epsilon transitions
-        # NOTE: don't consume a token, move forward one state
-        # we do this before self-loops and single-steps.
-        # we only allow zero or one epsilon transition in a row
-        if self.no_epsilons:
-            after_epsilons = hiddens
-        else:
-            # doesn't depend on token, just state
-            after_epsilons = self.semiring.plus(
-                hiddens,
-                torch.cat(
-                    (zero_padding,
-                     self.semiring.times(hiddens[:, :, :-1], epsilon_values)),
-                    2))
-
-        # adding the start state
+    def transition_once(self, wildcard_values: Union[torch.Tensor, None],
+                        hiddens: torch.Tensor, transition_matrix: torch.Tensor,
+                        restart_padding: torch.Tensor) -> torch.Tensor:
+        # adding the start state and main transition
         after_main_paths = torch.cat(
             (restart_padding,
-             self.semiring.times(after_epsilons[:, :, :-1],
-                                 transition_matrix[:, :, -1, :-1])), 2)
+             self.semiring.times(hiddens[:, :, :-1],
+                                 transition_matrix[:, :, :-1])), 2)
 
-        # conditionally adding self-loops
-        if self.no_self_loops:
+        # adding wildcard transitions
+        if self.no_wildcards:
             return after_main_paths
         else:
-            # NOTE: mypy-related fix, does not affect torch workflow
-            self_loop_scale = cast(torch.Tensor, self_loop_scale)
-
-            # adjust self_loop_scale
-            if self.shared_self_loops == SHARED_SL_PARAM_PER_STATE_PER_PATTERN:
-                self_loop_scale = self_loop_scale.expand(
-                    transition_matrix[:, :, 0, :].size())
-
-            # adding self loops (consume a token, stay in same state)
-            after_self_loops = self.semiring.times(
-                self_loop_scale,
-                self.semiring.times(after_epsilons, transition_matrix[:, :,
-                                                                      0, :]))
-
-            # either happy or self-loop, not both
-            return self.semiring.plus(after_main_paths, after_self_loops)
+            after_wildcards = torch.cat(
+                (restart_padding,
+                 self.semiring.times(hiddens[:, :, :-1],
+                                     wildcard_values)), 2)
+            # either main transition or wildcard
+            return self.semiring.plus(after_main_paths, after_wildcards)

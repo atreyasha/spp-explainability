@@ -101,12 +101,9 @@ def evaluate_outer(args: argparse.Namespace) -> None:
         embeddings,  # type:ignore
         vocab,
         semiring,
-        args.shared_self_loops,
-        args.no_epsilons,
-        args.no_self_loops,
+        args.no_wildcards,
         args.bias_scale,
-        args.epsilon_scale,
-        args.self_loop_scale,
+        args.wildcard_scale,
         0.)
 
     # log information about model
