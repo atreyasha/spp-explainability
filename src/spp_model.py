@@ -62,7 +62,7 @@ class SoftPatternClassifier(Module):
         self.binarizer = STEHeaviside()
 
         # create transition matrix diagonal and bias tensors
-        diags_size = (self.total_num_patterns * self.max_pattern_length)
+        diags_size = (self.total_num_patterns * (self.max_pattern_length - 1))
         diags = torch.Tensor(  # type: ignore
             diags_size, self.embeddings.embedding_dim)
         bias = torch.Tensor(diags_size, 1)
@@ -152,7 +152,7 @@ class SoftPatternClassifier(Module):
         # reformat transition scores
         transition_matrices = torch.cat(transition_matrices).view(
             batch_size, max_doc_len, self.total_num_patterns,
-            self.max_pattern_length)
+            self.max_pattern_length - 1)
 
         # finally return transition matrices for all tokens
         return transition_matrices
@@ -246,8 +246,7 @@ class SoftPatternClassifier(Module):
         # adding the start state and main transition
         after_main_paths = torch.cat(
             (restart_padding,
-             self.semiring.times(hiddens[:, :, :-1],
-                                 transition_matrix[:, :, :-1])), 2)
+             self.semiring.times(hiddens[:, :, :-1], transition_matrix)), 2)
 
         # adding wildcard transitions
         if self.no_wildcards:
@@ -255,7 +254,6 @@ class SoftPatternClassifier(Module):
         else:
             after_wildcards = torch.cat(
                 (restart_padding,
-                 self.semiring.times(hiddens[:, :, :-1],
-                                     wildcard_values)), 2)
+                 self.semiring.times(hiddens[:, :, :-1], wildcard_values)), 2)
             # either main transition or wildcard
             return self.semiring.plus(after_main_paths, after_wildcards)
