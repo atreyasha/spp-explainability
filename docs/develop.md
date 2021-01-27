@@ -20,70 +20,20 @@
 
 ### Current
 
-1.  Mixed modelling and explainability
-
-    1.  Mixed tasks
-
-        1.  remove both epsilon/self-loops and replace with simple
-            transitions and hard wild cards -\> pattern with d states
-            will fit exactly to d-1 tokens
-
-        2.  only use pattern if it fits at least d-1 tokens ahead
-            (assign 0 for non-fits automatically)
-
-        3.  consider issues that might arise when using normalizer on
-            inf values -\> maybe this might be a good enough technique
-            to detect if pattern has been reached or not
-
-        4.  consider otherwise what to do with `num_padding_tokens`
-            argument inside script
-
-            1.  whether to keep or remove it for good (or default to 1)
-
-            2.  if overpadding is necessary, then we need to save this
-                under the model configuration for this to be re-used
-
-    2.  Final tasks before re-running
-
-        1.  encourage learning of wildcards by increasing its scale
-            factor default
-
-        2.  consider removing unnecessary bias scales such as bias
-            scaling and others
-
-        3.  think whether scale options should be simply multiplied or
-            whether it should use the semiring
-
-        4.  increase default minimum pattern length to 3 and reduce
-            maximum pattern length to allow for generalization
-
-        5.  add dedicated argument to evaluation for grid search where
-            all results are centrally summarized in base grid directory
-            -\> use `grid_training_arg_parser` with discriminating
-            boolean and rename it to the something other than
-            `resume_training`
-
-        6.  lower learning rate further for grid training since training
-            tends to converge fast
-
-        7.  repeat grid-search with multiple random seeds
-
-        8.  **extra:** use parallelized computations to fill up all GPU
-            memory -\> would require reading-up on how to do this safely
-            for a single GPU
-
-2.  Dedicated explainability
+1.  Dedicated explainability
 
     1.  Generic changes
 
-        1.  clean out source code with newer and more efficient
+        1.  update readme and usage scripts with changes made so far
+
+        2.  clean out source code with newer and more efficient
             workflows, consistent variable namings and function
             definitions on-the-fly -\> start off with `explain_data`
 
-        2.  precisely type functions and classes on-the-fly -\>
+        3.  precisely type functions and classes on-the-fly -\>
             especially for explainability scripts
 
-        3.  sort out scattered TODOs
+        4.  sort out scattered TODOs
 
     2.  Global explainability
 
@@ -132,6 +82,10 @@
             12. fix looping over transition matrices as per modelling
                 scripts
 
+            13. consider removing `detach` calls on registered buffers
+                since they have no gradients, and instead just use
+                `clone` -\> but need to check this to be sure
+
         2.  check if it is possible to port the entire backpointer
             concept inside the sopa model as an exec-mode
 
@@ -149,7 +103,8 @@
 
         6.  zero and restart padding used in model, but only restart
             padding used in explain script -\> incompatibilities between
-            transitons_once functions
+            transitons_once functions -\> now we no longer need zero
+            padding in transitions
 
         7.  binarizer and layer normalization output should be used for
             explainability to ignore all other patterns -\> might help
@@ -223,7 +178,7 @@
         2.  this can be done a per-sample basis with pattern and score
             specification -\> more likely to be useful on the test set
 
-3.  Post explainability
+2.  Post explainability
 
     1.  Extension to new data sets
 
@@ -235,21 +190,43 @@
         3.  both have some papers which could be cited to add some
             relevance
 
-4.  Dedicated modelling
+    2.  Dedicated modelling
 
-    1.  change frequency of tensorboard, evaluation and model saving to
-        update-level
+        1.  add 2 threads specific arguments to jarvis shell scripts
 
-        1.  update arg parser with new arguments
+        2.  attempt to make normalizer dynamically ignore infinities
+            instead of expecting fixed sizes
 
-        2.  update train_inner with new workflow for saving/loading
-            information
+        3.  consider adding back elementwise affine transformations for
+            LayerNorm -\> but this could possibly result in dead
+            patterns to be activated which is an illogical result
 
-        3.  update save checkpoint code with required information
+        4.  consider using a generic function for batch minima, since
+            this could be dependent on the semiring
 
-        4.  shift torch hooks around to be more sensible
+        5.  encourage learning of wildcards by increasing its scale
+            factor default -\> in case there are not enough
 
-        5.  convert data object to generator
+        6.  change frequency of tensorboard, evaluation and model saving
+            to update-level
+
+            1.  update arg parser with new arguments
+
+            2.  update train_inner with new workflow for saving/loading
+                information
+
+            3.  update save checkpoint code with required information
+
+            4.  shift torch hooks around to be more sensible
+
+            5.  convert data object to generator
+
+        7.  **extra:** repeat grid-search with multiple random seeds -\>
+            do this after all changes
+
+        8.  **extra:** use parallelized computations to fill up all GPU
+            memory -\> would require reading-up on how to do this safely
+            for a single GPU
 
 ### Long-term
 
@@ -330,8 +307,6 @@
         required for training processes
 
     10. test download and all other scripts to ensure they work
-
-    11. add MIT license when made public
 
 ## Notes
 
@@ -520,6 +495,16 @@
         9.  extension/recommendations -\> transducer for seq2seq tasks
 
 ## Completed
+
+**DONE** modify normalizer to ignore calculation of all
+infinities via minimal value replacement
+
+**CLOSED:** *\[2021-01-27 Wed 19:19\]*
+
+**DONE** remove both epsilon/self-loops -\> use only simple
+transitions and hard wild cards
+
+**CLOSED:** *\[2021-01-27 Wed 15:01\]*
 
 **DONE** defaults from paper: semiring -\> max-product,
 batch-size -\> 128 (cpu), epochs -\> 200, patience -\> 30, word_dim -\>
