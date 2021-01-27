@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Dict, Tuple, List
 from .utils.data_utils import unique
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.preprocess_utils import (read_tsv, mapping, serialize,
                                      lowercase, tokenize, upsample)
 from .arg_parser import preprocess_arg_parser, logging_arg_parser
+from typing import Dict, Tuple, List
 import argparse
 import json
 import os

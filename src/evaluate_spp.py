@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from glob import glob
-from functools import partial
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import Vocab, PAD_TOKEN_INDEX, read_docs, read_labels
@@ -14,6 +12,8 @@ from .spp_model import SoftPatternClassifier
 from sklearn.metrics import classification_report
 from typing import cast, List, Tuple, Union
 from torch.nn import Embedding, Module
+from functools import partial
+from glob import glob
 import argparse
 import torch
 import json
