@@ -4,13 +4,13 @@
 from glob import glob
 from functools import partial
 from sklearn.metrics import classification_report
-from typing import cast, List, Tuple, Union
+from typing import cast, List, Tuple, Union, Dict
 from torch.nn import Embedding, Module
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import Vocab, PAD_TOKEN_INDEX, read_docs, read_labels
 from .arg_parser import (logging_arg_parser, hardware_arg_parser,
-                         evaluation_arg_parser)
+                         evaluation_arg_parser, grid_training_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_pattern_specs,
                         get_semiring, evaluate_metric)
 from .spp_model import SoftPatternClassifier
@@ -28,7 +28,7 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
                    batch_size: int,
                    output_prefix: str,
                    gpu_device: Union[torch.device, None] = None,
-                   max_doc_len: Union[int, None] = None) -> None:
+                   max_doc_len: Union[int, None] = None) -> Dict:
     # load model checkpoint
     model_checkpoint = torch.load(model_checkpoint,
                                   map_location=torch.device("cpu"))
@@ -55,8 +55,11 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
             "w") as output_file_stream:
         json.dump(clf_report, output_file_stream)
 
+    # return classification report
+    return clf_report
 
-def evaluate_outer(args: argparse.Namespace) -> None:
+
+def evaluate_outer(args: argparse.Namespace) -> Dict:
     # create local model_log_directory variable
     model_log_directory = args.model_log_directory
 
@@ -110,26 +113,63 @@ def evaluate_outer(args: argparse.Namespace) -> None:
     LOGGER.info("Model: %s" % model)
 
     # execute inner evaluation workflow
-    evaluate_inner(eval_data, model, args.model_checkpoint,
-                   model_log_directory, num_classes, args.batch_size,
-                   args.output_prefix, gpu_device, args.max_doc_len)
+    clf_report = evaluate_inner(eval_data, model, args.model_checkpoint,
+                                model_log_directory, num_classes,
+                                args.batch_size, args.output_prefix,
+                                gpu_device, args.max_doc_len)
+    return clf_report
 
 
 def main(args: argparse.Namespace) -> None:
-    for model_checkpoint in glob(args.model_checkpoint):
+    # parse glob to get all paths
+    model_checkpoint_collection = glob(args.model_checkpoint)
+    evaluation_metric_collection = []
+
+    # infer and assume grid directory if provided
+    if args.grid_training:
+        model_checkpoint_grid_directories = [
+            os.path.dirname(os.path.dirname(model_checkpoint))
+            for model_checkpoint in model_checkpoint_collection
+        ]
+        assert len(set(model_checkpoint_grid_directories)) == 1, (
+            "Glob provided cannot be processed with " +
+            "--grid-training because it corresponds to more than " +
+            "one grid directory")
+        model_grid_directory = model_checkpoint_grid_directories[0]
+
+    # loop over all provided models
+    for model_checkpoint in model_checkpoint_collection:
         args.model_checkpoint = model_checkpoint
         args.model_log_directory = os.path.dirname(args.model_checkpoint)
         args = parse_configs_to_args(args, training=False)
-        evaluate_outer(args)
+        clf_report = evaluate_outer(args)
+        evaluation_metric_collection.append({model_checkpoint: clf_report})
+
+    if args.grid_training:
+        # find best clf report by checking all entries
+        # source: https://stackoverflow.com/a/30546905
+        best_clf_report = max(
+            evaluation_metric_collection,
+            key=lambda dictionary: next(iter(dictionary.values()))[
+                "weighted avg"]["f1-score"])
+
+        # dump json report in grid_directory
+        with open(
+                os.path.join(
+                    model_grid_directory, "best_" + args.output_prefix +
+                    "_classification_report.json"), "w") as output_file_stream:
+            json.dump(best_clf_report, output_file_stream)
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(formatter_class=ArgparseFormatter,
-                                     parents=[
-                                         evaluation_arg_parser(),
-                                         hardware_arg_parser(),
-                                         logging_arg_parser()
-                                     ])
+    parser = argparse.ArgumentParser(
+        formatter_class=ArgparseFormatter,
+        parents=[
+            evaluation_arg_parser(),
+            grid_training_arg_parser(start_training=False),
+            hardware_arg_parser(),
+            logging_arg_parser()
+        ])
     LOGGER = stdout_root_logger(
         logging_arg_parser().parse_known_args()[0].logging_level)
     main(parser.parse_args())

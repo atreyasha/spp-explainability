@@ -210,10 +210,10 @@ def evaluation_arg_parser() -> argparse.ArgumentParser:
 
 
 def grid_training_arg_parser(
-        resume_training: bool = False) -> argparse.ArgumentParser:
+        start_training: bool = True) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     grid = parser.add_argument_group('optional grid-training arguments')
-    if not resume_training:
+    if start_training:
         grid.add_argument(
             "--grid-config",
             help="Path to grid configuration file",

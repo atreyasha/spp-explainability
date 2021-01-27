@@ -50,7 +50,7 @@ if __name__ == '__main__':
         formatter_class=ArgparseFormatter,
         parents=[
             resume_training_arg_parser(),
-            grid_training_arg_parser(resume_training=True),
+            grid_training_arg_parser(start_training=False),
             hardware_arg_parser(),
             logging_arg_parser(),
             tqdm_arg_parser()
