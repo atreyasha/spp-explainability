@@ -166,19 +166,19 @@ class SoftPatternClassifier(Module):
 
         # clone null scores tensor
         scores = self.scores.expand(  # type: ignore
-            batch_size, -1).detach().clone()
+            batch_size, -1).clone()
 
         # clone restart_padding tensor to add start state for each word
         restart_padding = self.restart_padding.expand(  # type: ignore
-            batch_size, -1, -1).detach().clone()
+            batch_size, -1, -1).clone()
 
         # initialize hiddens tensor
         hiddens = self.hiddens.expand(  # type: ignore
-            batch_size, -1, -1).detach().clone()
+            batch_size, -1, -1).clone()
 
         # enumerate all end pattern states
         end_states = self.end_states.expand(  # type: ignore
-            batch_size, self.total_num_patterns, -1).detach().clone()
+            batch_size, self.total_num_patterns, -1).clone()
 
         # set start state (0) to semiring 1 for each pattern in each doc
         hiddens[:, :, 0] = self.semiring.one(batch_size,
@@ -237,7 +237,7 @@ class SoftPatternClassifier(Module):
 
     def get_wildcard_values(self) -> Union[torch.Tensor, None]:
         return None if self.no_wildcards else self.semiring.times(
-            self.wildcard_scale.detach().clone(),  # type: ignore
+            self.wildcard_scale.clone(),  # type: ignore
             self.semiring.from_outer_to_semiring(self.wildcards))
 
     def transition_once(self, wildcard_values: Union[torch.Tensor, None],
