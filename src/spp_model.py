@@ -210,11 +210,11 @@ class SoftPatternClassifier(Module):
                 scores[active_doc_indices],
                 end_state_values[active_doc_indices])
 
-        # extract scores from semiring to outer set
-        scores = self.semiring.from_semiring_to_outer(scores)
-
         # extract all infinite indices
         inf_indices = torch.where(scores == float("-inf"))
+
+        # extract scores from semiring to outer set
+        scores = self.semiring.from_semiring_to_outer(scores).clone()
 
         # temporarily replace all negative infinities by positive infinities
         scores[inf_indices] = float("inf")
