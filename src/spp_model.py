@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from typing import Union, Any
+from collections import OrderedDict
+from torch.nn import Module, Parameter, Linear, Dropout, LayerNorm, init
 from .utils.model_utils import Semiring, Batch
 from .utils.data_utils import Vocab
-from torch.nn import Module, Parameter, Linear, Dropout, LayerNorm, init
-from collections import OrderedDict
-from typing import Union, Any
 import torch
 
 

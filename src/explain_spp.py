@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from tqdm import tqdm
+from typing import List, Tuple, Any, Union
+from torch.nn import Embedding, Module
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import PAD_TOKEN_INDEX, Vocab
@@ -12,9 +15,6 @@ from .arg_parser import (explain_arg_parser, hardware_arg_parser,
 from .train_spp import (parse_configs_to_args, set_hardware, get_semiring,
                         get_train_valid_data, get_pattern_specs)
 from .spp_model import SoftPatternClassifier
-from typing import List, Tuple, Any, Union
-from torch.nn import Embedding, Module
-from tqdm import tqdm
 import argparse
 import torch
 import os

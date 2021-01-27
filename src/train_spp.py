@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from tqdm import tqdm
+from glob import glob
+from functools import partial
+from collections import OrderedDict
+from tensorboardX import SummaryWriter
+from torch.optim import Adam
+from torch.nn import NLLLoss, Module, Embedding
+from torch.nn.functional import log_softmax
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import ParameterGrid
+from typing import List, Union, Tuple, cast, Any, Callable
 from .utils.parser_utils import ArgparseFormatter
 from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
                                read_embeddings, Vocab, PAD_TOKEN_INDEX)
@@ -14,18 +26,6 @@ from .arg_parser import (spp_model_arg_parser, training_arg_parser,
                          logging_arg_parser, tqdm_arg_parser,
                          hardware_arg_parser, grid_training_arg_parser)
 from .spp_model import SoftPatternClassifier
-from typing import List, Union, Tuple, cast, Any, Callable
-from tqdm import tqdm
-from glob import glob
-from functools import partial
-from collections import OrderedDict
-from torch.optim import Adam
-from torch.nn import NLLLoss, Module, Embedding
-from torch.nn.functional import log_softmax
-from torch.optim.lr_scheduler import ReduceLROnPlateau
-from tensorboardX import SummaryWriter
-from sklearn.model_selection import ParameterGrid
-from sklearn.metrics import accuracy_score
 import numpy as np
 import argparse
 import logging
