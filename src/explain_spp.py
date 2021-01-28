@@ -8,7 +8,7 @@ from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import PAD_TOKEN_INDEX, Vocab
 from .utils.model_utils import decreasing_length, to_cuda, Batch
-from .utils.explain_utils import (cat_2d, zip_lambda_2d,
+from .utils.explain_utils import (cat_nested, zip_lambda_nested,
                                   torch_apply_float_function, BackPointer)
 from .arg_parser import (explain_arg_parser, hardware_arg_parser,
                          logging_arg_parser)
@@ -49,11 +49,11 @@ def transition_once_with_trace(model: Module, token_idx: int,
     # TODO: unmix tensors and floats, might help with speed, eg. eps_value
 
     # NOTE: new start_token_idx is transferred from previous padding
-    epsilons = cat_2d(
+    epsilons = cat_nested(
         # TODO should be zero padding instead
         # TODO revert back end token index here
         restart_padding(model, token_idx, num_patterns),
-        zip_lambda_2d(
+        zip_lambda_nested(
             lambda bp, e: BackPointer(score=torch_apply_float_function(
                 model.semiring.times, bp.score, e),
                                       previous=bp,
@@ -63,14 +63,14 @@ def transition_once_with_trace(model: Module, token_idx: int,
             [xs[:-1] for xs in back_pointers],
             eps_value  # doesn't depend on token, just state
         ))
-    epsilons = zip_lambda_2d(max, back_pointers, epsilons)
+    epsilons = zip_lambda_nested(max, back_pointers, epsilons)
 
     # Adding main loops (consume a token, move state)
     # TODO: look into issue of 0 to 2 transitions occuring at pattern state 1
     # TODO maybe end token idx should stay current token index + 1
-    main_paths = cat_2d(
+    main_paths = cat_nested(
         restart_padding(model, token_idx, num_patterns),
-        zip_lambda_2d(
+        zip_lambda_nested(
             lambda bp, t: BackPointer(score=torch_apply_float_function(
                 model.semiring.times, bp.score, t),
                                       previous=bp,
@@ -80,7 +80,7 @@ def transition_once_with_trace(model: Module, token_idx: int,
             [xs[:-1] for xs in epsilons], transition_matrix_val[:, 1, :-1]))
 
     # Adding self loops (consume a token, stay in same state)
-    self_loops = zip_lambda_2d(
+    self_loops = zip_lambda_nested(
         lambda bp, sl: BackPointer(score=torch_apply_float_function(
             model.semiring.times, bp.score, sl),
                                    previous=bp,
@@ -90,7 +90,7 @@ def transition_once_with_trace(model: Module, token_idx: int,
         transition_matrix_val[:, 0, :])
 
     # return final object
-    return zip_lambda_2d(max, main_paths, self_loops)
+    return zip_lambda_nested(max, main_paths, self_loops)
 
 
 def get_top_scoring_spans_for_doc(

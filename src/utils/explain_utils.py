@@ -6,13 +6,13 @@ from functools import total_ordering
 import torch
 
 
-def zip_lambda_2d(function: Callable, input_a: Any,
-                  input_b: Any) -> List[List[Any]]:
+def zip_lambda_nested(function: Callable, input_a: Any,
+                      input_b: Any) -> List[List[Any]]:
     return [[function(x, y) for x, y in zip(X, Y)]
             for X, Y in zip(input_a, input_b)]
 
 
-def cat_2d(padding: Any, data: Any) -> List[List[Any]]:
+def cat_nested(padding: Any, data: Any) -> List[List[Any]]:
     return [[p] + x for p, x in zip(padding, data)]
 
 
