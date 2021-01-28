@@ -307,48 +307,58 @@ For evaluating a trained SoPa++ model, we use `src/evaluate_spp.py`:
 ```
 usage: evaluate_spp.py [-h] --eval-data <file_path> --eval-labels <file_path>
                        --model-checkpoint <glob_path> [--batch-size <int>]
-                       [--gpu] [--gpu-device <str>] [--grid-training]
+                       [--evaluation-metric {recall,precision,f1-score,accuracy}]
+                       [--evaluation-metric-type {weighted avg,macro avg}]
+                       [--gpu] [--gpu-device <str>] [--grid-evaluation]
                        [--logging-level {debug,info,warning,error,critical}]
                        [--max-doc-len <int>] [--num-threads <int>]
                        [--output-prefix <str>]
 
 optional arguments:
-  -h, --help          show this help message and exit
+  -h, --help                show this help message and exit
 
 required evaluation arguments:
-  --eval-data         <file_path>
-                      Path to evaluation data file (default: None)
-  --eval-labels       <file_path>
-                      Path to evaluation labels file (default: None)
-  --model-checkpoint  <glob_path>
-                      Glob path to model checkpoint with '.pt' extension. Note
-                      that 'model_config.json' must be in the same directory
-                      level as the model checkpoint file (default: None)
+  --eval-data               <file_path>
+                            Path to evaluation data file (default: None)
+  --eval-labels             <file_path>
+                            Path to evaluation labels file (default: None)
+  --model-checkpoint        <glob_path>
+                            Glob path to model checkpoint with '.pt'
+                            extension. Note that 'model_config.json' must be
+                            in the same directory level as the model
+                            checkpoint file (default: None)
 
 optional evaluation arguments:
-  --batch-size        <int>
-                      Batch size for evaluation (default: 256)
-  --max-doc-len       <int>
-                      Maximum document length allowed (default: None)
-  --output-prefix     <str>
-                      Prefix for output classification report (default: test)
+  --batch-size              <int>
+                            Batch size for evaluation (default: 256)
+  --max-doc-len             <int>
+                            Maximum document length allowed (default: None)
+  --output-prefix           <str>
+                            Prefix for output classification report (default:
+                            test)
 
-optional grid-training arguments:
-  --grid-training     Use grid-training instead of single-training (default:
-                      False)
+optional grid-evaluation arguments:
+  --evaluation-metric       {recall,precision,f1-score,accuracy}
+                            Specify which evaluation metric to use for
+                            comparison (default: f1-score)
+  --evaluation-metric-type  {weighted avg,macro avg}
+                            Specify which type of evaluation metric to use
+                            (default: weighted avg)
+  --grid-evaluation         Use grid-evaluation framework to find/summarize
+                            best model (default: False)
 
 optional hardware-acceleration arguments:
-  --gpu               Use GPU hardware acceleration (default: False)
-  --gpu-device        <str>
-                      GPU device specification in case --gpu option is used
-                      (default: cuda:0)
-  --num-threads       <int>
-                      Set the number of threads used for intraop parallelism
-                      on CPU (default: None)
+  --gpu                     Use GPU hardware acceleration (default: False)
+  --gpu-device              <str>
+                            GPU device specification in case --gpu option is
+                            used (default: cuda:0)
+  --num-threads             <int>
+                            Set the number of threads used for intraop
+                            parallelism on CPU (default: None)
 
 optional logging arguments:
-  --logging-level     {debug,info,warning,error,critical}
-                      Set logging level (default: info)
+  --logging-level           {debug,info,warning,error,critical}
+                            Set logging level (default: info)
 ```
 
 #### Single SoPa++ model evaluation
