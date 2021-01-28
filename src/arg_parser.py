@@ -209,6 +209,27 @@ def evaluation_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def grid_evaluation_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(add_help=False)
+    grid = parser.add_argument_group('optional grid-evaluation arguments')
+    grid.add_argument(
+        "--evaluation-metric",
+        help="Specify which evaluation metric to use for comparison",
+        choices=["recall", "precision", "f1-score", "accuracy"],
+        default="f1-score",
+        type=str)
+    grid.add_argument("--evaluation-metric-type",
+                      help="Specify which type of evaluation metric to use",
+                      choices=["weighted avg", "macro avg"],
+                      default="weighted avg",
+                      type=str)
+    grid.add_argument(
+        "--grid-evaluation",
+        help="Use grid-evaluation framework to find/summarize best model",
+        action="store_true")
+    return parser
+
+
 def grid_training_arg_parser(
         start_training: bool = True) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
@@ -286,8 +307,8 @@ def logging_arg_parser() -> argparse.ArgumentParser:
     logging.add_argument(
         "--logging-level",
         help="Set logging level",
-        default="info",
         choices=["debug", "info", "warning", "error", "critical"],
+        default="info",
         type=str)
     return parser
 

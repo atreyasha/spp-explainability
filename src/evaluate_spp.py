@@ -10,7 +10,7 @@ from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import Vocab, PAD_TOKEN_INDEX, read_docs, read_labels
 from .arg_parser import (logging_arg_parser, hardware_arg_parser,
-                         evaluation_arg_parser, grid_training_arg_parser)
+                         evaluation_arg_parser, grid_evaluation_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_pattern_specs,
                         get_semiring, evaluate_metric)
 from .spp_model import SoftPatternClassifier
@@ -126,7 +126,7 @@ def main(args: argparse.Namespace) -> None:
     evaluation_metric_collection = []
 
     # infer and assume grid directory if provided
-    if args.grid_training:
+    if args.grid_evaluation:
         model_checkpoint_grid_directories = [
             os.path.dirname(os.path.dirname(model_checkpoint))
             for model_checkpoint in model_checkpoint_collection
@@ -145,13 +145,15 @@ def main(args: argparse.Namespace) -> None:
         clf_report = evaluate_outer(args)
         evaluation_metric_collection.append({model_checkpoint: clf_report})
 
-    if args.grid_training:
+    if args.grid_evaluation:
         # find best clf report by checking all entries
         # source: https://stackoverflow.com/a/30546905
         best_clf_report = max(
             evaluation_metric_collection,
             key=lambda dictionary: next(iter(dictionary.values()))[
-                "weighted avg"]["f1-score"])
+                args.evaluation_metric_type][args.evaluation_metric]
+            if args.evaluation_metric != "accuracy" else next(
+                iter(dictionary.values()))[args.evaluation_metric])
 
         # dump json report in grid_directory
         with open(
@@ -162,14 +164,13 @@ def main(args: argparse.Namespace) -> None:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        formatter_class=ArgparseFormatter,
-        parents=[
-            evaluation_arg_parser(),
-            grid_training_arg_parser(start_training=False),
-            hardware_arg_parser(),
-            logging_arg_parser()
-        ])
+    parser = argparse.ArgumentParser(formatter_class=ArgparseFormatter,
+                                     parents=[
+                                         evaluation_arg_parser(),
+                                         grid_evaluation_arg_parser(),
+                                         hardware_arg_parser(),
+                                         logging_arg_parser()
+                                     ])
     LOGGER = stdout_root_logger(
         logging_arg_parser().parse_known_args()[0].logging_level)
     main(parser.parse_args())
