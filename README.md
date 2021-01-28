@@ -75,20 +75,20 @@ usage: train_spp.py [-h] --embeddings <file_path> --train-data <file_path>
                     --valid-labels <file_path> [--batch-size <int>]
                     [--bias-scale <float>] [--clip-threshold <float>]
                     [--disable-scheduler] [--disable-tqdm] [--dropout <float>]
-                    [--epochs <int>] [--epsilon-scale <float>] [--gpu]
-                    [--gpu-device <str>] [--grid-config <file_path>]
-                    [--grid-training] [--learning-rate <float>]
+                    [--epochs <int>] [--gpu] [--gpu-device <str>]
+                    [--grid-config <file_path>] [--grid-training]
+                    [--learning-rate <float>]
                     [--logging-level {debug,info,warning,error,critical}]
                     [--max-doc-len <int>] [--models-directory <dir_path>]
-                    [--no-epsilons] [--no-self-loops]
-                    [--num-random-iterations <int>] [--num-threads <int>]
-                    [--num-train-instances <int>] [--patience <int>]
-                    [--patterns <str>] [--pre-computed-patterns <file_path>]
+                    [--no-wildcards] [--num-random-iterations <int>]
+                    [--num-threads <int>] [--num-train-instances <int>]
+                    [--patience <int>] [--patterns <str>]
+                    [--pre-computed-patterns <file_path>]
                     [--scheduler-factor <float>] [--scheduler-patience <int>]
-                    [--seed <int>] [--self-loop-scale <float>]
-                    [--semiring {MaxSumSemiring,MaxProductSemiring,ProbabilitySemiring}]
-                    [--shared-self-loops {0,1,2}] [--static-embeddings]
-                    [--tqdm-update-period <int>] [--word-dropout <float>]
+                    [--seed <int>]
+                    [--semiring {MaxSumSemiring,MaxProductSemiring}]
+                    [--static-embeddings] [--tqdm-update-period <int>]
+                    [--wildcard-scale <float>] [--word-dropout <float>]
 
 optional arguments:
   -h, --help               show this help message and exit
@@ -120,8 +120,7 @@ optional training arguments:
   --learning-rate          <float>
                            Learning rate for Adam optimizer (default: 0.001)
   --max-doc-len            <int>
-                           Maximum document length allowed. -1 refers to no
-                           length restriction (default: -1)
+                           Maximum document length allowed (default: None)
   --models-directory       <dir_path>
                            Base directory where all models will be saved
                            (default: ./models)
@@ -168,27 +167,18 @@ optional hardware-acceleration arguments:
 optional sopa-architecture arguments:
   --bias-scale             <float>
                            Scale biases by this parameter (default: None)
-  --epsilon-scale          <float>
-                           Scale epsilons by this parameter (default: None)
-  --no-epsilons            Do not use epsilon transitions (default: False)
-  --no-self-loops          Do not use self loops (default: False)
+  --no-wildcards           Do not use wildcard transitions (default: False)
   --patterns               <str>
                            Pattern lengths and counts with the following
                            syntax: PatternLength1-PatternCount1_PatternLength2
-                           -PatternCount2_... (default:
-                           7-25_6-25_5-25_4-25_3-25_2-25)
-  --self-loop-scale        <float>
-                           Scale self-loops by this parameter (default: None)
-  --semiring               {MaxSumSemiring,MaxProductSemiring,ProbabilitySemiring}
+                           -PatternCount2_... (default: 6-25_5-25_4-25_3-25)
+  --semiring               {MaxSumSemiring,MaxProductSemiring}
                            Specify which semiring to use (default:
                            MaxSumSemiring)
-  --shared-self-loops      {0,1,2}
-                           Option to share main path and self loop parameters.
-                           0: do not share parameters, 1: share one parameter
-                           per state per pattern, 2: share one global
-                           parameter (default: 0)
   --static-embeddings      Freeze learning of token embeddings (default:
                            False)
+  --wildcard-scale         <float>
+                           Scale wildcard(s) by this parameter (default: None)
 
 optional logging arguments:
   --logging-level          {debug,info,warning,error,critical}
@@ -317,9 +307,10 @@ For evaluating a trained SoPa++ model, we use `src/evaluate_spp.py`:
 ```
 usage: evaluate_spp.py [-h] --eval-data <file_path> --eval-labels <file_path>
                        --model-checkpoint <glob_path> [--batch-size <int>]
-                       [--gpu] [--gpu-device <str>]
+                       [--gpu] [--gpu-device <str>] [--grid-training]
                        [--logging-level {debug,info,warning,error,critical}]
-                       [--num-threads <int>] [--output-prefix <str>]
+                       [--max-doc-len <int>] [--num-threads <int>]
+                       [--output-prefix <str>]
 
 optional arguments:
   -h, --help          show this help message and exit
@@ -337,8 +328,14 @@ required evaluation arguments:
 optional evaluation arguments:
   --batch-size        <int>
                       Batch size for evaluation (default: 256)
+  --max-doc-len       <int>
+                      Maximum document length allowed (default: None)
   --output-prefix     <str>
                       Prefix for output classification report (default: test)
+
+optional grid-training arguments:
+  --grid-training     Use grid-training instead of single-training (default:
+                      False)
 
 optional hardware-acceleration arguments:
   --gpu               Use GPU hardware acceleration (default: False)
@@ -373,13 +370,13 @@ bash scripts/evaluate_spp_gpu.sh /path/to/model/checkpoint
 To evaluate grid-based SoPa++ models using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/evaluate_spp_cpu.sh "/glob/to/model/*/checkpoints"
+bash scripts/evaluate_spp_grid_cpu.sh "/glob/to/model/*/checkpoints"
 ```
 
 To evaluate grid-based SoPa++ models using our defaults on a single GPU, execute:
 
 ```shell
-bash scripts/evaluate_spp_gpu.sh "/glob/to/model/*/checkpoints"
+bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/model/*/checkpoints"
 ```
 
 </p>
