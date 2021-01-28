@@ -39,7 +39,7 @@ evaluate_spp_grid_cpu() {
   python3 -m src.evaluate_spp \
     --eval-data "./data/facebook_multiclass_nlu/clean/test.uncased.data" \
     --eval-labels "./data/facebook_multiclass_nlu/clean/test.labels" \
-    --model-checkpoint "$model_checkpoint" --grid-training
+    --model-checkpoint "$model_checkpoint" --grid-evaluation
 }
 
 # execute function
