@@ -221,6 +221,8 @@ def get_train_valid_data(
     if args.num_train_instances is not None:
         train_data = train_data[:args.num_train_instances]
         valid_data = valid_data[:args.num_train_instances]
+        train_text = train_text[:args.num_train_instances]
+        valid_text = valid_text[:args.num_train_instances]
 
     # log diagnostic information
     LOGGER.info("Number of classes: %s" % num_classes)
