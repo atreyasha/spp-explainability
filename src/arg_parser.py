@@ -153,9 +153,6 @@ def explain_arg_parser() -> argparse.ArgumentParser:
                           type=file_path)
     # add group for optional arguments
     explain = parser.add_argument_group('optional explainability arguments')
-    explain.add_argument("--output-prefix",
-                         help="Prefix for output patterns file",
-                         type=str)
     explain.add_argument("--batch-size",
                          help="Batch size for explainability",
                          default=256,
