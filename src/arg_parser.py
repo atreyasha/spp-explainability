@@ -148,28 +148,23 @@ def explain_arg_parser() -> argparse.ArgumentParser:
                           required=True,
                           type=file_path)
     required.add_argument("--model-checkpoint",
-                          help=("Glob path to model checkpoint with '.pt' "
-                                "extension. Note that 'model_config.json' "
-                                "must be in the same directory level as the "
-                                "model checkpoint file"),
+                          help="Path to model checkpoint with '.pt' extension",
                           required=True,
-                          type=glob_path)
+                          type=file_path)
     # add group for optional arguments
     explain = parser.add_argument_group('optional explainability arguments')
     explain.add_argument("--output-prefix",
                          help="Prefix for output patterns file",
                          type=str)
-    explain.add_argument("--k-best",
-                         help=("Use 'k' best document scores for extracting "
-                               "patterns"),
-                         default=5,
-                         type=int)
     explain.add_argument("--batch-size",
                          help="Batch size for explainability",
                          default=256,
                          type=int)
     explain.add_argument("--num-train-instances",
                          help="Maximum number of training instances",
+                         type=int)
+    explain.add_argument("--max-doc-len",
+                         help="Maximum document length allowed",
                          type=int)
     return parser
 
@@ -188,9 +183,7 @@ def evaluation_arg_parser() -> argparse.ArgumentParser:
                           type=file_path)
     required.add_argument("--model-checkpoint",
                           help=("Glob path to model checkpoint with '.pt' "
-                                "extension. Note that 'model_config.json' "
-                                "must be in the same directory level as the "
-                                "model checkpoint file"),
+                                "extension"),
                           required=True,
                           type=glob_path)
     # add group for optional arguments
