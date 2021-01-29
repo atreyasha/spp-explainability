@@ -284,7 +284,7 @@ def save_checkpoint(epoch: int, model: torch.nn.Module,
                     optimizer: torch.optim.Optimizer,
                     scheduler: Union[ReduceLROnPlateau, None],
                     best_valid_loss: float, best_valid_loss_index: int,
-                    best_valid_acc: float, path: str) -> None:
+                    best_valid_acc: float, filename: str) -> None:
     torch.save(
         {
             "epoch":
@@ -305,7 +305,7 @@ def save_checkpoint(epoch: int, model: torch.nn.Module,
             np.random.get_state(),
             "torch_random_state":
             torch.random.get_rng_state()
-        }, path)
+        }, filename)
 
 
 def train_batch(model: Module,
@@ -699,19 +699,19 @@ def train_inner(train_data: List[Tuple[List[int], int]],
 
 def train_outer(args: argparse.Namespace, resume_training=False) -> None:
     # create model log directory
-    model_log_directory = args.model_log_directory
-    os.makedirs(model_log_directory, exist_ok=True)
+    os.makedirs(args.model_log_directory, exist_ok=True)
 
     # execute code while catching any errors
     try:
         # update LOGGER object with file handler
         global LOGGER
         LOGGER = add_file_handler(
-            LOGGER, os.path.join(model_log_directory, "session.log"))
+            LOGGER, os.path.join(args.model_log_directory, "session.log"))
 
         if resume_training:
             args = parse_configs_to_args(args)
-            exit_code_file = os.path.join(model_log_directory, "exit_code")
+            exit_code_file = os.path.join(args.model_log_directory,
+                                          "exit_code")
             if not os.path.exists(exit_code_file):
                 LOGGER.info("Exit-code file not found, continuing training")
             else:
@@ -731,7 +731,7 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
 
         # log namespace arguments and model directory
         LOGGER.info(args)
-        LOGGER.info("Model log directory: %s" % model_log_directory)
+        LOGGER.info("Model log directory: %s" % args.model_log_directory)
 
         # set gpu and cpu hardware
         gpu_device = set_hardware(args)
@@ -743,10 +743,10 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         set_random_seed(args)
 
         if resume_training:
-            vocab_file = os.path.join(model_log_directory, "vocab.txt")
+            vocab_file = os.path.join(args.model_log_directory, "vocab.txt")
             if os.path.exists(vocab_file):
                 vocab = Vocab.from_vocab_file(
-                    os.path.join(model_log_directory, "vocab.txt"))
+                    os.path.join(args.model_log_directory, "vocab.txt"))
             else:
                 raise FileNotFoundError("%s is missing" % vocab_file)
             # generate embeddings to fill up correct dimensions
@@ -797,15 +797,15 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
             LOGGER.info("Total model parameters: %s" %
                         sum(parameter.nelement()
                             for parameter in model.parameters()))
-            dump_configs(args, model_log_directory)
-            dump_vocab(vocab, model_log_directory)
+            dump_configs(args, args.model_log_directory)
+            dump_vocab(vocab, args.model_log_directory)
 
         train_inner(train_data, valid_data, model, num_classes, args.epochs,
-                    model_log_directory, args.learning_rate, args.batch_size,
-                    args.disable_scheduler, args.scheduler_patience,
-                    args.scheduler_factor, gpu_device, args.clip_threshold,
-                    args.max_doc_len, args.word_dropout, args.patience,
-                    resume_training, args.disable_tqdm,
+                    args.model_log_directory, args.learning_rate,
+                    args.batch_size, args.disable_scheduler,
+                    args.scheduler_patience, args.scheduler_factor, gpu_device,
+                    args.clip_threshold, args.max_doc_len, args.word_dropout,
+                    args.patience, resume_training, args.disable_tqdm,
                     args.tqdm_update_period)
     finally:
         # update LOGGER object to remove file handler

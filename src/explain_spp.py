@@ -216,10 +216,10 @@ def explain_outer(args: argparse.Namespace) -> None:
     pattern_specs = get_pattern_specs(args)
 
     # load vocab and embeddings
-    vocab_file = os.path.join(model_log_directory, "vocab.txt")
+    vocab_file = os.path.join(args.model_log_directory, "vocab.txt")
     if os.path.exists(vocab_file):
         vocab = Vocab.from_vocab_file(
-            os.path.join(model_log_directory, "vocab.txt"))
+            os.path.join(args.model_log_directory, "vocab.txt"))
     else:
         raise FileNotFoundError("%s is missing" % vocab_file)
     # generate embeddings to fill up correct dimensions
@@ -254,7 +254,7 @@ def explain_outer(args: argparse.Namespace) -> None:
 
     # execute inner function here
     explain_inner(explain_data, explain_text, model, args.model_checkpoint,
-                  model_log_directory, args.batch_size, gpu_device,
+                  args.model_log_directory, args.batch_size, gpu_device,
                   args.max_doc_len)
 
 

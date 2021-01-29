@@ -60,12 +60,9 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
 
 
 def evaluate_outer(args: argparse.Namespace) -> Dict:
-    # create local model_log_directory variable
-    model_log_directory = args.model_log_directory
-
     # log namespace arguments and model directory
     LOGGER.info(args)
-    LOGGER.info("Model log directory: %s" % model_log_directory)
+    LOGGER.info("Model log directory: %s" % args.model_log_directory)
 
     # set gpu and cpu hardware
     gpu_device = set_hardware(args)
@@ -74,10 +71,10 @@ def evaluate_outer(args: argparse.Namespace) -> Dict:
     pattern_specs = get_pattern_specs(args)
 
     # load vocab and embeddings
-    vocab_file = os.path.join(model_log_directory, "vocab.txt")
+    vocab_file = os.path.join(args.model_log_directory, "vocab.txt")
     if os.path.exists(vocab_file):
         vocab = Vocab.from_vocab_file(
-            os.path.join(model_log_directory, "vocab.txt"))
+            os.path.join(args.model_log_directory, "vocab.txt"))
     else:
         raise FileNotFoundError("%s is missing" % vocab_file)
     # generate embeddings to fill up correct dimensions
@@ -114,7 +111,7 @@ def evaluate_outer(args: argparse.Namespace) -> Dict:
 
     # execute inner evaluation workflow
     clf_report = evaluate_inner(eval_data, model, args.model_checkpoint,
-                                model_log_directory, num_classes,
+                                args.model_log_directory, num_classes,
                                 args.batch_size, args.output_prefix,
                                 gpu_device, args.max_doc_len)
     return clf_report
