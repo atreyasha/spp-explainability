@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from tqdm import tqdm
-from typing import List, Tuple, Union
+from collections import OrderedDict
+from typing import List, Tuple, Union, Dict
 from torch.nn import Embedding, Module
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
-from .utils.data_utils import PAD_TOKEN_INDEX, Vocab
+from .utils.data_utils import unique, PAD_TOKEN_INDEX, Vocab
 from .utils.model_utils import decreasing_length, to_cuda, Batch
-from .utils.explain_utils import (cat_nested, zip_lambda_nested,
-                                  torch_apply_float_function, BackPointer)
+from .utils.explain_utils import (cat_nested, zip_lambda_nested, BackPointer)
 from .arg_parser import (explain_arg_parser, hardware_arg_parser,
                          logging_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_semiring,
@@ -18,6 +18,38 @@ from .spp_model import SoftPatternClassifier
 import argparse
 import torch
 import os
+import re
+
+
+def save_regex_model(pattern_specs: 'OrderedDict[int, int]',
+                     activating_regex: Dict[int, List[str]],
+                     linear_model: torch.nn.Module, filename: str) -> None:
+    torch.save(
+        {
+            "pattern_specs": pattern_specs,
+            "activating_regex": activating_regex,
+            "linear_state_dict": linear_model.state_dict()
+        }, filename)
+
+
+def convert_text_to_regex(
+        activating_text_pattern: List[List[str]]) -> List[str]:
+    # create new local variable for regex storage
+    activating_regex_pattern = []
+
+    # loop over all activating spans for pattern
+    for activating_text_pattern_instance in activating_text_pattern:
+        regex = []
+        for text in activating_text_pattern_instance:
+            if text == "*":
+                regex.append(r"\w+")
+            else:
+                # escape possible regular expressions
+                regex.append(re.escape(text))
+        # add collected regex to upper list
+        activating_regex_pattern.append(" ".join(regex))
+
+    return activating_regex_pattern
 
 
 def restart_padding(model: Module, token_index: int,
@@ -45,19 +77,19 @@ def transition_once_with_trace(
     main_transitions = cat_nested(
         restart_padding(model, token_index, total_num_patterns),
         zip_lambda_nested(
-            lambda back_pointer, transition_value:
-            BackPointer(raw_score=torch_apply_float_function(
-                model.semiring.times, back_pointer.raw_score, transition_value
-            ),
-                        binarized_score=0.,
-                        pattern_index=back_pointer.pattern_index,
-                        previous=back_pointer,
-                        transition="main_transition",
-                        start_token_index=back_pointer.start_token_index,
-                        current_token_index=token_index,
-                        end_token_index=token_index + 1),
+            lambda back_pointer, transition_value: BackPointer(
+                raw_score=model.semiring.times(back_pointer.raw_score,
+                                               transition_value).item(),
+                binarized_score=0.,
+                pattern_index=back_pointer.pattern_index,
+                previous=back_pointer,
+                transition="main_transition",
+                start_token_index=back_pointer.start_token_index,
+                current_token_index=token_index,
+                end_token_index=token_index + 1),
             [hidden[:-1] for hidden in hiddens], transition_matrix))
 
+    # return if no wildcards allowed
     if model.no_wildcards:
         return main_transitions
     else:
@@ -65,17 +97,16 @@ def transition_once_with_trace(
         wildcard_transitions = cat_nested(
             restart_padding(model, token_index, total_num_patterns),
             zip_lambda_nested(
-                lambda back_pointer, wildcard_value: BackPointer(
-                    raw_score=torch_apply_float_function(
-                        model.semiring.times, back_pointer.raw_score,
-                        wildcard_value),
-                    binarized_score=0.,
-                    pattern_index=back_pointer.pattern_index,
-                    previous=back_pointer,
-                    transition="wildcard_transition",
-                    start_token_index=back_pointer.start_token_index,
-                    current_token_index=token_index,
-                    end_token_index=token_index + 1),
+                lambda back_pointer, wildcard_value:
+                BackPointer(raw_score=model.semiring.times(
+                    back_pointer.raw_score, wildcard_value).item(),
+                            binarized_score=0.,
+                            pattern_index=back_pointer.pattern_index,
+                            previous=back_pointer,
+                            transition="wildcard_transition",
+                            start_token_index=back_pointer.start_token_index,
+                            current_token_index=token_index,
+                            end_token_index=token_index + 1),
                 [hidden[:-1] for hidden in hiddens], wildcard_values))
 
         # return final object
@@ -113,7 +144,8 @@ def get_activating_spans(
 
     # create end-states
     end_state_back_pointers = [
-        bp[end_state] for bp, end_state in zip(hiddens, end_states)
+        back_pointers[end_state]
+        for back_pointers, end_state in zip(hiddens, end_states)
     ]
 
     # iterate over sequence
@@ -132,10 +164,12 @@ def get_activating_spans(
 
     # check that both explainability routine and model match
     assert torch.equal(
-        torch.Tensor([bp.raw_score for bp in end_state_back_pointers]),
-        scores_history[0]), ("Explainability routine does not produce "
-                             "matching scores with SoPa++ routine")
+        torch.Tensor([
+            back_pointer.raw_score for back_pointer in end_state_back_pointers
+        ]), scores_history[0]), ("Explainability routine does not produce "
+                                 "matching scores with SoPa++ routine")
 
+    # if no assertion error, assign binarized scores
     for pattern_index in range(total_num_patterns):
         end_state_back_pointers[
             pattern_index].binarized_score = scores_history[1][
@@ -154,9 +188,10 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
                   gpu_device: Union[torch.device, None],
                   max_doc_len: Union[int, None] = None) -> None:
     # load model checkpoint
-    model_checkpoint = torch.load(model_checkpoint,
-                                  map_location=torch.device("cpu"))
-    model.load_state_dict(model_checkpoint["model_state_dict"])  # type: ignore
+    model_checkpoint_loaded = torch.load(model_checkpoint,
+                                         map_location=torch.device("cpu"))
+    model.load_state_dict(
+        model_checkpoint_loaded["model_state_dict"])  # type: ignore
 
     # send model to correct device
     if gpu_device is not None:
@@ -172,6 +207,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
         *decreasing_length(zip(explain_data, explain_text)))
 
     # start explanation workflow on all explain_data
+    LOGGER.info("Retrieving activating spans and back pointers")
     activating_spans_back_pointers = [[
         back_pointer if back_pointer.binarized_score else None
         for back_pointer in back_pointers
@@ -180,34 +216,73 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
         for data in tqdm(explain_data)
     ]]
 
-    # iterate over all patterns
-    for pattern_index in range(model.total_num_patterns):
-        # log current iterating
-        LOGGER.info(
-            "Pattern %s of length %s:" %
-            (pattern_index, model.end_states[pattern_index].item() + 1))
+    # reprocess back pointers by pattern
+    LOGGER.info("Grouping activating spans by patterns")
+    activating_spans_back_pointers = {
+        pattern_index:
+        sorted([[
+            explain_text[explain_data_index],
+            activating_spans_back_pointers[explain_data_index][pattern_index]
+        ] for explain_data_index in range(len(explain_data))
+                if activating_spans_back_pointers[explain_data_index]
+                [pattern_index]],
+               key=lambda mixed: mixed[1].raw_score,
+               reverse=True)
+        for pattern_index in range(model.total_num_patterns)
+    }
 
-        # log relevant spans
-        text_back_pointers = sorted([
-            [explain_text[index],
-             activating_spans_back_pointers[index][pattern_index]]
-            for index in range(len(explain_data))
-            if activating_spans_back_pointers[index][pattern_index]
-        ], key=lambda mixed: mixed[1].raw_score, reverse=True)
+    # extract segments of text leading to activations
+    LOGGER.info("Converting activating spans to text")
+    activating_text = {
+        pattern_index: [
+            back_pointer_with_text[1].display(back_pointer_with_text[0])
+            for back_pointer_with_text in back_pointers_with_text
+        ]
+        for pattern_index, back_pointers_with_text in
+        activating_spans_back_pointers.items()
+    }
 
-        activating_spans = [back_pointer.display(text)
-                            for text, back_pointer in text_back_pointers]
-        for text in activating_spans:
-            LOGGER.info(text)
+    # make all spans unqiue
+    LOGGER.info("Making activating text unique")
+    activating_text = {
+        pattern_index: [
+            list(text_tuple_inner) for text_tuple_inner in unique([
+                tuple(text_list_inner) for text_list_inner in text_list_outer
+            ])
+        ]
+        for pattern_index, text_list_outer in activating_text.items()
+    }
+
+    # produce sample text for the user to peruse
+    LOGGER.info("Sample activating text: %s" % activating_text[0])
+
+    # convert text to regex
+    LOGGER.info("Converting activating text to regular expressions")
+    activating_regex = {
+        pattern_index: convert_text_to_regex(activating_text_pattern)
+        for pattern_index, activating_text_pattern in activating_text.items()
+    }
+
+    # TODO: add clustering and generalization functions here
+    # these should ideally simplify the regular expressions
+
+    # define model filename
+    model_filename = os.path.join(
+        model_log_directory,
+        re.sub("\\.pt$", "_", os.path.basename(model_checkpoint)) +
+        "regex_ensemble.pt")
+
+    # save regular expression ensemble
+    LOGGER.info("Saving regular expression ensemble to disk: %s" %
+                model_filename)
+    save_regex_model(model.pattern_specs, activating_regex, model.linear,
+                     model_filename)
 
 
 def explain_outer(args: argparse.Namespace) -> None:
-    # create local model_log_directory variable
-    model_log_directory = args.model_log_directory
-
     # log namespace arguments and model directory
     LOGGER.info(args)
-    LOGGER.info("Model log directory: %s" % model_log_directory)
+    LOGGER.info("Model log directory: %s" % args.model_log_directory)
 
     # set gpu and cpu hardware
     gpu_device = set_hardware(args)

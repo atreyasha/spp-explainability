@@ -17,12 +17,6 @@ def cat_nested(padding: List[List['BackPointer']],
     return [[pad] + data_element for pad, data_element in zip(padding, data)]
 
 
-def torch_apply_float_function(function: Callable[..., torch.Tensor],
-                               input_a: float, input_b: float) -> float:
-    return function(torch.FloatTensor([input_a]),
-                    torch.FloatTensor([input_b])).item()
-
-
 @total_ordering
 class BackPointer:
     def __init__(self, raw_score: float, binarized_score: float,
@@ -63,7 +57,7 @@ class BackPointer:
                 extra: List[str] = [],
                 num_padding_tokens: int = 1) -> str:
         if self.previous is None:
-            return " ".join(extra)
+            return extra
         if self.transition == "main_transition":
             extra = [doc_text[self.current_token_index]] + extra
             return self.previous.display(doc_text, extra=extra)
