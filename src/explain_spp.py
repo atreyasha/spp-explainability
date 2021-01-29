@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from tqdm import tqdm
-from typing import List, Tuple, Any, Union
+from typing import List, Tuple, Union
 from torch.nn import Embedding, Module
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
@@ -20,122 +20,128 @@ import torch
 import os
 
 
-def transition_str(model: Module, norm: torch.Tensor, neighb: int,
-                   bias: torch.Tensor) -> str:
-    return "{:5.2f} * {:<15} + {:5.2f}".format(norm, model.vocab[neighb], bias)
-
-
-def restart_padding(model: Module, token_index: int, num_patterns: int):
+def restart_padding(model: Module, token_index: int,
+                    total_num_patterns: int) -> List[List[BackPointer]]:
     return [
-        BackPointer(score=x,
+        BackPointer(raw_score=state_activation,
+                    binarized_score=0.,
+                    pattern_index=pattern_index,
                     previous=None,
                     transition=None,
-                    start_token_idx=token_index,
-                    end_token_idx=token_index)
-        for x in model.semiring.one(num_patterns)
+                    start_token_index=token_index,
+                    current_token_index=token_index,
+                    end_token_index=token_index)
+        for pattern_index, state_activation in enumerate(
+            model.semiring.one(total_num_patterns))
     ]
 
 
-def transition_once_with_trace(model: Module, token_idx: int,
-                               eps_value: torch.Tensor,
-                               back_pointers: List[List[Any]],
-                               transition_matrix_val: torch.Tensor,
-                               num_patterns: int) -> List[List[Any]]:
-
-    # NOTE: epsilon transitions (don't consume a token, move forward one state)
-    # we only allow one epsilon transition in a row.
-    # TODO: why are token_idx and bp.start_token_idx different?
-    # TODO: long computation times appear to be recorded here
-    # TODO: unmix tensors and floats, might help with speed, eg. eps_value
-
-    # NOTE: new start_token_idx is transferred from previous padding
-    epsilons = cat_nested(
-        # TODO should be zero padding instead
-        # TODO revert back end token index here
-        restart_padding(model, token_idx, num_patterns),
+def transition_once_with_trace(
+        model: Module, token_index: int, total_num_patterns: int,
+        wildcard_values: Union[torch.Tensor,
+                               None], hiddens: List[List[BackPointer]],
+        transition_matrix: torch.Tensor) -> List[List[BackPointer]]:
+    # add main transition; consume a token and state
+    main_transitions = cat_nested(
+        restart_padding(model, token_index, total_num_patterns),
         zip_lambda_nested(
-            lambda bp, e: BackPointer(score=torch_apply_float_function(
-                model.semiring.times, bp.score, e),
-                                      previous=bp,
-                                      transition="epsilon-transition",
-                                      start_token_idx=bp.start_token_idx,
-                                      end_token_idx=token_idx),
-            [xs[:-1] for xs in back_pointers],
-            eps_value  # doesn't depend on token, just state
-        ))
-    epsilons = zip_lambda_nested(max, back_pointers, epsilons)
+            lambda back_pointer, transition_value:
+            BackPointer(raw_score=torch_apply_float_function(
+                model.semiring.times, back_pointer.raw_score, transition_value
+            ),
+                        binarized_score=0.,
+                        pattern_index=back_pointer.pattern_index,
+                        previous=back_pointer,
+                        transition="main_transition",
+                        start_token_index=back_pointer.start_token_index,
+                        current_token_index=token_index,
+                        end_token_index=token_index + 1),
+            [hidden[:-1] for hidden in hiddens], transition_matrix))
 
-    # Adding main loops (consume a token, move state)
-    # TODO: look into issue of 0 to 2 transitions occuring at pattern state 1
-    # TODO maybe end token idx should stay current token index + 1
-    main_paths = cat_nested(
-        restart_padding(model, token_idx, num_patterns),
-        zip_lambda_nested(
-            lambda bp, t: BackPointer(score=torch_apply_float_function(
-                model.semiring.times, bp.score, t),
-                                      previous=bp,
-                                      transition="main-path",
-                                      start_token_idx=bp.start_token_idx,
-                                      end_token_idx=token_idx + 1),
-            [xs[:-1] for xs in epsilons], transition_matrix_val[:, 1, :-1]))
+    if model.no_wildcards:
+        return main_transitions
+    else:
+        # add wildcard transition; consume a generic token and state
+        wildcard_transitions = cat_nested(
+            restart_padding(model, token_index, total_num_patterns),
+            zip_lambda_nested(
+                lambda back_pointer, wildcard_value: BackPointer(
+                    raw_score=torch_apply_float_function(
+                        model.semiring.times, back_pointer.raw_score,
+                        wildcard_value),
+                    binarized_score=0.,
+                    pattern_index=back_pointer.pattern_index,
+                    previous=back_pointer,
+                    transition="wildcard_transition",
+                    start_token_index=back_pointer.start_token_index,
+                    current_token_index=token_index,
+                    end_token_index=token_index + 1),
+                [hidden[:-1] for hidden in hiddens], wildcard_values))
 
-    # Adding self loops (consume a token, stay in same state)
-    self_loops = zip_lambda_nested(
-        lambda bp, sl: BackPointer(score=torch_apply_float_function(
-            model.semiring.times, bp.score, sl),
-                                   previous=bp,
-                                   transition="self-loop",
-                                   start_token_idx=bp.start_token_idx,
-                                   end_token_idx=token_idx + 1), epsilons,
-        transition_matrix_val[:, 0, :])
-
-    # return final object
-    return zip_lambda_nested(max, main_paths, self_loops)
+        # return final object
+        return zip_lambda_nested(max, main_transitions, wildcard_transitions)
 
 
-def get_top_scoring_spans_for_doc(
-        model: Module, doc: Tuple[List[int], int], max_doc_len: Union[int,
-                                                                      None],
-        gpu_device: Union[torch.device, None]) -> List[BackPointer]:
-    batch = Batch([doc[0]], model.embeddings, to_cuda(gpu_device), 0,
+def get_activating_spans(
+        model: Module, doc: Tuple[List[int], int],
+        max_doc_len: Union[int, None],
+        gpu_device: Union[torch.device, None]) -> List[BackPointer]:  # yapf: disable
+    # initialize local variables
+    batch = Batch([doc[0]], model.embeddings, to_cuda(gpu_device), 0.,
                   max_doc_len)
+    scores_history = model.forward(batch, explain=True).squeeze()
     transition_matrices = model.get_transition_matrices(batch)
-    num_patterns = model.total_num_patterns
-    # TODO: check if end states need to be expanded by batch dimension
-    end_states = model.end_states.detach().clone().view(num_patterns)
-    eps_value = model.get_epsilon_values().detach().clone()
-    hiddens = model.semiring.zero(num_patterns, model.max_pattern_length)
+    total_num_patterns = model.total_num_patterns
+    wildcard_values = model.get_wildcard_values()
+    end_states = model.end_states.squeeze()
+    hiddens = model.semiring.zero(total_num_patterns, model.max_pattern_length)
 
-    # set start state activation to 1 for each pattern in each dc
-    hiddens[:, 0] = model.semiring.one(num_patterns)
+    # set start state activation to 1 for each pattern
+    hiddens[:, 0] = model.semiring.one(total_num_patterns)
+
     # convert to back-pointers
-    # TODO: issue with leftover tensors instead of floats
     hiddens = [[
-        BackPointer(score=state_activation,
+        BackPointer(raw_score=state_activation,
+                    binarized_score=0.,
+                    pattern_index=pattern_index,
                     previous=None,
                     transition=None,
-                    start_token_idx=0,
-                    end_token_idx=0) for state_activation in pattern
-    ] for pattern in hiddens]
+                    start_token_index=0,
+                    current_token_index=0,
+                    end_token_index=0) for state_activation in pattern
+    ] for pattern_index, pattern in enumerate(hiddens)]
 
     # create end-states
-    # TODO: can remove zip/list-comprehension and keep it simple
-    # NOTE: this might help improve speed
     end_state_back_pointers = [
         bp[end_state] for bp, end_state in zip(hiddens, end_states)
     ]
 
     # iterate over sequence
-    for token_idx, transition_matrix in enumerate(transition_matrices):
-        transition_matrix = transition_matrix[0, :, :, :].detach().clone()
-        hiddens = transition_once_with_trace(model, token_idx, eps_value,
-                                             hiddens, transition_matrix,
-                                             num_patterns)
+    for token_index in range(transition_matrices.size(1)):
+        transition_matrix = transition_matrices[0, token_index, :, :]
+        hiddens = transition_once_with_trace(model, token_index,
+                                             total_num_patterns,
+                                             wildcard_values, hiddens,
+                                             transition_matrix)
         # extract end-states and max with current bests
         end_state_back_pointers = [
-            max(best_bp, hidden_bps[end_state]) for best_bp, hidden_bps,
-            end_state in zip(end_state_back_pointers, hiddens, end_states)
+            max(best_back_pointer, hidden_back_pointers[end_state])
+            for best_back_pointer, hidden_back_pointers, end_state in zip(
+                end_state_back_pointers, hiddens, end_states)
         ]
+
+    # check that both explainability routine and model match
+    assert torch.equal(
+        torch.Tensor([bp.raw_score for bp in end_state_back_pointers]),
+        scores_history[0]), ("Explainability routine does not produce "
+                             "matching scores with SoPa++ routine")
+
+    for pattern_index in range(total_num_patterns):
+        end_state_back_pointers[
+            pattern_index].binarized_score = scores_history[1][
+                pattern_index].item()
+
+    # return best back pointers
     return end_state_back_pointers
 
 
@@ -144,12 +150,9 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
                   model: Module,
                   model_checkpoint: str,
                   model_log_directory: str,
-                  k_best: int,
                   batch_size: int,
                   gpu_device: Union[torch.device, None],
-                  max_doc_len: Union[int, None] = None,
-                  num_padding_tokens: int = 1,
-                  threshold: int = 1000) -> None:
+                  max_doc_len: Union[int, None] = None) -> None:
     # load model checkpoint
     model_checkpoint = torch.load(model_checkpoint,
                                   map_location=torch.device("cpu"))
@@ -164,72 +167,37 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     model.eval()
     torch.autograd.set_grad_enabled(False)
 
-    # disable autograd for explainability
-    explain_sorted = decreasing_length(zip(explain_data, explain_text))
-    explain_data = [doc for doc, _ in explain_sorted]
-    explain_text = [text for _, text in explain_sorted]
-    num_patterns = model.total_num_patterns
-    pattern_length = model.max_pattern_length
+    # sort explain data and text in decreasing length order
+    explain_data, explain_text = zip(
+        *decreasing_length(zip(explain_data, explain_text)))
 
-    # NOTE: most time is taken in computing this step
-    # this is the most important part to understand
-    back_pointers = [
-        get_top_scoring_spans_for_doc(model, doc, max_doc_len, gpu_device)
-        for doc in tqdm(explain_data)
-    ]
+    # start explanation workflow on all explain_data
+    activating_spans_back_pointers = [[
+        back_pointer if back_pointer.binarized_score else None
+        for back_pointer in back_pointers
+    ] for back_pointers in [
+        get_activating_spans(model, data, max_doc_len, gpu_device)
+        for data in tqdm(explain_data)
+    ]]
 
-    # TODO: understand what this does in terms of frequent words
-    # NOTE: this chunk only relats with superfluous segment
-    # not sure where the exact sorting happenes as per docstring
-    nearest_neighbors = torch.argmax(torch.mm(
-        model.diags.detach().clone(),
-        model.embeddings.weight.t()[:threshold, :]),
-                                     dim=1).view(num_patterns, model.num_diags,
-                                                 pattern_length)
-    diags = model.diags.view(num_patterns, model.num_diags, pattern_length,
-                             model.embeddings.embedding_dim).detach().clone()
-    biases = model.bias.view(num_patterns, model.num_diags,
-                             pattern_length).detach().clone()
-    self_loop_norms = torch.norm(diags[:, 0, :, :], 2, 2)
-    self_loop_neighbs = nearest_neighbors[:, 0, :]
-    self_loop_biases = biases[:, 0, :]
-    fwd_one_norms = torch.norm(diags[:, 1, :, :], 2, 2)
-    fwd_one_biases = biases[:, 1, :]
-    fwd_one_neighbs = nearest_neighbors[:, 1, :]
-    epsilons = model.get_epsilon_values().detach().clone()
+    # iterate over all patterns
+    for pattern_index in range(model.total_num_patterns):
+        # log current iterating
+        LOGGER.info(
+            "Pattern %s of length %s:" %
+            (pattern_index, model.end_states[pattern_index].item() + 1))
 
-    for p in range(num_patterns):
-        p_len = model.end_states[p].item() + 1
-        k_best_doc_idxs = sorted(
-            range(len(explain_data)),
-            key=lambda doc_idx: back_pointers[doc_idx][p].score,
-            reverse=True  # high-scores first
-        )[:k_best]
-
-        print("Pattern:", p, "of length", p_len)
-        print("Highest scoring spans:")
-        for k, d in enumerate(k_best_doc_idxs):
-            back_pointer = back_pointers[d][p]
-            score, text = back_pointer.score, back_pointer.display(
-                explain_text[d], num_padding_tokens=num_padding_tokens)
-            print("{} {:2.3f}  {}".format(k, score, text))
-
-        # TODO: unsure what these segments below print, perhaps not needed
-        print(
-            "self-loops: ", ", ".join(
-                transition_str(model, norm, neighb, bias) for norm, neighb,
-                bias in zip(self_loop_norms[p, :p_len], self_loop_neighbs[
-                    p, :p_len], self_loop_biases[p, :p_len])))
-        print(
-            "fwd 1s:     ", ", ".join(
-                transition_str(model, norm, neighb, bias)
-                for norm, neighb, bias in zip(fwd_one_norms[
-                    p, :p_len -
-                    1], fwd_one_neighbs[p, :p_len -
-                                        1], fwd_one_biases[p, :p_len - 1])))
-        print("epsilons:   ",
-              ", ".join("{:31.2f}".format(x) for x in epsilons[p, :p_len - 1]))
-        print()
+        # log relevant spans
+        text_back_pointers = sorted([
+            [explain_text[index],
+             activating_spans_back_pointers[index][pattern_index]]
+            for index in range(len(explain_data))
+            if activating_spans_back_pointers[index][pattern_index]
+        ], key=lambda mixed: mixed[1].raw_score)
+        activating_spans = [back_pointer.display(text)
+                            for text, back_pointer in text_back_pointers]
+        for text in activating_spans:
+            LOGGER.info(text)
 
 
 def explain_outer(args: argparse.Namespace) -> None:
@@ -275,12 +243,9 @@ def explain_outer(args: argparse.Namespace) -> None:
         embeddings,  # type:ignore
         vocab,
         semiring,
-        args.shared_self_loops,
-        args.no_epsilons,
-        args.no_self_loops,
+        args.no_wildcards,
         args.bias_scale,
-        args.epsilon_scale,
-        args.self_loop_scale,
+        args.wildcard_scale,
         0.)
 
     # log information about model
@@ -288,8 +253,8 @@ def explain_outer(args: argparse.Namespace) -> None:
 
     # execute inner function here
     explain_inner(explain_data, explain_text, model, args.model_checkpoint,
-                  model_log_directory, args.k_best, args.batch_size,
-                  gpu_device)
+                  model_log_directory, args.batch_size, gpu_device,
+                  args.max_doc_len)
 
 
 def main(args: argparse.Namespace) -> None:
