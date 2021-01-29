@@ -193,7 +193,8 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
              activating_spans_back_pointers[index][pattern_index]]
             for index in range(len(explain_data))
             if activating_spans_back_pointers[index][pattern_index]
-        ], key=lambda mixed: mixed[1].raw_score)
+        ], key=lambda mixed: mixed[1].raw_score, reverse=True)
+
         activating_spans = [back_pointer.display(text)
                             for text, back_pointer in text_back_pointers]
         for text in activating_spans:
