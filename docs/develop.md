@@ -22,161 +22,132 @@
 
 1.  Dedicated explainability
 
-    1.  Generic changes
+    1.  Execution speed
 
-        1.  update readme and usage scripts with changes made so far
+        1.  investigate exact bottlenack location inside
+            `get_activating_spans` -\> particularly in torch apply
+            function -\> better to find workaround than use torch for
+            this -\> perhaps convert everthing to numpy and operate from
+            there -\> perhaps a numpy or base-python equivalent for
+            semirings
 
-        2.  clean out source code with newer and more efficient
-            workflows, consistent variable namings and function
-            definitions on-the-fly -\> start off with `explain_data`
+            1.  update data types after changing these such as for utils
+                functions
 
-        3.  precisely type functions and classes on-the-fly -\>
-            especially for explainability scripts
+            2.  this can then be better parallelized with multipool, use
+                `batch_size` argument for this
 
-        4.  sort out scattered TODOs
+        2.  current model forwards are done by loops, but these can be
+            parallelized or vectorized before `get_activating_spans` and
+            then used inside -\> use `batch_size` argument for this
 
-    2.  Global explainability
+            1.  compute measure of sparsity -\> would be useful as model
+                output diagnostic -\> should be roughly half as per how
+                things are done, but can vary significantly by samples
 
-        1.  compatibility issues
+        3.  port backpointer concept to model as another function which
+            reflects the same workflow
 
-            1.  synchronize all changes in the oracle model into the
-                mimic model
+        4.  use tqdm to help with estimations -\> add `tqdm_arg_parser`
+            for posterity and pass around disable tqdm
 
-            2.  figure out why many end tokens occur after each other in
-                output patterns and how to remedy these illogical
-                pattern types -\> seems to be fixed by reducing
-                `num_padding_tokens` to `0` so it seems something is off
-                with offsetting technique used in backpointer display
-
-            3.  consider removing `num_padding_tokens` and emulate from
-                other scripts
-
-            4.  look into to/from-semiring functions are not used,
-                especially for log-space semiring
-
-            5.  look into legacy `visualization*` scripts to ensure no
-                workarounds during debugging were transferred causing
-                wrong indices
-
-            6.  modify `get_nearest_neighbors` to use full embeddings
-                and to use biases as well -\> if this is indeed
-                necessary after understanding
-
-            7.  look into `end_states` and other tensors which need to
-                be expanded based on batch dimension
-
-            8.  fix problem of double increment jumps in token indices
-                -\> possibly fixed but unsure
-
-            9.  replace nested zip with nested list comp of
-                `zip_lambda_2d` function -\> perhaps same for `cat_2d`
-                function
-
-            10. add all conditionals related to epsilons and SL (or
-                wildcards) to explainability script as per
-                `visualize_efficiently`
-
-            11. fix `max_doc_len` for explainability and emulate from
-                modelling scripts
-
-            12. fix looping over transition matrices as per modelling
-                scripts
-
-            13. consider removing `detach` calls on registered buffers
-                since they have no gradients, and instead just use
-                `clone` -\> but need to check this to be sure
-
-        2.  check if it is possible to port the entire backpointer
-            concept inside the sopa model as an exec-mode
-
-        3.  consider modifying model forward to conditionally return
-            scores and other tensors before linear layer -\> preferably
-            as a concatenated tensor -\> then can simply use model
-            outputs instead of computing them from scratch as is
-            currently done in explain script
-
-        4.  consider adding softmax to model forward if this is of any
-            use
-
-        5.  consider adding NullPointer instead of padding -\> might
-            help distinguish
-
-        6.  zero and restart padding used in model, but only restart
-            padding used in explain script -\> incompatibilities between
-            transitons_once functions -\> now we no longer need zero
-            padding in transitions
-
-        7.  binarizer and layer normalization output should be used for
-            explainability to ignore all other patterns -\> might help
-            with explainability
-
-        8.  think about how to work with unknown tokens on new data for
-            mimic model
-
-        9.  perhaps keep the existing nearest neighbours functionality
-            to deal with similar patterns with different tokens
-
-        10. introduce new function for loading and dumping patterns to
-            intercommunicate between mimic/oracle models -\> utilize
-            output-prefix argument when dumping output patterns file
-
-        11. look into `visualize_efficiently` and
-            `interpret_classification_results` scripts for possible
-            workflows to adopt
-
-        12. develop merging framework where regular expressions are
-            generalized from all the best patterns available -\> produce
-            pretty and compact ensemble of regular expressions, perhaps
-            with graphviz
-
-    3.  Execution speed
-
-        1.  use tqdm to help with estimations
-
-        2.  search for more efficient back-pointer python implementation
-
-        3.  look into torch semiring times function which could be a
-            bottleneck or otherwise use timing analysis to find
-            bottleneck
-
-        4.  can offer GPU for model-based exection, but main
+        5.  can offer GPU for model-based exection, but main
             explainability must happen on the CPU; multiple threads
             would be a bonus here for overall speed
-
-        5.  check if batch-level processing is possible as per training
-            workflow
 
         6.  merge efficiencies from `visualize_efficiently` script, for
             example using `heapq` for binary search tree
 
-        7.  consider keeping `explain_labels` or removing these
+    2.  Generalizing global explainability
+
+        1.  perform some kind of clustering to determine which patterns
+            to show/save and which ones not to
+
+        2.  develop merging framework where regular expressions are
+            generalized from all the best patterns available -\> produce
+            pretty and compact ensemble of regular expressions
+
+            1.  compile regular expressions when doing a search over the
+                mimic model
+
+        3.  modify `get_nearest_neighbors` to use full embeddings and to
+            use biases as well -\> perhaps keep the existing nearest
+            neighbours functionality to deal with similar patterns with
+            different tokens
+
+        4.  add back `k_best` to argument parser in case it is needed
+
+        5.  think about how to work with unknown tokens on new data for
+            mimic model
+
+        6.  consider keeping `explain_labels` or removing these
             altogether -\> not sure how they could still be of use later
             on in explainability
 
-    4.  Quantification of global explainability potential
+        7.  find tricks which help to increase generalization such as
+            defaulting to patterns given nearest neighbours or
+            levenstein distance -\> or at least discuss them
 
-        1.  perhaps do a check between model forward and explain forward
-            to ensure they are the same as a failsafe
+        8.  since all transitions are only dependent on the state and
+            not on each other, would it be possible to concatenate all
+            token spans for each pattern and interweave between them?
 
-        2.  compare confusion matrices between oracle and mimic and
+            1.  if this is possible, it will hugely benefit global
+                explainability
+
+            2.  might not be the best solution, but we can experiment
+                how this affects generalization
+
+            3.  perhaps use graphviz for visualization
+
+    3.  Quantification and generalizing global explainability
+
+        1.  compare confusion matrices between oracle and mimic and
             compute euclidean distances over raw softmax predictions
 
-        3.  demonstrate when global explainability aligns well and when
+        2.  demonstrate when global explainability aligns well and when
             it does not
 
-        4.  can be done for both the train and test partitions to check
+        3.  can be done for both the train and test partitions to check
             for extrapolation potential for explainability
 
-        5.  find tricks which help to increase generalization -\> or at
-            least discuss them
+    4.  Local explainability as a failsafe
 
-    5.  Local explainability as a failsafe
+        1.  rename `explain_spp` to something related to globalk
+            explainability and mimic model construction, since another
+            script will be needed to conduct local explanations
 
-        1.  in cases where global explainability cannot be deciphered,
+        2.  consider adding softmax to model forward if this is of any
+            use
+
+        3.  in cases where global explainability cannot be deciphered,
             we can provide a failsafe of local explainability
 
-        2.  this can be done a per-sample basis with pattern and score
+        4.  this can be done a per-sample basis with pattern and score
             specification -\> more likely to be useful on the test set
+
+    5.  Generic changes
+
+        1.  re-check token indices in backpointers and ensure they are
+            indeed correct -\> do some manual runs and re-thinking
+
+        2.  think whether to allow transition out of end state and how
+            this works, or what this means and if it is logical
+
+        3.  look again into document indices and why legacy code
+            subtracted padding tokens
+
+        4.  look into legacy visualization and interpretation scripts
+            for possible workflows to adopt
+
+        5.  clean out source code with newer and more efficient
+            workflows, consistent variable namings and function
+            definitions on-the-fly
+
+        6.  precisely type functions and classes on-the-fly -\>
+            especially for explainability scripts
+
+        7.  sort out scattered TODOs
 
 2.  Post explainability
 
@@ -192,14 +163,19 @@
 
     2.  Dedicated modelling
 
-        1.  add 2 threads specific arguments to jarvis shell scripts
+        1.  think again about removing binarizer if it limits freedom of
+            model too much
 
         2.  attempt to make normalizer dynamically ignore infinities
-            instead of expecting fixed sizes
+            instead of expecting fixed sizes -\> could be done with a
+            simple normalization routine but would have to work on
+            vectoring code
 
         3.  consider adding back elementwise affine transformations for
             LayerNorm -\> but this could possibly result in dead
-            patterns to be activated which is an illogical result
+            patterns to be activated which is an illogical result -\>
+            unless we can guarantee that infinity states will always be
+            ignored
 
         4.  consider using a generic function for batch minima, since
             this could be dependent on the semiring
@@ -207,7 +183,10 @@
         5.  encourage learning of wildcards by increasing its scale
             factor default -\> in case there are not enough
 
-        6.  change frequency of tensorboard, evaluation and model saving
+        6.  add 2 threads specific arguments to all jarvis shell scripts
+            and commit as local optimizations
+
+        7.  change frequency of tensorboard, evaluation and model saving
             to update-level
 
             1.  update arg parser with new arguments
@@ -221,10 +200,10 @@
 
             5.  convert data object to generator
 
-        7.  **extra:** repeat grid-search with multiple random seeds -\>
+        8.  **extra:** repeat grid-search with multiple random seeds -\>
             do this after all changes
 
-        8.  **extra:** use parallelized computations to fill up all GPU
+        9.  **extra:** use parallelized computations to fill up all GPU
             memory -\> would require reading-up on how to do this safely
             for a single GPU
 
@@ -275,38 +254,42 @@
         this can be changed or understood to keep consistency (ie. keep
         everything to List)
 
-4.  Documentation
+4.  Documentation and clean-code
 
-    1.  read paper again to get some familiarity with terms and
+    1.  remove cases where variables from argument namespace are
+        redefined as local variables, a common example of this is with
+        `args.model_log_directory` and `model_log_directory`
+
+    2.  read paper again to get some familiarity with terms and
         algorithms
 
-    2.  find better naming for mimic/oracle models which is based on
+    3.  find better naming for mimic/oracle models which is based on
         research terminology
 
-    3.  GPU/CPU runs not always reproducible depending on
+    4.  GPU/CPU runs not always reproducible depending on
         multi-threading, see:
         <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    4.  consider renaming `soft_patterns_pp` to more elegant name
+    5.  consider renaming `soft_patterns_pp` to more elegant name
         without special symbols such as `spp` or better -\> be useful to
         think of this before registering topic
 
-    5.  reduce source code lines, chunking and comments -\> pretty sort
+    6.  reduce source code lines, chunking and comments -\> pretty sort
         python code and function/class orders perhaps by length
 
-    6.  update metadata eg. with comprehensive python/shell help
+    7.  update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    7.  add information on best model downloads and preparation
+    8.  add information on best model downloads and preparation
 
-    8.  add pydocstrings to all functions and improve argparse
+    9.  add pydocstrings to all functions and improve argparse
         documentation
 
-    9.  provide description of data structures (eg. data, labels)
+    10. provide description of data structures (eg. data, labels)
         required for training processes
 
-    10. test download and all other scripts to ensure they work
+    11. test download and all other scripts to ensure they work
 
 ## Notes
 
@@ -466,33 +449,39 @@
         11. further work: porting this technique to a transformer where
             possible
 
-    3.  Self-thoughts
+    3.  Visualizations
 
-        1.  use graphical TikZ editor for creating graphs
+        1.  add visualization of in-depth computational graph in paper
+            for clarity -\> this can be automated
 
-        2.  add visualization of in-depth computational graph in paper
-            for clarity
+        2.  use graphical TikZ editor for creating graphs -\> produce
+            pretty graph to show processing
 
-        3.  compare oracle performance with those from other papers
+        3.  produce visualization of training performance using python
+            frameworks rather than R
 
-        4.  semirings, abstract algebra and how they are used for
+    4.  Self-thoughts
+
+        1.  compare oracle performance with those from other papers
+
+        2.  semirings, abstract algebra and how they are used for
             finite-state machines in Forward and Viterbi algorithms -\>
             go deeper into this to get some background
 
-        5.  use more appropriate and generalized semiring terminology
+        3.  use more appropriate and generalized semiring terminology
             from Peng et al. 2019 -\> more generalized compared to SoPa
             paper
 
-        6.  Chomsky hierarchy of languages -\> might be relevant
+        4.  Chomsky hierarchy of languages -\> might be relevant
             especially relating to CFGs
 
-        7.  FSA/WFSAs -\> input theoretical CS, mathematics background
+        5.  FSA/WFSAs -\> input theoretical CS, mathematics background
             to describe these
 
-        8.  ANN\'s historical literature -\> describe how ANNs
+        6.  ANN\'s historical literature -\> describe how ANNs
             approximate symbolic representations
 
-        9.  extension/recommendations -\> transducer for seq2seq tasks
+        7.  extension/recommendations -\> transducer for seq2seq tasks
 
 ## Completed
 
