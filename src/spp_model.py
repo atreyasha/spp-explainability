@@ -157,6 +157,11 @@ class SoftPatternClassifier(Module):
         # finally return transition matrices for all tokens
         return transition_matrices
 
+    def get_wildcard_matrix(self) -> Union[torch.Tensor, None]:
+        return None if self.no_wildcards else self.semiring.times(
+            self.wildcard_scale.clone(),  # type: ignore
+            self.semiring.from_outer_to_semiring(self.wildcards))
+
     def forward(self, batch: Batch, explain: bool = False) -> torch.Tensor:
         # start timer and get transition matrices
         transition_matrices = self.get_transition_matrices(batch)
@@ -184,8 +189,8 @@ class SoftPatternClassifier(Module):
         hiddens[:, :, 0] = self.semiring.one(batch_size,
                                              self.total_num_patterns)
 
-        # get wildcard_values based on previous class settings
-        wildcard_values = self.get_wildcard_values()
+        # get wildcard_matrix based on previous class settings
+        wildcard_matrix = self.get_wildcard_matrix()
 
         # start loop over all transition matrices
         for token_index in range(transition_matrices.size(1)):
@@ -193,8 +198,8 @@ class SoftPatternClassifier(Module):
             transition_matrix = transition_matrices[:, token_index, :, :]
 
             # retrieve all hiddens given current state embeddings
-            hiddens = self.transition_once(wildcard_values, hiddens,
-                                           transition_matrix, restart_padding)
+            hiddens = self.transition_once(hiddens, transition_matrix,
+                                           wildcard_matrix, restart_padding)
 
             # look at the end state for each pattern, and "add" it into score
             end_state_values = torch.gather(hiddens, 2, end_states).view(
@@ -243,13 +248,9 @@ class SoftPatternClassifier(Module):
         else:
             return self.linear.forward(scores)
 
-    def get_wildcard_values(self) -> Union[torch.Tensor, None]:
-        return None if self.no_wildcards else self.semiring.times(
-            self.wildcard_scale.clone(),  # type: ignore
-            self.semiring.from_outer_to_semiring(self.wildcards))
-
-    def transition_once(self, wildcard_values: Union[torch.Tensor, None],
-                        hiddens: torch.Tensor, transition_matrix: torch.Tensor,
+    def transition_once(self, hiddens: torch.Tensor,
+                        transition_matrix: torch.Tensor,
+                        wildcard_matrix: Union[torch.Tensor, None],
                         restart_padding: torch.Tensor) -> torch.Tensor:
         # adding the start state and main transition
         main_transitions = torch.cat(
@@ -262,6 +263,6 @@ class SoftPatternClassifier(Module):
         else:
             wildcard_transitions = torch.cat(
                 (restart_padding,
-                 self.semiring.times(hiddens[:, :, :-1], wildcard_values)), 2)
+                 self.semiring.times(hiddens[:, :, :-1], wildcard_matrix)), 2)
             # either main transition or wildcard
             return self.semiring.plus(main_transitions, wildcard_transitions)

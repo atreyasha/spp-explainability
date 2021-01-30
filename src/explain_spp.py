@@ -70,9 +70,8 @@ def restart_padding(model: Module, token_index: int,
 
 def transition_once_with_trace(
         model: Module, token_index: int, total_num_patterns: int,
-        wildcard_values: Union[torch.Tensor,
-                               None], hiddens: List[List[BackPointer]],
-        transition_matrix: torch.Tensor) -> List[List[BackPointer]]:
+        hiddens: List[List[BackPointer]], transition_matrix: torch.Tensor,
+        wildcard_matrix: Union[torch.Tensor, None]) -> List[List[BackPointer]]:
     # add main transition; consume a token and state
     main_transitions = cat_nested(
         restart_padding(model, token_index, total_num_patterns),
@@ -107,7 +106,7 @@ def transition_once_with_trace(
                             start_token_index=back_pointer.start_token_index,
                             current_token_index=token_index,
                             end_token_index=token_index + 1),
-                [hidden[:-1] for hidden in hiddens], wildcard_values))
+                [hidden[:-1] for hidden in hiddens], wildcard_matrix))
 
         # return final object
         return zip_lambda_nested(max, main_transitions, wildcard_transitions)
@@ -123,7 +122,7 @@ def get_activating_spans(
     scores_history = model.forward(batch, explain=True).squeeze()
     transition_matrices = model.get_transition_matrices(batch)
     total_num_patterns = model.total_num_patterns
-    wildcard_values = model.get_wildcard_values()
+    wildcard_matrix = model.get_wildcard_matrix()
     end_states = model.end_states.squeeze()
     hiddens = model.semiring.zero(total_num_patterns, model.max_pattern_length)
 
@@ -152,9 +151,9 @@ def get_activating_spans(
     for token_index in range(transition_matrices.size(1)):
         transition_matrix = transition_matrices[0, token_index, :, :]
         hiddens = transition_once_with_trace(model, token_index,
-                                             total_num_patterns,
-                                             wildcard_values, hiddens,
-                                             transition_matrix)
+                                             total_num_patterns, hiddens,
+                                             transition_matrix,
+                                             wildcard_matrix)
         # extract end-states and max with current bests
         end_state_back_pointers = [
             max(best_back_pointer, hidden_back_pointers[end_state])
