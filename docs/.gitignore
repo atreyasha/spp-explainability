@@ -10,4 +10,11 @@
 *.out
 *.gz
 *.toc
+*.sty
+*.bst
+*.nav
+*.xml
+*.snm
+*.zip
 *.anthology.bib
+*-blx.bib
