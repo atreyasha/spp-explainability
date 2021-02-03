@@ -216,7 +216,7 @@ class SoftPatternClassifier(Module):
 
         # clone raw scores to keep track of it
         if explain:
-            scores_history = scores.clone()
+            interim_scores = scores.clone()
 
         # extract all infinite indices
         inf_indices = torch.where(scores == float("-inf"))
@@ -242,8 +242,8 @@ class SoftPatternClassifier(Module):
 
         # conditionally return different tensors depending on routine
         if explain:
-            scores_history = torch.stack((scores_history, scores.clone()))
-            return scores_history
+            interim_scores = torch.stack((interim_scores, scores.clone()))
+            return interim_scores
         else:
             return self.linear.forward(scores)
 
