@@ -16,33 +16,35 @@ def timestamp() -> str:
     return str(int(datetime.datetime.now().timestamp()))
 
 
-def chunked(xs: List[Tuple[List[int], int]],
+def chunked(inputs: List[Tuple[List[int], int]],
             chunk_size: int) -> List[List[Tuple[List[int], int]]]:
-    return [xs[i:i + chunk_size] for i in range(0, len(xs), chunk_size)]
+    return [
+        inputs[i:i + chunk_size] for i in range(0, len(inputs), chunk_size)
+    ]
 
 
 def decreasing_length(
-        xs: List[Tuple[List[int], int]]) -> List[Tuple[List[int], int]]:
-    return sorted(list(xs), key=lambda x: len(x[0]), reverse=True)
+        inputs: List[Tuple[List[int], int]]) -> List[Tuple[List[int], int]]:
+    return sorted(list(inputs), key=lambda x: len(x[0]), reverse=True)
 
 
-def chunked_sorted(xs: List[Tuple[List[int], int]],
+def chunked_sorted(inputs: List[Tuple[List[int], int]],
                    chunk_size: int) -> List[List[Tuple[List[int], int]]]:
-    return chunked(decreasing_length(xs), chunk_size)
+    return chunked(decreasing_length(inputs), chunk_size)
 
 
 def shuffled_chunked_sorted(
-        xs: List[Tuple[List[int], int]],
+        inputs: List[Tuple[List[int], int]],
         chunk_size: int) -> List[List[Tuple[List[int], int]]]:
-    shuffled_xs = xs.copy()
-    np.random.shuffle(shuffled_xs)
-    chunks = chunked_sorted(shuffled_xs, chunk_size)
+    shuffled_inputs = inputs.copy()
+    np.random.shuffle(shuffled_inputs)
+    chunks = chunked_sorted(shuffled_inputs, chunk_size)
     np.random.shuffle(chunks)
     return chunks
 
 
-def right_pad(xs: List[Any], min_len: int, pad_element: Any) -> List[Any]:
-    return xs + [pad_element] * (min_len - len(xs))
+def right_pad(inputs: List[Any], min_len: int, pad_element: Any) -> List[Any]:
+    return inputs + [pad_element] * (min_len - len(inputs))
 
 
 def to_cuda(gpu_device: Union[torch.device, None]) -> Callable:
