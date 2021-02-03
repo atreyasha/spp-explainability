@@ -3,17 +3,19 @@
 
 from typing import Callable, List, Union
 from functools import total_ordering
-import torch
 
 
-def zip_lambda_nested(function: Callable, input_a: List[List['BackPointer']],
-                      input_b: torch.Tensor) -> List[List['BackPointer']]:
+def zip_lambda_nested(function: Callable[['BackPointer', float],
+                                         'BackPointer'],
+                      input_X: List[List['BackPointer']],
+                      input_Y: List[List[float]]) -> List[List['BackPointer']]:
     return [[function(x, y) for x, y in zip(X, Y)]
-            for X, Y in zip(input_a, input_b)]
+            for X, Y in zip(input_X, input_Y)]
 
 
-def cat_nested(padding: List[List['BackPointer']],
-               data: List[List['BackPointer']]) -> List[List['BackPointer']]:
+def concatenate_lists(
+        padding: List['BackPointer'],
+        data: List[List['BackPointer']]) -> List[List['BackPointer']]:
     return [[pad] + data_element for pad, data_element in zip(padding, data)]
 
 
