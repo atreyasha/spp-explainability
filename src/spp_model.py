@@ -124,10 +124,13 @@ class SoftPatternClassifier(Module):
                              persistent=False)
 
         # register hiddens tensor
-        self.register_buffer("hiddens",
-                             self.semiring.zero(self.total_num_patterns,
-                                                self.max_pattern_length),
-                             persistent=False)
+        self.register_buffer(
+            "hiddens",
+            torch.cat((self.semiring.one(self.total_num_patterns, 1),
+                       self.semiring.zero(self.total_num_patterns,
+                                          self.max_pattern_length - 1)),
+                      axis=1),
+            persistent=False)
 
     def get_transition_matrices(self, batch: Batch) -> torch.Tensor:
         # initialize local variables
@@ -184,10 +187,6 @@ class SoftPatternClassifier(Module):
         # enumerate all end pattern states
         end_states = self.end_states.expand(  # type: ignore
             batch_size, self.total_num_patterns, -1).clone()
-
-        # set start state (0) to semiring 1 for each pattern in each doc
-        hiddens[:, :, 0] = self.semiring.one(batch_size,
-                                             self.total_num_patterns)
 
         # get wildcard_matrix based on previous class settings
         wildcard_matrix = self.get_wildcard_matrix()
