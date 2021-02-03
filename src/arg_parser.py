@@ -153,10 +153,6 @@ def explain_arg_parser() -> argparse.ArgumentParser:
                           type=file_path)
     # add group for optional arguments
     explain = parser.add_argument_group('optional explainability arguments')
-    explain.add_argument("--batch-size",
-                         help="Batch size for explainability",
-                         default=256,
-                         type=int)
     explain.add_argument("--num-train-instances",
                          help="Maximum number of training instances",
                          type=int)
@@ -261,9 +257,9 @@ def hardware_arg_parser() -> argparse.ArgumentParser:
                                 " is used"),
                           default="cuda:0",
                           type=str)
-    hardware.add_argument("--num-threads",
+    hardware.add_argument("--torch-num-threads",
                           help=("Set the number of threads used for intraop "
-                                "parallelism on CPU"),
+                                "parallelism on CPU with PyTorch"),
                           type=int)
     hardware.add_argument("--gpu",
                           help="Use GPU hardware acceleration",
