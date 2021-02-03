@@ -108,19 +108,25 @@ class Semiring:
                  one: Callable[..., torch.Tensor],
                  plus: Callable[..., torch.Tensor],
                  times: Callable[..., torch.Tensor],
+                 float_plus: Callable[[float, float], float],
+                 float_times: Callable[[float, float], float],
                  from_outer_to_semiring: Callable[..., torch.Tensor],
                  from_semiring_to_outer: Callable[..., torch.Tensor]) -> None:  # yapf: disable
         self.zero = zero
         self.one = one
         self.plus = plus
         self.times = times
+        self.float_plus = float_plus
+        self.float_times = float_times
         self.from_outer_to_semiring = from_outer_to_semiring
         self.from_semiring_to_outer = from_semiring_to_outer
 
 
 MaxSumSemiring = Semiring(neg_infinity, torch.zeros, torch.max, torch.add,
-                          identity, identity)
+                          lambda x, y: max(x, y), lambda x, y: x + y, identity,
+                          identity)
 
 LogSpaceMaxProductSemiring = Semiring(
-    neg_infinity, torch.zeros, torch.max, torch.add,
-    lambda x: torch.log(torch.sigmoid(x) + LOG_EPSILON), torch.exp)
+    neg_infinity, torch.zeros, torch.max, torch.add, lambda x, y: max(x, y),
+    lambda x, y: x + y, lambda x: torch.log(torch.sigmoid(x) + LOG_EPSILON),
+    torch.exp)
