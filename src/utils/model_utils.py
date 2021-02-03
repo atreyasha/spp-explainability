@@ -108,8 +108,8 @@ class Semiring:
                  one: Callable[..., torch.Tensor],
                  plus: Callable[..., torch.Tensor],
                  times: Callable[..., torch.Tensor],
-                 float_plus: Callable[[float, float], float],
-                 float_times: Callable[[float, float], float],
+                 float_plus: Callable,
+                 float_times: Callable,
                  from_outer_to_semiring: Callable[..., torch.Tensor],
                  from_semiring_to_outer: Callable[..., torch.Tensor]) -> None:  # yapf: disable
         self.zero = zero

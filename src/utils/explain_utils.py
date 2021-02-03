@@ -5,11 +5,11 @@ from typing import Callable, List, Union
 from functools import total_ordering
 
 
-def zip_lambda_nested(function: Callable[['BackPointer', float],
-                                         'BackPointer'],
-                      input_X: List[List['BackPointer']],
-                      input_Y: List[List[float]]) -> List[List['BackPointer']]:
-    return [[function(x, y) for x, y in zip(X, Y)]
+def zip_lambda_nested(
+    function: Callable, input_X: List[List['BackPointer']],
+    input_Y: Union[List[List[float]], List[List['BackPointer']]]
+) -> List[List['BackPointer']]:
+    return [[function(x, y) for x, y in zip(X, Y)]  # type: ignore
             for X, Y in zip(input_X, input_Y)]
 
 
@@ -34,7 +34,9 @@ class BackPointer:
         self.current_token_index = current_token_index
         self.end_token_index = end_token_index
 
-    def __eq__(self, other: 'BackPointer') -> bool:
+    def __eq__(self, other: 'BackPointer') -> bool:  # type: ignore
+        if not isinstance(other, BackPointer):
+            return NotImplemented
         return self.raw_score == other.raw_score
 
     def __lt__(self, other: 'BackPointer') -> bool:
@@ -54,10 +56,11 @@ class BackPointer:
                     self.previous, self.transition, self.start_token_index,
                     self.current_token_index, self.end_token_index)
 
-    def display(self,
-                doc_text: List[str],
-                extra: List[str] = [],
-                num_padding_tokens: int = 1) -> str:
+    def display(  # type: ignore
+            self,
+            doc_text: List[str],
+            extra: List[str] = [],
+            num_padding_tokens: int = 1) -> List[str]:
         if self.previous is None:
             return extra
         if self.transition == "main_transition":
