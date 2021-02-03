@@ -87,13 +87,13 @@ def parse_configs_to_args(args: argparse.Namespace,
 
 def set_hardware(args: argparse.Namespace) -> Union[torch.device, None]:
     # set torch number of threads
-    if args.num_threads is None:
+    if args.torch_num_threads is None:
         LOGGER.info("Using default number of CPU threads: %s" %
                     torch.get_num_threads())
     else:
-        torch.set_num_threads(args.num_threads)
+        torch.set_num_threads(args.torch_num_threads)
         LOGGER.info("Using specified number of CPU threads: %s" %
-                    args.num_threads)
+                    args.torch_num_threads)
 
     # specify gpu device if relevant
     if args.gpu:
