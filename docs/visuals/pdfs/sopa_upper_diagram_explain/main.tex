@@ -1,3 +1,4 @@
+% document-level settings
 \documentclass[border=0.125cm]{standalone}
 \usepackage{tikz}
 \usepackage{amssymb}
@@ -5,6 +6,8 @@
 \usetikzlibrary{positioning, fit, backgrounds}
 
 \begin{document}
+
+% create re-usable tikzset
 \tikzset{
   every neuron/.style={
     circle,
@@ -47,7 +50,6 @@
 
     % set random seed for color generation 
     \pgfmathsetseed{3}
-
     \foreach \m [count=\y] in {1,2,missing,3}{
       \pgfmathparse{80*rnd}
       \edef\tmp{\pgfmathresult}

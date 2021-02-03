@@ -1,9 +1,12 @@
+% document-level settings
 \documentclass[border=0.125cm]{standalone}
 \usepackage{tikz}
 \usepackage{amssymb}
 \usetikzlibrary{positioning}
 
 \begin{document}
+
+% re-usable tikzset
 \tikzset{
   every neuron/.style={
     circle,
@@ -24,8 +27,7 @@
   % create and distribute neurons
   {
     % set random seed for color generation 
-    \pgfmathsetseed{1}
-    
+    \pgfmathsetseed{1}    
     \foreach \m/\l [count=\y] in {1,2,3,missing,4}{
       \pgfmathparse{100*rnd}
       \edef\tmp{\pgfmathresult}
@@ -34,7 +36,6 @@
 
     % set random seed for color generation 
     \pgfmathsetseed{1}
-    
     \foreach \m [count=\y] in {1,2,3,missing,4}{
       \pgfmathparse{40*rnd}
       \edef\tmp{\pgfmathresult}
@@ -55,7 +56,6 @@
 
     % set random seed for color generation 
     \pgfmathsetseed{3}
-
     \foreach \m [count=\y] in {1,2,missing,3}{
       \pgfmathparse{80*rnd}
       \edef\tmp{\pgfmathresult}
