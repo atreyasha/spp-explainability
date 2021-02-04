@@ -15,7 +15,7 @@ from .arg_parser import (explain_arg_parser, hardware_arg_parser,
                          logging_arg_parser, tqdm_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_semiring,
                         get_train_valid_data, get_pattern_specs)
-from .spp_model import SoftPatternClassifier
+from .spp_torch_model import SoftPatternClassifier
 import argparse
 import torch
 import os
