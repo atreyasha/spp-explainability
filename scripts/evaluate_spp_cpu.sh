@@ -13,9 +13,7 @@ Optional arguments:
 
 Required arguments:
   model_checkpoint <glob_path>  Glob path to model checkpoint with '.pt'
-                                extension. Note that 'model_config.json'
-                                must be in the same directory level as
-                                the model checkpoint file
+                                extension
 EOF
 }
 

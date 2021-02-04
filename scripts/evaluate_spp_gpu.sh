@@ -6,16 +6,14 @@ usage() {
   cat <<EOF
 Usage: evaluate_spp_gpu.sh [-h|--help] model_checkpoint
 
-Evaluate SoPa++ model on an evaluation data set on the GPU
+Evaluate SoPa++ model on an evaluation data set on a GPU
 
 Optional arguments:
   -h, --help                    Show this help message and exit
 
 Required arguments:
   model_checkpoint <glob_path>  Glob path to model checkpoint with '.pt'
-                                extension. Note that 'model_config.json'
-                                must be in the same directory level as
-                                the model checkpoint file
+                                extension
 EOF
 }
 
