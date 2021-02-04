@@ -22,73 +22,46 @@
 
 1.  Dedicated explainability
 
-    1.  Execution speed
+    1.  Generalizing global explainability
 
-        1.  investigate exact bottlenack location inside
-            `get_activating_spans` -\> particularly in torch apply
-            function -\> better to find workaround than use torch for
-            this -\> perhaps convert everthing to numpy and operate from
-            there -\> perhaps a numpy or base-python equivalent for
-            semirings
+        1.  make separate script for regex compression framework, such
+            as `compress_explainable_spp`
 
-            1.  update data types after changing these such as for utils
-                functions
+            1.  develop merging framework where regular expressions are
+                generalized from all the best patterns available
 
-            2.  this can then be better parallelized with multipool, use
-                `batch_size` argument for this
+            2.  provide options such as rational, brave and mad for
+                compression types, indicating how broad they could be
 
-        2.  current model forwards are done by loops, but these can be
-            parallelized or vectorized before `get_activating_spans` and
-            then used inside -\> use `batch_size` argument for this
+            3.  look into similar regular expressions across patterns
+                and if this can be optimized somehow
 
-            1.  compute measure of sparsity -\> would be useful as model
-                output diagnostic -\> should be roughly half as per how
-                things are done, but can vary significantly by samples
+            4.  produce pretty and compact ensemble of regular
+                expressions
 
-        3.  port backpointer concept to model as another function which
-            reflects the same workflow
+            5.  perform some kind of clustering to determine which regex
+                patterns to show/save and which ones not to
 
-        4.  use tqdm to help with estimations -\> add `tqdm_arg_parser`
-            for posterity and pass around disable tqdm
-
-        5.  can offer GPU for model-based exection, but main
-            explainability must happen on the CPU; multiple threads
-            would be a bonus here for overall speed
-
-        6.  merge efficiencies from `visualize_efficiently` script, for
-            example using `heapq` for binary search tree
-
-    2.  Generalizing global explainability
-
-        1.  perform some kind of clustering to determine which patterns
-            to show/save and which ones not to
-
-        2.  develop merging framework where regular expressions are
-            generalized from all the best patterns available -\> produce
-            pretty and compact ensemble of regular expressions
-
-            1.  compile regular expressions when doing a search over the
+            6.  compile regular expressions when doing a search over the
                 mimic model
 
-        3.  modify `get_nearest_neighbors` to use full embeddings and to
-            use biases as well -\> perhaps keep the existing nearest
-            neighbours functionality to deal with similar patterns with
-            different tokens
+            7.  modify `get_nearest_neighbors` to use full embeddings
+                and to use biases as well
 
-        4.  add back `k_best` to argument parser in case it is needed
+            8.  keep the existing nearest neighbours functionality to
+                deal with similar patterns with different tokens
 
-        5.  think about how to work with unknown tokens on new data for
-            mimic model
+            9.  add back `k_best` to argument parser in case it is
+                needed
 
-        6.  consider keeping `explain_labels` or removing these
-            altogether -\> not sure how they could still be of use later
-            on in explainability
+            10. think about how to work with unknown tokens on new data
+                for mimic model
 
-        7.  find tricks which help to increase generalization such as
-            defaulting to patterns given nearest neighbours or
-            levenstein distance -\> or at least discuss them
+            11. find tricks which help to increase generalization such
+                as defaulting to patterns given nearest neighbours or
+                levenstein distance -\> or at least discuss them
 
-        8.  since all transitions are only dependent on the state and
+        2.  since all transitions are only dependent on the state and
             not on each other, would it be possible to concatenate all
             token spans for each pattern and interweave between them?
 
@@ -100,7 +73,7 @@
 
             3.  perhaps use graphviz for visualization
 
-    3.  Quantification and generalizing global explainability
+    2.  Quantification and generalizing global explainability
 
         1.  compare confusion matrices between oracle and mimic and
             compute euclidean distances over raw softmax predictions
@@ -111,7 +84,7 @@
         3.  can be done for both the train and test partitions to check
             for extrapolation potential for explainability
 
-    4.  Local explainability as a failsafe
+    3.  Local explainability as a failsafe
 
         1.  rename `explain_spp` to something related to globalk
             explainability and mimic model construction, since another
@@ -126,7 +99,7 @@
         4.  this can be done a per-sample basis with pattern and score
             specification -\> more likely to be useful on the test set
 
-    5.  Generic changes
+    4.  Generic changes
 
         1.  re-check token indices in backpointers and ensure they are
             indeed correct -\> do some manual runs and re-thinking
@@ -161,32 +134,48 @@
         3.  both have some papers which could be cited to add some
             relevance
 
-    2.  Dedicated modelling
+    2.  Explainability execution speed
+
+        1.  add batch size to explainability while computing
+            `interim_scores`, but would require that `explain_data` and
+            `explain_text` are sorted beforehand in a symmetric manner
+            and respecting the fact that sorting requires label to be
+            replaced with text, also need to add `batch_size` to
+            `arg_parser`
+
+        2.  if applicable, merge efficiencies from
+            `visualize_efficiently` such as using `heapq`
+
+    3.  Dedicated modelling
 
         1.  think again about removing binarizer if it limits freedom of
             model too much
 
-        2.  attempt to make normalizer dynamically ignore infinities
+        2.  add option to increase threshold for STE to detect more
+            distinct and sparse patterns instead of roughly half -\>
+            call this threshold \"tau\"
+
+        3.  attempt to make normalizer dynamically ignore infinities
             instead of expecting fixed sizes -\> could be done with a
             simple normalization routine but would have to work on
             vectoring code
 
-        3.  consider adding back elementwise affine transformations for
+        4.  consider adding back elementwise affine transformations for
             LayerNorm -\> but this could possibly result in dead
             patterns to be activated which is an illogical result -\>
             unless we can guarantee that infinity states will always be
             ignored
 
-        4.  consider using a generic function for batch minima, since
+        5.  consider using a generic function for batch minima, since
             this could be dependent on the semiring
 
-        5.  encourage learning of wildcards by increasing its scale
+        6.  encourage learning of wildcards by increasing its scale
             factor default -\> in case there are not enough
 
-        6.  add 2 threads specific arguments to all jarvis shell scripts
+        7.  add 2 threads specific arguments to all jarvis shell scripts
             and commit as local optimizations
 
-        7.  change frequency of tensorboard, evaluation and model saving
+        8.  change frequency of tensorboard, evaluation and model saving
             to update-level
 
             1.  update arg parser with new arguments
@@ -200,10 +189,10 @@
 
             5.  convert data object to generator
 
-        8.  **extra:** repeat grid-search with multiple random seeds -\>
+        9.  **extra:** repeat grid-search with multiple random seeds -\>
             do this after all changes
 
-        9.  **extra:** use parallelized computations to fill up all GPU
+        10. **extra:** use parallelized computations to fill up all GPU
             memory -\> would require reading-up on how to do this safely
             for a single GPU
 
@@ -239,16 +228,14 @@
 
 3.  Dependencies, typing and testing
 
-    1.  use `renv` for managing and shipping R dependencies -\> keep
-        just `renv.lock` for easier shipping and ignore other files
+    1.  include basic test code by instantiating class and/or other
+        simple methods
 
-    2.  include basic test code by instantiating class and/or other
-        simple methods which are inherent to the workflow
+    2.  add mypy as an explicit part of testing the source code
 
-    3.  add mypy as an explicit part of testing the source code
+    3.  replace Union + None types with Optional type for conciseness
 
-    4.  consider adding Optional type to all optional arguments instead
-        of Union + None
+    4.  replace all `dict` types with `Dict` for consistency
 
     5.  look into cases where List was replaced by Sequential and how
         this can be changed or understood to keep consistency (ie. keep
@@ -256,40 +243,48 @@
 
 4.  Documentation and clean-code
 
-    1.  remove cases where variables from argument namespace are
+    1.  rename `spp_model` to `spp_torch_model` to fit indents better
+
+    2.  port backpointer concept to model as another function inside
+        torch model
+
+    3.  remove cases where variables from argument namespace are
         redefined as local variables, a common example of this is with
         `args.model_log_directory` and `model_log_directory`
 
-    2.  read paper again to get some familiarity with terms and
+    4.  read paper again to get some familiarity with terms and
         algorithms
 
-    3.  find better naming for mimic/oracle models which is based on
+    5.  find better naming for mimic/oracle models which is based on
         research terminology
 
-    4.  GPU/CPU runs not always reproducible depending on
+    6.  GPU/CPU runs not always reproducible depending on
         multi-threading, see:
         <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    5.  consider renaming `soft_patterns_pp` to more elegant name
+    7.  consider renaming `soft_patterns_pp` to more elegant name
         without special symbols such as `spp` or better -\> be useful to
         think of this before registering topic
 
-    6.  reduce source code lines, chunking and comments -\> pretty sort
+    8.  reduce source code lines, chunking and comments -\> pretty sort
         python code and function/class orders perhaps by length
 
-    7.  update metadata eg. with comprehensive python/shell help
+    9.  add a comment to each code chunk which explains inner mechanisms
+        better
+
+    10. update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    8.  add information on best model downloads and preparation
+    11. add information on best model downloads and preparation
 
-    9.  add pydocstrings to all functions and improve argparse
+    12. add pydocstrings to all functions and improve argparse
         documentation
 
-    10. provide description of data structures (eg. data, labels)
+    13. provide description of data structures (eg. data, labels)
         required for training processes
 
-    11. test download and all other scripts to ensure they work
+    14. test download and all other scripts to ensure they work
 
 ## Notes
 
@@ -389,7 +384,7 @@
 
     3.  ~~Topic proposal final: **15.11.2020**~~
 
-    4.  Topic registration: **01.02.2021**
+    4.  ~~Topic registration: **01.02.2021**~~
 
     5.  Manuscript submission: **31.03.2021**
 

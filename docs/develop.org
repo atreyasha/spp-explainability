@@ -1,30 +1,23 @@
 #+STARTUP: overview
 #+OPTIONS: ^:nil
 #+OPTIONS: p:t
-
+  
 ** Tasks
 *** Current
 **** Dedicated explainability
-***** Execution speed
-****** investigate exact bottlenack location inside =get_activating_spans= -> particularly in torch apply function -> better to find workaround than use torch for this -> perhaps convert everthing to numpy and operate from there -> perhaps a numpy or base-python equivalent for semirings
-******* update data types after changing these such as for utils functions
-******* this can then be better parallelized with multipool, use =batch_size= argument for this
-****** current model forwards are done by loops, but these can be parallelized or vectorized before =get_activating_spans= and then used inside -> use =batch_size= argument for this
-******* compute measure of sparsity -> would be useful as model output diagnostic -> should be roughly half as per how things are done, but can vary significantly by samples
-****** port backpointer concept to model as another function which reflects the same workflow
-****** use tqdm to help with estimations -> add =tqdm_arg_parser= for posterity and pass around disable tqdm
-****** can offer GPU for model-based exection, but main explainability must happen on the CPU; multiple threads would be a bonus here for overall speed
-****** merge efficiencies from =visualize_efficiently= script, for example using =heapq= for binary search tree
-
 ***** Generalizing global explainability
-****** perform some kind of clustering to determine which patterns to show/save and which ones not to
-****** develop merging framework where regular expressions are generalized from all the best patterns available -> produce pretty and compact ensemble of regular expressions
+****** make separate script for regex compression framework, such as =compress_explainable_spp=
+******* develop merging framework where regular expressions are generalized from all the best patterns available
+******* provide options such as rational, brave and mad for compression types, indicating how broad they could be
+******* look into similar regular expressions across patterns and if this can be optimized somehow
+******* produce pretty and compact ensemble of regular expressions
+******* perform some kind of clustering to determine which regex patterns to show/save and which ones not to
 ******* compile regular expressions when doing a search over the mimic model
-****** modify =get_nearest_neighbors= to use full embeddings and to use biases as well -> perhaps keep the existing nearest neighbours functionality to deal with similar patterns with different tokens
-****** add back =k_best= to argument parser in case it is needed
-****** think about how to work with unknown tokens on new data for mimic model
-****** consider keeping =explain_labels= or removing these altogether -> not sure how they could still be of use later on in explainability
-****** find tricks which help to increase generalization such as defaulting to patterns given nearest neighbours or levenstein distance -> or at least discuss them
+******* modify =get_nearest_neighbors= to use full embeddings and to use biases as well
+******* keep the existing nearest neighbours functionality to deal with similar patterns with different tokens
+******* add back =k_best= to argument parser in case it is needed
+******* think about how to work with unknown tokens on new data for mimic model
+******* find tricks which help to increase generalization such as defaulting to patterns given nearest neighbours or levenstein distance -> or at least discuss them
 ****** since all transitions are only dependent on the state and not on each other, would it be possible to concatenate all token spans for each pattern and interweave between them?
 ******* if this is possible, it will hugely benefit global explainability
 ******* might not be the best solution, but we can experiment how this affects generalization
@@ -52,8 +45,12 @@
 ****** consider extending workflow to ATIS and/or SNIPS
 ****** re-use preprocessing functions by sending them to utils and perhaps make them more general where possible
 ****** both have some papers which could be cited to add some relevance
+***** Explainability execution speed
+****** add batch size to explainability while computing =interim_scores=, but would require that =explain_data= and =explain_text= are sorted beforehand in a symmetric manner and respecting the fact that sorting requires label to be replaced with text, also need to add =batch_size= to =arg_parser= 
+****** if applicable, merge efficiencies from =visualize_efficiently= such as using =heapq=
 ***** Dedicated modelling
 ****** think again about removing binarizer if it limits freedom of model too much
+****** add option to increase threshold for STE to detect more distinct and sparse patterns instead of roughly half -> call this threshold "tau"
 ****** attempt to make normalizer dynamically ignore infinities instead of expecting fixed sizes -> could be done with a simple normalization routine but would have to work on vectoring code
 ****** consider adding back elementwise affine transformations for LayerNorm -> but this could possibly result in dead patterns to be activated which is an illogical result -> unless we can guarantee that infinity states will always be ignored
 ****** consider using a generic function for batch minima, since this could be dependent on the semiring
@@ -79,24 +76,27 @@
 ***** replace all legacy =tensor.data= calls with =tensor.detach()= for safety and =tensor.detach().clone()= for cases where data is being updated
 ***** check code for =squeeze()= call which can be problematic for dim 1 tensors
 **** Dependencies, typing and testing
-***** use =renv= for managing and shipping R dependencies -> keep just =renv.lock= for easier shipping and ignore other files
-***** include basic test code by instantiating class and/or other simple methods which are inherent to the workflow
+***** include basic test code by instantiating class and/or other simple methods
 ***** add mypy as an explicit part of testing the source code
-***** consider adding Optional type to all optional arguments instead of Union + None
+***** replace Union + None types with Optional type for conciseness
+***** replace all =dict= types with =Dict= for consistency
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List)
 **** Documentation and clean-code
+***** rename =spp_model= to =spp_torch_model= to fit indents better 
+***** port backpointer concept to model as another function inside torch model
 ***** remove cases where variables from argument namespace are redefined as local variables, a common example of this is with =args.model_log_directory= and =model_log_directory=
 ***** read paper again to get some familiarity with terms and algorithms
 ***** find better naming for mimic/oracle models which is based on research terminology
 ***** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility
 ***** consider renaming =soft_patterns_pp= to more elegant name without special symbols such as =spp= or better -> be useful to think of this before registering topic
 ***** reduce source code lines, chunking and comments -> pretty sort python code and function/class orders perhaps by length
+***** add a comment to each code chunk which explains inner mechanisms better
 ***** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
 ***** add information on best model downloads and preparation
 ***** add pydocstrings to all functions and improve argparse documentation
 ***** provide description of data structures (eg. data, labels) required for training processes
 ***** test download and all other scripts to ensure they work
-      
+ 
 ** Notes
 *** Research
 **** SoPa++
@@ -135,7 +135,7 @@
 ***** +Initial thesis document: *15.09.2020*+
 ***** +Topic proposal draft: *06.11.2020*+
 ***** +Topic proposal final: *15.11.2020*+
-***** Topic registration: *01.02.2021* 
+***** +Topic registration: *01.02.2021*+
 ***** Manuscript submission: *31.03.2021* 
 
 **** Manuscript notes
