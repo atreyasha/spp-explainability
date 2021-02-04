@@ -8,7 +8,7 @@ from torch.nn import Embedding, Module
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import unique, PAD_TOKEN_INDEX, Vocab
-from .utils.model_utils import to_cuda, Batch
+from .utils.model_utils import to_cuda, chunked, Batch
 from .utils.explain_utils import (concatenate_lists, zip_lambda_nested,
                                   BackPointer)
 from .arg_parser import (explain_arg_parser, hardware_arg_parser,
@@ -62,8 +62,9 @@ def restart_padding(model: Module, token_index: int) -> List[BackPointer]:
                     transition=None,
                     start_token_index=token_index,
                     current_token_index=token_index,
-                    end_token_index=token_index) for pattern_index,
-        state_activation in enumerate(model.restart_padding.squeeze().tolist())
+                    end_token_index=token_index)
+        for pattern_index, state_activation in enumerate(
+            model.restart_padding.squeeze().tolist())  # type: ignore
     ]
 
 
@@ -75,17 +76,18 @@ def transition_once_with_trace(model: Module, hiddens: List[List[BackPointer]],
     main_transitions = concatenate_lists(
         restart_padding(model, token_index),
         zip_lambda_nested(
-            lambda back_pointer, transition_value:
-            BackPointer(raw_score=model.semiring.float_times(
-                back_pointer.raw_score, transition_value),
-                        binarized_score=0.,
-                        pattern_index=back_pointer.pattern_index,
-                        previous=back_pointer,
-                        transition="main_transition",
-                        start_token_index=back_pointer.start_token_index,
-                        current_token_index=token_index,
-                        end_token_index=token_index + 1),
-            [hidden[:-1] for hidden in hiddens], transition_matrix))
+            lambda back_pointer, transition_value: BackPointer(
+                raw_score=model.semiring.float_times(  # type: ignore
+                    back_pointer.raw_score, transition_value),
+                binarized_score=0.,
+                pattern_index=back_pointer.pattern_index,
+                previous=back_pointer,
+                transition="main_transition",
+                start_token_index=back_pointer.start_token_index,
+                current_token_index=token_index,
+                end_token_index=token_index + 1),
+            [hidden[:-1] for hidden in hiddens],
+            transition_matrix))
 
     # return if no wildcards allowed
     if model.no_wildcards:
@@ -98,7 +100,7 @@ def transition_once_with_trace(model: Module, hiddens: List[List[BackPointer]],
             restart_padding(model, token_index),
             zip_lambda_nested(
                 lambda back_pointer, wildcard_value: BackPointer(
-                    raw_score=model.semiring.float_times(
+                    raw_score=model.semiring.float_times(  # type: ignore
                         back_pointer.raw_score, wildcard_value),
                     binarized_score=0.,
                     pattern_index=back_pointer.pattern_index,
@@ -107,11 +109,14 @@ def transition_once_with_trace(model: Module, hiddens: List[List[BackPointer]],
                     start_token_index=back_pointer.start_token_index,
                     current_token_index=token_index,
                     end_token_index=token_index + 1),
-                [hidden[:-1] for hidden in hiddens], wildcard_matrix))
+                [hidden[:-1] for hidden in hiddens],
+                wildcard_matrix))
 
         # return final object
-        return zip_lambda_nested(model.semiring.float_plus, main_transitions,
-                                 wildcard_transitions)
+        return zip_lambda_nested(
+            model.semiring.float_plus,  # type: ignore
+            main_transitions,
+            wildcard_transitions)
 
 
 def get_activating_spans(
@@ -119,30 +124,39 @@ def get_activating_spans(
         model: Module,
         gpu_device: Union[torch.device, None],
         max_doc_len: Union[int, None],
+        batch_size: int,
         disable_tqdm: bool = False) -> List[List[BackPointer]]:
-    # create batches from explain data
-    batches = [
-        Batch([doc], model.embeddings, to_cuda(gpu_device), 0., max_doc_len)
-        for doc, _ in explain_data
-    ]
-
     # process all transition matrices
     LOGGER.info("Processing transition matrices")
     transition_matrices_list = [
-        model.get_transition_matrices(batch).squeeze()
-        for batch in tqdm(batches, disable=disable_tqdm)
+        model.get_transition_matrices(  # type: ignore
+            Batch(
+                [doc],
+                model.embeddings,  # type: ignore
+                to_cuda(gpu_device),
+                0.,
+                max_doc_len)).squeeze()
+        for doc, _ in tqdm(explain_data, disable=disable_tqdm)
     ]
 
     # process all interim scores
     LOGGER.info("Processing interim tensors for sanity checks")
     interim_scores_list = [
-        model.forward(batch, explain=True).squeeze()
-        for batch in tqdm(batches, disable=disable_tqdm)
+        interim_scores for chunk in tqdm(chunked(explain_data, batch_size),
+                                         disable=disable_tqdm)
+        for interim_scores in model.forward(
+            Batch(
+                [doc for doc, _ in chunk],
+                model.embeddings,  # type: ignore
+                to_cuda(gpu_device),
+                0.,
+                max_doc_len),
+            explain=True).permute(1, 0, 2)  # type: ignore
     ]
 
     # create local variables
-    wildcard_matrix = model.get_wildcard_matrix().tolist()
-    end_states = model.end_states.squeeze().tolist()
+    wildcard_matrix = model.get_wildcard_matrix().tolist()  # type: ignore
+    end_states = model.end_states.squeeze().tolist()  # type: ignore
     end_state_back_pointers_list = []
 
     # loop over transition matrices and interim scores
@@ -152,7 +166,7 @@ def get_activating_spans(
             total=len(transition_matrices_list),
             disable=disable_tqdm):
         # construct hiddens from tensor to back pointers
-        hiddens = model.hiddens.tolist()
+        hiddens = model.hiddens.tolist()  # type: ignore
         hiddens = [[
             BackPointer(raw_score=state_activation,
                         binarized_score=0.,
@@ -178,8 +192,8 @@ def get_activating_spans(
                                                  wildcard_matrix, token_index)
             # extract end-states and compare with current bests
             end_state_back_pointers = [
-                model.semiring.float_plus(best_back_pointer,
-                                          hidden_back_pointers[end_state])
+                model.semiring.float_plus(  # type: ignore
+                    best_back_pointer, hidden_back_pointers[end_state])
                 for best_back_pointer, hidden_back_pointers, end_state in zip(
                     end_state_back_pointers, hiddens, end_states)
             ]
@@ -195,7 +209,7 @@ def get_activating_spans(
                          "matching scores with SoPa++ routine")
 
         # assign binarized scores
-        for pattern_index in range(model.total_num_patterns):
+        for pattern_index in range(model.total_num_patterns):  # type: ignore
             end_state_back_pointers[
                 pattern_index].binarized_score = interim_scores[1][
                     pattern_index].item()
@@ -215,6 +229,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
                   model: Module,
                   model_checkpoint: str,
                   model_log_directory: str,
+                  batch_size: int,
                   gpu_device: Union[torch.device, None],
                   max_doc_len: Union[int, None] = None,
                   disable_tqdm: bool = False) -> None:
@@ -233,10 +248,18 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     model.eval()
     torch.autograd.set_grad_enabled(False)
 
+    # sort explain_data and explain_text for batch processing
+    explain_data, explain_text = map(
+        list,
+        zip(*sorted(zip(explain_data, explain_text),
+                    key=lambda v: v[0][0],
+                    reverse=True)))
+    explain_data = cast(List[Tuple[List[int], int]], explain_data)
+
     # start explanation workflow on all explain_data
     LOGGER.info("Retrieving activating spans and back pointers")
     activating_spans_back_pointers = get_activating_spans(
-        explain_data, model, gpu_device, max_doc_len, disable_tqdm)
+        explain_data, model, gpu_device, max_doc_len, batch_size, disable_tqdm)
 
     # reprocess back pointers by pattern
     LOGGER.info("Grouping activating spans by patterns")
@@ -251,7 +274,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
              [pattern_index]],
             key=lambda mixed: mixed[1].raw_score,  # type: ignore
             reverse=True)
-        for pattern_index in range(model.total_num_patterns)
+        for pattern_index in range(model.total_num_patterns)  # type: ignore
     }
 
     # extract segments of text leading to activations
@@ -296,8 +319,11 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     # save regular expression ensemble
     LOGGER.info("Saving regular expression ensemble to disk: %s" %
                 model_filename)
-    save_regex_model(model.pattern_specs, activating_regex, model.linear,
-                     model_filename)
+    save_regex_model(
+        model.pattern_specs,  # type: ignore
+        activating_regex,
+        model.linear,  # type: ignore
+        model_filename)
 
 
 def explain_outer(args: argparse.Namespace) -> None:
@@ -350,8 +376,8 @@ def explain_outer(args: argparse.Namespace) -> None:
 
     # execute inner function here
     explain_inner(explain_data, explain_text, model, args.model_checkpoint,
-                  args.model_log_directory, gpu_device, args.max_doc_len,
-                  args.disable_tqdm)
+                  args.model_log_directory, args.batch_size, gpu_device,
+                  args.max_doc_len, args.disable_tqdm)
 
 
 def main(args: argparse.Namespace) -> None:

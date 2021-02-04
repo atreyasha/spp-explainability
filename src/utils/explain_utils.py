@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Callable, List, Union
+from typing import Callable, List, Union, Any
 from functools import total_ordering
 
 
 def zip_lambda_nested(
-    function: Callable, input_X: List[List['BackPointer']],
+    function: Callable[..., Any], input_X: List[List['BackPointer']],
     input_Y: Union[List[List[float]], List[List['BackPointer']]]
 ) -> List[List['BackPointer']]:
     return [[function(x, y) for x, y in zip(X, Y)]  # type: ignore

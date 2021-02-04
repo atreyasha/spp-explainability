@@ -153,6 +153,10 @@ def explain_arg_parser() -> argparse.ArgumentParser:
                           type=file_path)
     # add group for optional arguments
     explain = parser.add_argument_group('optional explainability arguments')
+    explain.add_argument("--batch-size",
+                         help="Batch size for explainability",
+                         default=256,
+                         type=int)
     explain.add_argument("--num-train-instances",
                          help="Maximum number of training instances",
                          type=int)

@@ -126,10 +126,11 @@ class SoftPatternClassifier(Module):
         # register hiddens tensor
         self.register_buffer(
             "hiddens",
-            torch.cat((self.semiring.one(self.total_num_patterns, 1),
-                       self.semiring.zero(self.total_num_patterns,
-                                          self.max_pattern_length - 1)),
-                      axis=1),
+            torch.cat(  # type: ignore
+                (self.semiring.one(self.total_num_patterns, 1),
+                 self.semiring.zero(self.total_num_patterns,
+                                    self.max_pattern_length - 1)),
+                axis=1),
             persistent=False)
 
     def get_transition_matrices(self, batch: Batch) -> torch.Tensor:
