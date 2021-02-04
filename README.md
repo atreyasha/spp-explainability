@@ -400,8 +400,8 @@ For explaining a SoPa++ model by simplifying it into an ensemble of weighted reg
 usage: explain_simplify_spp.py [-h] --model-checkpoint <file_path>
                                --train-data <file_path> --train-labels
                                <file_path> --valid-data <file_path>
-                               --valid-labels <file_path> [--disable-tqdm]
-                               [--gpu] [--gpu-device <str>]
+                               --valid-labels <file_path> [--batch-size <int>]
+                               [--disable-tqdm] [--gpu] [--gpu-device <str>]
                                [--logging-level {debug,info,warning,error,critical}]
                                [--max-doc-len <int>]
                                [--num-train-instances <int>]
@@ -425,6 +425,8 @@ required explainability arguments:
                          Path to validation labels file (default: None)
 
 optional explainability arguments:
+  --batch-size           <int>
+                         Batch size for explainability (default: 256)
   --max-doc-len          <int>
                          Maximum document length allowed (default: None)
   --num-train-instances  <int>
