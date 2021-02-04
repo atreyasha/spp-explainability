@@ -186,10 +186,10 @@ def get_activating_spans(
 
         # check that both explainability routine and model match
         assert torch.allclose(
-            torch.FloatTensor([
+            to_cuda(gpu_device)(torch.FloatTensor([
                 back_pointer.raw_score
                 for back_pointer in end_state_back_pointers
-            ]),
+            ])),
             interim_scores[0],
             atol=1e-7), ("Explainability routine does not produce "
                          "matching scores with SoPa++ routine")
