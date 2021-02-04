@@ -258,8 +258,8 @@ def hardware_arg_parser() -> argparse.ArgumentParser:
                           default="cuda:0",
                           type=str)
     hardware.add_argument("--torch-num-threads",
-                          help=("Set the number of threads used for intraop "
-                                "parallelism on CPU with PyTorch"),
+                          help=("Set the number of threads used for CPU "
+                                "intraop parallelism with PyTorch"),
                           type=int)
     hardware.add_argument("--gpu",
                           help="Use GPU hardware acceleration",
