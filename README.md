@@ -81,14 +81,14 @@ usage: train_spp.py [-h] --embeddings <file_path> --train-data <file_path>
                     [--logging-level {debug,info,warning,error,critical}]
                     [--max-doc-len <int>] [--models-directory <dir_path>]
                     [--no-wildcards] [--num-random-iterations <int>]
-                    [--num-threads <int>] [--num-train-instances <int>]
-                    [--patience <int>] [--patterns <str>]
-                    [--pre-computed-patterns <file_path>]
+                    [--num-train-instances <int>] [--patience <int>]
+                    [--patterns <str>] [--pre-computed-patterns <file_path>]
                     [--scheduler-factor <float>] [--scheduler-patience <int>]
                     [--seed <int>]
                     [--semiring {MaxSumSemiring,MaxProductSemiring}]
-                    [--static-embeddings] [--tqdm-update-period <int>]
-                    [--wildcard-scale <float>] [--word-dropout <float>]
+                    [--static-embeddings] [--torch-num-threads <int>]
+                    [--tqdm-update-period <int>] [--wildcard-scale <float>]
+                    [--word-dropout <float>]
 
 optional arguments:
   -h, --help               show this help message and exit
@@ -160,9 +160,9 @@ optional hardware-acceleration arguments:
   --gpu-device             <str>
                            GPU device specification in case --gpu option is
                            used (default: cuda:0)
-  --num-threads            <int>
-                           Set the number of threads used for intraop
-                           parallelism on CPU (default: None)
+  --torch-num-threads      <int>
+                           Set the number of threads used for CPU intraop
+                           parallelism with PyTorch (default: None)
 
 optional sopa-architecture arguments:
   --bias-scale             <float>
@@ -233,7 +233,8 @@ usage: train_resume_spp.py [-h] --model-log-directory <dir_path>
                            [--disable-tqdm] [--gpu] [--gpu-device <str>]
                            [--grid-training]
                            [--logging-level {debug,info,warning,error,critical}]
-                           [--num-threads <int>] [--tqdm-update-period <int>]
+                           [--torch-num-threads <int>]
+                           [--tqdm-update-period <int>]
 
 optional arguments:
   -h, --help             show this help message and exit
@@ -252,9 +253,9 @@ optional hardware-acceleration arguments:
   --gpu-device           <str>
                          GPU device specification in case --gpu option is used
                          (default: cuda:0)
-  --num-threads          <int>
-                         Set the number of threads used for intraop
-                         parallelism on CPU (default: None)
+  --torch-num-threads    <int>
+                         Set the number of threads used for CPU intraop
+                         parallelism with PyTorch (default: None)
 
 optional logging arguments:
   --logging-level        {debug,info,warning,error,critical}
@@ -311,8 +312,8 @@ usage: evaluate_spp.py [-h] --eval-data <file_path> --eval-labels <file_path>
                        [--evaluation-metric-type {weighted avg,macro avg}]
                        [--gpu] [--gpu-device <str>] [--grid-evaluation]
                        [--logging-level {debug,info,warning,error,critical}]
-                       [--max-doc-len <int>] [--num-threads <int>]
-                       [--output-prefix <str>]
+                       [--max-doc-len <int>] [--output-prefix <str>]
+                       [--torch-num-threads <int>]
 
 optional arguments:
   -h, --help                show this help message and exit
@@ -323,10 +324,8 @@ required evaluation arguments:
   --eval-labels             <file_path>
                             Path to evaluation labels file (default: None)
   --model-checkpoint        <glob_path>
-                            Glob path to model checkpoint with '.pt'
-                            extension. Note that 'model_config.json' must be
-                            in the same directory level as the model
-                            checkpoint file (default: None)
+                            Glob path to model checkpoint with '.pt' extension
+                            (default: None)
 
 optional evaluation arguments:
   --batch-size              <int>
@@ -352,9 +351,9 @@ optional hardware-acceleration arguments:
   --gpu-device              <str>
                             GPU device specification in case --gpu option is
                             used (default: cuda:0)
-  --num-threads             <int>
-                            Set the number of threads used for intraop
-                            parallelism on CPU (default: None)
+  --torch-num-threads       <int>
+                            Set the number of threads used for CPU intraop
+                            parallelism with PyTorch (default: None)
 
 optional logging arguments:
   --logging-level           {debug,info,warning,error,critical}
@@ -387,6 +386,81 @@ To evaluate grid-based SoPa++ models using our defaults on a single GPU, execute
 
 ```shell
 bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/model/*/checkpoints"
+```
+
+</p>
+</details>
+
+<details><summary><strong>v. Explainability</strong></summary>
+<p>
+
+For explaining a SoPa++ model by simplifying it into an ensemble of weighted regular expressions, we use `src/explain_simplify_spp.py`:
+
+```
+usage: explain_simplify_spp.py [-h] --model-checkpoint <file_path>
+                               --train-data <file_path> --train-labels
+                               <file_path> --valid-data <file_path>
+                               --valid-labels <file_path> [--disable-tqdm]
+                               [--gpu] [--gpu-device <str>]
+                               [--logging-level {debug,info,warning,error,critical}]
+                               [--max-doc-len <int>]
+                               [--num-train-instances <int>]
+                               [--torch-num-threads <int>]
+                               [--tqdm-update-period <int>]
+
+optional arguments:
+  -h, --help             show this help message and exit
+
+required explainability arguments:
+  --model-checkpoint     <file_path>
+                         Path to model checkpoint with '.pt' extension
+                         (default: None)
+  --train-data           <file_path>
+                         Path to train data file (default: None)
+  --train-labels         <file_path>
+                         Path to train labels file (default: None)
+  --valid-data           <file_path>
+                         Path to validation data file (default: None)
+  --valid-labels         <file_path>
+                         Path to validation labels file (default: None)
+
+optional explainability arguments:
+  --max-doc-len          <int>
+                         Maximum document length allowed (default: None)
+  --num-train-instances  <int>
+                         Maximum number of training instances (default: None)
+
+optional hardware-acceleration arguments:
+  --gpu                  Use GPU hardware acceleration (default: False)
+  --gpu-device           <str>
+                         GPU device specification in case --gpu option is used
+                         (default: cuda:0)
+  --torch-num-threads    <int>
+                         Set the number of threads used for CPU intraop
+                         parallelism with PyTorch (default: None)
+
+optional logging arguments:
+  --logging-level        {debug,info,warning,error,critical}
+                         Set logging level (default: info)
+
+optional progress-bar arguments:
+  --disable-tqdm         Disable tqdm progress bars (default: False)
+  --tqdm-update-period   <int>
+                         Specify after how many training updates should the
+                         tqdm progress bar be updated with model diagnostics
+                         (default: 5)
+```
+
+To explain a single SoPa++ model using our defaults on the CPU, execute:
+
+```shell
+bash scripts/explain_simplify_spp_cpu.sh /path/to/model/checkpoint
+```
+
+To explain a single SoPa++ model using our defaults on a single GPU, execute:
+
+```shell
+bash scripts/explain_simplify_spp_gpu.sh /path/to/model/checkpoint
 ```
 
 </p>
