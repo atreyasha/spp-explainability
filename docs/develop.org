@@ -1,7 +1,7 @@
 #+STARTUP: overview
 #+OPTIONS: ^:nil
-#+OPTIONS: p:t
-  
+#+OPTIONS: p:t 
+
 ** Tasks
 *** Current
 **** Dedicated explainability
@@ -10,19 +10,19 @@
 ******* develop merging framework where regular expressions are generalized from all the best patterns available
 ******* provide options such as rational, brave and mad for compression types, indicating how broad they could be
 ******* look into similar regular expressions across patterns and if this can be optimized somehow
-******* produce pretty and compact ensemble of regular expressions
 ******* perform some kind of clustering to determine which regex patterns to show/save and which ones not to
-******* compile regular expressions when doing a search over the mimic model
-******* modify =get_nearest_neighbors= to use full embeddings and to use biases as well
 ******* keep the existing nearest neighbours functionality to deal with similar patterns with different tokens
+******* modify =get_nearest_neighbors= to use full embeddings and to use biases as well
 ******* add back =k_best= to argument parser in case it is needed
-******* think about how to work with unknown tokens on new data for mimic model
-******* find tricks which help to increase generalization such as defaulting to patterns given nearest neighbours or levenstein distance -> or at least discuss them
 ****** since all transitions are only dependent on the state and not on each other, would it be possible to concatenate all token spans for each pattern and interweave between them?
 ******* if this is possible, it will hugely benefit global explainability
 ******* might not be the best solution, but we can experiment how this affects generalization
-******* perhaps use graphviz for visualization
 ***** Quantification and generalizing global explainability
+****** produce pretty and compact ensemble of regular expressions, use graphviz for this
+****** think about how to work with unknown tokens on new data for mimic model
+****** perform comparisons of quantification across various compression methods
+****** find tricks which help to increase generalization such as defaulting to patterns given nearest neighbours or levenstein distance -> or at least discuss them
+****** compile regular expressions when doing a search over the mimic model
 ****** compare confusion matrices between oracle and mimic and compute euclidean distances over raw softmax predictions
 ****** demonstrate when global explainability aligns well and when it does not
 ****** can be done for both the train and test partitions to check for extrapolation potential for explainability
@@ -45,25 +45,22 @@
 ****** consider extending workflow to ATIS and/or SNIPS
 ****** re-use preprocessing functions by sending them to utils and perhaps make them more general where possible
 ****** both have some papers which could be cited to add some relevance
-***** Explainability execution speed
-****** add batch size to explainability while computing =interim_scores=, but would require that =explain_data= and =explain_text= are sorted beforehand in a symmetric manner and respecting the fact that sorting requires label to be replaced with text, also need to add =batch_size= to =arg_parser= 
-****** if applicable, merge efficiencies from =visualize_efficiently= such as using =heapq=
 ***** Dedicated modelling
-****** think again about removing binarizer if it limits freedom of model too much
-****** add option to increase threshold for STE to detect more distinct and sparse patterns instead of roughly half -> call this threshold "tau"
+****** add option to increase threshold for STE to detect more distinct and sparse patterns instead of roughly half -> call this threshold =tau= -> consider removing Heaviside name from STE for simplicity
 ****** attempt to make normalizer dynamically ignore infinities instead of expecting fixed sizes -> could be done with a simple normalization routine but would have to work on vectoring code
-****** consider adding back elementwise affine transformations for LayerNorm -> but this could possibly result in dead patterns to be activated which is an illogical result -> unless we can guarantee that infinity states will always be ignored
 ****** consider using a generic function for batch minima, since this could be dependent on the semiring
-****** encourage learning of wildcards by increasing its scale factor default -> in case there are not enough
-****** add 2 threads specific arguments to all jarvis shell scripts and commit as local optimizations
 ****** change frequency of tensorboard, evaluation and model saving to update-level
 ******* update arg parser with new arguments
 ******* update train_inner with new workflow for saving/loading information
 ******* update save checkpoint code with required information
 ******* shift torch hooks around to be more sensible
 ******* convert data object to generator
+******* encourage learning of wildcards by increasing its scale factor default -> in case there are not enough
+******* think again about removing binarizer if it limits freedom of model too much
 ****** *extra:* repeat grid-search with multiple random seeds -> do this after all changes
 ****** *extra:* use parallelized computations to fill up all GPU memory -> would require reading-up on how to do this safely for a single GPU
+***** Explainability execution speed
+****** if applicable, merge efficiencies from =visualize_efficiently= such as using =heapq=
 
 *** Long-term
 **** Performance and explainability

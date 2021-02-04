@@ -36,30 +36,17 @@
             3.  look into similar regular expressions across patterns
                 and if this can be optimized somehow
 
-            4.  produce pretty and compact ensemble of regular
-                expressions
-
-            5.  perform some kind of clustering to determine which regex
+            4.  perform some kind of clustering to determine which regex
                 patterns to show/save and which ones not to
 
-            6.  compile regular expressions when doing a search over the
-                mimic model
-
-            7.  modify `get_nearest_neighbors` to use full embeddings
-                and to use biases as well
-
-            8.  keep the existing nearest neighbours functionality to
+            5.  keep the existing nearest neighbours functionality to
                 deal with similar patterns with different tokens
 
-            9.  add back `k_best` to argument parser in case it is
+            6.  modify `get_nearest_neighbors` to use full embeddings
+                and to use biases as well
+
+            7.  add back `k_best` to argument parser in case it is
                 needed
-
-            10. think about how to work with unknown tokens on new data
-                for mimic model
-
-            11. find tricks which help to increase generalization such
-                as defaulting to patterns given nearest neighbours or
-                levenstein distance -\> or at least discuss them
 
         2.  since all transitions are only dependent on the state and
             not on each other, would it be possible to concatenate all
@@ -71,17 +58,31 @@
             2.  might not be the best solution, but we can experiment
                 how this affects generalization
 
-            3.  perhaps use graphviz for visualization
-
     2.  Quantification and generalizing global explainability
 
-        1.  compare confusion matrices between oracle and mimic and
+        1.  produce pretty and compact ensemble of regular expressions,
+            use graphviz for this
+
+        2.  think about how to work with unknown tokens on new data for
+            mimic model
+
+        3.  perform comparisons of quantification across various
+            compression methods
+
+        4.  find tricks which help to increase generalization such as
+            defaulting to patterns given nearest neighbours or
+            levenstein distance -\> or at least discuss them
+
+        5.  compile regular expressions when doing a search over the
+            mimic model
+
+        6.  compare confusion matrices between oracle and mimic and
             compute euclidean distances over raw softmax predictions
 
-        2.  demonstrate when global explainability aligns well and when
+        7.  demonstrate when global explainability aligns well and when
             it does not
 
-        3.  can be done for both the train and test partitions to check
+        8.  can be done for both the train and test partitions to check
             for extrapolation potential for explainability
 
     3.  Local explainability as a failsafe
@@ -134,48 +135,22 @@
         3.  both have some papers which could be cited to add some
             relevance
 
-    2.  Explainability execution speed
+    2.  Dedicated modelling
 
-        1.  add batch size to explainability while computing
-            `interim_scores`, but would require that `explain_data` and
-            `explain_text` are sorted beforehand in a symmetric manner
-            and respecting the fact that sorting requires label to be
-            replaced with text, also need to add `batch_size` to
-            `arg_parser`
-
-        2.  if applicable, merge efficiencies from
-            `visualize_efficiently` such as using `heapq`
-
-    3.  Dedicated modelling
-
-        1.  think again about removing binarizer if it limits freedom of
-            model too much
-
-        2.  add option to increase threshold for STE to detect more
+        1.  add option to increase threshold for STE to detect more
             distinct and sparse patterns instead of roughly half -\>
-            call this threshold \"tau\"
+            call this threshold `tau` -\> consider removing Heaviside
+            name from STE for simplicity
 
-        3.  attempt to make normalizer dynamically ignore infinities
+        2.  attempt to make normalizer dynamically ignore infinities
             instead of expecting fixed sizes -\> could be done with a
             simple normalization routine but would have to work on
             vectoring code
 
-        4.  consider adding back elementwise affine transformations for
-            LayerNorm -\> but this could possibly result in dead
-            patterns to be activated which is an illogical result -\>
-            unless we can guarantee that infinity states will always be
-            ignored
-
-        5.  consider using a generic function for batch minima, since
+        3.  consider using a generic function for batch minima, since
             this could be dependent on the semiring
 
-        6.  encourage learning of wildcards by increasing its scale
-            factor default -\> in case there are not enough
-
-        7.  add 2 threads specific arguments to all jarvis shell scripts
-            and commit as local optimizations
-
-        8.  change frequency of tensorboard, evaluation and model saving
+        4.  change frequency of tensorboard, evaluation and model saving
             to update-level
 
             1.  update arg parser with new arguments
@@ -189,12 +164,23 @@
 
             5.  convert data object to generator
 
-        9.  **extra:** repeat grid-search with multiple random seeds -\>
+            6.  encourage learning of wildcards by increasing its scale
+                factor default -\> in case there are not enough
+
+            7.  think again about removing binarizer if it limits
+                freedom of model too much
+
+        5.  **extra:** repeat grid-search with multiple random seeds -\>
             do this after all changes
 
-        10. **extra:** use parallelized computations to fill up all GPU
+        6.  **extra:** use parallelized computations to fill up all GPU
             memory -\> would require reading-up on how to do this safely
             for a single GPU
+
+    3.  Explainability execution speed
+
+        1.  if applicable, merge efficiencies from
+            `visualize_efficiently` such as using `heapq`
 
 ### Long-term
 
