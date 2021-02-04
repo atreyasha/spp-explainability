@@ -129,7 +129,7 @@ def get_activating_spans(
     # process all transition matrices
     LOGGER.info("Processing transition matrices")
     transition_matrices_list = [
-        model.get_transition_matrices(batch)
+        model.get_transition_matrices(batch).squeeze()
         for batch in tqdm(batches, disable=disable_tqdm)
     ]
 
@@ -146,6 +146,7 @@ def get_activating_spans(
     end_state_back_pointers_list = []
 
     # loop over transition matrices and interim scores
+    LOGGER.info("Looping over data to extract regular expressions")
     for transition_matrices, interim_scores in tqdm(
             zip(transition_matrices_list, interim_scores_list),
             total=len(transition_matrices_list),
@@ -170,9 +171,8 @@ def get_activating_spans(
         ]
 
         # iterate over sequence
-        for token_index in range(transition_matrices.size(1)):
-            transition_matrix = transition_matrices[
-                0, token_index, :, :].tolist()
+        for token_index in range(transition_matrices.size(0)):
+            transition_matrix = transition_matrices[token_index, :, :].tolist()
             hiddens = transition_once_with_trace(model, hiddens,
                                                  transition_matrix,
                                                  wildcard_matrix, token_index)
