@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Dict, Tuple, List
+from typing import Dict, Tuple, List, cast
 from .utils.data_utils import unique
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.preprocess_utils import (read_tsv, mapping, serialize,
-                                     lowercase, tokenize, upsample)
+                                     lowercase, tokenize, upsample,
+                                     remove_commons_from_first)
 from .arg_parser import preprocess_arg_parser, logging_arg_parser
 import argparse
 import json
@@ -82,13 +83,28 @@ def main(args: argparse.Namespace) -> None:
     else:
         suffix = "truecased"
 
-    # make everything unique
+    # make everything unique internally
     LOGGER.info("Making training data unique")
     train = list(unique(zip(train_data, train_labels)))
+    assert len(train) == len(set(train))
     LOGGER.info("Making validation data unique")
     valid = list(unique(zip(valid_data, valid_labels)))
+    assert len(valid) == len(set(valid))
     LOGGER.info("Making test data unique")
     test = list(unique(zip(test_data, test_labels)))
+    assert len(test) == len(set(test))
+
+    # making cross-partitions unique
+    LOGGER.info("Removing duplicates between partitions")
+    train, test = remove_commons_from_first(train, test)
+    assert len(set(train).intersection(set(test))) == 0
+    train, valid = remove_commons_from_first(train, valid)
+    assert len(set(train).intersection(set(valid))) == 0
+    test, valid = remove_commons_from_first(test, valid)
+    assert len(set(test).intersection(set(valid))) == 0
+    train = cast(List[Tuple[str, int]], train)
+    valid = cast(List[Tuple[str, int]], valid)
+    test = cast(List[Tuple[str, int]], test)
 
     # write main files
     LOGGER.info("Sorting and writing data")

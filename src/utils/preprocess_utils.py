@@ -34,6 +34,15 @@ def repeat_items(data: List[str], count: int) -> List[str]:
     return data * (count // len(data)) + data[:(count % len(data))]
 
 
+def remove_commons_from_first(
+        input_X: List[Tuple[Any]], input_Y: List[Tuple[Any]]
+) -> Tuple[List[Tuple[Any]], List[Tuple[Any]]]:
+    common_elements = set(input_X).intersection(input_Y)
+    for common_element in common_elements:
+        input_X.remove(common_element)
+    return input_X, input_Y
+
+
 def categorize_by_label(
         full_data: List[Tuple[str, int]]) -> Dict[int, List[str]]:
     label_data_mapping = {}
