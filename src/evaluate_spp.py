@@ -13,7 +13,7 @@ from .arg_parser import (logging_arg_parser, hardware_arg_parser,
                          evaluation_arg_parser, grid_evaluation_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_pattern_specs,
                         get_semiring, evaluate_metric)
-from .spp_torch_model import SoftPatternClassifier
+from .torch_model_spp import SoftPatternClassifier
 import argparse
 import torch
 import json
