@@ -11,7 +11,7 @@ from .utils.data_utils import unique, PAD_TOKEN_INDEX, Vocab
 from .utils.model_utils import to_cuda, chunked, Batch
 from .utils.explain_utils import (concatenate_lists, zip_lambda_nested,
                                   BackPointer)
-from .arg_parser import (explain_arg_parser, hardware_arg_parser,
+from .arg_parser import (explain_simplify_arg_parser, hardware_arg_parser,
                          logging_arg_parser, tqdm_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_semiring,
                         get_train_valid_data, get_pattern_specs)
@@ -24,12 +24,12 @@ import re
 
 def save_regex_model(pattern_specs: 'OrderedDict[int, int]',
                      activating_regex: Dict[int, List[str]],
-                     linear_model: Module, filename: str) -> None:
+                     linear_state_dict: 'OrderedDict', filename: str) -> None:
     torch.save(
         {
             "pattern_specs": pattern_specs,
             "activating_regex": activating_regex,
-            "linear_state_dict": linear_model.state_dict()
+            "linear_state_dict": linear_state_dict
         }, filename)
 
 
@@ -328,7 +328,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     save_regex_model(
         model.pattern_specs,  # type: ignore
         activating_regex,
-        model.linear,  # type: ignore
+        model.linear.state_dict(),  # type: ignore
         model_filename)
 
 
@@ -395,7 +395,7 @@ def main(args: argparse.Namespace) -> None:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=ArgparseFormatter,
                                      parents=[
-                                         explain_arg_parser(),
+                                         explain_simplify_arg_parser(),
                                          hardware_arg_parser(),
                                          logging_arg_parser(),
                                          tqdm_arg_parser()
