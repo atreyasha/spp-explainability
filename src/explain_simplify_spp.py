@@ -71,6 +71,7 @@ def restart_padding(model: Module, token_index: int) -> List[BackPointer]:
 def transition_once_with_trace(model: Module, hiddens: List[List[BackPointer]],
                                transition_matrix: List[List[float]],
                                wildcard_matrix: Union[List[List[float]], None],
+                               end_states: List[int],
                                token_index: int) -> List[List[BackPointer]]:
     # add main transition; consume a token and state
     main_transitions = concatenate_lists(
@@ -87,7 +88,8 @@ def transition_once_with_trace(model: Module, hiddens: List[List[BackPointer]],
                 current_token_index=token_index,
                 end_token_index=token_index + 1),
             [hidden[:-1] for hidden in hiddens],
-            transition_matrix))
+            transition_matrix,
+            end_states))
 
     # return if no wildcards allowed
     if model.no_wildcards:
@@ -110,13 +112,15 @@ def transition_once_with_trace(model: Module, hiddens: List[List[BackPointer]],
                     current_token_index=token_index,
                     end_token_index=token_index + 1),
                 [hidden[:-1] for hidden in hiddens],
-                wildcard_matrix))
+                wildcard_matrix,
+                end_states))
 
         # return final object
         return zip_lambda_nested(
             model.semiring.float_plus,  # type: ignore
             main_transitions,
-            wildcard_transitions)
+            wildcard_transitions,
+            end_states)
 
 
 def get_activating_spans(
@@ -189,7 +193,9 @@ def get_activating_spans(
             transition_matrix = transition_matrices[token_index, :, :].tolist()
             hiddens = transition_once_with_trace(model, hiddens,
                                                  transition_matrix,
-                                                 wildcard_matrix, token_index)
+                                                 wildcard_matrix, end_states,
+                                                 token_index)
+
             # extract end-states and compare with current bests
             end_state_back_pointers = [
                 model.semiring.float_plus(  # type: ignore
@@ -205,7 +211,7 @@ def get_activating_spans(
                 for back_pointer in end_state_back_pointers
             ])),
             interim_scores[0],
-            atol=1e-7), ("Explainability routine does not produce "
+            atol=1e-6), ("Explainability routine does not produce "
                          "matching scores with SoPa++ routine")
 
         # assign binarized scores
