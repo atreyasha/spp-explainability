@@ -66,12 +66,8 @@ def rational_clustering(pattern_regex: List[str]) -> List[str]:
                 if len(join_list) == 1:
                     joint[key] = join_list[0]
                 else:
-                    # filter wildcards and replace string with combined regex
-                    if "[^\\s]+" in join_list:
-                        joint[key] = "[^\\s]+"
-                    else:
-                        # combine remaining words and add them in
-                        joint[key] = "(" + "|".join(join_list) + ")"
+                    # combine remaining words and add them in
+                    joint[key] = "(" + "|".join(join_list) + ")"
 
                 # finally append to tracking list
                 clustered_pattern_regex.append("\\b" + " ".join(joint) + "\\b")
