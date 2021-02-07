@@ -43,12 +43,12 @@ def convert_text_to_regex(
         regex = []
         for text in activating_text_pattern_instance:
             if text == "*":
-                regex.append(r"\w+")
+                regex.append("[^\\s]+")
             else:
                 # escape possible regular expressions
                 regex.append(re.escape(text))
         # add collected regex to upper list
-        activating_regex_pattern.append(" ".join(regex))
+        activating_regex_pattern.append("\\b" + " ".join(regex) + "\\b")
 
     return activating_regex_pattern
 

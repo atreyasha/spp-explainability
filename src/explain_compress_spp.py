@@ -16,7 +16,8 @@ import os
 def rational_clustering(pattern_regex: List[str]) -> List[str]:
     # intitialize storage list
     clustered_pattern_regex = []
-    pattern_regex = list(map(lambda x: x.split(), pattern_regex))
+    pattern_regex = list(
+        map(lambda x: x.replace("\\b", "").split(), pattern_regex))
 
     # loop over pattern regular expressions until all processed
     while len(pattern_regex) != 0:
@@ -41,7 +42,7 @@ def rational_clustering(pattern_regex: List[str]) -> List[str]:
         if all(
                 len(index_segmenter[key]) == 0
                 for key in index_segmenter.keys()):
-            clustered_pattern_regex.append(" ".join(start))
+            clustered_pattern_regex.append("\\b" + " ".join(start) + "\\b")
         else:
             dense_keys = [
                 key for key in index_segmenter.keys()
@@ -58,16 +59,22 @@ def rational_clustering(pattern_regex: List[str]) -> List[str]:
                     regex[key] for regex in index_segmenter[key]
                 ]
 
-                # filter wildcards and replace string with combined regex
-                if "\\w+" in join_list:
-                    joint[key] = "\\w+"
-                elif len(join_list) == 1:
+                # make join_list unique
+                join_list = list(set(join_list))
+
+                # combine list into string
+                if len(join_list) == 1:
                     joint[key] = join_list[0]
                 else:
-                    joint[key] = "(" + "|".join(join_list) + ")"
+                    # filter wildcards and replace string with combined regex
+                    if "[^\\s]+" in join_list:
+                        joint[key] = "[^\\s]+"
+                    else:
+                        # combine remaining words and add them in
+                        joint[key] = "(" + "|".join(join_list) + ")"
 
                 # finally append to tracking list
-                clustered_pattern_regex.append(" ".join(joint))
+                clustered_pattern_regex.append("\\b" + " ".join(joint) + "\\b")
 
     return clustered_pattern_regex
 
@@ -86,8 +93,6 @@ def main(args: argparse.Namespace) -> None:
             for key in tqdm(regex_model["activating_regex"],
                             disable=args.disable_tqdm)
         }
-    else:
-        pass
 
     # save model as required
     save_regex_model(
