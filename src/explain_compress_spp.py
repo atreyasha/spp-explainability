@@ -42,7 +42,7 @@ def rational_clustering(pattern_regex: List[str]) -> List[str]:
         if all(
                 len(index_segmenter[key]) == 0
                 for key in index_segmenter.keys()):
-            clustered_pattern_regex.append("\\b" + " ".join(start) + "\\b")
+            clustered_pattern_regex.append(start)
         else:
             dense_keys = [
                 key for key in index_segmenter.keys()
@@ -66,11 +66,28 @@ def rational_clustering(pattern_regex: List[str]) -> List[str]:
                 if len(join_list) == 1:
                     joint[key] = join_list[0]
                 else:
-                    # combine remaining words and add them in
-                    joint[key] = "(" + "|".join(join_list) + ")"
+                    # filter wildcards and replace string with combined regex
+                    if "[^\\s]+" in join_list:
+                        joint[key] = "[^\\s]+"
+                    else:
+                        # combine remaining words and add them in
+                        joint[key] = "(" + "|".join(join_list) + ")"
 
                 # finally append to tracking list
-                clustered_pattern_regex.append("\\b" + " ".join(joint) + "\\b")
+                clustered_pattern_regex.append(joint)
+
+    # correct total wildcards
+    if any([
+            True if regex.count("[^\\s]+") == len(regex) else False
+            for regex in clustered_pattern_regex
+    ]):
+        clustered_pattern_regex = [["[^\\s]+"] *
+                                   len(clustered_pattern_regex[0])]
+
+    # add boundary conditions
+    clustered_pattern_regex = [
+        "\\b" + " ".join(regex) + "\\b" for regex in clustered_pattern_regex
+    ]
 
     return clustered_pattern_regex
 
