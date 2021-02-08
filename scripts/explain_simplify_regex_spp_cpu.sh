@@ -4,10 +4,10 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: explain_simplify_spp_gpu.sh [-h|--help] model_checkpoint
+Usage: explain_simplify_regex_spp_cpu.sh [-h|--help] model_checkpoint
 
 Explain and simplify a given SoPa++ model to retrieve highest
-activating regular expressions on a GPU
+activating regular expressions on the CPU
 
 Optional arguments:
   -h, --help                    Show this help message and exit
@@ -28,18 +28,18 @@ check_help() {
 }
 
 # define function
-explain_simplify_spp_gpu() {
+explain_simplify_regex_spp_cpu() {
   local model_checkpoint
   model_checkpoint="$1"
 
-  python3 -m src.explain_simplify_spp \
+  python3 -m src.explain_simplify_regex_spp \
     --train-data "./data/facebook_multiclass_nlu/clean/train.uncased.data" \
     --train-labels "./data/facebook_multiclass_nlu/clean/train.labels" \
     --valid-data "./data/facebook_multiclass_nlu/clean/valid.uncased.data" \
     --valid-labels "./data/facebook_multiclass_nlu/clean/valid.labels" \
-    --model-checkpoint "$model_checkpoint" --gpu
+    --model-checkpoint "$model_checkpoint"
 }
 
 # execute function
 check_help "$@"
-explain_simplify_spp_gpu "$@"
+explain_simplify_regex_spp_cpu "$@"

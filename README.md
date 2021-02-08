@@ -394,19 +394,20 @@ bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/model/*/checkpoints"
 <details><summary><strong>v. Explainability</strong></summary>
 <p>
 
-For explaining a SoPa++ model by simplifying it into an ensemble of weighted regular expressions, we use `src/explain_simplify_spp.py`:
+For explaining a SoPa++ model by simplifying it into an ensemble of weighted regular expressions, we use `src/explain_simplify_regex_spp.py`:
 
 ```
-usage: explain_simplify_spp.py [-h] --model-checkpoint <file_path>
-                               --train-data <file_path> --train-labels
-                               <file_path> --valid-data <file_path>
-                               --valid-labels <file_path> [--batch-size <int>]
-                               [--disable-tqdm] [--gpu] [--gpu-device <str>]
-                               [--logging-level {debug,info,warning,error,critical}]
-                               [--max-doc-len <int>]
-                               [--num-train-instances <int>]
-                               [--torch-num-threads <int>]
-                               [--tqdm-update-period <int>]
+usage: explain_simplify_regex_spp.py [-h] --model-checkpoint <file_path>
+                                     --train-data <file_path> --train-labels
+                                     <file_path> --valid-data <file_path>
+                                     --valid-labels <file_path>
+                                     [--batch-size <int>] [--disable-tqdm]
+                                     [--gpu] [--gpu-device <str>]
+                                     [--logging-level {debug,info,warning,error,critical}]
+                                     [--max-doc-len <int>]
+                                     [--num-train-instances <int>]
+                                     [--torch-num-threads <int>]
+                                     [--tqdm-update-period <int>]
 
 optional arguments:
   -h, --help             show this help message and exit
@@ -453,16 +454,16 @@ optional progress-bar arguments:
                          (default: 5)
 ```
 
-To explain a single SoPa++ model using our defaults on the CPU, execute:
+To simplify a single SoPa++ model using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/explain_simplify_spp_cpu.sh /path/to/model/checkpoint
+bash scripts/explain_simplify_regex_spp_cpu.sh /path/to/model/checkpoint
 ```
 
-To explain a single SoPa++ model using our defaults on a single GPU, execute:
+To simplify a single SoPa++ model using our defaults on a single GPU, execute:
 
 ```shell
-bash scripts/explain_simplify_spp_gpu.sh /path/to/model/checkpoint
+bash scripts/explain_simplify_regex_spp_gpu.sh /path/to/model/checkpoint
 ```
 
 </p>
