@@ -22,129 +22,123 @@
 
 1.  Dedicated explainability
 
-    1.  Improve compression methods with evaluation
+    1.  Cross-model comparisons
 
-        1.  Brave compression (needs more features from simplification
-            such as nearest neighbours)
+        1.  **TODO** Local explainability
 
-            1.  offer subtext matches on edges without `\b` boundary
-                regex -\> it appears to improve score
+            1.  incorporate local explainability directly into SoPa++
+                neural model by porting transition with trace code there
+                -\> use this segment for comparison runs
 
-            2.  95.2% accuracy by putting limits to the edges, 96.7%
-                accuracy can be reached by allowing subtext matches
+            2.  incorporate local explainability into SoPa++ regex model
+                by simply returning which regex got activated
 
-            3.  modify `get_nearest_neighbors` to use full embeddings
-                and to use biases as well -\> would be interesting to do
-                this within model\'s weights -\> use these for creating
-                new neighbouring regex\'s
+        2.  Comparisons
 
-            4.  add back `k_best` to argument parser in case it is
+            1.  work on code that uses local explainability features of
+                both the neural and regex to generate outputs and
+                explanations
+
+            2.  make aggregate statistics such as euclidean distance
+                over differences in activations, see more below
+
+            3.  log the rest of the activations to compare more later on
+
+        3.  Metrics
+
+            1.  compare confusion matrices between oracle and mimic
+
+            2.  compute euclidean distances over raw softmax predictions
+
+        4.  Visualization
+
+            1.  output a well-structured file which can be easily
+                visualized with anoter module
+
+            2.  visualize examples where regex and neural model align
+                and misalign
+
+    2.  Regular expression compression
+
+        1.  Improve the baseline compression method with nearest
+            neighbours
+
+            1.  EITHER needs more features from simplification such as
+                nearest neighbours OR generate them with access to the
+                model again
+
+            2.  add back `k_best` to argument parser in case it is
                 needed
 
-            5.  think of semantic clustering with digits or time or
-                other means -\> if there are no wildcards present -\>
-                perhaps this could be a new compression type
+        2.  Explore improving/creating new compression methods
 
-        2.  Additional ideas
-
-            1.  think of how to aggregate compression, perhaps it is
-                indeed possible to stack them
+            1.  think of semantic clustering with digits or time or
+                other means -\> if there are no wildcards present
 
             2.  look into similar regular expressions **across
                 separate** patterns and if this can be optimized somehow
 
-    2.  Regex OOP
+            3.  think of how to aggregate compression, perhaps it is
+                indeed possible to stack them
 
-        1.  think about how to work with unknown tokens on new data for
-            mimic model -\> perhaps look for best possible match
+    3.  Regex OOP
 
-        2.  find tricks which help to increase generalization such as
-            defaulting to patterns given nearest neighbours or
-            levenstein distance -\> or at least discuss them
+        1.  Add modes for using regex model
 
-    3.  Cross-model evaluation between neural and non-neural models
+            1.  naive mode using existing regex
 
-        1.  compare confusion matrices between oracle and mimic and
-            compute euclidean distances over raw softmax predictions
+            2.  handle unknown tokens on new data for mimic model -\>
+                perhaps look for best possible match given context
 
-        2.  demonstrate when global explainability aligns well and when
-            it does not -\> this would be essential to generalization
+            3.  find tricks which help to increase generalization such
+                as defaulting to patterns given nearest neighbours or
+                levenstein distance
 
-        3.  can be done for both the train and test partitions to check
-            for extrapolation potential for explainability
+            4.  these modes should be coupled with performance
+                improvements, evaluations and neural-model comparisons
 
-        4.  perhaps add benchmarking too with execution times, memory
-            and other concerns since this might be interesting
+            5.  otherwise, this step can be ignored and delegated to
+                improving compression with nearest neighbours
 
-        5.  can be used to compare two regex model types as well -\>
-            check to ensure that no compression vs. rational compression
-            produce the exact same results since rational compression is
-            really just performance-sustaining compression
+        2.  Add visualization of regex ensemble with graphviz
 
-        6.  this can be used to find out how different compression types
-            help with explainability
-
-        7.  perhaps this can be linked with graphviz or tikz to produce
-            visualizations of comparisons
-
-    4.  Generic changes
-
-        1.  fix up filenames later on to keep things consistent
-
-        2.  update all usages and consider adding different for SoPa++
-            and regex model usages
-
-        3.  clean out source code with newer and more efficient
-            workflows, consistent variable namings and function
-            definitions on-the-fly
-
-        4.  precisely type functions and classes on-the-fly -\>
-            especially for explainability scripts
+            1.  can specify which pattern to visualize and how to make
+                large scale visualizations
 
 2.  Post explainability
 
     1.  Miscellaneous explainability
 
-        1.  attempt to multi-thread all regex-related scripts as much as
-            possible, difficulty would be where torch model calls are
-            required ie. `explain_simplify_spp` -\> need to improve
-            chunking process
+        1.  attempt to multi-thread all regex-related scripts
 
         2.  find out if individual compiled regex or full compiled regex
             is better
 
-        3.  add visualization of regex ensemble with graphviz in regex
-            object
-
-        4.  add explainability feature for regex model where user can
-            see which regex got activated instead of only score
-
-        5.  maybe add value of atol directly into explainability by
+        3.  maybe add value of atol directly into explainability by
             simplification\'s argument parser so this can be adjusted
             for different models
 
-        6.  if applicable, merge efficiencies from
-            `visualize_efficiently` such as using `heapq`
-
     2.  Dedicated modelling
 
-        1.  add option to increase threshold for STE to detect more
-            distinct and sparse patterns instead of roughly half -\>
-            call this threshold `tau` -\> consider removing Heaviside
-            name from STE for simplicity
-
-        2.  attempt to make normalizer dynamically ignore infinities
-            instead of expecting fixed sizes -\> could be done with a
-            simple normalization routine but would have to work on
-            vectoring code
-
-        3.  consider using a generic function for batch minima, since
-            this could be dependent on the semiring
-
-        4.  add visualization of computational graph function directly
+        1.  add visualization of computational graph function directly
             to sopa torch model
 
-        5.  change frequency of tensorboard, evaluation and model saving
+        2.  add option to increase threshold for STE to detect more
+            distinct and sparse patterns instead of roughly half -\>
+            call this threshold `tau`
+
+        3.  remove Heaviside name from STE for simplicity -\> change
+            citation to 2013 paper which is more fundamental:
+            <https://arxiv.org/abs/1308.3432>
+
+        4.  attempt to make normalizer dynamically ignore infinities
+            instead of expecting fixed sizes -\> could be done with a
+            simple normalization routine
+
+        5.  consider using a generic function for batch minima, since
+            this could be dependent on the semiring
+
+        6.  change frequency of tensorboard, evaluation and model saving
             to update-level
 
             1.  update arg parser with new arguments
@@ -164,54 +158,45 @@
             7.  think again about removing binarizer if it limits
                 freedom of model too much
 
-        6.  **extra:** repeat grid-search with multiple random seeds -\>
-            do this after all changes
+            8.  repeat grid-search with multiple random seeds -\> do
+                this after all changes and run code multiple times to
+                maximize GPU memory usage
 
-        7.  **extra:** use parallelized computations to fill up all GPU
-            memory -\> would require reading-up on how to do this safely
-            for a single GPU
+    3.  Generic changes
 
-    3.  Local explainability as a failsafe
+        1.  fix up filenames later on to keep things consistent, eg.
+            `spp` vs. `regex_spp` vs. `spp_regex` etc.
 
-        1.  rename `explain_spp` to something related to globalk
-            explainability and mimic model construction, since another
-            script will be needed to conduct local explanations
+        2.  update all usages and consider adding different for SoPa++
+            and regex model usages
 
-        2.  consider adding softmax to model forward if this is of any
-            use
+        3.  clean out source code with newer and more efficient
+            workflows, consistent variable namings and function
+            definitions on-the-fly
 
-        3.  in cases where global explainability cannot be deciphered,
-            we can provide a failsafe of local explainability
-
-        4.  this can be done a per-sample basis with pattern and score
-            specification -\> more likely to be useful on the test set
-
-    4.  Extension to new data sets
-
-        1.  consider extending workflow to ATIS and/or SNIPS
-
-        2.  re-use preprocessing functions by sending them to utils and
-            perhaps make them more general where possible
-
-        3.  both have some papers which could be cited to add some
-            relevance
+        4.  precisely type functions and classes on-the-fly -\>
+            especially for explainability scripts
 
 ### Long-term
 
 1.  Performance and explainability
 
-    1.  add check to ensure start, end and pad tokens don\'t occur
+    1.  rename `explain_spp` to something related to global
+        explainability and mimic model construction, since another
+        script will be needed to conduct local explanations
+
+    2.  add check to ensure start, end and pad tokens don\'t occur
         adversarially inside sequence -\> `nltk.word_tokenize` already
         breaks these up
 
-    2.  add predict function for both mimic and oracle model which does
+    3.  add predict function for both mimic and oracle model which does
         not need extra data to be loaded -\> can also accept stdin as
         unix pipe
 
-    3.  when comparing model performance with other studies, consider
+    4.  when comparing model performance with other studies, consider
         only lowercasing and not making unique the test set
 
-    4.  check if packed sequences could be incoporated into model
+    5.  check if packed sequences could be incoporated into model
 
 2.  Re-check potential pitfalls
 
@@ -245,45 +230,40 @@
 
     1.  add different usages for different types of models
 
-    2.  port backpointer concept to model as another function inside
-        torch model
-
-    3.  rename all argument parser functions to reflect the respective
+    2.  rename all argument parser functions to reflect the respective
         updated file names
 
-    4.  remove cases where variables from argument namespace are
+    3.  remove cases where variables from argument namespace are
         redefined as local variables, a common example of this is with
         `args.model_log_directory` and `model_log_directory`
 
-    5.  read paper again to get some familiarity with terms and
-        algorithms
+    4.  find better naming for mimic/oracle models which is based on
+        research terminology -\> right now mix of neural and regex is
+        being used; it would be good to have something more firm
 
-    6.  find better naming for mimic/oracle models which is based on
-        research terminology
-
-    7.  GPU/CPU runs not always reproducible depending on
+    5.  GPU/CPU runs not always reproducible depending on
         multi-threading, see:
         <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    8.  reduce source code lines, chunking and comments -\> pretty sort
+    6.  reduce source code lines, chunking and comments -\> pretty sort
         python code and function/class orders perhaps by length
 
-    9.  add a comment to each code chunk which explains inner mechanisms
+    7.  add a comment to each code chunk which explains inner mechanisms
         better
 
-    10. update metadata eg. with comprehensive python/shell help
+    8.  update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    11. add information on best model downloads and preparation
+    9.  add information on best model downloads and preparation
 
-    12. add pydocstrings to all functions and improve argparse
+    10. add pydocstrings to all functions and improve argparse
         documentation
 
-    13. provide description of data structures (eg. data, labels)
+    11. provide description of data structures (eg. data, labels)
         required for training processes
 
-    14. test download and all other scripts to ensure they work
+    12. test download and all other scripts to ensure they work
 
 ## Notes
 
@@ -353,7 +333,12 @@
     3.  vary training data sizes from 10% to 70% for perspective on data
         settings
 
-4.  Constraints
+4.  Extension to new data sets
+
+    1.  could extend workflow to ATIS and/or SNIPS since all other code
+        is established
+
+5.  Constraints
 
     1.  work with RNNs only
 
@@ -362,7 +347,7 @@
 
     3.  base main ideas off peer-reviewed articles
 
-5.  Research questions
+6.  Research questions
 
     1.  To what extent does SoPa++ contribute to competitive performance
         on NLU tasks?
@@ -491,48 +476,51 @@
 
     3.  Own-thoughts
 
-        1.  provide evidence for why different forms of compression
+        1.  read paper again to get some familiarity with terms and
+            algorithms
+
+        2.  provide evidence for why different forms of compression
             improve explainable model performance
 
-        2.  can map linear to decision tree as extra work
+        3.  can map linear to decision tree as extra work
 
-        3.  make comparison of single-threaded sequential speeds of both
+        4.  make comparison of single-threaded sequential speeds of both
             model over test set
 
-        4.  show possibilities of fixing errors on the test set with
+        5.  show possibilities of fixing errors on the test set with
             general changes to the regex model which are much easier to
             do compared to the tensor model
 
-        5.  show cases where we could avoid adversarial cases using the
+        6.  show cases where we could avoid adversarial cases using the
             insight of the regex model
 
-        6.  would be interesting to deterministically export which
+        7.  would be interesting to deterministically export which
             patterns for sure lead to which class, could help to
             identify adversarial samples via tinkering
 
-        7.  add information on memory compression resulting from regex
+        8.  add information on memory compression resulting from regex
             compression methods
 
-        8.  compare oracle performance with those from other papers
+        9.  compare oracle performance with those from other papers
 
-        9.  semirings, abstract algebra and how they are used for
+        10. semirings, abstract algebra and how they are used for
             finite-state machines in Forward and Viterbi algorithms -\>
             go deeper into this to get some background
 
-        10. use more appropriate and generalized semiring terminology
+        11. use more appropriate and generalized semiring terminology
             from Peng et al. 2019 -\> more generalized compared to SoPa
             paper
 
-        11. Chomsky hierarchy of languages -\> might be relevant
+        12. Chomsky hierarchy of languages -\> might be relevant
             especially relating to CFGs
 
-        12. FSA/WFSAs -\> input theoretical CS, mathematics background
+        13. FSA/WFSAs -\> input theoretical CS, mathematics background
             to describe these
 
-        13. ANN\'s historical literature -\> describe how ANNs
+        14. ANN\'s historical literature -\> describe how ANNs
             approximate symbolic representations
 
-        14. extension/recommendations -\> transducer for seq2seq tasks
+        15. extension/recommendations -\> transducer for seq2seq tasks
 
 ## Completed
 
