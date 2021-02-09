@@ -232,7 +232,7 @@ class SoftPatternClassifier(Module):
         # find the minimum of all original scores and replace infinite by this
         batch_minima = torch.min(scores, 1)[0]
 
-        # assing batch-level minima to infinity indices
+        # assigning batch-level minima to infinity indices
         scores[inf_indices] = torch.repeat_interleave(
             batch_minima, torch.sum(scores.isinf(), 1))
 
