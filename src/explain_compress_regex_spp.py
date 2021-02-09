@@ -13,9 +13,9 @@ import torch
 import os
 
 
-def rational_clustering(pattern_regex: List[str]) -> List[str]:
+def rational_compression(pattern_regex: List[str]) -> List[str]:
     # intitialize storage list
-    clustered_pattern_regex = []
+    compressed_pattern_regex = []
     pattern_regex = list(
         map(lambda x: x.replace("\\b", "").split(), pattern_regex))
 
@@ -42,7 +42,7 @@ def rational_clustering(pattern_regex: List[str]) -> List[str]:
         if all(
                 len(index_segmenter[key]) == 0
                 for key in index_segmenter.keys()):
-            clustered_pattern_regex.append(start)
+            compressed_pattern_regex.append(start)
         else:
             dense_keys = [
                 key for key in index_segmenter.keys()
@@ -74,22 +74,22 @@ def rational_clustering(pattern_regex: List[str]) -> List[str]:
                         joint[key] = "(" + "|".join(join_list) + ")"
 
                 # finally append to tracking list
-                clustered_pattern_regex.append(joint)
+                compressed_pattern_regex.append(joint)
 
     # correct total wildcards
     if any([
             True if regex.count("[^\\s]+") == len(regex) else False
-            for regex in clustered_pattern_regex
+            for regex in compressed_pattern_regex
     ]):
-        clustered_pattern_regex = [["[^\\s]+"] *
-                                   len(clustered_pattern_regex[0])]
+        compressed_pattern_regex = [["[^\\s]+"] *
+                                    len(compressed_pattern_regex[0])]
 
     # add boundary conditions
-    clustered_pattern_regex = [
-        "\\b" + " ".join(regex) + "\\b" for regex in clustered_pattern_regex
+    compressed_pattern_regex = [
+        "\\b" + " ".join(regex) + "\\b" for regex in compressed_pattern_regex
     ]
 
-    return clustered_pattern_regex
+    return compressed_pattern_regex
 
 
 def main(args: argparse.Namespace) -> None:
@@ -102,7 +102,7 @@ def main(args: argparse.Namespace) -> None:
     # conduct compression as required
     if args.compression_method == "rational":
         regex_model["activating_regex"] = {
-            key: rational_clustering(regex_model["activating_regex"][key])
+            key: rational_compression(regex_model["activating_regex"][key])
             for key in tqdm(regex_model["activating_regex"],
                             disable=args.disable_tqdm)
         }
