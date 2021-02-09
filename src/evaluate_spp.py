@@ -79,6 +79,7 @@ def evaluate_outer(args: argparse.Namespace) -> Dict:
             os.path.join(args.model_log_directory, "vocab.txt"))
     else:
         raise FileNotFoundError("%s is missing" % vocab_file)
+
     # generate embeddings to fill up correct dimensions
     embeddings = torch.zeros(len(vocab), args.word_dim)
     embeddings = Embedding.from_pretrained(embeddings,

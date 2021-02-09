@@ -743,12 +743,14 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         set_random_seed(args)
 
         if resume_training:
+            # load vocab and embeddings
             vocab_file = os.path.join(args.model_log_directory, "vocab.txt")
             if os.path.exists(vocab_file):
                 vocab = Vocab.from_vocab_file(
                     os.path.join(args.model_log_directory, "vocab.txt"))
             else:
                 raise FileNotFoundError("%s is missing" % vocab_file)
+
             # generate embeddings to fill up correct dimensions
             embeddings = torch.zeros(len(vocab), args.word_dim)
             embeddings = Embedding.from_pretrained(
