@@ -319,8 +319,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     # define model filename
     model_filename = os.path.join(
         model_log_directory,
-        re.sub("\\.pt$", "_", os.path.basename(model_checkpoint)) +
-        "regex_ensemble.pt")
+        "regex_" + os.path.basename(model_checkpoint))
 
     # save regular expression ensemble
     LOGGER.info("Saving regular expression ensemble to disk: %s" %

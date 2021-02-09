@@ -7,7 +7,7 @@ from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .arg_parser import (explain_compress_arg_parser, logging_arg_parser,
                          tqdm_arg_parser)
-from .explain_simplify_spp import save_regex_model
+from .explain_simplify_regex_spp import save_regex_model
 import argparse
 import torch
 import os
@@ -112,8 +112,8 @@ def main(args: argparse.Namespace) -> None:
         regex_model["pattern_specs"], regex_model["activating_regex"],
         regex_model["linear_state_dict"],
         os.path.join(
-            args.regex_model.replace(".pt",
-                                     "_" + args.compression_method + ".pt")))
+            args.regex_model.replace("regex",
+                                     "regex_" + args.compression_method)))
 
 
 if __name__ == '__main__':

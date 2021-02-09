@@ -24,15 +24,15 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
                    model: Module,
                    model_checkpoint: str,
                    model_log_directory: str,
-                   num_classes: int,
                    batch_size: int,
                    output_prefix: str,
                    gpu_device: Union[torch.device, None] = None,
                    max_doc_len: Union[int, None] = None) -> Dict:
     # load model checkpoint
-    model_checkpoint = torch.load(model_checkpoint,
-                                  map_location=torch.device("cpu"))
-    model.load_state_dict(model_checkpoint["model_state_dict"])  # type: ignore
+    model_checkpoint_loaded = torch.load(model_checkpoint,
+                                         map_location=torch.device("cpu"))
+    model.load_state_dict(
+        model_checkpoint_loaded["model_state_dict"])  # type: ignore
 
     # send model to correct device
     if gpu_device is not None:
@@ -50,8 +50,10 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
 
     # dump json report in model_log_directory
     with open(
-            os.path.join(model_log_directory,
-                         output_prefix + "_classification_report.json"),
+            os.path.join(
+                model_log_directory,
+                os.path.basename(model_checkpoint).replace(".pt", "_") +
+                output_prefix + "_classification_report.json"),
             "w") as output_file_stream:
         json.dump(clf_report, output_file_stream)
 
@@ -111,9 +113,9 @@ def evaluate_outer(args: argparse.Namespace) -> Dict:
 
     # execute inner evaluation workflow
     clf_report = evaluate_inner(eval_data, model, args.model_checkpoint,
-                                args.model_log_directory, num_classes,
-                                args.batch_size, args.output_prefix,
-                                gpu_device, args.max_doc_len)
+                                args.model_log_directory, args.batch_size,
+                                args.output_prefix, gpu_device,
+                                args.max_doc_len)
     return clf_report
 
 
@@ -152,10 +154,16 @@ def main(args: argparse.Namespace) -> None:
             if args.evaluation_metric != "accuracy" else next(
                 iter(dictionary.values()))[args.evaluation_metric])
 
+        # add additional evaluation information
+        best_clf_report["evaluation_metric"] = args.evaluation_metric
+        if args.evaluation_metric != "accuracy":
+            best_clf_report[
+                "evaluation_metric_type"] = args.evaluation_metric_type
+
         # dump json report in grid_directory
         with open(
                 os.path.join(
-                    model_grid_directory, "best_" + args.output_prefix +
+                    model_grid_directory, "spp_best_" + args.output_prefix +
                     "_classification_report.json"), "w") as output_file_stream:
             json.dump(best_clf_report, output_file_stream)
 
