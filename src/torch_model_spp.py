@@ -9,11 +9,11 @@ from .utils.data_utils import Vocab
 import torch
 
 
-class STEHeavisideFunction(torch.autograd.Function):
+class STEFunction(torch.autograd.Function):
     @staticmethod
-    def forward(ctx: Any, input: Any) -> Any:  # type: ignore
+    def forward(ctx: Any, tau: float, input: Any) -> Any:  # type: ignore
         ctx.save_for_backward(input)
-        return (input > 0).float()
+        return (input > tau).float()
 
     @staticmethod
     def backward(ctx: Any, grad_output: Any) -> Any:  # type: ignore
@@ -21,15 +21,16 @@ class STEHeavisideFunction(torch.autograd.Function):
         grad_input = grad_output.clone()
         grad_output[input > 1] = 0
         grad_output[input < -1] = 0
-        return grad_input
+        return None, grad_input
 
 
-class STEHeaviside(Module):
-    def __init__(self) -> None:
-        super(STEHeaviside, self).__init__()
+class STE(Module):
+    def __init__(self, tau: float = 0.) -> None:
+        super(STE, self).__init__()
+        self.tau = tau
 
     def forward(self, batch: torch.Tensor) -> torch.Tensor:
-        batch = STEHeavisideFunction.apply(batch)
+        batch = STEFunction.apply(self.tau, batch)
         return batch
 
 
@@ -59,7 +60,7 @@ class SoftPatternClassifier(Module):
         self.dropout = Dropout(dropout)
         self.normalizer = LayerNorm(self.total_num_patterns,
                                     elementwise_affine=False)
-        self.binarizer = STEHeaviside()
+        self.binarizer = STE()
 
         # create transition matrix diagonal and bias tensors
         diags_size = (self.total_num_patterns * (self.max_pattern_length - 1))
@@ -238,7 +239,7 @@ class SoftPatternClassifier(Module):
         # execute normalization of scores
         scores = self.normalizer(scores)
 
-        # binarize scores using STEHeaviside
+        # binarize scores using STE
         scores = self.binarizer(scores)
 
         # conditionally return different tensors depending on routine
