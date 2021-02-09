@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from tqdm import tqdm
-from typing import List
+from typing import cast, List, Dict
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .arg_parser import (explain_compress_arg_parser, logging_arg_parser,
@@ -22,7 +22,10 @@ def rational_compression(pattern_regex: List[str]) -> List[str]:
     # loop over pattern regular expressions until all processed
     while len(pattern_regex) != 0:
         start = pattern_regex.pop(0)
-        index_segmenter = {i: [] for i in range(len(start))}
+        index_segmenter: Dict[int, List[List[str]]] = {
+            i: []
+            for i in range(len(start))
+        }
         all_to_compare = pattern_regex.copy()
 
         # collect patterns that match and segment them

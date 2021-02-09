@@ -36,8 +36,9 @@ class RegexSoftPatternClassifier(Module):
 
     def forward(self, batch: List[str]) -> torch.Tensor:
         # start loop over regular expressions
-        scores = torch.FloatTensor([self.regex_forward(doc) for doc in batch
-                                    ]).to(self.linear.weight.device)
+        scores = torch.FloatTensor(
+            [self.regex_forward(doc)
+             for doc in batch]).to(self.linear.weight.device)  # type: ignore
 
         # convert scores to tensor
         return self.linear(scores)

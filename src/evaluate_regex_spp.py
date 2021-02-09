@@ -3,8 +3,8 @@
 
 from tqdm import tqdm
 from glob import glob
-from typing import List, Union
 from torch.nn import Linear
+from typing import cast, List, Union
 from sklearn.metrics import classification_report
 from .utils.model_utils import chunked
 from .utils.parser_utils import ArgparseFormatter
@@ -60,7 +60,8 @@ def evaluate_inner(eval_text: List[str],
 
     # loop over data in batches
     predicted = []
-    for batch in tqdm(chunked(eval_text, batch_size), disable=disable_tqdm):
+    for batch in tqdm(chunked(eval_text, batch_size),  # type: ignore
+                      disable=disable_tqdm):
         predicted.extend(torch.argmax(model.forward(batch), 1).tolist())
 
     # process classification report
@@ -96,12 +97,14 @@ def evaluate_outer(args: argparse.Namespace) -> None:
 
     # load evaluation data here
     _, eval_text = read_docs(args.eval_data, vocab)
+    eval_text = cast(List[List[str]], eval_text)
     LOGGER.info("Sample evaluation text: %s" % eval_text[:10])
     eval_labels = read_labels(args.eval_labels)
 
     # apply maximum document length if necessary
     if args.max_doc_len is not None:
-        eval_text = [eval_text[:args.max_doc_len] for doc in eval_text]
+        eval_text = [eval_text[:args.max_doc_len]  # type: ignore
+                     for doc in eval_text]
 
     # convert eval_text into list of string
     eval_text = [" ".join(doc) for doc in eval_text]
