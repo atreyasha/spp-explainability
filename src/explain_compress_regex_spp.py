@@ -13,7 +13,8 @@ import torch
 import os
 
 
-def rational_compression(pattern_regex: List[str]) -> List[str]:
+def rational_compression(pattern_regex: List[str],
+                         word_boundaries: bool = True) -> List[str]:
     # intitialize storage list
     compressed_pattern_regex = []
     pattern_regex = list(
@@ -87,11 +88,21 @@ def rational_compression(pattern_regex: List[str]) -> List[str]:
         compressed_pattern_regex = [["[^\\s]+"] *
                                     len(compressed_pattern_regex[0])]
 
-    # add boundary conditions
-    compressed_pattern_regex = [
-        "\\b" + " ".join(regex) + "\\b" for regex in compressed_pattern_regex
-    ]
+    if word_boundaries:
+        # add boundary conditions
+        compressed_pattern_regex = [
+            "\\b" + " ".join(regex) + "\\b"  # type: ignore
+            for regex in compressed_pattern_regex
+        ]
+    else:
+        # join regex without boundary conditions
+        compressed_pattern_regex = [
+            " ".join(regex)  # type: ignore
+            for regex in compressed_pattern_regex
+        ]
 
+    # mypy-related fix
+    compressed_pattern_regex = cast(List[str], compressed_pattern_regex)
     return compressed_pattern_regex
 
 
@@ -106,6 +117,13 @@ def main(args: argparse.Namespace) -> None:
     if args.compression_method == "rational":
         regex_model["activating_regex"] = {
             key: rational_compression(regex_model["activating_regex"][key])
+            for key in tqdm(regex_model["activating_regex"],
+                            disable=args.disable_tqdm)
+        }
+    elif args.compression_method == "brave":
+        regex_model["activating_regex"] = {
+            key: rational_compression(regex_model["activating_regex"][key],
+                                      False)
             for key in tqdm(regex_model["activating_regex"],
                             disable=args.disable_tqdm)
         }
