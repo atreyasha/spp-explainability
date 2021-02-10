@@ -9,8 +9,6 @@ from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import unique, PAD_TOKEN_INDEX, Vocab
 from .utils.model_utils import to_cuda, chunked, Batch
-from .utils.explain_utils import (concatenate_lists, zip_lambda_nested,
-                                  BackPointer)
 from .arg_parser import (explain_simplify_arg_parser, hardware_arg_parser,
                          logging_arg_parser, tqdm_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_semiring,
@@ -53,183 +51,6 @@ def convert_text_to_regex(
     return activating_regex_pattern
 
 
-def restart_padding(model: Module, token_index: int) -> List[BackPointer]:
-    return [
-        BackPointer(raw_score=state_activation,
-                    binarized_score=0.,
-                    pattern_index=pattern_index,
-                    previous=None,
-                    transition=None,
-                    start_token_index=token_index,
-                    current_token_index=token_index,
-                    end_token_index=token_index)
-        for pattern_index, state_activation in enumerate(
-            model.restart_padding.squeeze().tolist())  # type: ignore
-    ]
-
-
-def transition_once_with_trace(model: Module, hiddens: List[List[BackPointer]],
-                               transition_matrix: List[List[float]],
-                               wildcard_matrix: Union[List[List[float]], None],
-                               end_states: List[int],
-                               token_index: int) -> List[List[BackPointer]]:
-    # add main transition; consume a token and state
-    main_transitions = concatenate_lists(
-        restart_padding(model, token_index),
-        zip_lambda_nested(
-            lambda back_pointer, transition_value: BackPointer(
-                raw_score=model.semiring.float_times(  # type: ignore
-                    back_pointer.raw_score, transition_value),
-                binarized_score=0.,
-                pattern_index=back_pointer.pattern_index,
-                previous=back_pointer,
-                transition="main_transition",
-                start_token_index=back_pointer.start_token_index,
-                current_token_index=token_index,
-                end_token_index=token_index + 1),
-            [hidden[:-1] for hidden in hiddens],
-            transition_matrix,
-            end_states))
-
-    # return if no wildcards allowed
-    if model.no_wildcards:
-        return main_transitions
-    else:
-        # mypy typing fix
-        wildcard_matrix = cast(List[List[float]], wildcard_matrix)
-        # add wildcard transition; consume a generic token and state
-        wildcard_transitions = concatenate_lists(
-            restart_padding(model, token_index),
-            zip_lambda_nested(
-                lambda back_pointer, wildcard_value: BackPointer(
-                    raw_score=model.semiring.float_times(  # type: ignore
-                        back_pointer.raw_score, wildcard_value),
-                    binarized_score=0.,
-                    pattern_index=back_pointer.pattern_index,
-                    previous=back_pointer,
-                    transition="wildcard_transition",
-                    start_token_index=back_pointer.start_token_index,
-                    current_token_index=token_index,
-                    end_token_index=token_index + 1),
-                [hidden[:-1] for hidden in hiddens],
-                wildcard_matrix,
-                end_states))
-
-        # return final object
-        return zip_lambda_nested(
-            model.semiring.float_plus,  # type: ignore
-            main_transitions,
-            wildcard_transitions,
-            end_states)
-
-
-def get_activating_spans(
-        explain_data: List[Tuple[List[int], int]],
-        model: Module,
-        gpu_device: Union[torch.device, None],
-        max_doc_len: Union[int, None],
-        batch_size: int,
-        disable_tqdm: bool = False) -> List[List[BackPointer]]:
-    # process all transition matrices
-    LOGGER.info("Processing transition matrices")
-    transition_matrices_list = [
-        model.get_transition_matrices(  # type: ignore
-            Batch(
-                [doc],
-                model.embeddings,  # type: ignore
-                to_cuda(gpu_device),
-                0.,
-                max_doc_len)).squeeze()
-        for doc, _ in tqdm(explain_data, disable=disable_tqdm)
-    ]
-
-    # process all interim scores
-    LOGGER.info("Processing interim tensors for sanity checks")
-    interim_scores_list = [
-        interim_scores for chunk in tqdm(chunked(explain_data, batch_size),
-                                         disable=disable_tqdm)
-        for interim_scores in model.forward(
-            Batch(
-                [doc for doc, _ in chunk],
-                model.embeddings,  # type: ignore
-                to_cuda(gpu_device),
-                0.,
-                max_doc_len),
-            explain=True).permute(1, 0, 2)  # type: ignore
-    ]
-
-    # create local variables
-    wildcard_matrix = model.get_wildcard_matrix().tolist()  # type: ignore
-    end_states = model.end_states.squeeze().tolist()  # type: ignore
-    end_state_back_pointers_list = []
-
-    # loop over transition matrices and interim scores
-    LOGGER.info("Looping over data to extract regular expressions")
-    for transition_matrices, interim_scores in tqdm(
-            zip(transition_matrices_list, interim_scores_list),
-            total=len(transition_matrices_list),
-            disable=disable_tqdm):
-        # construct hiddens from tensor to back pointers
-        hiddens = model.hiddens.tolist()  # type: ignore
-        hiddens = [[
-            BackPointer(raw_score=state_activation,
-                        binarized_score=0.,
-                        pattern_index=pattern_index,
-                        previous=None,
-                        transition=None,
-                        start_token_index=0,
-                        current_token_index=0,
-                        end_token_index=0) for state_activation in pattern
-        ] for pattern_index, pattern in enumerate(hiddens)]
-
-        # create end-states
-        end_state_back_pointers = [
-            back_pointers[end_state]
-            for back_pointers, end_state in zip(hiddens, end_states)
-        ]
-
-        # iterate over sequence
-        for token_index in range(transition_matrices.size(0)):
-            transition_matrix = transition_matrices[token_index, :, :].tolist()
-            hiddens = transition_once_with_trace(model, hiddens,
-                                                 transition_matrix,
-                                                 wildcard_matrix, end_states,
-                                                 token_index)
-
-            # extract end-states and compare with current bests
-            end_state_back_pointers = [
-                model.semiring.float_plus(  # type: ignore
-                    best_back_pointer, hidden_back_pointers[end_state])
-                for best_back_pointer, hidden_back_pointers, end_state in zip(
-                    end_state_back_pointers, hiddens, end_states)
-            ]
-
-        # check that both explainability routine and model match
-        assert torch.allclose(
-            to_cuda(gpu_device)(torch.FloatTensor([
-                back_pointer.raw_score
-                for back_pointer in end_state_back_pointers
-            ])),
-            interim_scores[0],
-            atol=1e-6), ("Explainability routine does not produce "
-                         "matching scores with SoPa++ routine")
-
-        # assign binarized scores
-        for pattern_index in range(model.total_num_patterns):  # type: ignore
-            end_state_back_pointers[
-                pattern_index].binarized_score = interim_scores[1][
-                    pattern_index].item()
-
-        # append end state back pointers to higher list
-        end_state_back_pointers_list.append([
-            back_pointer if back_pointer.binarized_score else None
-            for back_pointer in end_state_back_pointers
-        ])
-
-    # return best back pointers
-    return end_state_back_pointers_list
-
-
 def explain_inner(explain_data: List[Tuple[List[int], int]],
                   explain_text: List[List[str]],
                   model: Module,
@@ -264,8 +85,18 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
 
     # start explanation workflow on all explain_data
     LOGGER.info("Retrieving activating spans and back pointers")
-    activating_spans_back_pointers = get_activating_spans(
-        explain_data, model, gpu_device, max_doc_len, batch_size, disable_tqdm)
+    activating_spans_back_pointers = [
+        back_pointers
+        for explain_batch in tqdm(chunked(explain_data, batch_size),
+                                  disable=disable_tqdm)
+        for back_pointers in model.forward_with_trace(  # type: ignore
+            Batch(
+                [doc for doc, _ in explain_batch],
+                model.embeddings,  # type: ignore
+                to_cuda(gpu_device),
+                0.,
+                max_doc_len))[0]
+    ]
 
     # reprocess back pointers by pattern
     LOGGER.info("Grouping activating spans by patterns")
@@ -318,8 +149,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
 
     # define model filename
     model_filename = os.path.join(
-        model_log_directory,
-        "regex_" + os.path.basename(model_checkpoint))
+        model_log_directory, "regex_" + os.path.basename(model_checkpoint))
 
     # save regular expression ensemble
     LOGGER.info("Saving regular expression ensemble to disk: %s" %

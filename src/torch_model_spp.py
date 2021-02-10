@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Union, Any
+from typing import cast, Union, Any, List, Tuple
 from collections import OrderedDict
 from torch.nn import Module, Parameter, Linear, Dropout, LayerNorm, init
+from .utils.explain_utils import (concatenate_lists, zip_lambda_nested,
+                                  BackPointer)
 from .utils.model_utils import Semiring, Batch
 from .utils.data_utils import Vocab
 import torch
@@ -136,6 +138,11 @@ class SoftPatternClassifier(Module):
                 axis=1),
             persistent=False)
 
+    def get_wildcard_matrix(self) -> Union[torch.Tensor, None]:
+        return None if self.no_wildcards else self.semiring.times(
+            self.wildcard_scale.clone(),  # type: ignore
+            self.semiring.from_outer_to_semiring(self.wildcards))
+
     def get_transition_matrices(self, batch: Batch) -> torch.Tensor:
         # initialize local variables
         batch_size = batch.size()
@@ -164,10 +171,24 @@ class SoftPatternClassifier(Module):
         # finally return transition matrices for all tokens
         return transition_matrices
 
-    def get_wildcard_matrix(self) -> Union[torch.Tensor, None]:
-        return None if self.no_wildcards else self.semiring.times(
-            self.wildcard_scale.clone(),  # type: ignore
-            self.semiring.from_outer_to_semiring(self.wildcards))
+    def transition_once(self, hiddens: torch.Tensor,
+                        transition_matrix: torch.Tensor,
+                        wildcard_matrix: Union[torch.Tensor, None],
+                        restart_padding: torch.Tensor) -> torch.Tensor:
+        # adding the start state and main transition
+        main_transitions = torch.cat(
+            (restart_padding,
+             self.semiring.times(hiddens[:, :, :-1], transition_matrix)), 2)
+
+        # adding wildcard transitions
+        if self.no_wildcards:
+            return main_transitions
+        else:
+            wildcard_transitions = torch.cat(
+                (restart_padding,
+                 self.semiring.times(hiddens[:, :, :-1], wildcard_matrix)), 2)
+            # either main transition or wildcard
+            return self.semiring.plus(main_transitions, wildcard_transitions)
 
     def forward(self, batch: Batch, explain: bool = False) -> torch.Tensor:
         # start timer and get transition matrices
@@ -246,26 +267,166 @@ class SoftPatternClassifier(Module):
 
         # conditionally return different tensors depending on routine
         if explain:
-            interim_scores = torch.stack((interim_scores, scores.clone()))
+            interim_scores = torch.stack((interim_scores, scores), 1)
             return interim_scores
         else:
             return self.linear.forward(scores)
 
-    def transition_once(self, hiddens: torch.Tensor,
-                        transition_matrix: torch.Tensor,
-                        wildcard_matrix: Union[torch.Tensor, None],
-                        restart_padding: torch.Tensor) -> torch.Tensor:
-        # adding the start state and main transition
-        main_transitions = torch.cat(
-            (restart_padding,
-             self.semiring.times(hiddens[:, :, :-1], transition_matrix)), 2)
+    def restart_padding_with_trace(self,
+                                   token_index: int) -> List[BackPointer]:
+        return [
+            BackPointer(raw_score=state_activation,
+                        binarized_score=0.,
+                        pattern_index=pattern_index,
+                        previous=None,
+                        transition=None,
+                        start_token_index=token_index,
+                        current_token_index=token_index,
+                        end_token_index=token_index)
+            for pattern_index, state_activation in enumerate(
+                self.restart_padding.squeeze().tolist())  # type: ignore
+        ]
 
-        # adding wildcard transitions
+    def transition_once_with_trace(
+            self,
+            hiddens: List[List[BackPointer]],
+            transition_matrix: List[List[float]],
+            wildcard_matrix: Union[List[List[float]], None],  # yapf: disable
+            end_states: List[int],
+            token_index: int) -> List[List[BackPointer]]:
+        # add main transition; consume a token and state
+        main_transitions = concatenate_lists(
+            self.restart_padding_with_trace(token_index),
+            zip_lambda_nested(
+                lambda back_pointer, transition_value: BackPointer(
+                    raw_score=self.semiring.float_times(  # type: ignore
+                        back_pointer.raw_score, transition_value),
+                    binarized_score=0.,
+                    pattern_index=back_pointer.pattern_index,
+                    previous=back_pointer,
+                    transition="main_transition",
+                    start_token_index=back_pointer.start_token_index,
+                    current_token_index=token_index,
+                    end_token_index=token_index + 1),
+                [hidden[:-1] for hidden in hiddens],
+                transition_matrix,
+                end_states))
+
+        # return if no wildcards allowed
         if self.no_wildcards:
             return main_transitions
         else:
-            wildcard_transitions = torch.cat(
-                (restart_padding,
-                 self.semiring.times(hiddens[:, :, :-1], wildcard_matrix)), 2)
-            # either main transition or wildcard
-            return self.semiring.plus(main_transitions, wildcard_transitions)
+            # mypy typing fix
+            wildcard_matrix = cast(List[List[float]], wildcard_matrix)
+            # add wildcard transition; consume a generic token and state
+            wildcard_transitions = concatenate_lists(
+                self.restart_padding_with_trace(token_index),
+                zip_lambda_nested(
+                    lambda back_pointer, wildcard_value: BackPointer(
+                        raw_score=self.semiring.float_times(  # type: ignore
+                            back_pointer.raw_score, wildcard_value),
+                        binarized_score=0.,
+                        pattern_index=back_pointer.pattern_index,
+                        previous=back_pointer,
+                        transition="wildcard_transition",
+                        start_token_index=back_pointer.start_token_index,
+                        current_token_index=token_index,
+                        end_token_index=token_index + 1),
+                    [hidden[:-1] for hidden in hiddens],
+                    wildcard_matrix,
+                    end_states))
+
+            # return final object
+            return zip_lambda_nested(
+                self.semiring.float_plus,  # type: ignore
+                main_transitions,
+                wildcard_transitions,
+                end_states)
+
+    def forward_with_trace(
+            self,
+            batch: Batch) -> Tuple[List[List[BackPointer]], torch.Tensor]:
+        # process all transition matrices
+        transition_matrices_list = [
+            transition_matrices[:index, :, :]
+            for transition_matrices, index in zip(
+                self.get_transition_matrices(batch), batch.doc_lens)
+        ]
+
+        # process all interim scores
+        interim_scores_tensor = self.forward(batch, explain=True)
+
+        # extract relevant interim scores
+        interim_scores_list = [
+            interim_scores for interim_scores in interim_scores_tensor
+        ]
+
+        # create local variables
+        wildcard_matrix = self.get_wildcard_matrix().tolist()  # type: ignore
+        end_states = self.end_states.squeeze().tolist()  # type: ignore
+        end_state_back_pointers_list = []
+
+        # loop over transition matrices and interim scores
+        for transition_matrices, interim_scores in zip(
+                transition_matrices_list, interim_scores_list):
+            # construct hiddens from tensor to back pointers
+            hiddens = self.hiddens.tolist()  # type: ignore
+            hiddens = [[
+                BackPointer(raw_score=state_activation,
+                            binarized_score=0.,
+                            pattern_index=pattern_index,
+                            previous=None,
+                            transition=None,
+                            start_token_index=0,
+                            current_token_index=0,
+                            end_token_index=0) for state_activation in pattern
+            ] for pattern_index, pattern in enumerate(hiddens)]
+
+            # create end-states
+            end_state_back_pointers = [
+                back_pointers[end_state]
+                for back_pointers, end_state in zip(hiddens, end_states)
+            ]
+
+            # iterate over sequence
+            for token_index in range(transition_matrices.size(0)):
+                transition_matrix = transition_matrices[
+                    token_index, :, :].tolist()
+                hiddens = self.transition_once_with_trace(
+                    hiddens, transition_matrix, wildcard_matrix, end_states,
+                    token_index)
+
+                # extract end-states and compare with current bests
+                end_state_back_pointers = [
+                    self.semiring.float_plus(  # type: ignore
+                        best_back_pointer, hidden_back_pointers[end_state])
+                    for best_back_pointer, hidden_back_pointers, end_state in
+                    zip(end_state_back_pointers, hiddens, end_states)
+                ]
+
+            # check that both explainability routine and model match
+            assert torch.allclose(
+                torch.FloatTensor([
+                    back_pointer.raw_score
+                    for back_pointer in end_state_back_pointers
+                ]).to(self.linear.weight.device),
+                interim_scores[0],
+                atol=1e-6), ("Explainability routine does not produce "
+                             "matching scores with SoPa++ routine")
+
+            # assign binarized scores
+            for pattern_index in range(
+                    self.total_num_patterns):  # type: ignore
+                end_state_back_pointers[
+                    pattern_index].binarized_score = interim_scores[1][
+                        pattern_index].item()
+
+            # append end state back pointers to higher list
+            end_state_back_pointers_list.append([
+                back_pointer if back_pointer.binarized_score else None
+                for back_pointer in end_state_back_pointers
+            ])
+
+        # return best back pointers
+        return end_state_back_pointers_list, self.linear(
+            interim_scores_tensor[:, -1, :])
