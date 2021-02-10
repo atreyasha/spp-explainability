@@ -11,9 +11,10 @@ import torch
 
 class STEFunction(torch.autograd.Function):
     @staticmethod
-    def forward(ctx: Any, tau: float, input: Any) -> Any:  # type: ignore
+    def forward(  # type: ignore
+            ctx: Any, tau_threshold: float, input: Any) -> Any:
         ctx.save_for_backward(input)
-        return (input > tau).float()
+        return (input > tau_threshold).float()
 
     @staticmethod
     def backward(ctx: Any, grad_output: Any) -> Any:  # type: ignore
@@ -25,12 +26,12 @@ class STEFunction(torch.autograd.Function):
 
 
 class STE(Module):
-    def __init__(self, tau: float = 0.) -> None:
+    def __init__(self, tau_threshold: float = 0.) -> None:
         super(STE, self).__init__()
-        self.tau = tau
+        self.tau_threshold = tau_threshold
 
     def forward(self, batch: torch.Tensor) -> torch.Tensor:
-        batch = STEFunction.apply(self.tau, batch)
+        batch = STEFunction.apply(self.tau_threshold, batch)
         return batch
 
 
@@ -41,6 +42,7 @@ class SoftPatternClassifier(Module):
                  embeddings: Module,
                  vocab: Vocab,
                  semiring: Semiring,
+                 tau_threshold: float,
                  no_wildcards: bool = False,
                  bias_scale: Union[float, None] = None,
                  wildcard_scale: Union[float, None] = None,
@@ -60,7 +62,7 @@ class SoftPatternClassifier(Module):
         self.dropout = Dropout(dropout)
         self.normalizer = LayerNorm(self.total_num_patterns,
                                     elementwise_affine=False)
-        self.binarizer = STE()
+        self.binarizer = STE(tau_threshold)
 
         # create transition matrix diagonal and bias tensors
         diags_size = (self.total_num_patterns * (self.max_pattern_length - 1))

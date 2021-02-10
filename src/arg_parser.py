@@ -26,6 +26,10 @@ def spp_model_arg_parser() -> argparse.ArgumentParser:
     sopa.add_argument("--wildcard-scale",
                       help="Scale wildcard(s) by this parameter",
                       type=float)
+    sopa.add_argument("--tau-threshold",
+                      help="Specify value of STE binarizer tau threshold",
+                      default=0.,
+                      type=float)
     sopa.add_argument("--word-dim", help=argparse.SUPPRESS, type=int)
     # boolean flags
     sopa.add_argument("--no-wildcards",

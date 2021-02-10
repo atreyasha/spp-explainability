@@ -104,6 +104,7 @@ def evaluate_outer(args: argparse.Namespace) -> Dict:
         embeddings,  # type:ignore
         vocab,
         semiring,
+        args.tau_threshold,
         args.no_wildcards,
         args.bias_scale,
         args.wildcard_scale,
