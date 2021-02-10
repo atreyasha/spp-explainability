@@ -190,7 +190,7 @@ class SoftPatternClassifier(Module):
             # either main transition or wildcard
             return self.semiring.plus(main_transitions, wildcard_transitions)
 
-    def forward(self, batch: Batch, explain: bool = False) -> torch.Tensor:
+    def forward(self, batch: Batch, interim: bool = False) -> torch.Tensor:
         # start timer and get transition matrices
         transition_matrices = self.get_transition_matrices(batch)
 
@@ -240,7 +240,7 @@ class SoftPatternClassifier(Module):
                 end_state_values[active_doc_indices])
 
         # clone raw scores to keep track of it
-        if explain:
+        if interim:
             interim_scores = scores.clone()
 
         # extract all infinite indices
@@ -266,7 +266,7 @@ class SoftPatternClassifier(Module):
         scores = self.binarizer(scores)
 
         # conditionally return different tensors depending on routine
-        if explain:
+        if interim:
             interim_scores = torch.stack((interim_scores, scores), 1)
             return interim_scores
         else:
@@ -354,7 +354,7 @@ class SoftPatternClassifier(Module):
         ]
 
         # process all interim scores
-        interim_scores_tensor = self.forward(batch, explain=True)
+        interim_scores_tensor = self.forward(batch, interim=True)
 
         # extract relevant interim scores
         interim_scores_list = [
