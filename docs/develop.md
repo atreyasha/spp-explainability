@@ -24,16 +24,7 @@
 
     1.  Cross-model comparisons
 
-        1.  **TODO** Local explainability
-
-            1.  incorporate local explainability directly into SoPa++
-                neural model by porting transition with trace code there
-                -\> use this segment for comparison runs
-
-            2.  incorporate local explainability into SoPa++ regex model
-                by simply returning which regex got activated
-
-        2.  Comparisons
+        1.  Comparisons
 
             1.  work on code that uses local explainability features of
                 both the neural and regex to generate outputs and
@@ -44,13 +35,13 @@
 
             3.  log the rest of the activations to compare more later on
 
-        3.  Metrics
+        2.  Metrics
 
             1.  compare confusion matrices between oracle and mimic
 
             2.  compute euclidean distances over raw softmax predictions
 
-        4.  Visualization
+        3.  Visualization
 
             1.  output a well-structured file which can be easily
                 visualized with anoter module
@@ -67,7 +58,10 @@
                 nearest neighbours OR generate them with access to the
                 model again
 
-            2.  add back `k_best` to argument parser in case it is
+            2.  handle unknown tokens on new data for mimic model -\>
+                perhaps look for best possible match given context
+
+            3.  add back `k_best` to argument parser in case it is
                 needed
 
         2.  Explore improving/creating new compression methods
@@ -83,22 +77,11 @@
 
     3.  Regex OOP
 
-        1.  Add modes for using regex model
+        1.  Add modes for regex search
 
-            1.  naive mode using existing regex
-
-            2.  handle unknown tokens on new data for mimic model -\>
-                perhaps look for best possible match given context
-
-            3.  find tricks which help to increase generalization such
+            1.  find tricks which help to increase generalization such
                 as defaulting to patterns given nearest neighbours or
                 levenstein distance
-
-            4.  these modes should be coupled with performance
-                improvements, evaluations and neural-model comparisons
-
-            5.  otherwise, this step can be ignored and delegated to
-                improving compression with nearest neighbours
 
         2.  Add visualization of regex ensemble with graphviz
 
@@ -123,22 +106,25 @@
         1.  add visualization of computational graph function directly
             to sopa torch model
 
-        2.  add option to increase threshold for STE to detect more
-            distinct and sparse patterns instead of roughly half -\>
-            call this threshold `tau`
+        2.  replace `bias_scale` argument default with 1.0 since it is
+            used outside of the semiring, might be more descriptive to
+            have it that way instead of `None`
 
-        3.  remove Heaviside name from STE for simplicity -\> change
+        3.  vary tau argument in grid search and use values in range
+            from 0.25-0.75
+
+        4.  remove Heaviside name from STE for simplicity -\> change
             citation to 2013 paper which is more fundamental:
             <https://arxiv.org/abs/1308.3432>
 
-        4.  attempt to make normalizer dynamically ignore infinities
-            instead of expecting fixed sizes -\> could be done with a
-            simple normalization routine
+        5.  make custom normalizer module to dynamically ignore
+            infinities instead of expecting fixed sizes -\> requires
+            some new code to be written and autograd must be tested
 
-        5.  consider using a generic function for batch minima, since
+        6.  consider using a generic function for batch minima, since
             this could be dependent on the semiring
 
-        6.  change frequency of tensorboard, evaluation and model saving
+        7.  change frequency of tensorboard, evaluation and model saving
             to update-level
 
             1.  update arg parser with new arguments

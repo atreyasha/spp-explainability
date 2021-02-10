@@ -1,15 +1,11 @@
 #+STARTUP: overview
 #+OPTIONS: ^:nil
 #+OPTIONS: p:t
-
-
+  
 ** Tasks
 *** Current
 **** Dedicated explainability
 ***** Cross-model comparisons
-****** TODO Local explainability
-******* incorporate local explainability directly into SoPa++ neural model by porting transition with trace code there -> use this segment for comparison runs
-******* incorporate local explainability into SoPa++ regex model by simply returning which regex got activated
 ****** Comparisons
 ******* work on code that uses local explainability features of both the neural and regex to generate outputs and explanations
 ******* make aggregate statistics such as euclidean distance over differences in activations, see more below
@@ -23,18 +19,15 @@
 ***** Regular expression compression
 ****** Improve the baseline compression method with nearest neighbours
 ******* EITHER needs more features from simplification such as nearest neighbours OR generate them with access to the model again
+******* handle unknown tokens on new data for mimic model -> perhaps look for best possible match given context
 ******* add back =k_best= to argument parser in case it is needed
 ****** Explore improving/creating new compression methods
 ******* think of semantic clustering with digits or time or other means -> if there are no wildcards present
 ******* look into similar regular expressions *across separate* patterns and if this can be optimized somehow
 ******* think of how to aggregate compression, perhaps it is indeed possible to stack them
 ***** Regex OOP
-****** Add modes for using regex model
-******* naive mode using existing regex
-******* handle unknown tokens on new data for mimic model -> perhaps look for best possible match given context
+****** Add modes for regex search
 ******* find tricks which help to increase generalization such as defaulting to patterns given nearest neighbours or levenstein distance
-******* these modes should be coupled with performance improvements, evaluations and neural-model comparisons
-******* otherwise, this step can be ignored and delegated to improving compression with nearest neighbours
 ****** Add visualization of regex ensemble with graphviz
 ******* can specify which pattern to visualize and how to make large scale visualizations
 
@@ -45,9 +38,10 @@
 ****** maybe add value of atol directly into explainability by simplification's argument parser so this can be adjusted for different models
 ***** Dedicated modelling
 ****** add visualization of computational graph function directly to sopa torch model
-****** add option to increase threshold for STE to detect more distinct and sparse patterns instead of roughly half -> call this threshold =tau=
+****** replace =bias_scale= argument default with 1.0 since it is used outside of the semiring, might be more descriptive to have it that way instead of =None=
+****** vary tau argument in grid search and use values in range from 0.25-0.75
 ****** remove Heaviside name from STE for simplicity -> change citation to 2013 paper which is more fundamental: https://arxiv.org/abs/1308.3432
-****** attempt to make normalizer dynamically ignore infinities instead of expecting fixed sizes -> could be done with a simple normalization routine
+****** make custom normalizer module to dynamically ignore infinities instead of expecting fixed sizes -> requires some new code to be written and autograd must be tested
 ****** consider using a generic function for batch minima, since this could be dependent on the semiring
 ****** change frequency of tensorboard, evaluation and model saving to update-level
 ******* update arg parser with new arguments
