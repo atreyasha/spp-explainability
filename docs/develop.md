@@ -20,49 +20,35 @@
 
 ### Current
 
-1.  Dedicated explainability
+1.  Tasks pre-writing
+
+    **DEADLINE:** *\<2021-02-21 Sun\>*
 
     1.  Cross-model comparisons
 
-        1.  Comparisons
+        1.  compare neural and regex model as two model inputs in total,
+            create output with all exhaustive numbers required for later
+            -\> output model (softmax) scores, along with explanatory
+            text/regex
 
-            1.  work on code that uses local explainability features of
-                both the neural and regex to generate outputs and
-                explanations
+        2.  use it to optimize compression techniques and other regex
+            OOP generalization tricks
 
-            2.  make aggregate statistics such as euclidean distance
-                over differences in activations, see more below
-
-            3.  log the rest of the activations to compare more later on
-
-        2.  Metrics
-
-            1.  compare confusion matrices between oracle and mimic
-
-            2.  compute euclidean distances over raw softmax predictions
-
-        3.  Visualization
-
-            1.  output a well-structured file which can be easily
-                visualized with anoter module
-
-            2.  visualize examples where regex and neural model align
-                and misalign
-
-    2.  Regular expression compression
+    2.  Simplification and compression
 
         1.  Improve the baseline compression method with nearest
             neighbours
 
             1.  EITHER needs more features from simplification such as
                 nearest neighbours OR generate them with access to the
-                model again
+                model again -\> use comparison scripts to determine
+                which improvements are necessary
 
-            2.  handle unknown tokens on new data for mimic model -\>
-                perhaps look for best possible match given context
-
-            3.  add back `k_best` to argument parser in case it is
+            2.  add back `k_best` to argument parser in case it is
                 needed
+
+            3.  handle **UNK** tokens on new data for mimic model -\>
+                perhaps look for best possible match given context
 
         2.  Explore improving/creating new compression methods
 
@@ -77,54 +63,59 @@
 
     3.  Regex OOP
 
-        1.  Add modes for regex search
+        1.  find tricks to handle **UNK** tokens, which could be related
+            or delegated to compression techniques
 
-            1.  find tricks which help to increase generalization such
-                as defaulting to patterns given nearest neighbours or
-                levenstein distance
+        2.  find tricks which help to increase generalization such as
+            defaulting to patterns given nearest neighbours or
+            levenstein distance
 
-        2.  Add visualization of regex ensemble with graphviz
+2.  Tasks intra-writing
 
-            1.  can specify which pattern to visualize and how to make
+    1.  Visualization
+
+        1.  Cross-model comparisons
+
+            1.  visualize examples where regex and neural model align
+                and misalign
+
+        2.  Regex OOP
+
+            1.  add visualization of regex ensemble with graphviz -\>
+                can specify which pattern to visualize and how to make
                 large scale visualizations
 
-2.  Post explainability
+        3.  Model runs
 
-    1.  Miscellaneous explainability
+            1.  add visualizations of model runs using dedicated
+                functions, preferably all using python libraries
 
-        1.  attempt to multi-thread all regex-related scripts
+        4.  SoPa++ computational graph
 
-        2.  find out if individual compiled regex or full compiled regex
-            is better
-
-        3.  maybe add value of atol directly into explainability by
-            simplification\'s argument parser so this can be adjusted
-            for different models
+            1.  add visualization of computational graph function
+                directly to sopa torch model
 
     2.  Dedicated modelling
 
-        1.  add visualization of computational graph function directly
-            to sopa torch model
-
-        2.  replace `bias_scale` argument default with 1.0 since it is
+        1.  replace `bias_scale` argument default with 1.0 since it is
             used outside of the semiring, might be more descriptive to
             have it that way instead of `None`
 
-        3.  vary tau argument in grid search and use values in range
+        2.  vary tau argument in grid search and use values in range
             from 0.25-0.75
 
-        4.  remove Heaviside name from STE for simplicity -\> change
+        3.  remove Heaviside name from STE for simplicity -\> change
             citation to 2013 paper which is more fundamental:
             <https://arxiv.org/abs/1308.3432>
 
-        5.  make custom normalizer module to dynamically ignore
+        4.  make custom normalizer module to dynamically ignore
             infinities instead of expecting fixed sizes -\> requires
             some new code to be written and autograd must be tested
 
-        6.  consider using a generic function for batch minima, since
+        5.  consider using a generic function for batch minima, since
             this could be dependent on the semiring
 
-        7.  change frequency of tensorboard, evaluation and model saving
+        6.  change frequency of tensorboard, evaluation and model saving
             to update-level
 
             1.  update arg parser with new arguments
@@ -148,20 +139,12 @@
                 this after all changes and run code multiple times to
                 maximize GPU memory usage
 
-    3.  Generic changes
+    3.  Speed of explainability execution
 
-        1.  fix up filenames later on to keep things consistent, eg.
-            `spp` vs. `regex_spp` vs. `spp_regex` etc.
+        1.  attempt to multi-thread all regex-related scripts
 
-        2.  update all usages and consider adding different for SoPa++
-            and regex model usages
-
-        3.  clean out source code with newer and more efficient
-            workflows, consistent variable namings and function
-            definitions on-the-fly
-
-        4.  precisely type functions and classes on-the-fly -\>
-            especially for explainability scripts
+        2.  find out if individual compiled regex or full compiled regex
+            is better
 
 ### Long-term
 
@@ -199,57 +182,68 @@
 
 3.  Dependencies, typing and testing
 
-    1.  include basic test code by instantiating class and/or other
+    1.  precisely type functions and classes on-the-fly -\> especially
+        for explainability scripts
+
+    2.  include basic test code by instantiating class and/or other
         simple methods
 
-    2.  add mypy as an explicit part of testing the source code
+    3.  add mypy as an explicit part of testing the source code
 
-    3.  replace Union + None types with Optional type for conciseness
+    4.  replace Union + None types with Optional type for conciseness
 
-    4.  replace all `dict` types with `Dict` for consistency
+    5.  replace all `dict` types with `Dict` for consistency
 
-    5.  look into cases where List was replaced by Sequential and how
+    6.  look into cases where List was replaced by Sequential and how
         this can be changed or understood to keep consistency (ie. keep
         everything to List)
 
 4.  Documentation and clean-code
 
-    1.  add different usages for different types of models
+    1.  fix up filenames later on to keep things consistent, eg. `spp`
+        vs. `regex_spp` vs. `spp_regex` etc.
 
-    2.  rename all argument parser functions to reflect the respective
-        updated file names
+    2.  clean out source code with newer and more efficient workflows,
+        consistent variable namings and function definitions on-the-fly
 
-    3.  remove cases where variables from argument namespace are
+    3.  add different usages for different types of models
+
+    4.  **TODO** settle argument parser examples where some
+        defaults are `None`, perhaps we could use another way to specify
+        what default values will be chosen, or perhaps only leave
+        arguments to `None` when there is no other semantic choice
+
+    5.  remove cases where variables from argument namespace are
         redefined as local variables, a common example of this is with
         `args.model_log_directory` and `model_log_directory`
 
-    4.  find better naming for mimic/oracle models which is based on
+    6.  find better naming for mimic/oracle models which is based on
         research terminology -\> right now mix of neural and regex is
         being used; it would be good to have something more firm
 
-    5.  GPU/CPU runs not always reproducible depending on
+    7.  GPU/CPU runs not always reproducible depending on
         multi-threading, see:
         <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    6.  reduce source code lines, chunking and comments -\> pretty sort
+    8.  reduce source code lines, chunking and comments -\> pretty sort
         python code and function/class orders perhaps by length
 
-    7.  add a comment to each code chunk which explains inner mechanisms
+    9.  add a comment to each code chunk which explains inner mechanisms
         better
 
-    8.  update metadata eg. with comprehensive python/shell help
+    10. update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    9.  add information on best model downloads and preparation
+    11. add information on best model downloads and preparation
 
-    10. add pydocstrings to all functions and improve argparse
+    12. add pydocstrings to all functions and improve argparse
         documentation
 
-    11. provide description of data structures (eg. data, labels)
+    13. provide description of data structures (eg. data, labels)
         required for training processes
 
-    12. test download and all other scripts to ensure they work
+    14. test download and all other scripts to ensure they work
 
 ## Notes
 

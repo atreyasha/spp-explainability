@@ -4,40 +4,35 @@
   
 ** Tasks
 *** Current
-**** Dedicated explainability
+**** Tasks pre-writing
+     DEADLINE: <2021-02-21 Sun>
 ***** Cross-model comparisons
-****** Comparisons
-******* work on code that uses local explainability features of both the neural and regex to generate outputs and explanations
-******* make aggregate statistics such as euclidean distance over differences in activations, see more below
-******* log the rest of the activations to compare more later on
-****** Metrics
-******* compare confusion matrices between oracle and mimic
-******* compute euclidean distances over raw softmax predictions
-****** Visualization
-******* output a well-structured file which can be easily visualized with anoter module
-******* visualize examples where regex and neural model align and misalign
-***** Regular expression compression
+****** compare neural and regex model as two model inputs in total, create output with all exhaustive numbers required for later -> output model (softmax) scores, along with explanatory text/regex
+****** use it to optimize compression techniques and other regex OOP generalization tricks
+***** Simplification and compression
 ****** Improve the baseline compression method with nearest neighbours
-******* EITHER needs more features from simplification such as nearest neighbours OR generate them with access to the model again
-******* handle unknown tokens on new data for mimic model -> perhaps look for best possible match given context
+******* EITHER needs more features from simplification such as nearest neighbours OR generate them with access to the model again -> use comparison scripts to determine which improvements are necessary
 ******* add back =k_best= to argument parser in case it is needed
+******* handle *UNK* tokens on new data for mimic model -> perhaps look for best possible match given context
 ****** Explore improving/creating new compression methods
 ******* think of semantic clustering with digits or time or other means -> if there are no wildcards present
 ******* look into similar regular expressions *across separate* patterns and if this can be optimized somehow
 ******* think of how to aggregate compression, perhaps it is indeed possible to stack them
 ***** Regex OOP
-****** Add modes for regex search
-******* find tricks which help to increase generalization such as defaulting to patterns given nearest neighbours or levenstein distance
-****** Add visualization of regex ensemble with graphviz
-******* can specify which pattern to visualize and how to make large scale visualizations
+****** find tricks to handle *UNK* tokens, which could be related or delegated to compression techniques
+****** find tricks which help to increase generalization such as defaulting to patterns given nearest neighbours or levenstein distance
 
-**** Post explainability
-***** Miscellaneous explainability
-****** attempt to multi-thread all regex-related scripts
-****** find out if individual compiled regex or full compiled regex is better
-****** maybe add value of atol directly into explainability by simplification's argument parser so this can be adjusted for different models
+**** Tasks intra-writing
+***** Visualization
+****** Cross-model comparisons
+******* visualize examples where regex and neural model align and misalign
+****** Regex OOP
+******* add visualization of regex ensemble with graphviz -> can specify which pattern to visualize and how to make large scale visualizations
+****** Model runs
+******* add visualizations of model runs using dedicated functions, preferably all using python libraries
+****** SoPa++ computational graph
+******* add visualization of computational graph function directly to sopa torch model
 ***** Dedicated modelling
-****** add visualization of computational graph function directly to sopa torch model
 ****** replace =bias_scale= argument default with 1.0 since it is used outside of the semiring, might be more descriptive to have it that way instead of =None=
 ****** vary tau argument in grid search and use values in range from 0.25-0.75
 ****** remove Heaviside name from STE for simplicity -> change citation to 2013 paper which is more fundamental: https://arxiv.org/abs/1308.3432
@@ -52,11 +47,9 @@
 ******* encourage learning of wildcards by increasing its scale factor default -> in case there are not enough
 ******* think again about removing binarizer if it limits freedom of model too much
 ******* repeat grid-search with multiple random seeds -> do this after all changes and run code multiple times to maximize GPU memory usage
-***** Generic changes
-****** fix up filenames later on to keep things consistent, eg. =spp= vs. =regex_spp= vs. =spp_regex= etc. 
-****** update all usages and consider adding different for SoPa++ and regex model usages
-****** clean out source code with newer and more efficient workflows, consistent variable namings and function definitions on-the-fly
-****** precisely type functions and classes on-the-fly -> especially for explainability scripts
+***** Speed of explainability execution
+****** attempt to multi-thread all regex-related scripts
+****** find out if individual compiled regex or full compiled regex is better
 
 *** Long-term
 **** Performance and explainability
@@ -70,14 +63,17 @@
 ***** replace all legacy =tensor.data= calls with =tensor.detach()= for safety and =tensor.detach().clone()= for cases where data is being updated
 ***** check code for =squeeze()= call which can be problematic for dim 1 tensors
 **** Dependencies, typing and testing
+***** precisely type functions and classes on-the-fly -> especially for explainability scripts
 ***** include basic test code by instantiating class and/or other simple methods
 ***** add mypy as an explicit part of testing the source code
 ***** replace Union + None types with Optional type for conciseness
 ***** replace all =dict= types with =Dict= for consistency
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List)
 **** Documentation and clean-code
+***** fix up filenames later on to keep things consistent, eg. =spp= vs. =regex_spp= vs. =spp_regex= etc.
+***** clean out source code with newer and more efficient workflows, consistent variable namings and function definitions on-the-fly
 ***** add different usages for different types of models
-***** rename all argument parser functions to reflect the respective updated file names 
+***** TODO settle argument parser examples where some defaults are =None=, perhaps we could use another way to specify what default values will be chosen, or perhaps only leave arguments to =None= when there is no other semantic choice
 ***** remove cases where variables from argument namespace are redefined as local variables, a common example of this is with =args.model_log_directory= and =model_log_directory=
 ***** find better naming for mimic/oracle models which is based on research terminology -> right now mix of neural and regex is being used; it would be good to have something more firm
 ***** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility
