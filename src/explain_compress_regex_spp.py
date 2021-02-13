@@ -112,8 +112,8 @@ def main(args: argparse.Namespace) -> None:
     regex_model = torch.load(args.regex_model,
                              map_location=torch.device("cpu"))
 
-    LOGGER.info("Compressing with method: %s" % args.compression_method)
     # conduct compression as required
+    LOGGER.info("Compressing with method: %s" % args.compression_method)
     if args.compression_method == "rational":
         regex_model["activating_regex"] = {
             key: rational_compression(regex_model["activating_regex"][key])

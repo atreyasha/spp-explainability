@@ -23,38 +23,50 @@ class RegexSoftPatternClassifier(Module):
         }
         self.linear = linear
 
-    def regex_lookup(self,
-                     doc: str) -> Tuple[List[int], List[Union[int, None]]]:
+    def regex_lookup(self, doc: str) -> List[int]:
         scores_doc: List[int] = []
-        index_doc: List[Union[int, None]] = []
         for key in sorted(self.activating_regex.keys()):
             for index, regex in enumerate(self.activating_regex[key]):
                 if regex.search(doc):
                     scores_doc.append(1)
-                    index_doc.append(index)
                     break
             else:
                 scores_doc.append(0)
-                index_doc.append(None)
-        return scores_doc, index_doc
+        return scores_doc
 
     def forward(self, batch: List[str]) -> torch.Tensor:
         # start loop over regular expressions
-        scores = torch.FloatTensor([
-            self.regex_lookup(doc)[0] for doc in batch
-        ]).to(self.linear.weight.device)  # type: ignore
+        scores = torch.FloatTensor(
+            [self.regex_lookup(doc)
+             for doc in batch]).to(self.linear.weight.device)  # type: ignore
 
         # convert scores to tensor
         return self.linear(scores)
 
+    def regex_lookup_with_trace(
+            self, doc: str) -> Tuple[List[int], List[Union[re.Match, None]]]:
+        scores_doc: List[int] = []
+        lookup_doc: List[Union[re.Match, None]] = []
+        for key in sorted(self.activating_regex.keys()):
+            for index, regex in enumerate(self.activating_regex[key]):
+                regex_lookup = regex.search(doc)
+                if regex_lookup:
+                    scores_doc.append(1)
+                    lookup_doc.append(regex_lookup)
+                    break
+            else:
+                scores_doc.append(0)
+                lookup_doc.append(None)
+        return scores_doc, lookup_doc
+
     def forward_with_trace(
-            self, batch: List[str]
-    ) -> Tuple[torch.Tensor, List[List[Union[int, None]]]]:
+        self, batch: List[str]
+    ) -> Tuple[torch.Tensor, List[List[Union[re.Match, None]]]]:
         # start loop over regular expressions
-        all_data = [self.regex_lookup(doc) for doc in batch]
+        all_data = [self.regex_lookup_with_trace(doc) for doc in batch]
         scores = torch.FloatTensor([data[0] for data in all_data]).to(
             self.linear.weight.device)  # type: ignore
-        indices = [data[1] for data in all_data]
+        lookup = [data[1] for data in all_data]
 
         # convert scores to tensor
-        return self.linear(scores), indices
+        return self.linear(scores), lookup
