@@ -4,8 +4,8 @@
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .arg_parser import (logging_arg_parser, tqdm_arg_parser,
-                         hardware_arg_parser, resume_training_arg_parser,
-                         grid_training_arg_parser)
+                         hardware_arg_parser, train_resume_arg_parser,
+                         grid_train_arg_parser)
 from .train_spp import (train_outer, get_grid_args_superset,
                         parse_configs_to_args)
 import argparse
@@ -49,8 +49,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         formatter_class=ArgparseFormatter,
         parents=[
-            resume_training_arg_parser(),
-            grid_training_arg_parser(start_training=False),
+            train_resume_arg_parser(),
+            grid_train_arg_parser(start_training=False),
             hardware_arg_parser(),
             logging_arg_parser(),
             tqdm_arg_parser()

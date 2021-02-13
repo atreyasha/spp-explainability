@@ -5,7 +5,7 @@ from .utils.parser_utils import dir_path, file_path, glob_path
 import argparse
 
 
-def spp_model_arg_parser() -> argparse.ArgumentParser:
+def spp_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     sopa = parser.add_argument_group('optional sopa-architecture arguments')
     # numeric and character-accepting options
@@ -41,7 +41,7 @@ def spp_model_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def training_arg_parser() -> argparse.ArgumentParser:
+def train_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add group for required arguments
     required = parser.add_argument_group('required training arguments')
@@ -188,7 +188,7 @@ def explain_compress_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def evaluation_arg_parser() -> argparse.ArgumentParser:
+def evaluate_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add group for required arguments
     required = parser.add_argument_group('required evaluation arguments')
@@ -221,7 +221,7 @@ def evaluation_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def grid_evaluation_arg_parser() -> argparse.ArgumentParser:
+def grid_evaluate_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     grid = parser.add_argument_group('optional grid-evaluation arguments')
     grid.add_argument(
@@ -242,7 +242,7 @@ def grid_evaluation_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def grid_training_arg_parser(
+def grid_train_arg_parser(
         start_training: bool = True) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     grid = parser.add_argument_group('optional grid-training arguments')
@@ -263,7 +263,7 @@ def grid_training_arg_parser(
     return parser
 
 
-def resume_training_arg_parser() -> argparse.ArgumentParser:
+def train_resume_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     required = parser.add_argument_group('required training arguments')
     required.add_argument("--model-log-directory",
@@ -271,25 +271,6 @@ def resume_training_arg_parser() -> argparse.ArgumentParser:
                                 "data to be resumed for training"),
                           required=True,
                           type=dir_path)
-    return parser
-
-
-def hardware_arg_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(add_help=False)
-    hardware = parser.add_argument_group(
-        'optional hardware-acceleration arguments')
-    hardware.add_argument("--gpu-device",
-                          help=("GPU device specification in case --gpu option"
-                                " is used"),
-                          default="cuda:0",
-                          type=str)
-    hardware.add_argument("--torch-num-threads",
-                          help=("Set the number of threads used for CPU "
-                                "intraop parallelism with PyTorch"),
-                          type=int)
-    hardware.add_argument("--gpu",
-                          help="Use GPU hardware acceleration",
-                          action='store_true')
     return parser
 
 
@@ -310,6 +291,25 @@ def preprocess_arg_parser() -> argparse.ArgumentParser:
         help=("Disable upsampling on the train and validation "
               "data sets"),
         action="store_true")
+    return parser
+
+
+def hardware_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(add_help=False)
+    hardware = parser.add_argument_group(
+        'optional hardware-acceleration arguments')
+    hardware.add_argument("--gpu-device",
+                          help=("GPU device specification in case --gpu option"
+                                " is used"),
+                          default="cuda:0",
+                          type=str)
+    hardware.add_argument("--torch-num-threads",
+                          help=("Set the number of threads used for CPU "
+                                "intraop parallelism with PyTorch"),
+                          type=int)
+    hardware.add_argument("--gpu",
+                          help="Use GPU hardware acceleration",
+                          action='store_true')
     return parser
 
 

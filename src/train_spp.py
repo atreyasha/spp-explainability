@@ -22,9 +22,9 @@ from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 MaxSumSemiring)
 from .utils.logging_utils import (stdout_root_logger, add_file_handler,
                                   remove_all_file_handlers)
-from .arg_parser import (spp_model_arg_parser, training_arg_parser,
+from .arg_parser import (spp_arg_parser, train_arg_parser,
                          logging_arg_parser, tqdm_arg_parser,
-                         hardware_arg_parser, grid_training_arg_parser)
+                         hardware_arg_parser, grid_train_arg_parser)
 from .torch_model_spp import SoftPatternClassifier
 import numpy as np
 import argparse
@@ -257,27 +257,27 @@ def dump_configs(args: argparse.Namespace,
                  model_log_directory: str,
                  prefix: str = "") -> None:
     # create dictionaries to fill up
-    spp_model_args_dict = {}
-    training_args_dict = {}
+    spp_args_dict = {}
+    train_args_dict = {}
 
     # extract real arguments and fill up model dictionary
-    for action in spp_model_arg_parser()._actions:
-        spp_model_args_dict[action.dest] = getattr(args, action.dest)
+    for action in spp_arg_parser()._actions:
+        spp_args_dict[action.dest] = getattr(args, action.dest)
 
     # extract real arguments and fill up training dictionary
-    for action in training_arg_parser()._actions:
-        training_args_dict[action.dest] = getattr(args, action.dest)
+    for action in train_arg_parser()._actions:
+        train_args_dict[action.dest] = getattr(args, action.dest)
 
     # dump soft patterns model arguments for posterity
     with open(os.path.join(model_log_directory, prefix + "model_config.json"),
               "w") as output_file_stream:
-        json.dump(spp_model_args_dict, output_file_stream, ensure_ascii=False)
+        json.dump(spp_args_dict, output_file_stream, ensure_ascii=False)
 
     # dump training arguments for posterity
     with open(
             os.path.join(model_log_directory, prefix + "training_config.json"),
             "w") as output_file_stream:
-        json.dump(training_args_dict, output_file_stream, ensure_ascii=False)
+        json.dump(train_args_dict, output_file_stream, ensure_ascii=False)
 
 
 def save_checkpoint(epoch: int, model: torch.nn.Module,
@@ -863,10 +863,10 @@ def main(args: argparse.Namespace) -> None:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=ArgparseFormatter,
                                      parents=[
-                                         training_arg_parser(),
-                                         grid_training_arg_parser(),
+                                         train_arg_parser(),
+                                         grid_train_arg_parser(),
                                          hardware_arg_parser(),
-                                         spp_model_arg_parser(),
+                                         spp_arg_parser(),
                                          logging_arg_parser(),
                                          tqdm_arg_parser()
                                      ])

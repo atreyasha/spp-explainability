@@ -11,7 +11,7 @@ from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import read_docs, read_labels, Vocab
 from .arg_parser import (logging_arg_parser, hardware_arg_parser,
-                         evaluation_arg_parser, tqdm_arg_parser)
+                         evaluate_arg_parser, tqdm_arg_parser)
 from .torch_model_regex_spp import RegexSoftPatternClassifier
 from .train_spp import set_hardware
 import argparse
@@ -129,7 +129,7 @@ def main(args: argparse.Namespace) -> None:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=ArgparseFormatter,
                                      parents=[
-                                         evaluation_arg_parser(),
+                                         evaluate_arg_parser(),
                                          hardware_arg_parser(),
                                          logging_arg_parser(),
                                          tqdm_arg_parser()

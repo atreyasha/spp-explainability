@@ -10,7 +10,7 @@ from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import Vocab, PAD_TOKEN_INDEX, read_docs, read_labels
 from .arg_parser import (logging_arg_parser, hardware_arg_parser,
-                         evaluation_arg_parser, grid_evaluation_arg_parser)
+                         evaluate_arg_parser, grid_evaluate_arg_parser)
 from .train_spp import (parse_configs_to_args, set_hardware, get_pattern_specs,
                         get_semiring, evaluate_metric)
 from .torch_model_spp import SoftPatternClassifier
@@ -173,8 +173,8 @@ def main(args: argparse.Namespace) -> None:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=ArgparseFormatter,
                                      parents=[
-                                         evaluation_arg_parser(),
-                                         grid_evaluation_arg_parser(),
+                                         evaluate_arg_parser(),
+                                         grid_evaluate_arg_parser(),
                                          hardware_arg_parser(),
                                          logging_arg_parser()
                                      ])
