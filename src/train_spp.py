@@ -863,10 +863,10 @@ def main(args: argparse.Namespace) -> None:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=ArgparseFormatter,
                                      parents=[
+                                         spp_arg_parser(),
                                          train_arg_parser(),
                                          grid_train_arg_parser(),
                                          hardware_arg_parser(),
-                                         spp_arg_parser(),
                                          logging_arg_parser(),
                                          tqdm_arg_parser()
                                      ])
