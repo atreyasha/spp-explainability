@@ -57,6 +57,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
                   model_checkpoint: str,
                   model_log_directory: str,
                   batch_size: int,
+                  atol: float,
                   gpu_device: Union[torch.device, None],
                   max_doc_len: Union[int, None] = None,
                   disable_tqdm: bool = False) -> None:
@@ -95,7 +96,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
                 model.embeddings,  # type: ignore
                 to_cuda(gpu_device),
                 0.,
-                max_doc_len))[0]
+                max_doc_len), atol)[0]
     ]
 
     # reprocess back pointers by pattern
@@ -213,8 +214,8 @@ def explain_outer(args: argparse.Namespace) -> None:
 
     # execute inner function here
     explain_inner(explain_data, explain_text, model, args.model_checkpoint,
-                  args.model_log_directory, args.batch_size, gpu_device,
-                  args.max_doc_len, args.disable_tqdm)
+                  args.model_log_directory, args.batch_size, args.atol,
+                  gpu_device, args.max_doc_len, args.disable_tqdm)
 
 
 def main(args: argparse.Namespace) -> None:

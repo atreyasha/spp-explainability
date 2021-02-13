@@ -157,6 +157,11 @@ def explain_simplify_arg_parser() -> argparse.ArgumentParser:
                           type=file_path)
     # add group for optional arguments
     explain = parser.add_argument_group('optional explainability arguments')
+    explain.add_argument("--atol",
+                         help=("Specify absolute tolerance when comparing "
+                               "equivalences between tensors"),
+                         default=1e-6,
+                         type=float)
     explain.add_argument("--batch-size",
                          help="Batch size for explainability",
                          default=256,

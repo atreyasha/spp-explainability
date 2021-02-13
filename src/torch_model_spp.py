@@ -345,7 +345,8 @@ class SoftPatternClassifier(Module):
 
     def forward_with_trace(
             self,
-            batch: Batch) -> Tuple[List[List[BackPointer]], torch.Tensor]:
+            batch: Batch,
+            atol=1e-6) -> Tuple[List[List[BackPointer]], torch.Tensor]:
         # process all transition matrices
         transition_matrices_list = [
             transition_matrices[:index, :, :]
@@ -411,7 +412,7 @@ class SoftPatternClassifier(Module):
                     for back_pointer in end_state_back_pointers
                 ]).to(self.linear.weight.device),
                 interim_scores[0],
-                atol=1e-6), ("Explainability routine does not produce "
+                atol=atol), ("Explainability routine does not produce "
                              "matching scores with SoPa++ routine")
 
             # assign binarized scores
