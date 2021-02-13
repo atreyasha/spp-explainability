@@ -20,15 +20,15 @@ def spp_arg_parser() -> argparse.ArgumentParser:
                       default="MaxSumSemiring",
                       choices=["MaxSumSemiring", "MaxProductSemiring"],
                       type=str)
+    sopa.add_argument("--tau-threshold",
+                      help="Specify value of STE binarizer tau threshold",
+                      default=0.,
+                      type=float)
     sopa.add_argument("--bias-scale",
                       help="Scale biases by this parameter",
                       type=float)
     sopa.add_argument("--wildcard-scale",
                       help="Scale wildcard(s) by this parameter",
-                      type=float)
-    sopa.add_argument("--tau-threshold",
-                      help="Specify value of STE binarizer tau threshold",
-                      default=0.,
                       type=float)
     sopa.add_argument("--word-dim", help=argparse.SUPPRESS, type=int)
     # boolean flags
@@ -72,9 +72,6 @@ def train_arg_parser() -> argparse.ArgumentParser:
                        help="Base directory where all models will be saved",
                        default="./models",
                        type=dir_path)
-    train.add_argument("--pre-computed-patterns",
-                       help="Path to file containing per-computed patterns",
-                       type=file_path)
     train.add_argument("--learning-rate",
                        help="Learning rate for Adam optimizer",
                        default=1e-3,
