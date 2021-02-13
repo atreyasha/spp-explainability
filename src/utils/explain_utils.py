@@ -5,19 +5,20 @@ from typing import Callable, List, Union, Any
 from functools import total_ordering
 
 
-def zip_lambda_nested(function: Callable[..., Any],
-                      input_X: List[List['BackPointer']],
-                      input_Y: Union[List[List[float]],
-                                     List[List['BackPointer']]],
-                      end_states: List[int]) -> List[List['BackPointer']]:
+def lambda_back_pointers(function: Callable[..., Any],
+                         input_X: List[List['BackPointer']],
+                         input_Y: Union[List[List[float]],
+                                        List[List['BackPointer']]],
+                         end_states: List[int]) -> List[List['BackPointer']]:
     return [
-        [function(x, y) if j <= end_states[i] else x
-         for j, (x, y) in enumerate(zip(X, Y))]  # type: ignore
-        for i, (X, Y) in enumerate(zip(input_X, input_Y))  # type: ignore
+        [
+            function(x, y) if j <= end_states[i] else x
+            for j, (x, y) in enumerate(zip(X, Y))  # type: ignore
+        ] for i, (X, Y) in enumerate(zip(input_X, input_Y))  # type: ignore
     ]
 
 
-def concatenate_lists(
+def pad_back_pointers(
         padding: List['BackPointer'],
         data: List[List['BackPointer']]) -> List[List['BackPointer']]:
     return [[pad] + data_element for pad, data_element in zip(padding, data)]

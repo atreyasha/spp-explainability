@@ -4,7 +4,7 @@
 from typing import cast, Union, Any, List, Tuple
 from collections import OrderedDict
 from torch.nn import Module, Parameter, Linear, Dropout, LayerNorm, init
-from .utils.explain_utils import (concatenate_lists, zip_lambda_nested,
+from .utils.explain_utils import (pad_back_pointers, lambda_back_pointers,
                                   BackPointer)
 from .utils.model_utils import Semiring, Batch
 from .utils.data_utils import Vocab
@@ -295,9 +295,9 @@ class SoftPatternClassifier(Module):
             end_states: List[int],
             token_index: int) -> List[List[BackPointer]]:
         # add main transition; consume a token and state
-        main_transitions = concatenate_lists(
+        main_transitions = pad_back_pointers(
             self.restart_padding_with_trace(token_index),
-            zip_lambda_nested(
+            lambda_back_pointers(
                 lambda back_pointer, transition_value: BackPointer(
                     raw_score=self.semiring.float_times(  # type: ignore
                         back_pointer.raw_score, transition_value),
@@ -319,9 +319,9 @@ class SoftPatternClassifier(Module):
             # mypy typing fix
             wildcard_matrix = cast(List[List[float]], wildcard_matrix)
             # add wildcard transition; consume a generic token and state
-            wildcard_transitions = concatenate_lists(
+            wildcard_transitions = pad_back_pointers(
                 self.restart_padding_with_trace(token_index),
-                zip_lambda_nested(
+                lambda_back_pointers(
                     lambda back_pointer, wildcard_value: BackPointer(
                         raw_score=self.semiring.float_times(  # type: ignore
                             back_pointer.raw_score, wildcard_value),
@@ -337,7 +337,7 @@ class SoftPatternClassifier(Module):
                     end_states))
 
             # return final object
-            return zip_lambda_nested(
+            return lambda_back_pointers(
                 self.semiring.float_plus,  # type: ignore
                 main_transitions,
                 wildcard_transitions,
