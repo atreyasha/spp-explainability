@@ -46,7 +46,7 @@ class SoftPatternClassifier(Module):
                  semiring: Semiring,
                  tau_threshold: float,
                  no_wildcards: bool = False,
-                 bias_scale: Union[float, None] = None,
+                 bias_scale: float = 1.,
                  wildcard_scale: Union[float, None] = None,
                  dropout: float = 0.) -> None:
         # initialize all class properties from torch.nn.Module
@@ -81,14 +81,9 @@ class SoftPatternClassifier(Module):
         self.bias = Parameter(bias)
 
         # assign bias_scale based on conditionals
-        if bias_scale is not None:
-            self.register_buffer("bias_scale",
-                                 torch.FloatTensor([bias_scale]),
-                                 persistent=False)
-        else:
-            self.register_buffer("bias_scale",
-                                 torch.FloatTensor([1.]),
-                                 persistent=False)
+        self.register_buffer("bias_scale",
+                             torch.FloatTensor([bias_scale]),
+                             persistent=False)
 
         # assign wildcard-related variables from conditionals
         if not self.no_wildcards:

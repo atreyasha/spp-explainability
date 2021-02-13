@@ -26,6 +26,7 @@ def spp_arg_parser() -> argparse.ArgumentParser:
                       type=float)
     sopa.add_argument("--bias-scale",
                       help="Scale biases by this parameter",
+                      default=1.,
                       type=float)
     sopa.add_argument("--wildcard-scale",
                       help="Scale wildcard(s) by this parameter",
