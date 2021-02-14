@@ -80,7 +80,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     explain_data, explain_text = map(
         list,
         zip(*sorted(zip(explain_data, explain_text),
-                    key=lambda v: v[0][0],
+                    key=lambda v: len(v[0][0]),
                     reverse=True)))
     explain_data = cast(List[Tuple[List[int], int]], explain_data)
 
