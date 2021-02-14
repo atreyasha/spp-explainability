@@ -64,6 +64,9 @@ def get_exit_code(filename: str) -> int:
 def parse_configs_to_args(args: argparse.Namespace,
                           prefix: str = "",
                           training: bool = True) -> argparse.Namespace:
+    # make copy of existing argument namespace
+    args = copy.deepcopy(args)
+
     # check for json configs and add them to list
     json_files = []
     json_files.append(
