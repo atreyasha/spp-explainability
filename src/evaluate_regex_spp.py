@@ -60,8 +60,7 @@ def evaluate_inner(eval_text: List[str],
 
     # loop over data in batches
     predicted = []
-    for batch in tqdm(chunked(eval_text, batch_size),  # type: ignore
-                      disable=disable_tqdm):
+    for batch in tqdm(chunked(eval_text, batch_size), disable=disable_tqdm):
         predicted.extend(torch.argmax(model.forward(batch), 1).tolist())
 
     # process classification report
@@ -103,8 +102,10 @@ def evaluate_outer(args: argparse.Namespace) -> None:
 
     # apply maximum document length if necessary
     if args.max_doc_len is not None:
-        eval_text = [eval_text[:args.max_doc_len]  # type: ignore
-                     for doc in eval_text]
+        eval_text = [
+            eval_text[:args.max_doc_len]  # type: ignore
+            for doc in eval_text
+        ]
 
     # convert eval_text into list of string
     eval_text = [" ".join(doc) for doc in eval_text]

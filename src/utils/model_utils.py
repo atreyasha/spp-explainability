@@ -16,8 +16,7 @@ def timestamp() -> str:
     return str(int(datetime.datetime.now().timestamp()))
 
 
-def chunked(inputs: List[Tuple[List[int], int]],
-            chunk_size: int) -> List[List[Tuple[List[int], int]]]:
+def chunked(inputs: List[Any], chunk_size: int) -> List[List[Any]]:
     return [
         inputs[i:i + chunk_size] for i in range(0, len(inputs), chunk_size)
     ]
