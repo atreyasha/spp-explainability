@@ -36,6 +36,9 @@ class STE(Module):
         batch = STEFunction.apply(self.tau_threshold, batch)
         return batch
 
+    def extra_repr(self) -> str:
+        return 'tau_threshold={}'.format(self.tau_threshold)
+
 
 class SoftPatternClassifier(Module):
     def __init__(self,
