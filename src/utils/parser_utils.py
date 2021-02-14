@@ -187,7 +187,7 @@ class Metavar_Indenter(argparse.HelpFormatter):
         """
         # determine the required width and the entry label
         help_position = min(self._action_max_length + 2,
-                            self._max_help_position + 4)
+                            self._max_help_position + 5)
         help_width = max(self._width - help_position, 11)
         action_width = help_position - self._current_indent - 2
         action_header = self._format_action_invocation(action)
