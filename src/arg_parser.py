@@ -191,7 +191,7 @@ def explain_compress_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def evaluate_arg_parser() -> argparse.ArgumentParser:
+def evaluate_arg_parser(compare: bool = False) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add group for required arguments
     required = parser.add_argument_group('required evaluation arguments')
@@ -203,13 +203,29 @@ def evaluate_arg_parser() -> argparse.ArgumentParser:
                           help="Path to evaluation labels file",
                           required=True,
                           type=file_path)
-    required.add_argument("--model-checkpoint",
-                          help=("Glob path to model checkpoint with '.pt' "
-                                "extension"),
-                          required=True,
-                          type=glob_path)
+    if compare:
+        required.add_argument("--neural-model-checkpoint",
+                              help=("Path to neural model checkpoint with "
+                                    "'.pt' extension"),
+                              required=True,
+                              type=file_path)
+        required.add_argument("--regex-model-checkpoint",
+                              help=("Path to regex model checkpoint with "
+                                    "'.pt' extension"),
+                              required=True,
+                              type=file_path)
+    else:
+        required.add_argument("--model-checkpoint",
+                              help=("Glob path to model checkpoint with '.pt' "
+                                    "extension"),
+                              required=True,
+                              type=glob_path)
     # add group for optional arguments
     evaluate = parser.add_argument_group('optional evaluation arguments')
+    if compare:
+        evaluate.add_argument("--output-dir",
+                              help="Specify directory to store output file",
+                              type=dir_path)
     evaluate.add_argument("--output-prefix",
                           help="Prefix for output classification report",
                           default="test",
