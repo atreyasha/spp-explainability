@@ -97,7 +97,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
         for pattern_index in range(model.total_num_patterns)  # type: ignore
     }
 
-    # extract segments of text leading to activations
+    # extract relevant regex leading to activations
     LOGGER.info("Converting activating spans to regex")
     activating_regex = {
         pattern_index: [
@@ -112,26 +112,12 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     # make all spans unqiue
     LOGGER.info("Making activating regex unique")
     activating_regex = {
-        pattern_index: [
-            list(text_tuple_inner) for text_tuple_inner in unique([
-                tuple(text_list_inner) for text_list_inner in text_list_outer
-            ])
-        ]
-        for pattern_index, text_list_outer in activating_regex.items()
-    }
-
-    # produce sample text for the user to peruse
-    LOGGER.info("Sample activating text: %s" % activating_regex[0])
-
-    # convert regex list to regex strings
-    LOGGER.info("Converting regex lists to regex strings")
-    activating_regex = {
-        pattern_index: [
-            "\\b" + " ".join(activating_regex_pattern_instance) + "\\b"
-            for activating_regex_pattern_instance in activating_regex_pattern
-        ]
+        pattern_index: list(set(activating_regex_pattern))
         for pattern_index, activating_regex_pattern in activating_regex.items()
     }
+
+    # produce sample regex for the user to peruse
+    LOGGER.info("Sample activating regex: %s" % activating_regex[0])
 
     # define model filename
     model_filename = os.path.join(

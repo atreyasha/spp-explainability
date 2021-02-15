@@ -65,9 +65,9 @@ class BackPointer:
     def get_text(  # type: ignore
             self,
             doc_text: List[str],
-            extra: List[str] = []) -> List[str]:
+            extra: List[str] = []) -> Union[List[str], str]:
         if self.previous is None:
-            return extra
+            return " ".join(extra)
         else:
             extra = [doc_text[self.current_token_index]] + extra
             return self.previous.get_text(doc_text, extra=extra)
@@ -75,9 +75,9 @@ class BackPointer:
     def get_regex(  # type: ignore
             self,
             doc_text: List[str],
-            extra: List[str] = []) -> List[str]:
+            extra: List[str] = []) -> Union[List[str], str]:
         if self.previous is None:
-            return extra
+            return "\\b" + " ".join(extra) + "\\b"
         if self.transition == "main_transition":
             extra = [re.escape(doc_text[self.current_token_index])] + extra
             return self.previous.get_regex(doc_text, extra=extra)
