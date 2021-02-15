@@ -7,7 +7,7 @@ from typing import List, Tuple, Union, Dict, cast
 from torch.nn import Embedding, Module
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
-from .utils.data_utils import unique, PAD_TOKEN_INDEX, Vocab
+from .utils.data_utils import PAD_TOKEN_INDEX, Vocab
 from .utils.model_utils import to_cuda, chunked, Batch
 from .arg_parser import (explain_simplify_arg_parser, hardware_arg_parser,
                          logging_arg_parser, tqdm_arg_parser)
