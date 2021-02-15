@@ -25,7 +25,7 @@ from .utils.logging_utils import (stdout_root_logger, add_file_handler,
 from .arg_parser import (spp_arg_parser, train_arg_parser,
                          logging_arg_parser, tqdm_arg_parser,
                          hardware_arg_parser, grid_train_arg_parser)
-from .torch_model_spp import SoftPatternClassifier
+from .torch_module_spp import SoftPatternClassifier
 import numpy as np
 import argparse
 import logging
