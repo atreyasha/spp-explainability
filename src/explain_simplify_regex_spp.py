@@ -119,7 +119,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     LOGGER.info("Converting activating spans to text")
     activating_text = {
         pattern_index: [
-            back_pointer_with_text[1].display(  # type: ignore
+            back_pointer_with_text[1].display_pattern(  # type: ignore
                 back_pointer_with_text[0])
             for back_pointer_with_text in back_pointers_with_text
         ]

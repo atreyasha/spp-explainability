@@ -61,16 +61,25 @@ class BackPointer:
                     self.previous, self.transition, self.start_token_index,
                     self.current_token_index, self.end_token_index)
 
-    def display(  # type: ignore
+    def display_text(  # type: ignore
             self,
             doc_text: List[str],
-            extra: List[str] = [],
-            num_padding_tokens: int = 1) -> List[str]:
+            extra: List[str] = []) -> List[str]:
+        if self.previous is None:
+            return extra
+        else:
+            extra = [doc_text[self.current_token_index]] + extra
+            return self.previous.display_text(doc_text, extra=extra)
+
+    def display_pattern(  # type: ignore
+            self,
+            doc_text: List[str],
+            extra: List[str] = []) -> List[str]:
         if self.previous is None:
             return extra
         if self.transition == "main_transition":
             extra = [doc_text[self.current_token_index]] + extra
-            return self.previous.display(doc_text, extra=extra)
+            return self.previous.display_pattern(doc_text, extra=extra)
         if self.transition == "wildcard_transition":
             extra = ["*"] + extra
-            return self.previous.display(doc_text, extra=extra)
+            return self.previous.display_pattern(doc_text, extra=extra)
