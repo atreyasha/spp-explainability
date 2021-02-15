@@ -421,10 +421,7 @@ class SoftPatternClassifier(Module):
                         pattern_index].item()
 
             # append end state back pointers to higher list
-            end_state_back_pointers_list.append([
-                back_pointer if back_pointer.binarized_score else None
-                for back_pointer in end_state_back_pointers
-            ])
+            end_state_back_pointers_list.append(end_state_back_pointers)
 
         # return best back pointers
         return end_state_back_pointers_list, self.linear(

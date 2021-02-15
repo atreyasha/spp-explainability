@@ -87,16 +87,19 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     # start explanation workflow on all explain_data
     LOGGER.info("Retrieving activating spans and back pointers")
     activating_spans_back_pointers = [
-        back_pointers
-        for explain_batch in tqdm(chunked(explain_data, batch_size),
-                                  disable=disable_tqdm)
+        [
+            back_pointer if back_pointer.binarized_score else None
+            for back_pointer in back_pointers
+        ] for explain_batch in tqdm(chunked(explain_data, batch_size),
+                                    disable=disable_tqdm)
         for back_pointers in model.forward_with_trace(  # type: ignore
             Batch(
                 [doc for doc, _ in explain_batch],
                 model.embeddings,  # type: ignore
                 to_cuda(gpu_device),
                 0.,
-                max_doc_len), atol)[0]
+                max_doc_len),
+            atol)[0]
     ]
 
     # reprocess back pointers by pattern
