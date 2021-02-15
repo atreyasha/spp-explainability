@@ -17,7 +17,6 @@ from .torch_model_spp import SoftPatternClassifier
 import argparse
 import torch
 import os
-import re
 
 
 def save_regex_model(pattern_specs: 'OrderedDict[int, int]',
@@ -29,26 +28,6 @@ def save_regex_model(pattern_specs: 'OrderedDict[int, int]',
             "activating_regex": activating_regex,
             "linear_state_dict": linear_state_dict
         }, filename)
-
-
-def convert_text_to_regex(
-        activating_text_pattern: List[List[str]]) -> List[str]:
-    # create new local variable for regex storage
-    activating_regex_pattern = []
-
-    # loop over all activating spans for pattern
-    for activating_text_pattern_instance in activating_text_pattern:
-        regex = []
-        for text in activating_text_pattern_instance:
-            if text == "*":
-                regex.append("[^\\s]+")
-            else:
-                # escape possible regular expressions
-                regex.append(re.escape(text))
-        # add collected regex to upper list
-        activating_regex_pattern.append("\\b" + " ".join(regex) + "\\b")
-
-    return activating_regex_pattern
 
 
 def explain_inner(explain_data: List[Tuple[List[int], int]],
@@ -119,10 +98,10 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     }
 
     # extract segments of text leading to activations
-    LOGGER.info("Converting activating spans to text")
-    activating_text = {
+    LOGGER.info("Converting activating spans to regex")
+    activating_regex = {
         pattern_index: [
-            back_pointer_with_text[1].display_pattern(  # type: ignore
+            back_pointer_with_text[1].get_regex(  # type: ignore
                 back_pointer_with_text[0])
             for back_pointer_with_text in back_pointers_with_text
         ]
@@ -131,24 +110,27 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     }
 
     # make all spans unqiue
-    LOGGER.info("Making activating text unique")
-    activating_text = {
+    LOGGER.info("Making activating regex unique")
+    activating_regex = {
         pattern_index: [
             list(text_tuple_inner) for text_tuple_inner in unique([
                 tuple(text_list_inner) for text_list_inner in text_list_outer
             ])
         ]
-        for pattern_index, text_list_outer in activating_text.items()
+        for pattern_index, text_list_outer in activating_regex.items()
     }
 
     # produce sample text for the user to peruse
-    LOGGER.info("Sample activating text: %s" % activating_text[0])
+    LOGGER.info("Sample activating text: %s" % activating_regex[0])
 
-    # convert text to regex
-    LOGGER.info("Converting activating text to regular expressions")
+    # convert regex list to regex strings
+    LOGGER.info("Converting regex lists to regex strings")
     activating_regex = {
-        pattern_index: convert_text_to_regex(activating_text_pattern)
-        for pattern_index, activating_text_pattern in activating_text.items()
+        pattern_index: [
+            "\\b" + " ".join(activating_regex_pattern_instance) + "\\b"
+            for activating_regex_pattern_instance in activating_regex_pattern
+        ]
+        for pattern_index, activating_regex_pattern in activating_regex.items()
     }
 
     # define model filename
