@@ -44,7 +44,7 @@ class RegexSoftPatternClassifier(Module):
         return self.linear(scores)
 
     def regex_lookup_with_trace(
-            self, doc: str) -> Tuple[List[int], List[Union[re.Match, None]]]:
+            self, doc: str) -> Tuple[List[Union[re.Match, None]], List[int]]:
         scores_doc: List[int] = []
         lookup_doc: List[Union[re.Match, None]] = []
         for key in sorted(self.activating_regex.keys()):
@@ -57,16 +57,16 @@ class RegexSoftPatternClassifier(Module):
             else:
                 scores_doc.append(0)
                 lookup_doc.append(None)
-        return scores_doc, lookup_doc
+        return lookup_doc, scores_doc
 
     def forward_with_trace(
         self, batch: List[str]
-    ) -> Tuple[torch.Tensor, List[List[Union[re.Match, None]]]]:
+    ) -> Tuple[List[List[Union[re.Match, None]]], torch.Tensor]:
         # start loop over regular expressions
         all_data = [self.regex_lookup_with_trace(doc) for doc in batch]
-        scores = torch.FloatTensor([data[0] for data in all_data]).to(
+        lookup = [data[0] for data in all_data]
+        scores = torch.FloatTensor([data[1] for data in all_data]).to(
             self.linear.weight.device)  # type: ignore
-        lookup = [data[1] for data in all_data]
 
         # convert scores to tensor
-        return self.linear(scores), lookup
+        return lookup, self.linear(scores)
