@@ -39,17 +39,14 @@ def stdout_root_logger(level: str) -> logging.Logger:
     return logger
 
 
-def remove_all_file_handlers(logger: logging.Logger) -> logging.Logger:
+def remove_all_file_handlers(logger: logging.Logger) -> None:
     for handler in logger.handlers[:]:
         if isinstance(handler, logging.FileHandler):
             logger.removeHandler(handler)
 
-    # return adjusted logger
-    return logger
-
 
 def add_file_handler(logger: logging.Logger,
-                     filename: str) -> logging.Logger:
+                     filename: str) -> None:
     # create formatter
     formatter = logging.Formatter(FORMAT)
 
@@ -60,6 +57,3 @@ def add_file_handler(logger: logging.Logger,
 
     # add file handler to logger
     logger.addHandler(file_handler)
-
-    # return adjusted logger
-    return logger

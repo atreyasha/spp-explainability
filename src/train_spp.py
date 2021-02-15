@@ -22,9 +22,9 @@ from .utils.model_utils import (shuffled_chunked_sorted, chunked_sorted,
                                 MaxSumSemiring)
 from .utils.logging_utils import (stdout_root_logger, add_file_handler,
                                   remove_all_file_handlers)
-from .arg_parser import (spp_arg_parser, train_arg_parser,
-                         logging_arg_parser, tqdm_arg_parser,
-                         hardware_arg_parser, grid_train_arg_parser)
+from .arg_parser import (spp_arg_parser, train_arg_parser, logging_arg_parser,
+                         tqdm_arg_parser, hardware_arg_parser,
+                         grid_train_arg_parser)
 from .torch_module_spp import SoftPatternClassifier
 import numpy as np
 import argparse
@@ -708,8 +708,8 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
     try:
         # update LOGGER object with file handler
         global LOGGER
-        LOGGER = add_file_handler(
-            LOGGER, os.path.join(args.model_log_directory, "session.log"))
+        add_file_handler(LOGGER,
+                         os.path.join(args.model_log_directory, "session.log"))
 
         if resume_training:
             args = parse_configs_to_args(args)
@@ -815,7 +815,7 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
                     args.tqdm_update_period)
     finally:
         # update LOGGER object to remove file handler
-        LOGGER = remove_all_file_handlers(LOGGER)
+        remove_all_file_handlers(LOGGER)
 
 
 def main(args: argparse.Namespace) -> None:
