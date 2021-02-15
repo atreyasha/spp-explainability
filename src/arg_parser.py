@@ -226,6 +226,12 @@ def evaluate_arg_parser(compare: bool = False) -> argparse.ArgumentParser:
         evaluate.add_argument("--output-dir",
                               help="Specify directory to store output file",
                               type=dir_path)
+        evaluate.add_argument(
+            "--atol",
+            help=("Specify absolute tolerance when comparing "
+                  "equivalences between tensors"),
+            default=1e-6,
+            type=float)
     evaluate.add_argument("--output-prefix",
                           help="Prefix for output classification report",
                           default="test",
