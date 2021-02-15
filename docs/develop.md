@@ -24,33 +24,36 @@
 
     **DEADLINE:** *\<2021-02-21 Sun\>*
 
-    1.  Cross-model comparisons
+    1.  Simplification and compression
 
-        1.  compare neural and regex model as two model inputs in total,
-            create output with all exhaustive numbers required for later
-            -\> output model (softmax) scores, along with explanatory
-            text/regex
+        1.  Improve baseline compression methods (ie. rational and
+            brave) with nearest neighbours
 
-        2.  use it to optimize compression techniques and other regex
-            OOP generalization tricks
+            1.  **TODO** **side_task:** test run comparison
+                script on GPU to ensure it works
 
-    2.  Simplification and compression
+            2.  **TODO** remove word boundaries if edge cases
+                are wildcards, leads to cases of \[START\] being matched
+                as eg. \[START when using a wild-card with boundaries
+                -\> change would need to be made in both simplification
+                and compression -\> maybe this might bring rational and
+                brave performances closer to each other -\> would be
+                worth checking differences between rational and brave
+                after this
 
-        1.  Improve the baseline compression method with nearest
-            neighbours
-
-            1.  EITHER needs more features from simplification such as
+            3.  EITHER needs more features from simplification such as
                 nearest neighbours OR generate them with access to the
                 model again -\> use comparison scripts to determine
                 which improvements are necessary
 
-            2.  add back `k_best` to argument parser in case it is
+            4.  add back `k_best` to argument parser in case it is
                 needed
 
-            3.  handle **UNK** tokens on new data for mimic model -\>
+            5.  handle **UNK** tokens on new data for mimic model -\>
                 perhaps look for best possible match given context
 
-        2.  Explore improving/creating new compression methods
+        2.  Explore improving/creating new compression methods, eg.
+            insane compression
 
             1.  think of semantic clustering with digits or time or
                 other means -\> if there are no wildcards present
@@ -61,7 +64,7 @@
             3.  think of how to aggregate compression, perhaps it is
                 indeed possible to stack them
 
-    3.  Regex OOP
+    2.  Regex OOP
 
         1.  find tricks to handle **UNK** tokens, which could be related
             or delegated to compression techniques
@@ -72,18 +75,27 @@
 
 2.  Tasks intra-writing
 
-    1.  Visualization
+    1.  Visualization and statistics
 
         1.  Cross-model comparisons
 
             1.  visualize examples where regex and neural model align
-                and misalign
+                and misalign, eg. with a confusion matrix
+
+            2.  compute statistics over softmax scores such as euclidean
+                distances between models
 
         2.  Regex OOP
 
             1.  add visualization of regex ensemble with graphviz -\>
                 can specify which pattern to visualize and how to make
                 large scale visualizations
+
+            2.  visualize patterns as dots with internal pie charts
+                which show magnitudes of each class; displayed as a
+                colour with legend -\> will show relative importance of
+                each binary neuron and can help us segment their
+                purposes
 
         3.  Model runs
 
@@ -167,6 +179,9 @@
 
     5.  check if packed sequences could be incoporated into model
 
+    6.  ensure final published model has all new model parameters such
+        as `tau_threshold` and `bias_scale` specified
+
 2.  Re-check potential pitfalls
 
     1.  add `with torch.no_grad()` scope indicator alongside
@@ -208,10 +223,10 @@
 
     3.  add different usages for different types of models
 
-    4.  **TODO** settle argument parser examples where some
-        defaults are `None`, perhaps we could use another way to specify
-        what default values will be chosen, or perhaps only leave
-        arguments to `None` when there is no other semantic choice
+    4.  settle argument parser examples where some defaults are `None`,
+        perhaps we could use another way to specify what default values
+        will be chosen, or perhaps only leave arguments to `None` when
+        there is no other semantic choice
 
     5.  remove cases where variables from argument namespace are
         redefined as local variables, a common example of this is with

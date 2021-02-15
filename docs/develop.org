@@ -6,15 +6,14 @@
 *** Current
 **** Tasks pre-writing
      DEADLINE: <2021-02-21 Sun>
-***** Cross-model comparisons
-****** compare neural and regex model as two model inputs in total, create output with all exhaustive numbers required for later -> output model (softmax) scores, along with explanatory text/regex
-****** use it to optimize compression techniques and other regex OOP generalization tricks
 ***** Simplification and compression
-****** Improve the baseline compression method with nearest neighbours
+****** Improve baseline compression methods (ie. rational and brave) with nearest neighbours
+******* TODO *side_task:* test run comparison script on GPU to ensure it works
+******* TODO remove word boundaries if edge cases are wildcards, leads to cases of [START] being matched as eg. [START when using a wild-card with boundaries -> change would need to be made in both simplification and compression -> maybe this might bring rational and brave performances closer to each other -> would be worth checking differences between rational and brave after this
 ******* EITHER needs more features from simplification such as nearest neighbours OR generate them with access to the model again -> use comparison scripts to determine which improvements are necessary
 ******* add back =k_best= to argument parser in case it is needed
 ******* handle *UNK* tokens on new data for mimic model -> perhaps look for best possible match given context
-****** Explore improving/creating new compression methods
+****** Explore improving/creating new compression methods, eg. insane compression 
 ******* think of semantic clustering with digits or time or other means -> if there are no wildcards present
 ******* look into similar regular expressions *across separate* patterns and if this can be optimized somehow
 ******* think of how to aggregate compression, perhaps it is indeed possible to stack them
@@ -23,11 +22,13 @@
 ****** find tricks which help to increase generalization such as defaulting to patterns given nearest neighbours or levenstein distance
 
 **** Tasks intra-writing
-***** Visualization
+***** Visualization and statistics
 ****** Cross-model comparisons
-******* visualize examples where regex and neural model align and misalign
+******* visualize examples where regex and neural model align and misalign, eg. with a confusion matrix
+******* compute statistics over softmax scores such as euclidean distances between models 
 ****** Regex OOP
 ******* add visualization of regex ensemble with graphviz -> can specify which pattern to visualize and how to make large scale visualizations
+******* visualize patterns as dots with internal pie charts which show magnitudes of each class; displayed as a colour with legend -> will show relative importance of each binary neuron and can help us segment their purposes
 ****** Model runs
 ******* add visualizations of model runs using dedicated functions, preferably all using python libraries
 ****** SoPa++ computational graph
@@ -58,6 +59,7 @@
 ***** add predict function for both mimic and oracle model which does not need extra data to be loaded -> can also accept stdin as unix pipe
 ***** when comparing model performance with other studies, consider only lowercasing and not making unique the test set
 ***** check if packed sequences could be incoporated into model
+***** ensure final published model has all new model parameters such as =tau_threshold= and =bias_scale= specified
 **** Re-check potential pitfalls
 ***** add =with torch.no_grad()= scope indicator alongside =model.eval()= to perform inference/validation correctly and efficiently
 ***** replace all legacy =tensor.data= calls with =tensor.detach()= for safety and =tensor.detach().clone()= for cases where data is being updated
@@ -73,7 +75,7 @@
 ***** fix up filenames later on to keep things consistent, eg. =spp= vs. =regex_spp= vs. =spp_regex= etc.
 ***** clean out source code with newer and more efficient workflows, consistent variable namings and function definitions on-the-fly
 ***** add different usages for different types of models
-***** TODO settle argument parser examples where some defaults are =None=, perhaps we could use another way to specify what default values will be chosen, or perhaps only leave arguments to =None= when there is no other semantic choice
+***** settle argument parser examples where some defaults are =None=, perhaps we could use another way to specify what default values will be chosen, or perhaps only leave arguments to =None= when there is no other semantic choice
 ***** remove cases where variables from argument namespace are redefined as local variables, a common example of this is with =args.model_log_directory= and =model_log_directory=
 ***** find better naming for mimic/oracle models which is based on research terminology -> right now mix of neural and regex is being used; it would be good to have something more firm
 ***** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility
