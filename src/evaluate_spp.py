@@ -4,7 +4,7 @@
 from glob import glob
 from functools import partial
 from sklearn.metrics import classification_report
-from typing import cast, List, Tuple, Union, Dict
+from typing import cast, List, Tuple, Union
 from torch.nn import Embedding, Module
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
@@ -27,7 +27,7 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
                    batch_size: int,
                    output_prefix: str,
                    gpu_device: Union[torch.device, None] = None,
-                   max_doc_len: Union[int, None] = None) -> Dict:
+                   max_doc_len: Union[int, None] = None) -> dict:
     # load model checkpoint
     model_checkpoint_loaded = torch.load(model_checkpoint,
                                          map_location=torch.device("cpu"))
@@ -61,7 +61,7 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
     return clf_report
 
 
-def evaluate_outer(args: argparse.Namespace) -> Dict:
+def evaluate_outer(args: argparse.Namespace) -> dict:
     # log namespace arguments and model directory
     LOGGER.info(args)
     LOGGER.info("Model log directory: %s" % args.model_log_directory)
