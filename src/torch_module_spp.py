@@ -408,7 +408,7 @@ class SoftPatternClassifier(Module):
                 torch.FloatTensor([
                     back_pointer.raw_score
                     for back_pointer in end_state_back_pointers
-                ]).to(self.linear.weight.device),
+                ]).to(interim_scores[0].device),
                 interim_scores[0],
                 atol=atol), ("Explainability routine does not produce "
                              "matching scores with SoPa++ routine")
