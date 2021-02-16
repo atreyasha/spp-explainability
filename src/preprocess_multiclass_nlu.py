@@ -5,8 +5,8 @@ from typing import Dict, Tuple, List, cast
 from .utils.data_utils import unique
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
-from .utils.preprocess_utils import (read_tsv, mapping, serialize,
-                                     lowercase, tokenize, upsample,
+from .utils.preprocess_utils import (read_tsv, mapping, serialize, lowercase,
+                                     tokenize, upsample,
                                      remove_commons_from_first)
 from .arg_parser import preprocess_arg_parser, logging_arg_parser
 import argparse
@@ -107,7 +107,7 @@ def main(args: argparse.Namespace) -> None:
     test = cast(List[Tuple[str, int]], test)
 
     # write main files
-    LOGGER.info("Sorting and writing data")
+    LOGGER.info("Sorting and writing data in directory: %s" % write_directory)
     write_file(train, class_mapping, "train", suffix, write_directory)
     write_file(valid, class_mapping, "valid", suffix, write_directory)
     write_file(test, class_mapping, "test", suffix, write_directory)
@@ -122,7 +122,8 @@ def main(args: argparse.Namespace) -> None:
         LOGGER.info("Upsampling training and validation data")
         train = upsample(train)
         valid = upsample(valid)
-        LOGGER.info("Sorting and writing upsampled data")
+        LOGGER.info("Sorting and writing upsampled data in directory: %s" %
+                    write_directory)
         write_file(train, class_mapping, "train.upsampled", suffix,
                    write_directory)
         write_file(valid, class_mapping, "valid.upsampled", suffix,

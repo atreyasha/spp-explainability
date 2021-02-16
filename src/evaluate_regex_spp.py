@@ -68,13 +68,15 @@ def evaluate_inner(eval_text: List[str],
                                        predicted,
                                        output_dict=True)
 
+    # designate filename
+    filename = os.path.join(
+        model_log_directory,
+        os.path.basename(model_checkpoint).replace(".pt", "_") +
+        output_prefix + "_classification_report.json")
+
     # dump json report in model_log_directory
-    with open(
-            os.path.join(
-                model_log_directory,
-                os.path.basename(model_checkpoint).replace(".pt", "_") +
-                output_prefix + "_classification_report.json"),
-            "w") as output_file_stream:
+    LOGGER.info("Writing classification report: %s" % filename)
+    with open(filename, "w") as output_file_stream:
         json.dump(clf_report, output_file_stream)
 
 

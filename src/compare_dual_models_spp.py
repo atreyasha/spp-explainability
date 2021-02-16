@@ -175,16 +175,17 @@ def compare_inner(eval_data: List[Tuple[List[int], int]],
                     regex_local_store["binaries"])
             ]) / len(neural_local_store["binaries"])
 
+    # designate filename
+    filename = os.path.join(
+        model_log_directory, "_".join([
+            "compare", output_prefix,
+            os.path.basename(neural_model_checkpoint).replace(".pt", ""),
+            os.path.basename(regex_model_checkpoint).replace(".pt", "")
+        ]) + ".json")
+
     # dump final dictionary in model_log_directory
-    with open(
-            os.path.join(
-                model_log_directory, "_".join([
-                    "compare", output_prefix,
-                    os.path.basename(neural_model_checkpoint).replace(
-                        ".pt", ""),
-                    os.path.basename(regex_model_checkpoint).replace(
-                        ".pt", "")
-                ]) + ".json"), "w") as output_file_stream:
+    LOGGER.info("Writing output file: %s" % filename)
+    with open(filename, "w") as output_file_stream:
         json.dump(results_store, output_file_stream)
 
 

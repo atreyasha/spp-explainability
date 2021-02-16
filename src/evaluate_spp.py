@@ -48,13 +48,15 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
         model, eval_data, batch_size, gpu_device,
         partial(classification_report, output_dict=True), max_doc_len)
 
+    # designate filename
+    filename = os.path.join(
+        model_log_directory,
+        os.path.basename(model_checkpoint).replace(".pt", "_") +
+        output_prefix + "_classification_report.json")
+
     # dump json report in model_log_directory
-    with open(
-            os.path.join(
-                model_log_directory,
-                os.path.basename(model_checkpoint).replace(".pt", "_") +
-                output_prefix + "_classification_report.json"),
-            "w") as output_file_stream:
+    LOGGER.info("Writing classification report: %s" % filename)
+    with open(filename, "w") as output_file_stream:
         json.dump(clf_report, output_file_stream)
 
     # return classification report

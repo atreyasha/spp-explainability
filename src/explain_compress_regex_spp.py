@@ -128,13 +128,18 @@ def main(args: argparse.Namespace) -> None:
                             disable=args.disable_tqdm)
         }
 
+    # designate filename
+    filename = os.path.join(
+        args.regex_model.replace("regex", "regex_" + args.compression_method))
+
     # save model as required
+    LOGGER.info("Writing compressed regex model: %s" % filename)
     save_regex_model(
-        regex_model["pattern_specs"], regex_model["activating_regex"],
+        regex_model["pattern_specs"],
+        regex_model["activating_regex"],
         regex_model["linear_state_dict"],
-        os.path.join(
-            args.regex_model.replace("regex",
-                                     "regex_" + args.compression_method)))
+        filename
+    )
 
 
 if __name__ == '__main__':
