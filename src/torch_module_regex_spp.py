@@ -54,10 +54,7 @@ class RegexSoftPatternClassifier(Module):
                 if regex_lookup:
                     local_lookup_doc.append(regex_lookup)
             # add scores
-            if local_lookup_doc != []:
-                scores_doc.append(1)
-            else:
-                scores_doc.append(0)
+            scores_doc.append(int(len(local_lookup_doc) > 0))
             # add lookup in any case
             lookup_doc.append(local_lookup_doc)
         return lookup_doc, scores_doc
