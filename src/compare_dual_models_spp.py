@@ -148,7 +148,7 @@ def compare_inner(eval_data: List[Tuple[List[int], int]],
             # add regex model diagnostics
             regex_local_store = local_store["regex_model"] = {}
             regex_local_store["activating_text"] = [
-                regex_match.group() if regex_match else None
+                regex_match.group(2) if regex_match else None
                 for regex_match in regex_lookup
             ]
             regex_local_store["activating_regex"] = [

@@ -114,13 +114,6 @@ def main(args: argparse.Namespace) -> None:
             for key in tqdm(regex_model["activating_regex"],
                             disable=args.disable_tqdm)
         }
-    elif args.compression_method == "brave":
-        regex_model["activating_regex"] = {
-            key: rational_compression(regex_model["activating_regex"][key],
-                                      False)
-            for key in tqdm(regex_model["activating_regex"],
-                            disable=args.disable_tqdm)
-        }
 
     # designate filename
     filename = os.path.join(
