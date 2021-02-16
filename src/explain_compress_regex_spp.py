@@ -13,12 +13,13 @@ import torch
 import os
 
 
-def rational_compression(pattern_regex: List[str],
-                         word_boundaries: bool = True) -> List[str]:
+def rational_compression(pattern_regex: List[str]) -> List[str]:
     # intitialize storage list
     compressed_pattern_regex = []
     pattern_regex = list(
-        map(lambda x: x.replace("\\b", "").split(), pattern_regex))
+        map(
+            lambda x: x.replace("(\\s|^)(", "").replace(")(\\s|$)", "").split(
+            ), pattern_regex))
 
     # loop over pattern regular expressions until all processed
     while len(pattern_regex) != 0:
@@ -88,18 +89,11 @@ def rational_compression(pattern_regex: List[str],
         compressed_pattern_regex = [["[^\\s]+"] *
                                     len(compressed_pattern_regex[0])]
 
-    if word_boundaries:
-        # add boundary conditions
-        compressed_pattern_regex = [
-            "\\b" + " ".join(regex) + "\\b"  # type: ignore
-            for regex in compressed_pattern_regex
-        ]
-    else:
-        # join regex without boundary conditions
-        compressed_pattern_regex = [
-            " ".join(regex)  # type: ignore
-            for regex in compressed_pattern_regex
-        ]
+    # add boundary conditions
+    compressed_pattern_regex = [
+        "(\\s|^)(" + " ".join(regex) + ")(\\s|$)"  # type: ignore
+        for regex in compressed_pattern_regex
+    ]
 
     # mypy-related fix
     compressed_pattern_regex = cast(List[str], compressed_pattern_regex)

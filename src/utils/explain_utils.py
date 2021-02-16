@@ -77,7 +77,7 @@ class BackPointer:
             doc_text: List[str],
             extra: List[str] = []) -> Union[List[str], str]:
         if self.previous is None:
-            return "\\b" + " ".join(extra) + "\\b"
+            return "(\\s|^)(" + " ".join(extra) + ")(\\s|$)"
         if self.transition == "main_transition":
             extra = [re.escape(doc_text[self.current_token_index])] + extra
             return self.previous.get_regex(doc_text, extra=extra)
