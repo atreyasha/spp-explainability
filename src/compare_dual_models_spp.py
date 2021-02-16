@@ -164,8 +164,9 @@ def compare_inner(eval_data: List[Tuple[List[int], int]],
                 regex_linear_output, 0).item()
 
             # add inter-model diagnostics
-            inter_model_store = local_store["inter_model_comparison"] = {}
-            inter_model_store["softmax_dist_norm"] = torch.dist(
+            inter_model_store = local_store[
+                "inter_model_distance_metrics"] = {}
+            inter_model_store["softmax_difference_norm"] = torch.dist(
                 torch.FloatTensor(neural_local_store["softmax"]),
                 torch.FloatTensor(regex_local_store["softmax"])).item()
             inter_model_store["binary_misalignment_rate"] = sum([
