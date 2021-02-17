@@ -6,8 +6,8 @@ usage() {
   cat <<EOF
 Usage: explain_simplify_regex_spp_cpu.sh [-h|--help] neural_model_checkpoint
 
-Explain and simplify a given SoPa++ model to retrieve highest
-activating regular expressions on the CPU
+Explain and simplify a given SoPa++ model into a regular expression
+model on the CPU
 
 Optional arguments:
   -h, --help                           Show this help message and exit
