@@ -43,16 +43,13 @@ class STE(Module):
 
 class MaskedLayerNorm(Module):
     # adapted from: https://yangkky.github.io/2020/03/16/masked-batch-norm.html
-    __constants__ = ['normalized_shape', 'eps']
-    _shape_t = Union[int, List[int], torch.Size]
-    normalized_shape: _shape_t
-    eps: float
-
-    def __init__(self, normalized_shape: _shape_t, eps: float = 1e-5) -> None:
+    def __init__(self,
+                 normalized_shape: Union[int, List[int], torch.Size],
+                 eps: float = 1e-5) -> None:
         super(MaskedLayerNorm, self).__init__()
         if isinstance(normalized_shape, numbers.Integral):
-            normalized_shape = (normalized_shape, )
-        self.normalized_shape = tuple(normalized_shape)
+            normalized_shape = (normalized_shape, )  # type: ignore
+        self.normalized_shape = tuple(normalized_shape)  # type: ignore
         self.eps = eps
         self.register_parameter('weight', None)
         self.register_parameter('bias', None)
@@ -61,9 +58,12 @@ class MaskedLayerNorm(Module):
                 input: torch.Tensor,
                 input_mask: Union[torch.Tensor, None] = None) -> torch.Tensor:
         if input_mask is None:
-            return torch.nn.functional.layer_norm(input, self.normalized_shape,
-                                                  self.weight, self.bias,
-                                                  self.eps)
+            return torch.nn.functional.layer_norm(
+                input,
+                self.normalized_shape,  # type: ignore
+                self.weight,  # type: ignore
+                self.bias,  # type: ignore
+                self.eps)
         else:
             # clone masked input and cache hidden values
             masked = input.clone()
@@ -297,7 +297,7 @@ class SoftPatternClassifier(Module):
         if isinf.sum().item() > 0:
             scores_mask = ~isinf
         else:
-            scores_mask = None
+            scores_mask = None  # type: ignore
 
         # execute normalization of scores
         scores = self.normalizer(scores, scores_mask)
