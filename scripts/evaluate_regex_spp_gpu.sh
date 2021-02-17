@@ -4,16 +4,16 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: evaluate_regex_spp_gpu.sh [-h|--help] model_checkpoint
+Usage: evaluate_regex_spp_gpu.sh [-h|--help] regex_model_checkpoint
 
 Evaluate SoPa++ regex model on an evaluation data set on a GPU
 
 Optional arguments:
-  -h, --help                    Show this help message and exit
+  -h, --help                          Show this help message and exit
 
 Required arguments:
-  model_checkpoint <glob_path>  Glob path to model checkpoint with '.pt'
-                                extension
+  regex_model_checkpoint <glob_path>  Glob path to regex model checkpoint(s)
+                                      with '.pt' extension
 EOF
 }
 
@@ -29,13 +29,13 @@ check_help() {
 
 # define function
 evaluate_regex_spp_gpu() {
-  local model_checkpoint
-  model_checkpoint="$1"
+  local regex_model_checkpoint
+  regex_model_checkpoint="$1"
 
   python3 -m src.evaluate_regex_spp \
     --eval-data "./data/facebook_multiclass_nlu/clean/test.uncased.data" \
     --eval-labels "./data/facebook_multiclass_nlu/clean/test.labels" \
-    --model-checkpoint "$model_checkpoint" --gpu
+    --model-checkpoint "$regex_model_checkpoint" --gpu
 }
 
 # execute function

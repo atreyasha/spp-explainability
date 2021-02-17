@@ -4,15 +4,15 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: evaluate_regex_spp_cpu.sh [-h|--help] regex_model_checkpoint
+Usage: explain_compress_regex_spp_cpu.sh [-h|--help] regex_model_checkpoint
 
-Evaluate SoPa++ regex model on an evaluation data set on the CPU
+Compress a regex SoPa++ model via custom algorithm on the CPU
 
 Optional arguments:
   -h, --help                          Show this help message and exit
 
 Required arguments:
-  regex_model_checkpoint <glob_path>  Glob path to regex model checkpoint(s)
+  regex_model_checkpoint <file_path>  Path to regex model checkpoint
                                       with '.pt' extension
 EOF
 }
@@ -28,16 +28,14 @@ check_help() {
 }
 
 # define function
-evaluate_regex_spp_cpu() {
+explain_compress_regex_spp_cpu() {
   local regex_model_checkpoint
   regex_model_checkpoint="$1"
 
-  python3 -m src.evaluate_regex_spp \
-    --eval-data "./data/facebook_multiclass_nlu/clean/test.uncased.data" \
-    --eval-labels "./data/facebook_multiclass_nlu/clean/test.labels" \
-    --model-checkpoint "$regex_model_checkpoint"
+  python3 -m src.explain_compress_regex_spp \
+    --regex-model-checkpoint "$regex_model_checkpoint"
 }
 
 # execute function
 check_help "$@"
-evaluate_regex_spp_cpu "$@"
+explain_compress_regex_spp_cpu "$@"

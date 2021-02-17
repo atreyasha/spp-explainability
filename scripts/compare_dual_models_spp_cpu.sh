@@ -4,7 +4,8 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: compare_dual_models_spp_cpu.sh [-h|--help] neural_model_checkpoint regex_model_checkpoint
+Usage: compare_dual_models_spp_cpu.sh [-h|--help] neural_model_checkpoint
+                                                  regex_model_checkpoint
 
 Compare neural and regex SoPa++ models an evaluation data set on the CPU
 
