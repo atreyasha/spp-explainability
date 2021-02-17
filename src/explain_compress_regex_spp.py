@@ -10,10 +10,9 @@ from .arg_parser import (explain_compress_arg_parser, logging_arg_parser,
 from .explain_simplify_regex_spp import save_regex_model
 import argparse
 import torch
-import os
 
 
-def rational_compression(pattern_regex: List[str]) -> List[str]:
+def compression(pattern_regex: List[str]) -> List[str]:
     # intitialize storage list
     compressed_pattern_regex = []
     pattern_regex = list(
@@ -102,31 +101,25 @@ def rational_compression(pattern_regex: List[str]) -> List[str]:
 
 def main(args: argparse.Namespace) -> None:
     # load regex model
-    LOGGER.info("Loading regex model: %s" % args.regex_model)
-    regex_model = torch.load(args.regex_model,
-                             map_location=torch.device("cpu"))
+    LOGGER.info("Loading regex model: %s" % args.regex_model_checkpoint)
+    model = torch.load(args.regex_model_checkpoint,
+                       map_location=torch.device("cpu"))
 
     # conduct compression as required
-    LOGGER.info("Compressing with method: %s" % args.compression_method)
-    if args.compression_method == "rational":
-        regex_model["activating_regex"] = {
-            key: rational_compression(regex_model["activating_regex"][key])
-            for key in tqdm(regex_model["activating_regex"],
-                            disable=args.disable_tqdm)
-        }
+    LOGGER.info("Compressing regex model")
+    model["activating_regex"] = {
+        key: compression(model["activating_regex"][key])
+        for key in tqdm(model["activating_regex"], disable=args.disable_tqdm)
+    }
 
     # designate filename
-    filename = os.path.join(
-        args.regex_model.replace("regex", "regex_" + args.compression_method))
+    filename = args.regex_model_checkpoint.replace("regex", "regex_compressed")
 
     # save model as required
     LOGGER.info("Writing compressed regex model: %s" % filename)
-    save_regex_model(
-        regex_model["pattern_specs"],
-        regex_model["activating_regex"],
-        regex_model["linear_state_dict"],
-        filename
-    )
+    save_regex_model(model["pattern_specs"],
+                     model["activating_regex"],
+                     model["linear_state_dict"], filename)
 
 
 if __name__ == '__main__':

@@ -33,7 +33,7 @@ def save_regex_model(pattern_specs: 'OrderedDict[int, int]',
 def explain_inner(explain_data: List[Tuple[List[int], int]],
                   explain_text: List[List[str]],
                   model: Module,
-                  model_checkpoint: str,
+                  neural_model_checkpoint: str,
                   model_log_directory: str,
                   batch_size: int,
                   atol: float,
@@ -41,10 +41,10 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
                   max_doc_len: Union[int, None] = None,
                   disable_tqdm: bool = False) -> None:
     # load model checkpoint
-    model_checkpoint_loaded = torch.load(model_checkpoint,
-                                         map_location=torch.device("cpu"))
+    neural_model_checkpoint_loaded = torch.load(
+        neural_model_checkpoint, map_location=torch.device("cpu"))
     model.load_state_dict(
-        model_checkpoint_loaded["model_state_dict"])  # type: ignore
+        neural_model_checkpoint_loaded["model_state_dict"])  # type: ignore
 
     # send model to correct device
     if gpu_device is not None:
@@ -113,7 +113,8 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
     LOGGER.info("Making activating regex unique")
     activating_regex = {
         pattern_index: list(set(activating_regex_pattern))
-        for pattern_index, activating_regex_pattern in activating_regex.items()
+        for pattern_index, activating_regex_pattern in
+        activating_regex.items()
     }
 
     # produce sample regex for the user to peruse
@@ -121,7 +122,8 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
 
     # define model filename
     model_filename = os.path.join(
-        model_log_directory, "regex_" + os.path.basename(model_checkpoint))
+        model_log_directory,
+        "regex_" + os.path.basename(neural_model_checkpoint))
     LOGGER.info("Saving regular expression ensemble to disk: %s" %
                 model_filename)
 
@@ -186,13 +188,14 @@ def explain_outer(args: argparse.Namespace) -> None:
     LOGGER.info("Model: %s" % model)
 
     # execute inner function here
-    explain_inner(explain_data, explain_text, model, args.model_checkpoint,
-                  args.model_log_directory, args.batch_size, args.atol,
-                  gpu_device, args.max_doc_len, args.disable_tqdm)
+    explain_inner(explain_data, explain_text, model,
+                  args.neural_model_checkpoint, args.model_log_directory,
+                  args.batch_size, args.atol, gpu_device, args.max_doc_len,
+                  args.disable_tqdm)
 
 
 def main(args: argparse.Namespace) -> None:
-    args.model_log_directory = os.path.dirname(args.model_checkpoint)
+    args.model_log_directory = os.path.dirname(args.neural_model_checkpoint)
     args = parse_configs_to_args(args, training=False)
     explain_outer(args)
 
