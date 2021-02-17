@@ -149,8 +149,9 @@ def explain_simplify_arg_parser() -> argparse.ArgumentParser:
                           help="Path to validation labels file",
                           required=True,
                           type=file_path)
-    required.add_argument("--model-checkpoint",
-                          help="Path to model checkpoint with '.pt' extension",
+    required.add_argument("--neural-model-checkpoint",
+                          help=("Path to neural model checkpoint with '.pt' "
+                                "extension"),
                           required=True,
                           type=file_path)
     # add group for optional arguments
@@ -177,17 +178,10 @@ def explain_compress_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     # add group for required arguments
     required = parser.add_argument_group('required explainability arguments')
-    required.add_argument("--regex-model",
+    required.add_argument("--regex-model-checkpoint",
                           help="Path to regex model with '.pt' extension",
                           required=True,
                           type=file_path)
-    # add group for optional arguments
-    explain = parser.add_argument_group('optional explainability arguments')
-    explain.add_argument("--compression-method",
-                         help="Type of compression to execute",
-                         choices=["rational", "brave"],
-                         default="rational",
-                         type=str)
     return parser
 
 
