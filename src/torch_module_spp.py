@@ -68,17 +68,16 @@ class MaskedLayerNorm(Module):
             # clone masked input and cache hidden values
             masked = input.clone()
             cached = masked[~input_mask]
+            divisor = input_mask.sum(dim=1, keepdim=True)
 
             # calculate masked mean
             masked[~input_mask] = 0
-            mean = masked.sum(dim=1, keepdim=True) / input_mask.sum(
-                dim=1, keepdim=True)
+            mean = masked.sum(dim=1, keepdim=True) / divisor
 
             # calculate masked variance
             variance = (masked - mean)**2
             variance[~input_mask] = 0
-            variance = variance.sum(dim=1, keepdim=True) / input_mask.sum(
-                dim=1, keepdim=True)
+            variance = variance.sum(dim=1, keepdim=True) / divisor
 
             # normalize inputs
             normalized = (masked - mean) / (torch.sqrt(variance + self.eps))
