@@ -63,6 +63,12 @@ def enable_gradient_clipping(model: torch.nn.Module,
                     grad, -clip_threshold, clip_threshold))
 
 
+def torch_exp_masked(input: torch.Tensor) -> torch.Tensor:
+    output = torch.exp(input).clone()
+    output[output == 0.] = float("-inf")
+    return output
+
+
 class Batch:
     def __init__(self,
                  docs: List[List[int]],
@@ -128,4 +134,4 @@ MaxSumSemiring = Semiring(neg_infinity, torch.zeros, torch.max, torch.add,
 LogSpaceMaxProductSemiring = Semiring(
     neg_infinity, torch.zeros, torch.max, torch.add, lambda x, y: max(x, y),
     lambda x, y: x + y, lambda x: torch.log(torch.sigmoid(x) + LOG_EPSILON),
-    torch.exp)
+    torch_exp_masked)

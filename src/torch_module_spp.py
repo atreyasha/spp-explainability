@@ -3,11 +3,12 @@
 
 from typing import cast, Union, Any, List, Tuple
 from collections import OrderedDict
-from torch.nn import Module, Parameter, Linear, Dropout, LayerNorm, init
+from torch.nn import Module, Parameter, Linear, Dropout, init
 from .utils.explain_utils import (pad_back_pointers, lambda_back_pointers,
                                   BackPointer)
 from .utils.model_utils import Semiring, Batch
 from .utils.data_utils import Vocab
+import numbers
 import torch
 
 
@@ -40,6 +41,54 @@ class STE(Module):
         return 'tau_threshold={}'.format(self.tau_threshold)
 
 
+class MaskedLayerNorm(Module):
+    # adapted from: https://yangkky.github.io/2020/03/16/masked-batch-norm.html
+    __constants__ = ['normalized_shape', 'eps']
+    _shape_t = Union[int, List[int], torch.Size]
+    normalized_shape: _shape_t
+    eps: float
+
+    def __init__(self, normalized_shape: _shape_t, eps: float = 1e-5) -> None:
+        super(MaskedLayerNorm, self).__init__()
+        if isinstance(normalized_shape, numbers.Integral):
+            normalized_shape = (normalized_shape, )
+        self.normalized_shape = tuple(normalized_shape)
+        self.eps = eps
+        self.register_parameter('weight', None)
+        self.register_parameter('bias', None)
+
+    def forward(self,
+                input: torch.Tensor,
+                input_mask: Union[torch.Tensor, None] = None) -> torch.Tensor:
+        if input_mask is None:
+            return torch.nn.functional.layer_norm(input, self.normalized_shape,
+                                                  self.weight, self.bias,
+                                                  self.eps)
+        else:
+            # clone masked input and cache hidden values
+            masked = input.clone()
+            cached = masked[~input_mask]
+
+            # calculate masked mean
+            masked[~input_mask] = 0
+            mean = masked.sum(dim=1, keepdim=True) / input_mask.sum(
+                dim=1, keepdim=True)
+
+            # calculate masked variance
+            variance = (masked - mean)**2
+            variance[~input_mask] = 0
+            variance = variance.sum(dim=1, keepdim=True) / input_mask.sum(
+                dim=1, keepdim=True)
+
+            # normalize inputs
+            normalized = (masked - mean) / (torch.sqrt(variance + self.eps))
+            normalized[~input_mask] = cached
+            return normalized
+
+    def extra_repr(self) -> str:
+        return '{normalized_shape}, eps={eps}'.format(**self.__dict__)
+
+
 class SoftPatternClassifier(Module):
     def __init__(self,
                  pattern_specs: 'OrderedDict[int, int]',
@@ -65,8 +114,7 @@ class SoftPatternClassifier(Module):
         self.semiring = semiring
         self.no_wildcards = no_wildcards
         self.dropout = Dropout(dropout)
-        self.normalizer = LayerNorm(self.total_num_patterns,
-                                    elementwise_affine=False)
+        self.normalizer = MaskedLayerNorm(self.total_num_patterns)
         self.binarizer = STE(tau_threshold)
 
         # create transition matrix diagonal and bias tensors
@@ -241,24 +289,19 @@ class SoftPatternClassifier(Module):
         if interim:
             interim_scores = scores.clone()
 
-        # extract all infinite indices
-        inf_indices = torch.where(scores == float("-inf"))
-
         # extract scores from semiring to outer set
-        scores = self.semiring.from_semiring_to_outer(scores).clone()
+        scores = self.semiring.from_semiring_to_outer(scores)
 
-        # temporarily replace all negative infinities by positive infinities
-        scores[inf_indices] = float("inf")
+        # extract all infinite indices
+        isinf = torch.isinf(scores)
 
-        # find the minimum of all original scores and replace infinite by this
-        batch_minima = torch.min(scores, 1)[0]
-
-        # assigning batch-level minima to infinity indices
-        scores[inf_indices] = torch.repeat_interleave(
-            batch_minima, torch.sum(scores.isinf(), 1))
+        if isinf.sum().item() > 0:
+            scores_mask = ~isinf
+        else:
+            scores_mask = None
 
         # execute normalization of scores
-        scores = self.normalizer(scores)
+        scores = self.normalizer(scores, scores_mask)
 
         # binarize scores using STE
         scores = self.binarizer(scores)
