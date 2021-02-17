@@ -32,6 +32,7 @@ check_help() {
 train_resume_spp_grid_cpu() {
   local model_log_directory
   model_log_directory="$1"
+
   python3 -m src.train_resume_spp --model-log-directory "$model_log_directory" \
     --grid-training
 }
