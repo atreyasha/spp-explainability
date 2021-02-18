@@ -285,10 +285,9 @@ def dump_configs(args: argparse.Namespace,
 
 
 def save_checkpoint(epoch: int, update: int, samples_seen: int,
-                    train_loss: torch.Tensor, model: torch.nn.Module,
-                    optimizer: torch.optim.Optimizer,
-                    scheduler: Union[ReduceLROnPlateau,
-                                     None], numpy_epoch_random_state: Tuple,
+                    model: torch.nn.Module, optimizer: torch.optim.Optimizer,
+                    scheduler: Union[ReduceLROnPlateau, None],
+                    numpy_epoch_random_state: Tuple, train_loss: float,
                     best_valid_loss: float, best_valid_loss_index: int,
                     best_valid_acc: float, filename: str) -> None:
     torch.save(
@@ -299,14 +298,14 @@ def save_checkpoint(epoch: int, update: int, samples_seen: int,
             update,
             "samples_seen":
             samples_seen,
-            "train_loss":
-            train_loss,
             "model_state_dict":
             model.state_dict(),
             "optimizer_state_dict":
             optimizer.state_dict(),
             "scheduler_state_dict":
             scheduler.state_dict() if scheduler is not None else None,
+            "train_loss":
+            train_loss,
             "best_valid_loss":
             best_valid_loss,
             "best_valid_loss_index":
@@ -706,7 +705,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                             LOGGER.info("New best validation accuracy")
 
                         # update patience related diagnostics
-                        best_valid_loss = valid_loss
+                        best_valid_loss = valid_loss.item()
                         best_valid_loss_index = 0
                         LOGGER.info("Patience counter: %s/%s" %
                                     (best_valid_loss_index, patience))
@@ -722,11 +721,12 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                                 epoch, (update + 1)))
                         LOGGER.info("Saving best checkpoint: %s" %
                                     model_save_file)
-                        save_checkpoint(epoch, update, samples_seen,
-                                        train_loss, model, optimizer,
-                                        scheduler, numpy_epoch_random_state,
-                                        best_valid_loss, best_valid_loss_index,
-                                        best_valid_acc, model_save_file)
+                        save_checkpoint(epoch, update, samples_seen, model,
+                                        optimizer, scheduler,
+                                        numpy_epoch_random_state,
+                                        train_loss.item(), best_valid_loss,
+                                        best_valid_loss_index, best_valid_acc,
+                                        model_save_file)
 
                         # delete previous best checkpoint(s)
                         for legacy_checkpoint in legacy_checkpoints:
@@ -752,9 +752,10 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                             epoch, (update + 1)))
 
                     LOGGER.info("Saving last checkpoint: %s" % model_save_file)
-                    save_checkpoint(epoch, update, samples_seen, train_loss,
-                                    model, optimizer, scheduler,
-                                    numpy_epoch_random_state, best_valid_loss,
+                    save_checkpoint(epoch, update, samples_seen, model,
+                                    optimizer,
+                                    scheduler, numpy_epoch_random_state,
+                                    train_loss.item(), best_valid_loss,
                                     best_valid_loss_index, best_valid_acc,
                                     model_save_file)
 
