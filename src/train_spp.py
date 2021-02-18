@@ -437,7 +437,8 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                                       map_location=torch.device("cpu"))
         model.load_state_dict(
             model_checkpoint["model_state_dict"])  # type: ignore
-        if (model_checkpoint["update"] + 1) == updates_per_epoch:
+        if (model_checkpoint["update"] +  # type: ignore
+                1) == updates_per_epoch:  # type: ignore
             current_epoch: int = model_checkpoint["epoch"] + 1  # type: ignore
             current_update: int = 0
         else:
@@ -534,8 +535,11 @@ def train_inner(train_data: List[Tuple[List[int], int]],
     for epoch in range(current_epoch, epochs):
         # initialize loop variables
         if resume_training and epoch == current_epoch and current_update != 0:
-            train_loss = model_checkpoint["train_loss"]
-            samples_seen = model_checkpoint["samples_seen"]
+            train_loss: Union[float,
+                              torch.Tensor] = model_checkpoint[  # type: ignore
+                                  "train_loss"]  # type: ignore
+            samples_seen: int = model_checkpoint[  # type: ignore
+                "samples_seen"]  # type: ignore
         else:
             train_loss = 0.
             samples_seen = 0
@@ -560,7 +564,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                         continue
                     elif update == current_update:
                         np.random.set_state(model_checkpoint[  # type: ignore
-                            "numpy_last_random_state"])
+                            "numpy_last_random_state"])  # type: ignore
 
                 # create batch object and parse out gold labels
                 batch, gold = Batch(
@@ -595,7 +599,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
 
                     # set valid loss to zero
                     update_number = (epoch * updates_per_epoch) + (update + 1)
-                    valid_loss = 0.
+                    valid_loss: Union[float, torch.Tensor] = 0.
 
                     # set model on eval mode and disable autograd
                     model.eval()
@@ -604,6 +608,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                     # compute mean train loss over updates and accuracy
                     # NOTE: mean_train_loss contains stochastic noise
                     LOGGER.info("Evaluating SoPa++ on training set")
+                    train_loss = cast(torch.Tensor, train_loss)
                     mean_train_loss = train_loss.item() / samples_seen
                     train_acc = evaluate_metric(model, train_data, batch_size,
                                                 gpu_device, accuracy_score,
@@ -665,6 +670,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                                     batch.size())
 
                     # compute mean valid loss and accuracy
+                    valid_loss = cast(torch.Tensor, valid_loss)
                     mean_valid_loss = valid_loss.item() / len(valid_data)
                     valid_acc = evaluate_metric(model, valid_data, batch_size,
                                                 gpu_device, accuracy_score,
