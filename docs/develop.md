@@ -26,33 +26,14 @@
 
     1.  Dedicated modelling
 
-        1.  **TODO** re-make usage scripts for github readme
+        1.  **TODO** perform grid-training with wider
+            parameters spaces and random seeds
 
-        2.  **TODO** make custom normalizer module to
-            dynamically ignore infinities instead of expecting fixed
-            sizes -\> perhaps create a new torch Module for this
-
-        3.  **TODO** consider using a generic function for
-            batch minima, since this could be dependent on the semiring
-
-        4.  change frequency of tensorboard, evaluation and model saving
-            to update-level
-
-            1.  update arg parser with new arguments
-
-            2.  update train_inner with new workflow for saving/loading
-                information
-
-            3.  update save checkpoint code with required information
-
-            4.  shift torch evaluation/autograd hooks around to be more
-                sensible and to respect more frequent evaluations
-
-            5.  vary tau argument in grid search and use values in range
+            1.  vary tau argument in grid search and use values in range
                 from 0.00-0.75 -\> use a greater than zero tau value to
                 depend on fewer patterns
 
-            6.  repeat grid-search with multiple random seeds -\> do
+            2.  repeat grid-search with multiple random seeds -\> do
                 this after all changes and run code multiple times to
                 maximize GPU memory usage
 
@@ -94,9 +75,11 @@
 
     2.  Model diversity
 
-        1.  run above explainability and comparison workflow on a larger
-            model as well, just to check extrapolation to different
-            model sizes
+        1.  run above explainability and comparison workflow on larger
+            models with different tau thresholds
+
+        2.  will help to get decent sample sizes and effect of tau on
+            explainability
 
     3.  Speed of explainability execution
 
@@ -249,7 +232,10 @@
     14. provide description of data structures (eg. data, labels)
         required for training processes
 
-    15. test download and all other scripts to ensure they work
+    15. update/remove git hooks depending on which features are finally
+        used, eg. remove pre-push hook
+
+    16. test download and all other scripts to ensure they work
 
 ## Notes
 
@@ -471,7 +457,8 @@
             experiment how this affects performance/explainability -\>
             hypothesis is that this might bring regex and neural
             explainabilities closer together -\> if not then think of
-            issues with this process
+            issues with this process -\> would be very interesting to
+            explore this relationship on both smmall and large models
 
         2.  think about why larger regex model tends to not be as close
             to neural as a smaller regex model -\> can also be

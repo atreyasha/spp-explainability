@@ -7,14 +7,7 @@
 **** Tasks pre-writing
      DEADLINE: <2021-02-21 Sun>
 ***** Dedicated modelling
-****** TODO re-make usage scripts for github readme 
-****** TODO make custom normalizer module to dynamically ignore infinities instead of expecting fixed sizes -> perhaps create a new torch Module for this
-****** TODO consider using a generic function for batch minima, since this could be dependent on the semiring
-****** change frequency of tensorboard, evaluation and model saving to update-level
-******* update arg parser with new arguments
-******* update train_inner with new workflow for saving/loading information
-******* update save checkpoint code with required information
-******* shift torch evaluation/autograd hooks around to be more sensible and to respect more frequent evaluations
+****** TODO perform grid-training with wider parameters spaces and random seeds
 ******* vary tau argument in grid search and use values in range from 0.00-0.75 -> use a greater than zero tau value to depend on fewer patterns
 ******* repeat grid-search with multiple random seeds -> do this after all changes and run code multiple times to maximize GPU memory usage
 
@@ -31,7 +24,8 @@
 ****** SoPa++ computational graph
 ******* add visualization of computational graph function directly to sopa torch model
 ***** Model diversity
-****** run above explainability and comparison workflow on a larger model as well, just to check extrapolation to different model sizes
+****** run above explainability and comparison workflow on larger models with different tau thresholds
+****** will help to get decent sample sizes and effect of tau on explainability
 ***** Speed of explainability execution
 ****** attempt to multi-thread all regex-related scripts
 ****** find out if individual compiled regex or full bracket-compiled regex is better
@@ -78,6 +72,7 @@
 ***** add information on best model downloads and preparation -> add these to Google Drive later on
 ***** add pydocstrings to all functions and improve argparse documentation
 ***** provide description of data structures (eg. data, labels) required for training processes
+***** update/remove git hooks depending on which features are finally used, eg. remove pre-push hook
 ***** test download and all other scripts to ensure they work
       
 ** Notes
@@ -160,7 +155,7 @@
 ******* perhaps suggest how this explainability could be evaluated via conducting a survey and getting rating from people
 ******* porting this technique to a transformer where possible -> but mention limitations of everything being context dependent
 ***** Own-thoughts
-****** run explainability and evaluation comparisons on models trained with different and increasing tau values to experiment how this affects performance/explainability -> hypothesis is that this might bring regex and neural explainabilities closer together -> if not then think of issues with this process
+****** run explainability and evaluation comparisons on models trained with different and increasing tau values to experiment how this affects performance/explainability -> hypothesis is that this might bring regex and neural explainabilities closer together -> if not then think of issues with this process -> would be very interesting to explore this relationship on both smmall and large models
 ****** think about why larger regex model tends to not be as close to neural as a smaller regex model -> can also be investigated with different models
 ****** read paper again to get some familiarity with terms and algorithms
 ****** database with indexing could help improve regex lookup speed -> further work
