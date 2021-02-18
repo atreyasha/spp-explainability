@@ -409,10 +409,6 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                 resume_training: bool = False,
                 disable_tqdm: bool = False,
                 tqdm_update_period: int = 1) -> None:
-    # initialize general local variables
-    updates_per_epoch = ceil(len(train_data) / batch_size)
-    patience_reached = False
-
     # create signal handlers in case script receives termination signals
     # adapted from: https://stackoverflow.com/a/31709094
     for specific_signal in [
@@ -422,6 +418,10 @@ def train_inner(train_data: List[Tuple[List[int], int]],
             specific_signal,
             partial(signal_handler,
                     os.path.join(model_log_directory, "exit_code")))
+
+    # initialize general local variables
+    updates_per_epoch = ceil(len(train_data) / batch_size)
+    patience_reached = False
 
     # load model checkpoint if training is being resumed
     if resume_training:
