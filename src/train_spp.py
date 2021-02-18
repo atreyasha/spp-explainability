@@ -3,6 +3,7 @@
 
 from tqdm import tqdm
 from glob import glob
+from math import ceil
 from functools import partial
 from collections import OrderedDict
 from tensorboardX import SummaryWriter
@@ -41,7 +42,7 @@ LOGGER = logging.getLogger(__name__)
 
 # define exit-codes
 FINISHED_EPOCHS = 0
-PATIENCE_THRESHOLD_BEFORE_EPOCHS = 1
+PATIENCE_REACHED = 1
 INTERRUPTION = 2
 
 
@@ -283,15 +284,23 @@ def dump_configs(args: argparse.Namespace,
         json.dump(train_args_dict, output_file_stream, ensure_ascii=False)
 
 
-def save_checkpoint(epoch: int, model: torch.nn.Module,
+def save_checkpoint(epoch: int, update: int, samples_seen: int,
+                    train_loss: torch.Tensor, model: torch.nn.Module,
                     optimizer: torch.optim.Optimizer,
-                    scheduler: Union[ReduceLROnPlateau, None],
+                    scheduler: Union[ReduceLROnPlateau,
+                                     None], numpy_epoch_random_state: Tuple,
                     best_valid_loss: float, best_valid_loss_index: int,
                     best_valid_acc: float, filename: str) -> None:
     torch.save(
         {
             "epoch":
             epoch,
+            "update":
+            update,
+            "samples_seen":
+            samples_seen,
+            "train_loss":
+            train_loss,
             "model_state_dict":
             model.state_dict(),
             "optimizer_state_dict":
@@ -304,9 +313,11 @@ def save_checkpoint(epoch: int, model: torch.nn.Module,
             best_valid_loss_index,
             "best_valid_acc":
             best_valid_acc,
-            "numpy_random_state":
+            "numpy_epoch_random_state":
+            numpy_epoch_random_state,
+            "numpy_last_random_state":
             np.random.get_state(),
-            "torch_random_state":
+            "torch_last_random_state":
             torch.random.get_rng_state()
         }, filename)
 
@@ -383,6 +394,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                 model: Module,
                 num_classes: int,
                 epochs: int,
+                evaluation_period: int,
                 model_log_directory: str,
                 learning_rate: float,
                 batch_size: int,
@@ -397,6 +409,10 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                 resume_training: bool = False,
                 disable_tqdm: bool = False,
                 tqdm_update_period: int = 1) -> None:
+    # initialize general local variables
+    updates_per_epoch = ceil(len(train_data) / batch_size)
+    patience_reached = False
+
     # create signal handlers in case script receives termination signals
     # adapted from: https://stackoverflow.com/a/31709094
     for specific_signal in [
@@ -422,7 +438,12 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                                       map_location=torch.device("cpu"))
         model.load_state_dict(
             model_checkpoint["model_state_dict"])  # type: ignore
-        current_epoch: int = model_checkpoint["epoch"] + 1  # type: ignore
+        if (model_checkpoint["update"] + 1) == updates_per_epoch:
+            current_epoch: int = model_checkpoint["epoch"] + 1  # type: ignore
+            current_update: int = 0
+        else:
+            current_epoch: int = model_checkpoint["epoch"]  # type: ignore
+            current_update: int = model_checkpoint["update"] + 1  # type: ignore
         best_valid_loss: float = model_checkpoint[  # type: ignore
             "best_valid_loss"]  # type: ignore
         best_valid_loss_index: int = model_checkpoint[  # type: ignore
@@ -440,15 +461,15 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                            FINISHED_EPOCHS)
             return None
         elif best_valid_loss_index >= patience:
-            LOGGER.info(
-                "%s patience epoch(s) threshold previously reached, exiting" %
-                patience)
+            LOGGER.info("%s patience threshold previously reached, exiting" %
+                        patience)
             # save exit-code and final processes
             save_exit_code(os.path.join(model_log_directory, "exit_code"),
-                           PATIENCE_THRESHOLD_BEFORE_EPOCHS)
+                           PATIENCE_REACHED)
             return None
     else:
         current_epoch = 0
+        current_update = 0
         best_valid_loss_index = 0
         best_valid_loss = float("inf")
         best_valid_acc = float("-inf")
@@ -501,31 +522,47 @@ def train_inner(train_data: List[Tuple[List[int], int]],
 
     # set numpy and torch RNG back to previous states before training
     if resume_training:
-        np.random.set_state(
-            model_checkpoint["numpy_random_state"])  # type: ignore
+        if current_update == 0:
+            np.random.set_state(
+                model_checkpoint["numpy_last_random_state"])  # type: ignore
+        else:
+            np.random.set_state(
+                model_checkpoint["numpy_epoch_random_state"])  # type: ignore
         torch.random.set_rng_state(
-            model_checkpoint["torch_random_state"])  # type: ignore
+            model_checkpoint["torch_last_random_state"])  # type: ignore
 
     # loop over epochs
     for epoch in range(current_epoch, epochs):
-        # set model on train mode and enable autograd
-        model.train()
-        torch.autograd.set_grad_enabled(True)
+        # initialize loop variables
+        if resume_training and epoch == current_epoch and current_update != 0:
+            train_loss = model_checkpoint["train_loss"]
+            samples_seen = model_checkpoint["samples_seen"]
+        else:
+            train_loss = 0.
+            samples_seen = 0
 
-        # initialize training and valid loss, and hook to stop training
-        train_loss = 0.
-        valid_loss = 0.
-        stop_training = False
+        # cache numpy random state for model checkpoint
+        numpy_epoch_random_state = np.random.get_state()
 
         # main training loop
         LOGGER.info("Training SoPa++ model")
         with tqdm(shuffled_chunked_sorted(train_data, batch_size),
+                  position=0,
                   disable=disable_tqdm,
                   unit="batch",
                   desc="Training [Epoch %s/%s]" %
-                  (epoch + 1, epochs)) as tqdm_batches:
+                  (epoch + 1, epochs)) as train_tqdm_batches:
             # loop over train batches
-            for i, batch in enumerate(tqdm_batches):
+            for update, batch in enumerate(train_tqdm_batches):
+                # return to previous update and random state, if relevant
+                if (resume_training and epoch == current_epoch
+                        and current_update != 0):
+                    if update < current_update:
+                        continue
+                    elif update == current_update:
+                        np.random.set_state(model_checkpoint[  # type: ignore
+                            "numpy_last_random_state"])
+
                 # create batch object and parse out gold labels
                 batch, gold = Batch(
                     [x[0] for x in batch],
@@ -542,155 +579,201 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                 # add batch loss to train_loss
                 train_loss += train_batch_loss  # type: ignore
 
+                # increment samples seen
+                samples_seen += batch.size()
+
                 # update tqdm progress bar
-                if (i + 1) % tqdm_update_period == 0 or (
-                        i + 1) == len(tqdm_batches):
-                    tqdm_batches.set_postfix(
+                if (update + 1) % tqdm_update_period == 0 or (
+                        update + 1) == len(train_tqdm_batches):
+                    train_tqdm_batches.set_postfix(
                         batch_loss=train_batch_loss.item() / batch.size())
 
-        # set model on eval mode and disable autograd
-        model.eval()
-        torch.autograd.set_grad_enabled(False)
+                # start evaluation routine
+                if (update + 1) % evaluation_period == 0 or (
+                        update + 1) == len(train_tqdm_batches):
+                    # update tqdm batches counter
+                    train_tqdm_batches.update()
 
-        # compute mean train loss over epoch and accuracy
-        # NOTE: mean_train_loss contains stochastic noise due to dropout
-        LOGGER.info("Evaluating SoPa++ on training set")
-        mean_train_loss = train_loss / len(train_data)
-        train_acc = evaluate_metric(model, train_data, batch_size, gpu_device,
-                                    accuracy_score, max_doc_len)
+                    # set valid loss to zero
+                    update_number = (epoch * updates_per_epoch) + (update + 1)
+                    valid_loss = 0.
 
-        # add training loss data
-        writer.add_scalar("loss/train_loss", mean_train_loss, epoch)
-        writer.add_scalar("accuracy/train_accuracy", train_acc, epoch)
+                    # set model on eval mode and disable autograd
+                    model.eval()
+                    torch.autograd.set_grad_enabled(False)
 
-        # add named parameter data
-        for name, param in model.named_parameters():
-            writer.add_scalar("parameter_mean/" + name,
-                              param.detach().mean(), epoch)
-            writer.add_scalar("parameter_std/" + name,
-                              param.detach().std(), epoch)
-            if param.grad is not None:
-                writer.add_scalar("gradient_mean/" + name,
-                                  param.grad.detach().mean(), epoch)
-                writer.add_scalar("gradient_std/" + name,
-                                  param.grad.detach().std(), epoch)
+                    # compute mean train loss over updates and accuracy
+                    # NOTE: mean_train_loss contains stochastic noise
+                    LOGGER.info("Evaluating SoPa++ on training set")
+                    mean_train_loss = train_loss.item() / samples_seen
+                    train_acc = evaluate_metric(model, train_data, batch_size,
+                                                gpu_device, accuracy_score,
+                                                max_doc_len)
 
-        # loop over static valid set
-        LOGGER.info("Evaluating SoPa++ on validation set")
-        with tqdm(chunked_sorted(valid_data, batch_size),
-                  disable=disable_tqdm,
-                  unit="batch",
-                  desc="Validating [Epoch %s/%s]" %
-                  (epoch + 1, epochs)) as tqdm_batches:
-            for i, batch in enumerate(tqdm_batches):
-                # create batch object and parse out gold labels
-                batch, gold = Batch(
-                    [x[0] for x in batch],
-                    model.embeddings,  # type: ignore
-                    to_cuda(gpu_device),
-                    0.,
-                    max_doc_len), [x[1] for x in batch]
+                    # add training loss data
+                    writer.add_scalar("loss/train_loss", mean_train_loss,
+                                      update_number)
+                    writer.add_scalar("accuracy/train_accuracy", train_acc,
+                                      update_number)
 
-                # find aggregate loss across valid samples in batch
-                valid_batch_loss = compute_loss(model, batch, num_classes,
-                                                gold, loss_function,
-                                                gpu_device)
+                    # add named parameter data
+                    for name, param in model.named_parameters():
+                        writer.add_scalar("parameter_mean/" + name,
+                                          param.detach().mean(), update_number)
+                        writer.add_scalar("parameter_std/" + name,
+                                          param.detach().std(), update_number)
+                        if param.grad is not None:
+                            writer.add_scalar("gradient_mean/" + name,
+                                              param.grad.detach().mean(),
+                                              update_number)
+                            writer.add_scalar("gradient_std/" + name,
+                                              param.grad.detach().std(),
+                                              update_number)
 
-                # add batch loss to valid_loss
-                valid_loss += valid_batch_loss  # type: ignore
+                    # loop over static valid set
+                    LOGGER.info("Evaluating SoPa++ on validation set")
+                    with tqdm(chunked_sorted(valid_data, batch_size),
+                              position=0,
+                              disable=disable_tqdm,
+                              unit="batch",
+                              desc="Validating [Epoch %s/%s] [Batch %s/%s]" %
+                              (epoch + 1, epochs, update + 1,
+                               updates_per_epoch)) as valid_tqdm_batches:
+                        for valid_update, batch in enumerate(
+                                valid_tqdm_batches):
+                            # create batch object and parse out gold labels
+                            batch, gold = Batch(
+                                [x[0] for x in batch],
+                                model.embeddings,  # type: ignore
+                                to_cuda(gpu_device),
+                                0.,
+                                max_doc_len), [x[1] for x in batch]
 
-                if (i + 1) % tqdm_update_period == 0 or (
-                        i + 1) == len(tqdm_batches):
-                    tqdm_batches.set_postfix(
-                        batch_loss=valid_batch_loss.item() / batch.size())
+                            # find aggregate loss across valid samples in batch
+                            valid_batch_loss = compute_loss(
+                                model, batch, num_classes, gold, loss_function,
+                                gpu_device)
 
-        # compute mean valid loss over epoch and accuracy
-        mean_valid_loss = valid_loss / len(valid_data)
-        valid_acc = evaluate_metric(model, valid_data, batch_size, gpu_device,
-                                    accuracy_score, max_doc_len)
+                            # add batch loss to valid_loss
+                            valid_loss += valid_batch_loss  # type: ignore
 
-        # add valid loss data to tensorboard
-        writer.add_scalar("loss/valid_loss", mean_valid_loss, epoch)
-        writer.add_scalar("accuracy/valid_accuracy", valid_acc, epoch)
+                            if (valid_update +
+                                    1) % tqdm_update_period == 0 or (
+                                        valid_update +
+                                        1) == len(valid_tqdm_batches):
+                                valid_tqdm_batches.set_postfix(
+                                    batch_loss=valid_batch_loss.item() /
+                                    batch.size())
 
-        # log out report of current epoch
-        LOGGER.info(
-            "epoch: {}/{}, mean_train_loss: {:.3f}, train_acc: {:.3f}%, "
-            "mean_valid_loss: {:.3f}, valid_acc: {:.3f}%".format(
-                epoch + 1, epochs, mean_train_loss, train_acc * 100,
-                mean_valid_loss, valid_acc * 100))
+                    # compute mean valid loss and accuracy
+                    mean_valid_loss = valid_loss.item() / len(valid_data)
+                    valid_acc = evaluate_metric(model, valid_data, batch_size,
+                                                gpu_device, accuracy_score,
+                                                max_doc_len)
 
-        # apply learning rate scheduler after epoch
-        if scheduler is not None:
-            scheduler.step(valid_loss)
+                    # set model on train mode and enable autograd
+                    model.train()
+                    torch.autograd.set_grad_enabled(True)
 
-        # check for loss improvement and save model if there is reduction
-        # optionally increment patience counter or stop training
-        # NOTE: loss values are summed over all data (not mean)
-        if valid_loss < best_valid_loss:
-            # log information and update records
-            LOGGER.info("New best validation loss")
-            if valid_acc > best_valid_acc:
-                best_valid_acc = valid_acc
-                LOGGER.info("New best validation accuracy")
+                    # add valid loss data to tensorboard
+                    writer.add_scalar("loss/valid_loss", mean_valid_loss,
+                                      update_number)
+                    writer.add_scalar("accuracy/valid_accuracy", valid_acc,
+                                      update_number)
 
-            # update patience related diagnostics
-            best_valid_loss = valid_loss
-            best_valid_loss_index = 0
-            LOGGER.info("Patience counter: %s/%s" %
-                        (best_valid_loss_index, patience))
+                    # log out report of current evaluation state
+                    LOGGER.info("Epoch: {}/{}, Batch: {}/{}".format(
+                        epoch + 1, epochs, (update + 1), updates_per_epoch))
+                    LOGGER.info("Mean training loss: {:.3f}, "
+                                "Training accuracy: {:.3f}%".format(
+                                    mean_train_loss, train_acc * 100))
+                    LOGGER.info("Mean validation loss: {:.3f}, "
+                                "Validation accuracy: {:.3f}%".format(
+                                    mean_valid_loss, valid_acc * 100))
 
-            # find previous best checkpoint(s)
-            legacy_checkpoints = glob(
-                os.path.join(model_log_directory, "*_best_*.pt"))
+                    # apply learning rate scheduler after evaluation
+                    if scheduler is not None:
+                        scheduler.step(valid_loss)
 
-            # save new best checkpoint
-            model_save_file = os.path.join(
-                model_log_directory, "spp_checkpoint_best_{}.pt".format(epoch))
-            LOGGER.info("Saving best checkpoint: %s" % model_save_file)
-            save_checkpoint(epoch, model, optimizer, scheduler,
-                            best_valid_loss, best_valid_loss_index,
-                            best_valid_acc, model_save_file)
+                    # check for loss improvement and save model if necessary
+                    # optionally increment patience counter or stop training
+                    # NOTE: loss values are summed over all data (not mean)
+                    if valid_loss < best_valid_loss:
+                        # log information and update records
+                        LOGGER.info("New best validation loss")
+                        if valid_acc > best_valid_acc:
+                            best_valid_acc = valid_acc
+                            LOGGER.info("New best validation accuracy")
 
-            # delete previous best checkpoint(s)
-            for legacy_checkpoint in legacy_checkpoints:
-                os.remove(legacy_checkpoint)
-        else:
-            # update patience related diagnostics
-            best_valid_loss_index += 1
-            LOGGER.info("Patience counter: %s/%s" %
-                        (best_valid_loss_index, patience))
+                        # update patience related diagnostics
+                        best_valid_loss = valid_loss
+                        best_valid_loss_index = 0
+                        LOGGER.info("Patience counter: %s/%s" %
+                                    (best_valid_loss_index, patience))
 
-            # create hook to exit training if patience threshold reached
-            if best_valid_loss_index == patience:
-                stop_training = True
+                        # find previous best checkpoint(s)
+                        legacy_checkpoints = glob(
+                            os.path.join(model_log_directory, "*_best_*.pt"))
 
-        # find previous last checkpoint(s)
-        legacy_checkpoints = glob(
-            os.path.join(model_log_directory, "*_last_*.pt"))
+                        # save new best checkpoint
+                        model_save_file = os.path.join(
+                            model_log_directory,
+                            "spp_checkpoint_best_{}_{}.pt".format(
+                                epoch, (update + 1)))
+                        LOGGER.info("Saving best checkpoint: %s" %
+                                    model_save_file)
+                        save_checkpoint(epoch, update, samples_seen,
+                                        train_loss, model, optimizer,
+                                        scheduler, numpy_epoch_random_state,
+                                        best_valid_loss, best_valid_loss_index,
+                                        best_valid_acc, model_save_file)
 
-        # save latest checkpoint
-        model_save_file = os.path.join(
-            model_log_directory, "spp_checkpoint_last_{}.pt".format(epoch))
-        LOGGER.info("Saving last checkpoint: %s" % model_save_file)
-        save_checkpoint(epoch, model, optimizer, scheduler, best_valid_loss,
-                        best_valid_loss_index, best_valid_acc, model_save_file)
+                        # delete previous best checkpoint(s)
+                        for legacy_checkpoint in legacy_checkpoints:
+                            os.remove(legacy_checkpoint)
+                    else:
+                        # update patience related diagnostics
+                        best_valid_loss_index += 1
+                        LOGGER.info("Patience counter: %s/%s" %
+                                    (best_valid_loss_index, patience))
 
-        # delete previous last checkpoint(s)
-        for legacy_checkpoint in legacy_checkpoints:
-            os.remove(legacy_checkpoint)
+                        # create hook to exit training if patience reached
+                        if best_valid_loss_index == patience:
+                            patience_reached = True
 
-        # hook to stop training in case patience threshold was reached
-        # and if threshold was reached strictly before the last epoch
-        if stop_training:
-            if epoch < max(range(epochs)):
-                LOGGER.info(
-                    "%s patience epoch(s) threshold reached, stopping training"
-                    % patience)
-                # save exit-code and final processes
-                save_exit_code(os.path.join(model_log_directory, "exit_code"),
-                               PATIENCE_THRESHOLD_BEFORE_EPOCHS)
-                return None
+                    # find previous last checkpoint(s)
+                    legacy_checkpoints = glob(
+                        os.path.join(model_log_directory, "*_last_*.pt"))
+
+                    # save latest checkpoint
+                    model_save_file = os.path.join(
+                        model_log_directory,
+                        "spp_checkpoint_last_{}_{}.pt".format(
+                            epoch, (update + 1)))
+
+                    LOGGER.info("Saving last checkpoint: %s" % model_save_file)
+                    save_checkpoint(epoch, update, samples_seen, train_loss,
+                                    model, optimizer, scheduler,
+                                    numpy_epoch_random_state, best_valid_loss,
+                                    best_valid_loss_index, best_valid_acc,
+                                    model_save_file)
+
+                    # delete previous last checkpoint(s)
+                    for legacy_checkpoint in legacy_checkpoints:
+                        os.remove(legacy_checkpoint)
+
+                    # hook to stop training in case patience was reached
+                    # if it was reached strictly before last epoch and update
+                    if patience_reached:
+                        if not (epoch == max(range(epochs)) and
+                                (update + 1) == len(train_tqdm_batches)):
+                            LOGGER.info("Patience threshold reached, "
+                                        "stopping training")
+                            # save exit-code and final processes
+                            save_exit_code(
+                                os.path.join(model_log_directory, "exit_code"),
+                                PATIENCE_REACHED)
+                            return None
 
     # log information at the end of training
     LOGGER.info("%s training epoch(s) completed, stopping training" % epochs)
@@ -724,7 +807,7 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
                                  "been reached"))
                     return None
                 elif exit_code == 1:
-                    LOGGER.info(("Exit-code 1: patience epochs have already "
+                    LOGGER.info(("Exit-code 1: patience threshold has already "
                                  "been reached"))
                     return None
                 elif exit_code == 2:
@@ -807,11 +890,12 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
             dump_vocab(vocab, args.model_log_directory)
 
         train_inner(train_data, valid_data, model, num_classes, args.epochs,
-                    args.model_log_directory, args.learning_rate,
-                    args.batch_size, args.disable_scheduler,
-                    args.scheduler_patience, args.scheduler_factor, gpu_device,
-                    args.clip_threshold, args.max_doc_len, args.word_dropout,
-                    args.patience, resume_training, args.disable_tqdm,
+                    args.evaluation_period, args.model_log_directory,
+                    args.learning_rate, args.batch_size,
+                    args.disable_scheduler, args.scheduler_patience,
+                    args.scheduler_factor, gpu_device, args.clip_threshold,
+                    args.max_doc_len, args.word_dropout, args.patience,
+                    resume_training, args.disable_tqdm,
                     args.tqdm_update_period)
     finally:
         # update LOGGER object to remove file handler

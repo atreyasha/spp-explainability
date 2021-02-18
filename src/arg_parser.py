@@ -97,6 +97,11 @@ def train_arg_parser() -> argparse.ArgumentParser:
                        help="Batch size for training",
                        default=256,
                        type=int)
+    train.add_argument("--evaluation-period",
+                       help=("Specify after how many training updates should "
+                             "model evaluation be conducted"),
+                       default=100,
+                       type=int)
     train.add_argument("--seed",
                        help="Global random seed for numpy and torch",
                        default=42,
