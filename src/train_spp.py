@@ -552,6 +552,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
         LOGGER.info("Training SoPa++ model")
         with tqdm(shuffled_chunked_sorted(train_data, batch_size),
                   position=0,
+                  mininterval=0.05,
                   disable=disable_tqdm,
                   unit="batch",
                   desc="Training [Epoch %s/%s]" %
@@ -639,6 +640,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                     LOGGER.info("Evaluating SoPa++ on validation set")
                     with tqdm(chunked_sorted(valid_data, batch_size),
                               position=0,
+                              mininterval=0.05,
                               disable=disable_tqdm,
                               unit="batch",
                               desc="Validating [Epoch %s/%s] [Batch %s/%s]" %
