@@ -394,6 +394,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                 num_classes: int,
                 epochs: int,
                 evaluation_period: int,
+                only_epoch_eval: bool,
                 model_log_directory: str,
                 learning_rate: float,
                 batch_size: int,
@@ -592,8 +593,8 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                         batch_loss=train_batch_loss.item() / batch.size())
 
                 # start evaluation routine
-                if (update + 1) % evaluation_period == 0 or (
-                        update + 1) == len(train_tqdm_batches):
+                if (not only_epoch_eval and (update + 1) % evaluation_period
+                        == 0) or (update + 1) == len(train_tqdm_batches):
                     # update tqdm batches counter
                     train_tqdm_batches.update()
 
@@ -897,12 +898,12 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
             dump_vocab(vocab, args.model_log_directory)
 
         train_inner(train_data, valid_data, model, num_classes, args.epochs,
-                    args.evaluation_period, args.model_log_directory,
-                    args.learning_rate, args.batch_size,
-                    args.disable_scheduler, args.scheduler_patience,
-                    args.scheduler_factor, gpu_device, args.clip_threshold,
-                    args.max_doc_len, args.word_dropout, args.patience,
-                    resume_training, args.disable_tqdm,
+                    args.evaluation_period, args.only_epoch_eval,
+                    args.model_log_directory, args.learning_rate,
+                    args.batch_size, args.disable_scheduler,
+                    args.scheduler_patience, args.scheduler_factor, gpu_device,
+                    args.clip_threshold, args.max_doc_len, args.word_dropout,
+                    args.patience, resume_training, args.disable_tqdm,
                     args.tqdm_update_period)
     finally:
         # update LOGGER object to remove file handler

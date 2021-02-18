@@ -131,6 +131,10 @@ def train_arg_parser() -> argparse.ArgumentParser:
                        help=("Disable learning rate scheduler which reduces "
                              "learning rate on performance plateau"),
                        action='store_true')
+    train.add_argument("--only-epoch-eval",
+                       help=("Only evaluate model at the end of epoch, "
+                             "instead of evaluation by updates"),
+                       action='store_true')
     return parser
 
 
