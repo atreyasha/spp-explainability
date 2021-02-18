@@ -462,8 +462,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                            FINISHED_EPOCHS)
             return None
         elif best_valid_loss_index >= patience:
-            LOGGER.info("%s patience threshold previously reached, exiting" %
-                        patience)
+            LOGGER.info("Patience threshold previously reached, exiting")
             # save exit-code and final processes
             save_exit_code(os.path.join(model_log_directory, "exit_code"),
                            PATIENCE_REACHED)
