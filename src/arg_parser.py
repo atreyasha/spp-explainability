@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from .utils.parser_utils import dir_path, file_path, glob_path
+from .utils.parser_utils import dir_path, file_path
 import argparse
 
 
@@ -163,6 +163,7 @@ def explain_simplify_arg_parser() -> argparse.ArgumentParser:
                           help=("Path to neural model checkpoint with '.pt' "
                                 "extension"),
                           required=True,
+                          nargs="+",
                           type=file_path)
     # add group for optional arguments
     explain = parser.add_argument_group('optional explainability arguments')
@@ -191,6 +192,7 @@ def explain_compress_arg_parser() -> argparse.ArgumentParser:
     required.add_argument("--regex-model-checkpoint",
                           help="Path to regex model with '.pt' extension",
                           required=True,
+                          nargs="+",
                           type=file_path)
     return parser
 
@@ -220,10 +222,11 @@ def evaluate_arg_parser(compare: bool = False) -> argparse.ArgumentParser:
                               type=file_path)
     else:
         required.add_argument("--model-checkpoint",
-                              help=("Glob path to model checkpoint with '.pt' "
+                              help=("Path to model checkpoint with '.pt' "
                                     "extension"),
                               required=True,
-                              type=glob_path)
+                              nargs="+",
+                              type=file_path)
     # add group for optional arguments
     evaluate = parser.add_argument_group('optional evaluation arguments')
     if compare:
