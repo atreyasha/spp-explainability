@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from tqdm import tqdm
-from glob import glob
 from torch.nn import Linear
 from typing import cast, List, Union
 from sklearn.metrics import classification_report
@@ -119,8 +118,8 @@ def evaluate_outer(args: argparse.Namespace) -> None:
 
 
 def main(args: argparse.Namespace) -> None:
-    # parse glob to get all paths
-    model_checkpoint_collection = glob(args.model_checkpoint)
+    # collect all checkpoints
+    model_checkpoint_collection = args.model_checkpoint
 
     # loop over all provided models
     for model_checkpoint in model_checkpoint_collection:

@@ -3,31 +3,23 @@
 
 from typing import Iterable, Union
 from operator import attrgetter
-from glob import glob
 import argparse
 import re
 import os
 
 
-def dir_path(path: str) -> Union[str, argparse.ArgumentTypeError]:
+def dir_path(path: str) -> str:
     if os.path.isdir(path):
         return path
     else:
         raise argparse.ArgumentTypeError("%s is not a valid directory" % path)
 
 
-def file_path(path: str) -> Union[str, argparse.ArgumentTypeError]:
+def file_path(path: str) -> str:
     if os.path.isfile(path):
         return path
     else:
         raise argparse.ArgumentTypeError("%s is not a valid file" % path)
-
-
-def glob_path(path: str) -> Union[str, argparse.ArgumentTypeError]:
-    if len(glob(path)) > 0:
-        return path
-    else:
-        raise argparse.ArgumentTypeError("%s is an empty glob" % path)
 
 
 class Sorting_Help_Formatter(argparse.HelpFormatter):

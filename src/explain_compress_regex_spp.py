@@ -100,26 +100,28 @@ def compression(pattern_regex: List[str]) -> List[str]:
 
 
 def main(args: argparse.Namespace) -> None:
-    # load regex model
-    LOGGER.info("Loading regex model: %s" % args.regex_model_checkpoint)
-    model = torch.load(args.regex_model_checkpoint,
-                       map_location=torch.device("cpu"))
+    # loop over all provided checkpoints
+    for regex_model_checkpoint in args.regex_model_checkpoint:
+        # load regex model
+        LOGGER.info("Loading regex model: %s" % regex_model_checkpoint)
+        model = torch.load(regex_model_checkpoint,
+                           map_location=torch.device("cpu"))
 
-    # conduct compression as required
-    LOGGER.info("Compressing regex model")
-    model["activating_regex"] = {
-        key: compression(model["activating_regex"][key])
-        for key in tqdm(model["activating_regex"], disable=args.disable_tqdm)
-    }
+        # conduct compression as required
+        LOGGER.info("Compressing regex model")
+        model["activating_regex"] = {
+            key: compression(model["activating_regex"][key])
+            for key in tqdm(model["activating_regex"],
+                            disable=args.disable_tqdm)
+        }
 
-    # designate filename
-    filename = args.regex_model_checkpoint.replace("regex", "regex_compressed")
+        # designate filename
+        filename = regex_model_checkpoint.replace("regex", "regex_compressed")
 
-    # save model as required
-    LOGGER.info("Writing compressed regex model: %s" % filename)
-    save_regex_model(model["pattern_specs"],
-                     model["activating_regex"],
-                     model["linear_state_dict"], filename)
+        # save model as required
+        LOGGER.info("Writing compressed regex model: %s" % filename)
+        save_regex_model(model["pattern_specs"], model["activating_regex"],
+                         model["linear_state_dict"], filename)
 
 
 if __name__ == '__main__':

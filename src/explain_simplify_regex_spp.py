@@ -195,9 +195,16 @@ def explain_outer(args: argparse.Namespace) -> None:
 
 
 def main(args: argparse.Namespace) -> None:
-    args.model_log_directory = os.path.dirname(args.neural_model_checkpoint)
-    args = parse_configs_to_args(args, training=False)
-    explain_outer(args)
+    # collect all checkpoints
+    neural_model_checkpoint_collection = args.neural_model_checkpoint
+
+    # loop over all provided models
+    for neural_model_checkpoint in neural_model_checkpoint_collection:
+        args.neural_model_checkpoint = neural_model_checkpoint
+        args.model_log_directory = os.path.dirname(
+            args.neural_model_checkpoint)
+        args = parse_configs_to_args(args, training=False)
+        explain_outer(args)
 
 
 if __name__ == '__main__':

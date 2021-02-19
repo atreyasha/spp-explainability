@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from glob import glob
 from functools import partial
 from sklearn.metrics import classification_report
 from typing import cast, List, Tuple, Union
@@ -124,8 +123,8 @@ def evaluate_outer(args: argparse.Namespace) -> dict:
 
 
 def main(args: argparse.Namespace) -> None:
-    # parse glob to get all paths
-    model_checkpoint_collection = glob(args.model_checkpoint)
+    # collect all checkpoints
+    model_checkpoint_collection = args.model_checkpoint
     evaluation_metric_collection = []
 
     # infer and assume grid directory if provided
@@ -135,8 +134,8 @@ def main(args: argparse.Namespace) -> None:
             for model_checkpoint in model_checkpoint_collection
         ]
         assert len(set(model_checkpoint_grid_directories)) == 1, (
-            "Glob provided cannot be processed with " +
-            "--grid-training because it corresponds to more than " +
+            "Checkpoints provided cannot be processed with " +
+            "--grid-evaluation because it corresponds to more than " +
             "one grid directory")
         model_grid_directory = model_checkpoint_grid_directories[0]
 
