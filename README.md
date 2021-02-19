@@ -1,8 +1,8 @@
-## SoPa++
+# SoPa++
 
 This repository documents thesis research with the working title *"SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted finite-state neural architectures"*.
 
-### Dependencies :neckbeard:
+## Dependencies :neckbeard:
 
 This repository's code was tested with Python versions `3.7.*`. To sync dependencies, we recommend creating a virtual environment and installing the relevant packages via `pip`:
 
@@ -12,7 +12,7 @@ pip install -r requirements.txt
 
 **Note:** If you intend to use the GPU, the `torch==1.7.0` dependency in `requirements.txt` works out-of-the-box with CUDA version `10.2`. If you have a different version of CUDA, refer to the official [PyTorch](https://pytorch.org/get-started/locally/) webpage for alternative `pip` installation commands which will provide `torch` optimized for your CUDA version.
 
-### Repository initialization :fire:
+## Repository initialization :fire:
 
 1. Download and prepare [GloVe](https://nlp.stanford.edu/projects/glove/) word embeddings and Facebook's multi-class Natural Language Understanding (NLU) [data set](https://research.fb.com/publications/cross-lingual-transfer-learning-for-multilingual-task-oriented-dialog/):
 
@@ -26,9 +26,9 @@ pip install -r requirements.txt
     bash scripts/setup_git_hooks.sh
     ```
 
-### Usage :snowflake:
+## Usage :snowflake:
 
-#### Neural SoPa++
+### Neural SoPa++
 
 <details><summary><strong>i. Preprocessing</strong></summary>
 <p>
@@ -202,7 +202,7 @@ optional progress-bar arguments:
                            (default: 5)
 ```
 
-##### Neural SoPa++ model training
+#### Neural SoPa++ model training
 
 To train a single neural SoPa++ model using our defaults on the CPU, execute:
 
@@ -216,7 +216,7 @@ To train a single neural SoPa++ model using our defaults on a single GPU, execut
 bash scripts/train_spp_gpu.sh
 ```
 
-##### Grid-based neural SoPa++ model training
+#### Grid-based neural SoPa++ model training
 
 To apply grid-based training on neural SoPa++ models using our defaults on the CPU, execute:
 
@@ -279,7 +279,7 @@ optional progress-bar arguments:
                          (default: 5)
 ```
 
-##### Resume neural SoPa++ model training
+#### Resume neural SoPa++ model training
 
 To resume training of a single neural SoPa++ model using our defaults on the CPU, execute:
 
@@ -293,7 +293,7 @@ To resume training of a single neural SoPa++ model using our defaults on a singl
 bash scripts/train_resume_spp_gpu.sh /path/to/model/directory
 ```
 
-##### Resume grid-based neural SoPa++ model training
+#### Resume grid-based neural SoPa++ model training
 
 To resume grid-based training of neural SoPa++ models using our defaults on the CPU, execute:
 
@@ -370,7 +370,7 @@ optional logging arguments:
                             Set logging level (default: info)
 ```
 
-##### Neural SoPa++ model evaluation
+#### Neural SoPa++ model evaluation
 
 To evaluate single or multiple neural SoPa++ model(s) using our defaults on the CPU, execute:
 
@@ -384,7 +384,7 @@ To evaluate single or multiple neural SoPa++ model(s) using our defaults on a si
 bash scripts/evaluate_spp_gpu.sh "/glob/to/neural/model/*/checkpoint(s)"
 ```
 
-##### Grid-based neural SoPa++ model evaluation
+#### Grid-based neural SoPa++ model evaluation
 
 To evaluate grid-based neural SoPa++ models using our defaults on the CPU, execute:
 
@@ -401,7 +401,7 @@ bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/neural/model/*/checkpoints"
 </p>
 </details>
 
-#### Regex SoPa++
+### Regex SoPa++
 
 <details><summary><strong>i. Explainability</strong></summary>
 <p>
@@ -598,7 +598,7 @@ bash scripts/evaluate_regex_spp_gpu.sh "/glob/to/regex/model/*/checkpoint(s)"
 </p>
 </details>
 
-#### Neural vs. Regex SoPa++
+### Neural vs. Regex SoPa++
 
 <details><summary><strong>i. Dual comparison</strong></summary>
 <p>
