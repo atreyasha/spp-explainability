@@ -278,12 +278,12 @@ def grid_train_arg_parser(
         grid.add_argument(
             "--grid-config",
             help="Path to grid configuration file",
-            default="./src/resources/flat_grid_light_config.json",
+            default="./src/resources/flat_grid_heavy_config.json",
             type=file_path)
         grid.add_argument(
             "--num-random-iterations",
             help="Number of random iteration(s) for each grid instance",
-            default=1,
+            default=10,
             type=int)
     grid.add_argument("--grid-training",
                       help="Use grid-training instead of single-training",
