@@ -210,16 +210,13 @@ def evaluate_arg_parser(compare: bool = False) -> argparse.ArgumentParser:
                           required=True,
                           type=file_path)
     if compare:
-        required.add_argument("--neural-model-checkpoint",
-                              help=("Path to neural model checkpoint with "
-                                    "'.pt' extension"),
+        required.add_argument("--model-log-directory",
+                              help=("Model log directory which contains "
+                                    "both the best neural and compressed "
+                                    "regex models"),
                               required=True,
-                              type=file_path)
-        required.add_argument("--regex-model-checkpoint",
-                              help=("Path to regex model checkpoint with "
-                                    "'.pt' extension"),
-                              required=True,
-                              type=file_path)
+                              nargs="+",
+                              type=dir_path)
     else:
         required.add_argument("--model-checkpoint",
                               help=("Path to model checkpoint with '.pt' "
@@ -230,9 +227,6 @@ def evaluate_arg_parser(compare: bool = False) -> argparse.ArgumentParser:
     # add group for optional arguments
     evaluate = parser.add_argument_group('optional evaluation arguments')
     if compare:
-        evaluate.add_argument("--output-dir",
-                              help="Specify directory to store output file",
-                              type=dir_path)
         evaluate.add_argument(
             "--atol",
             help=("Specify absolute tolerance when comparing "

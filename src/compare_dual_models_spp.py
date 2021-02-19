@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from glob import glob
 from tqdm import tqdm
 from typing import cast, List, Tuple, Union
 from torch.nn import Embedding, Module, Linear
@@ -264,19 +265,28 @@ def compare_outer(args: argparse.Namespace) -> None:
     LOGGER.info("Neural model: %s" % neural_model)
 
     # execute inner comparison workflow
-    compare_inner(
-        eval_data, eval_text, neural_model, args.neural_model_checkpoint,
-        args.regex_model_checkpoint,
-        args.model_log_directory if not args.output_dir else args.output_dir,
-        args.batch_size, args.atol, args.output_prefix, gpu_device,
-        args.max_doc_len, args.disable_tqdm)
+    compare_inner(eval_data, eval_text, neural_model,
+                  args.neural_model_checkpoint, args.regex_model_checkpoint,
+                  args.model_log_directory, args.batch_size, args.atol,
+                  args.output_prefix, gpu_device, args.max_doc_len,
+                  args.disable_tqdm)
 
 
 def main(args: argparse.Namespace) -> None:
-    # start workflow and update argument namespace
-    args.model_log_directory = os.path.dirname(args.neural_model_checkpoint)
-    args = parse_configs_to_args(args, training=False)
-    compare_outer(args)
+    # collect all checkpoints
+    model_log_directory_collection = args.model_log_directory
+
+    # loop over all provided models
+    for model_log_directory in model_log_directory_collection:
+        # start workflow and update argument namespace
+        args.model_log_directory = model_log_directory
+        args.neural_model_checkpoint = glob(
+            os.path.join(model_log_directory, "spp_checkpoint_best_*.pt"))[0]
+        args.regex_model_checkpoint = glob(
+            os.path.join(model_log_directory,
+                         "regex_compressed_spp_checkpoint_best_*.pt"))[0]
+        args = parse_configs_to_args(args, training=False)
+        compare_outer(args)
 
 
 if __name__ == '__main__':
