@@ -1,0 +1,1 @@
+{"patterns": ["6-25_5-25_4-25_3-25"], "semiring": ["MaxSumSemiring"], "learning_rate": [1e-3], "tau_threshold": [0, 0.25, 0.5, 0.75, 1]}
