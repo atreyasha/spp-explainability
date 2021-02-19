@@ -80,7 +80,7 @@ class MaskedLayerNorm(Module):
             variance = variance.sum(dim=1, keepdim=True) / divisor
 
             # normalize inputs
-            normalized = (masked - mean) / (torch.sqrt(variance + self.eps))
+            normalized = (masked - mean) / torch.sqrt(variance + self.eps)
             normalized[~input_mask] = cached
             return normalized
 
