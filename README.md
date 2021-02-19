@@ -375,13 +375,13 @@ optional logging arguments:
 To evaluate single or multiple neural SoPa++ model(s) using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/evaluate_spp_cpu.sh "/glob/to/neural/model/*/checkpoints"
+bash scripts/evaluate_spp_cpu.sh "/glob/to/neural/model/*/checkpoint(s)"
 ```
 
 To evaluate single or multiple neural SoPa++ model(s) using our defaults on a single GPU, execute:
 
 ```shell
-bash scripts/evaluate_spp_gpu.sh "/glob/to/neural/model/*/checkpoints"
+bash scripts/evaluate_spp_gpu.sh "/glob/to/neural/model/*/checkpoint(s)"
 ```
 
 ##### Grid-based neural SoPa++ model evaluation
@@ -586,13 +586,13 @@ optional progress-bar arguments:
 To evaluate single or multiple regex SoPa++ model(s) using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/evaluate_regex_spp_cpu.sh "/glob/to/regex/model/*/checkpoints"
+bash scripts/evaluate_regex_spp_cpu.sh "/glob/to/regex/model/*/checkpoint(s)"
 ```
 
 To evaluate single or multiple regex SoPa++ model(s) using our defaults on a single GPU, execute:
 
 ```shell
-bash scripts/evaluate_regex_spp_gpu.sh "/glob/to/regex/model/*/checkpoints"
+bash scripts/evaluate_regex_spp_gpu.sh "/glob/to/regex/model/*/checkpoint(s)"
 ```
 
 </p>
