@@ -4,19 +4,18 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: compare_dual_models_spp_cpu.sh [-h|--help] neural_model_checkpoint
-                                                  regex_model_checkpoint
+Usage: compare_dual_models_spp_cpu.sh [-h|--help] model_log_directory
+                                                  [model_log_directory...]
 
 Compare neural and regex SoPa++ models an evaluation data set on the CPU
 
 Optional arguments:
-  -h, --help                           Show this help message and exit
+  -h, --help                      Show this help message and exit
 
 Required arguments:
-  neural_model_checkpoint <file_path>  Path to neural model checkpoint with '.pt'
-                                       extension
-  regex_model_checkpoint  <file_path>  Path to regex model checkpoint with '.pt'
-                                       extension
+  model_log_directory <dir_path>  Model log directory which contains
+                                  both the best neural and compressed
+                                  regex models
 EOF
 }
 
@@ -32,15 +31,10 @@ check_help() {
 
 # define function
 compare_dual_models_spp_cpu() {
-  local neural_model_checkpoint regex_model_checkpoint
-  neural_model_checkpoint="$1"
-  regex_model_checkpoint="$2"
-
   python3 -m src.compare_dual_models_spp \
     --eval-data "./data/facebook_multiclass_nlu/clean/test.uncased.data" \
     --eval-labels "./data/facebook_multiclass_nlu/clean/test.labels" \
-    --neural-model-checkpoint "$neural_model_checkpoint" \
-    --regex-model-checkpoint "$regex_model_checkpoint"
+    --model-log-directory "$@"
 }
 
 # execute function
