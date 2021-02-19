@@ -99,7 +99,8 @@ def train_arg_parser() -> argparse.ArgumentParser:
                        type=int)
     train.add_argument("--evaluation-period",
                        help=("Specify after how many training updates should "
-                             "model evaluation be conducted"),
+                             "model evaluation(s) be conducted. Evaluation "
+                             "will always be conducted at the end of epochs"),
                        default=100,
                        type=int)
     train.add_argument("--seed",
