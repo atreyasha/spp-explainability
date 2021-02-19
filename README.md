@@ -28,7 +28,7 @@ pip install -r requirements.txt
 
 ### Usage :snowflake:
 
-#### 1. Neural SoPa++
+#### Neural SoPa++
 
 <details><summary><strong>i. Preprocessing</strong></summary>
 <p>
@@ -401,7 +401,7 @@ bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/neural/model/*/checkpoints"
 </p>
 </details>
 
-#### 2. Regex SoPa++
+#### Regex SoPa++
 
 <details><summary><strong>i. Explainability</strong></summary>
 <p>
@@ -598,7 +598,7 @@ bash scripts/evaluate_regex_spp_gpu.sh "/glob/to/regex/model/*/checkpoint(s)"
 </p>
 </details>
 
-#### 3. Neural vs. Regex SoPa++
+#### Neural vs. Regex SoPa++
 
 <details><summary><strong>i. Dual comparison</strong></summary>
 <p>
