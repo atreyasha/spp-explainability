@@ -1,1 +1,1 @@
-{"patterns": ["7-50_6-50_5-50_4-50_3-50", "7-25_6-25_5-25_4-25_3-25", "6-50_5-50_4-50_3-50", "6-25_5-25_4-25_3-25"], "semiring": ["MaxProductSemiring", "MaxSumSemiring"], "learning_rate": [1e-3, 1e-4]}
+{"patterns": ["6-50_5-50_4-50_3-50"], "semiring": ["MaxSumSemiring"], "learning_rate": [1e-3], "tau_threshold": [0, 0.25, 0.5, 0.75, 1]}
