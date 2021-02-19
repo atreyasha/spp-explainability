@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 ### Neural SoPa++
 
-<details><summary><strong>i. Preprocessing</strong></summary>
+<details><summary>i. Preprocessing</summary>
 <p>
 
 For preprocessing Facebook's multi-class NLU data set, we use `src/preprocess_multiclass_nlu.py`:
@@ -67,7 +67,7 @@ bash scripts/preprocess_multiclass_nlu.sh
 </p>
 </details>
 
-<details><summary><strong>ii. Training</strong></summary>
+<details><summary>ii. Training</summary>
 <p>
 
 For training the neural SoPa++ model, we use `src/train_spp.py`:
@@ -233,7 +233,7 @@ bash scripts/train_spp_grid_gpu.sh
 </p>
 </details>
 
-<details><summary><strong>iii. Resume training</strong></summary>
+<details><summary>iii. Resume training</summary>
 <p>
 
 For resuming the aforementioned training workflow in case of interruptions, we use `src/train_resume_spp.py`:
@@ -310,7 +310,7 @@ bash scripts/train_resume_spp_grid_gpu.sh /path/to/model/directory
 </p>
 </details>
 
-<details><summary><strong>iv. Evaluation</strong></summary>
+<details><summary>iv. Evaluation</summary>
 <p>
 
 For evaluating a trained neural SoPa++ model, we use `src/evaluate_spp.py`:
@@ -403,7 +403,7 @@ bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/neural/model/*/checkpoints"
 
 ### Regex SoPa++
 
-<details><summary><strong>i. Explainability</strong></summary>
+<details><summary>i. Explainability</summary>
 <p>
 
 For explaining a neural SoPa++ model by simplifying it into a regex SoPa++ model, we use `src/explain_simplify_regex_spp.py`:
@@ -486,7 +486,7 @@ bash scripts/explain_simplify_regex_spp_gpu.sh /path/to/neural/model/checkpoint
 </p>
 </details>
 
-<details><summary><strong>ii. Compression</strong></summary>
+<details><summary>ii. Compression</summary>
 <p>
 
 For compressing a regex SoPa++ model, we use `src/explain_compress_regex_spp.py`:
@@ -526,7 +526,7 @@ bash scripts/explain_compress_regex_spp_cpu.sh /path/to/regex/model/checkpoint
 </p>
 </details>
 
-<details><summary><strong>iii. Evaluation</strong></summary>
+<details><summary>iii. Evaluation</summary>
 <p>
 
 For evaluating a regex SoPa++ model, we use `src/evaluate_regex_spp.py`:
@@ -600,7 +600,7 @@ bash scripts/evaluate_regex_spp_gpu.sh "/glob/to/regex/model/*/checkpoint(s)"
 
 ### Neural vs. Regex SoPa++
 
-<details><summary><strong>i. Dual comparison</strong></summary>
+<details><summary>i. Dual comparison</summary>
 <p>
 
 For comparing a neural SoPa++ model and its corresponding regex SoPa++ model counterpart, we use `src/compare_dual_models_spp.py`:
