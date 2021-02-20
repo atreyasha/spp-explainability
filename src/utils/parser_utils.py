@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from glob import glob
 from typing import Iterable, Union
 from operator import attrgetter
 import argparse
@@ -20,6 +21,13 @@ def file_path(path: str) -> str:
         return path
     else:
         raise argparse.ArgumentTypeError("%s is not a valid file" % path)
+
+
+def glob_path(path: str) -> str:
+    if len(glob(path)) > 0:
+        return path
+    else:
+        raise argparse.ArgumentTypeError("%s is an empty glob" % path)
 
 
 class Sorting_Help_Formatter(argparse.HelpFormatter):
