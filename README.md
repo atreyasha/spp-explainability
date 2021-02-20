@@ -663,13 +663,13 @@ optional progress-bar arguments:
                          (default: 5)
 ```
 
-To compare neural and regex SoPa++ model(s) using our defaults on the CPU, execute:
+To compare neural and regex SoPa++ model pair(s) using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/compare_dual_models_spp_cpu.sh "/glob/to/model/log/*/director(ies)"
 ```
 
-To compare neural and regex SoPa++ model(s) using our defaults on a GPU, execute:
+To compare neural and regex SoPa++ model pair(s) using our defaults on a GPU, execute:
 
 ```shell
 bash scripts/compare_dual_models_spp_gpu.sh "/glob/to/model/log/*/director(ies)"
