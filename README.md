@@ -284,13 +284,13 @@ optional progress-bar arguments:
 To resume training of a single neural SoPa++ model using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/train_resume_spp_cpu.sh /path/to/model/directory
+bash scripts/train_resume_spp_cpu.sh /path/to/model/log/directory
 ```
 
 To resume training of a single neural SoPa++ model using our defaults on a single GPU, execute:
 
 ```shell
-bash scripts/train_resume_spp_gpu.sh /path/to/model/directory
+bash scripts/train_resume_spp_gpu.sh /path/to/model/log/directory
 ```
 
 #### Resume grid-based neural SoPa++ model training
@@ -298,13 +298,13 @@ bash scripts/train_resume_spp_gpu.sh /path/to/model/directory
 To resume grid-based training of neural SoPa++ models using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/train_resume_spp_grid_cpu.sh /path/to/model/directory
+bash scripts/train_resume_spp_grid_cpu.sh /path/to/model/log/directory
 ```
 
 To resume grid-based training of neural SoPa++ models using our defaults on a single GPU, execute:
 
 ```shell
-bash scripts/train_resume_spp_grid_gpu.sh /path/to/model/directory
+bash scripts/train_resume_spp_grid_gpu.sh /path/to/model/log/directory
 ```
 
 </p>
@@ -313,7 +313,7 @@ bash scripts/train_resume_spp_grid_gpu.sh /path/to/model/directory
 <details><summary>iv. Evaluation</summary>
 <p>
 
-For evaluating a trained neural SoPa++ model, we use `src/evaluate_spp.py`:
+For evaluating trained neural SoPa++ model(s), we use `src/evaluate_spp.py`:
 
 ```
 usage: evaluate_spp.py [-h] --eval-data <file_path> --eval-labels <file_path>
@@ -334,7 +334,7 @@ required evaluation arguments:
   --eval-labels             <file_path>
                             Path to evaluation labels file (default: None)
   --model-checkpoint        <glob_path>
-                            Glob path to model checkpoint with '.pt' extension
+                            Path to model checkpoint(s) with '.pt' extension
                             (default: None)
 
 optional evaluation arguments:
@@ -406,11 +406,11 @@ bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/neural/model/*/checkpoints"
 <details><summary>i. Explainability</summary>
 <p>
 
-For explaining a neural SoPa++ model by simplifying it into a regex SoPa++ model, we use `src/explain_simplify_regex_spp.py`:
+For explaining neural SoPa++ model(s) by simplifying it into a regex SoPa++ model, we use `src/explain_simplify_regex_spp.py`:
 
 ```
 usage: explain_simplify_regex_spp.py [-h] --neural-model-checkpoint
-                                     <file_path> --train-data <file_path>
+                                     <glob_path> --train-data <file_path>
                                      --train-labels <file_path> --valid-data
                                      <file_path> --valid-labels <file_path>
                                      [--atol <float>] [--batch-size <int>]
@@ -426,8 +426,8 @@ optional arguments:
   -h, --help                 show this help message and exit
 
 required explainability arguments:
-  --neural-model-checkpoint  <file_path>
-                             Path to neural model checkpoint with '.pt'
+  --neural-model-checkpoint  <glob_path>
+                             Path to neural model checkpoint(s) with '.pt'
                              extension (default: None)
   --train-data               <file_path>
                              Path to train data file (default: None)
@@ -471,16 +471,16 @@ optional progress-bar arguments:
                              diagnostics (default: 5)
 ```
 
-To simplify a single neural SoPa++ model using our defaults on the CPU, execute:
+To simplify single or multiple neural SoPa++ models using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/explain_simplify_regex_spp_cpu.sh /path/to/neural/model/checkpoint
+bash scripts/explain_simplify_regex_spp_cpu.sh "/glob/to/neural/model/*/checkpoint(s)"
 ```
 
-To simplify a single neural SoPa++ model using our defaults on a single GPU, execute:
+To simplify single or multiple neural SoPa++ models using our defaults on a GPU, execute:
 
 ```shell
-bash scripts/explain_simplify_regex_spp_gpu.sh /path/to/neural/model/checkpoint
+bash scripts/explain_simplify_regex_spp_gpu.sh "/glob/to/neural/model/*/checkpoint(s)"
 ```
 
 </p>
@@ -489,10 +489,10 @@ bash scripts/explain_simplify_regex_spp_gpu.sh /path/to/neural/model/checkpoint
 <details><summary>ii. Compression</summary>
 <p>
 
-For compressing a regex SoPa++ model, we use `src/explain_compress_regex_spp.py`:
+For compressing regex SoPa++ model(s), we use `src/explain_compress_regex_spp.py`:
 
 ```
-usage: explain_compress_regex_spp.py [-h] --regex-model-checkpoint <file_path>
+usage: explain_compress_regex_spp.py [-h] --regex-model-checkpoint <glob_path>
                                      [--disable-tqdm]
                                      [--logging-level {debug,info,warning,error,critical}]
                                      [--tqdm-update-period <int>]
@@ -501,9 +501,9 @@ optional arguments:
   -h, --help                show this help message and exit
 
 required explainability arguments:
-  --regex-model-checkpoint  <file_path>
-                            Path to regex model with '.pt' extension (default:
-                            None)
+  --regex-model-checkpoint  <glob_path>
+                            Path to regex model checkpoint(s) with '.pt'
+                            extension (default: None)
 
 optional logging arguments:
   --logging-level           {debug,info,warning,error,critical}
@@ -517,10 +517,10 @@ optional progress-bar arguments:
                             diagnostics (default: 5)
 ```
 
-To compress a single regex SoPa++ model using our defaults on the CPU, execute:
+To compress single or multiple regex SoPa++ models using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/explain_compress_regex_spp_cpu.sh /path/to/regex/model/checkpoint
+bash scripts/explain_compress_regex_spp_cpu.sh "/glob/to/regex/model/*/checkpoint(s)"
 ```
 
 </p>
@@ -529,7 +529,7 @@ bash scripts/explain_compress_regex_spp_cpu.sh /path/to/regex/model/checkpoint
 <details><summary>iii. Evaluation</summary>
 <p>
 
-For evaluating a regex SoPa++ model, we use `src/evaluate_regex_spp.py`:
+For evaluating regex SoPa++ model(s), we use `src/evaluate_regex_spp.py`:
 
 ```
 usage: evaluate_regex_spp.py [-h] --eval-data <file_path> --eval-labels
@@ -550,7 +550,7 @@ required evaluation arguments:
   --eval-labels         <file_path>
                         Path to evaluation labels file (default: None)
   --model-checkpoint    <glob_path>
-                        Glob path to model checkpoint with '.pt' extension
+                        Path to model checkpoint(s) with '.pt' extension
                         (default: None)
 
 optional evaluation arguments:
@@ -603,85 +603,76 @@ bash scripts/evaluate_regex_spp_gpu.sh "/glob/to/regex/model/*/checkpoint(s)"
 <details><summary>i. Dual comparison</summary>
 <p>
 
-For comparing a neural SoPa++ model and its corresponding regex SoPa++ model counterpart, we use `src/compare_dual_models_spp.py`:
+For comparing neural SoPa++ model(s) and corresponding regex SoPa++ model(s), we use `src/compare_dual_models_spp.py`:
 
 ```
 usage: compare_dual_models_spp.py [-h] --eval-data <file_path> --eval-labels
-                                  <file_path> --neural-model-checkpoint
-                                  <file_path> --regex-model-checkpoint
-                                  <file_path> [--atol <float>]
+                                  <file_path> --model-log-directory
+                                  <glob_path> [--atol <float>]
                                   [--batch-size <int>] [--disable-tqdm]
                                   [--gpu] [--gpu-device <str>]
                                   [--logging-level {debug,info,warning,error,critical}]
                                   [--max-doc-len <int>]
-                                  [--output-dir <dir_path>]
                                   [--output-prefix <str>]
                                   [--torch-num-threads <int>]
                                   [--tqdm-update-period <int>]
 
 optional arguments:
-  -h, --help                 show this help message and exit
+  -h, --help             show this help message and exit
 
 required evaluation arguments:
-  --eval-data                <file_path>
-                             Path to evaluation data file (default: None)
-  --eval-labels              <file_path>
-                             Path to evaluation labels file (default: None)
-  --neural-model-checkpoint  <file_path>
-                             Path to neural model checkpoint with '.pt'
-                             extension (default: None)
-  --regex-model-checkpoint   <file_path>
-                             Path to regex model checkpoint with '.pt'
-                             extension (default: None)
+  --eval-data            <file_path>
+                         Path to evaluation data file (default: None)
+  --eval-labels          <file_path>
+                         Path to evaluation labels file (default: None)
+  --model-log-directory  <glob_path>
+                         Model log directory/directories which contain both
+                         the best neural and compressed regex models (default:
+                         None)
 
 optional evaluation arguments:
-  --atol                     <float>
-                             Specify absolute tolerance when comparing
-                             equivalences between tensors (default: 1e-06)
-  --batch-size               <int>
-                             Batch size for evaluation (default: 256)
-  --max-doc-len              <int>
-                             Maximum document length allowed (default: None)
-  --output-dir               <dir_path>
-                             Specify directory to store output file (default:
-                             None)
-  --output-prefix            <str>
-                             Prefix for output classification report (default:
-                             test)
+  --atol                 <float>
+                         Specify absolute tolerance when comparing
+                         equivalences between tensors (default: 1e-06)
+  --batch-size           <int>
+                         Batch size for evaluation (default: 256)
+  --max-doc-len          <int>
+                         Maximum document length allowed (default: None)
+  --output-prefix        <str>
+                         Prefix for output classification report (default:
+                         test)
 
 optional hardware-acceleration arguments:
-  --gpu                      Use GPU hardware acceleration (default: False)
-  --gpu-device               <str>
-                             GPU device specification in case --gpu option is
-                             used (default: cuda:0)
-  --torch-num-threads        <int>
-                             Set the number of threads used for CPU intraop
-                             parallelism with PyTorch (default: None)
+  --gpu                  Use GPU hardware acceleration (default: False)
+  --gpu-device           <str>
+                         GPU device specification in case --gpu option is used
+                         (default: cuda:0)
+  --torch-num-threads    <int>
+                         Set the number of threads used for CPU intraop
+                         parallelism with PyTorch (default: None)
 
 optional logging arguments:
-  --logging-level            {debug,info,warning,error,critical}
-                             Set logging level (default: info)
+  --logging-level        {debug,info,warning,error,critical}
+                         Set logging level (default: info)
 
 optional progress-bar arguments:
-  --disable-tqdm             Disable tqdm progress bars (default: False)
-  --tqdm-update-period       <int>
-                             Specify after how many training updates should
-                             the tqdm progress bar be updated with model
-                             diagnostics (default: 5)
+  --disable-tqdm         Disable tqdm progress bars (default: False)
+  --tqdm-update-period   <int>
+                         Specify after how many training updates should the
+                         tqdm progress bar be updated with model diagnostics
+                         (default: 5)
 ```
 
 To compare neural and regex SoPa++ model(s) using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/compare_dual_models_spp_cpu.sh /path/to/neural/model/checkpoint \
-  /path/to/regex/model/checkpoint
+bash scripts/compare_dual_models_spp_cpu.sh "/glob/to/model/log/*/director(ies)"
 ```
 
 To compare neural and regex SoPa++ model(s) using our defaults on a GPU, execute:
 
 ```shell
-bash scripts/compare_dual_models_spp_gpu.sh /path/to/neural/model/checkpoint \
-  /path/to/regex/model/checkpoint
+bash scripts/compare_dual_models_spp_gpu.sh "/glob/to/model/log/*/director(ies)"
 ```
 
 </p>
