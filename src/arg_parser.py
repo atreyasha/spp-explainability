@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from .utils.parser_utils import dir_path, file_path
+from .utils.parser_utils import dir_path, file_path, glob_path
 import argparse
 
 
@@ -160,11 +160,10 @@ def explain_simplify_arg_parser() -> argparse.ArgumentParser:
                           required=True,
                           type=file_path)
     required.add_argument("--neural-model-checkpoint",
-                          help=("Path to neural model checkpoint with '.pt' "
-                                "extension"),
+                          help=("Path to neural model checkpoint(s) with "
+                                "'.pt' extension"),
                           required=True,
-                          nargs="+",
-                          type=file_path)
+                          type=glob_path)
     # add group for optional arguments
     explain = parser.add_argument_group('optional explainability arguments')
     explain.add_argument("--atol",
@@ -190,10 +189,10 @@ def explain_compress_arg_parser() -> argparse.ArgumentParser:
     # add group for required arguments
     required = parser.add_argument_group('required explainability arguments')
     required.add_argument("--regex-model-checkpoint",
-                          help="Path to regex model with '.pt' extension",
+                          help=("Path to regex model checkpoint(s) "
+                                "with '.pt' extension"),
                           required=True,
-                          nargs="+",
-                          type=file_path)
+                          type=glob_path)
     return parser
 
 
@@ -211,19 +210,17 @@ def evaluate_arg_parser(compare: bool = False) -> argparse.ArgumentParser:
                           type=file_path)
     if compare:
         required.add_argument("--model-log-directory",
-                              help=("Model log directory which contains "
-                                    "both the best neural and compressed "
-                                    "regex models"),
+                              help=("Model log directory/directories which "
+                                    "contain both the best neural and "
+                                    "compressed regex models"),
                               required=True,
-                              nargs="+",
-                              type=dir_path)
+                              type=glob_path)
     else:
         required.add_argument("--model-checkpoint",
-                              help=("Path to model checkpoint with '.pt' "
+                              help=("Path to model checkpoint(s) with '.pt' "
                                     "extension"),
                               required=True,
-                              nargs="+",
-                              type=file_path)
+                              type=glob_path)
     # add group for optional arguments
     evaluate = parser.add_argument_group('optional evaluation arguments')
     if compare:
