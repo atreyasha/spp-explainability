@@ -274,7 +274,7 @@ def compare_outer(args: argparse.Namespace) -> None:
 
 def main(args: argparse.Namespace) -> None:
     # collect all checkpoints
-    model_log_directory_collection = args.model_log_directory
+    model_log_directory_collection = glob(args.model_log_directory)
 
     # loop over all provided models
     for model_log_directory in model_log_directory_collection:

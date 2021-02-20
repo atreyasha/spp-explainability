@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from glob import glob
 from functools import partial
 from sklearn.metrics import classification_report
 from typing import cast, List, Tuple, Union
@@ -124,7 +125,7 @@ def evaluate_outer(args: argparse.Namespace) -> dict:
 
 def main(args: argparse.Namespace) -> None:
     # collect all checkpoints
-    model_checkpoint_collection = args.model_checkpoint
+    model_checkpoint_collection = glob(args.model_checkpoint)
     evaluation_metric_collection = []
 
     # infer and assume grid directory if provided

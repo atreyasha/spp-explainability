@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from glob import glob
 from tqdm import tqdm
 from collections import OrderedDict
 from typing import List, Tuple, Union, Dict, cast
@@ -196,7 +197,7 @@ def explain_outer(args: argparse.Namespace) -> None:
 
 def main(args: argparse.Namespace) -> None:
     # collect all checkpoints
-    neural_model_checkpoint_collection = args.neural_model_checkpoint
+    neural_model_checkpoint_collection = glob(args.neural_model_checkpoint)
 
     # loop over all provided models
     for neural_model_checkpoint in neural_model_checkpoint_collection:

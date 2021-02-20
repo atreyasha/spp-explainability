@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from glob import glob
 from tqdm import tqdm
 from typing import cast, List, Dict
 from .utils.parser_utils import ArgparseFormatter
@@ -101,7 +102,7 @@ def compression(pattern_regex: List[str]) -> List[str]:
 
 def main(args: argparse.Namespace) -> None:
     # loop over all provided checkpoints
-    for regex_model_checkpoint in args.regex_model_checkpoint:
+    for regex_model_checkpoint in glob(args.regex_model_checkpoint):
         # load regex model
         LOGGER.info("Loading regex model: %s" % regex_model_checkpoint)
         model = torch.load(regex_model_checkpoint,

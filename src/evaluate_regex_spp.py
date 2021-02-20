@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from glob import glob
 from tqdm import tqdm
 from torch.nn import Linear
 from typing import cast, List, Union
@@ -119,7 +120,7 @@ def evaluate_outer(args: argparse.Namespace) -> None:
 
 def main(args: argparse.Namespace) -> None:
     # collect all checkpoints
-    model_checkpoint_collection = args.model_checkpoint
+    model_checkpoint_collection = glob(args.model_checkpoint)
 
     # loop over all provided models
     for model_checkpoint in model_checkpoint_collection:
