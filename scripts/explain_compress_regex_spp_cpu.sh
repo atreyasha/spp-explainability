@@ -12,7 +12,7 @@ Optional arguments:
   -h, --help                          Show this help message and exit
 
 Required arguments:
-  regex_model_checkpoint <file_path>  Path to regex model checkpoint
+  regex_model_checkpoint <glob_path>  Path to regex model checkpoint(s)
                                       with '.pt' extension
 EOF
 }

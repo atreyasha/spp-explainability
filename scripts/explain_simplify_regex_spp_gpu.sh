@@ -13,7 +13,7 @@ Optional arguments:
   -h, --help                           Show this help message and exit
 
 Required arguments:
-  neural_model_checkpoint <file_path>  Path to neural model checkpoint
+  neural_model_checkpoint <glob_path>  Path to neural model checkpoint(s)
                                        with '.pt' extension
 EOF
 }
