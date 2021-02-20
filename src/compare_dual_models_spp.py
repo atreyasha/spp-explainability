@@ -132,11 +132,6 @@ def compare_inner(eval_data: List[Tuple[List[int], int]],
                 if back_pointer.binarized_score else None
                 for back_pointer in back_pointers
             ]
-            neural_local_store["activating_regex"] = [
-                back_pointer.get_regex(eval_sample_text.split())
-                if back_pointer.binarized_score else None
-                for back_pointer in back_pointers
-            ]
             neural_local_store["binaries"] = [
                 int(back_pointer.binarized_score)
                 for back_pointer in back_pointers
@@ -149,14 +144,8 @@ def compare_inner(eval_data: List[Tuple[List[int], int]],
             # add regex model diagnostics
             regex_local_store = local_store["regex_model"] = {}
             regex_local_store["activating_text"] = [
-                [regex_match.group(2) for regex_match in regex_matches]
-                if regex_matches != [] else None
-                for regex_matches in regex_lookup
-            ]
-            regex_local_store["activating_regex"] = [
-                [regex_match.re.pattern for regex_match in regex_matches]
-                if regex_matches != [] else None
-                for regex_matches in regex_lookup
+                regex_match.group(2) if regex_match is not None else None
+                for regex_match in regex_lookup
             ]
             regex_local_store["binaries"] = [
                 1 if regex_match else 0 for regex_match in regex_lookup
