@@ -280,11 +280,22 @@ def main(args: argparse.Namespace) -> None:
     for model_log_directory in model_log_directory_collection:
         # start workflow and update argument namespace
         args.model_log_directory = model_log_directory
-        args.neural_model_checkpoint = glob(
-            os.path.join(model_log_directory, "spp_checkpoint_best_*.pt"))[0]
-        args.regex_model_checkpoint = glob(
-            os.path.join(model_log_directory,
-                         "regex_compressed_spp_checkpoint_best_*.pt"))[0]
+        try:
+            args.neural_model_checkpoint = glob(
+                os.path.join(model_log_directory,
+                             "spp_checkpoint_best_*.pt"))[0]
+        except IndexError:
+            raise FileNotFoundError(
+                "Best neural checkpoint is missing in directory: %s" %
+                model_log_directory)
+        try:
+            args.regex_model_checkpoint = glob(
+                os.path.join(model_log_directory,
+                             "regex_compressed_spp_checkpoint_best_*.pt"))[0]
+        except IndexError:
+            raise FileNotFoundError(
+                "Best regex checkpoint is missing in directory: %s" %
+                model_log_directory)
         args = parse_configs_to_args(args, training=False)
         compare_outer(args)
 
