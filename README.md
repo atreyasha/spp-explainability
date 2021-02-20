@@ -687,6 +687,6 @@ bash scripts/compare_dual_models_spp_gpu.sh /path/to/neural/model/checkpoint \
 </p>
 </details>
 
-### Development :snail:
+## Development :snail:
 
 Ongoing development of this repository is documented in this [log](./docs/develop.md).
