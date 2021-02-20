@@ -2,6 +2,7 @@
 -   [Tasks](#tasks)
     -   [Current](#current)
     -   [Long-term](#long-term)
+    -   [Limitations and further work](#limitations-and-further-work)
 -   [Notes](#notes)
     -   [Research](#research)
     -   [Administrative](#administrative)
@@ -20,118 +21,65 @@
 
 ### Current
 
-1.  Tasks pre-writing
+1.  Manuscript
 
-    **DEADLINE:** *\<2021-02-21 Sun\>*
+    1.  set up all local writing tasks, extract tasks from notes below
+        to here
 
-    1.  Dedicated modelling
+    2.  compartmentalize certain tasks into further work section, and
+        leave others to current
 
-        1.  **TODO** perform grid-training with wider
-            parameters spaces and random seeds
+    3.  find decent book template with sufficient but still small enough
+        spacings
 
-            1.  vary tau argument in grid search and use values in range
-                from 0.00-0.75 -\> use a greater than zero tau value to
-                depend on fewer patterns
+2.  Model diversity
 
-            2.  repeat grid-search with multiple random seeds -\> do
-                this after all changes and run code multiple times to
-                maximize GPU memory usage
+    1.  run above explainability and comparison workflow on light models
+        first with different tau thresholds
 
-2.  Tasks intra-writing
-
-    1.  Visualization and summary-statistics
-
-        1.  Cross-model comparisons
-
-            1.  visualize examples where regex and neural model align
-                and misalign, eg. with a confusion matrix
-
-            2.  compute statistics over inter-model comparisons such as
-                average distance, misalignment, activation frequency and
-                other useful metrics that can elucidate on-the-ground
-                processes
-
-        2.  Regex OOP
-
-            1.  add visualization of regex ensemble with graphviz -\>
-                can specify which pattern to visualize and how to make
-                large scale visualizations
-
-            2.  visualize patterns as dots with internal pie charts
-                which show magnitudes of each class; displayed as a
-                colour with legend, will show relative importance of
-                each binary neuron and can help us segment their
-                purposes
-
-        3.  Model runs
-
-            1.  add visualizations of model runs using dedicated
-                functions, preferably all using python libraries
-
-        4.  SoPa++ computational graph
-
-            1.  add visualization of computational graph function
-                directly to sopa torch model
-
-    2.  Model diversity
-
-        1.  run above explainability and comparison workflow on larger
-            models with different tau thresholds
-
-        2.  will help to get decent sample sizes and effect of tau on
+        1.  will help to get decent sample sizes and effect of tau on
             explainability
 
-    3.  Speed of explainability execution
+        2.  would require overhead of running explainability workflow
+            over all models -\> could take some time
 
-        1.  attempt to multi-thread all regex-related scripts
+3.  Visualization and summary-statistics
 
-        2.  find out if individual compiled regex or full
-            bracket-compiled regex is better
+    1.  Cross-model comparisons
+
+        1.  visualize examples where regex and neural model align and
+            misalign, eg. with a confusion matrix
+
+        2.  compute statistics with random-seed deviations over
+            inter-model comparisons such as average distance,
+            misalignment, activation frequency and other useful metrics
+            that can elucidate on-the-ground processes
+
+    2.  Regex OOP
+
+        1.  add visualization of regex ensemble with graphviz -\> can
+            specify which pattern to visualize and how to make large
+            scale visualizations
+
+        2.  visualize patterns as dots with internal pie charts which
+            show magnitudes of each class; displayed as a colour with
+            legend, will show relative importance of each binary neuron
+            and can help us segment their purposes
+
+    3.  Model runs
+
+        1.  add visualizations of model runs using dedicated functions,
+            preferably all using python libraries, or otherwise
+            defaulting to R libraries
+
+    4.  SoPa++ computational graph
+
+        1.  add visualization of computational graph function directly
+            to sopa torch model
 
 ### Long-term
 
-1.  Explore activation generalization methods
-
-    1.  improve baseline simplification and rational compression method
-
-        1.  handle **UNK** tokens on new data for either in regex OOP or
-            during simplification/compression -\> perhaps look for best
-            possible match given context -\> **might be well-enough
-            handled by wildcards**
-
-        2.  EITHER needs more features from simplification such as
-            nearest neighbours OR generate them with access to the model
-            again -\> use comparison scripts to determine which
-            improvements are necessary -\> this should go into the
-            SoPa++ neural model below trace functions -\> look into
-            legacy code for some hints -\> \*might be well enough
-            handled by looking into enough training samples
-
-    2.  think of taking tokens in a regex group and finding their
-        **K-nearest-neighbours** in transition space to expand on them
-        if possible -\> only do this if there are few samples and if
-        their neighbours have very close scores (within eps), see:
-        <https://discuss.pytorch.org/t/k-nearest-neighbor-in-pytorch/59695/2>
-
-        1.  would require extra neural class function to compute all
-            transition matrices
-
-        2.  hard to justify these as compression techniques, more closer
-            to simplificiation -\> but perhaps this is just a
-            technicality which can be addressed later on
-
-        3.  might not help too much since regex model appears
-            over-activated at the binary layer compared to the neural
-            model -\> these compression generalizations will just
-            increase activations; where we would rather expect sparsity
-            instead
-
-    3.  think of semantic clustering with digits or time or other means
-        -\> if there are no wildcards present -\> would require external
-        ontology such as WordNet -\> would be slightly more work
-        intensive and is perhaps better to leave this for further work
-
-2.  Performance and explainability
+1.  Performance and explainability
 
     1.  rename `explain_spp` to something related to global
         explainability and mimic model construction, since another
@@ -153,7 +101,7 @@
     6.  ensure final published model has all new model parameters such
         as `tau_threshold` and `bias_scale` specified
 
-3.  Re-check potential pitfalls
+2.  Re-check potential pitfalls
 
     1.  add `with torch.no_grad()` scope indicator alongside
         `model.eval()` to perform inference/validation correctly and
@@ -166,23 +114,26 @@
     3.  check code for `squeeze()` call which can be problematic for dim
         1 tensors
 
-4.  Dependencies, typing and testing
+3.  Dependencies, typing and testing
 
-    1.  precisely type functions and classes on-the-fly -\> especially
+    1.  if using R, document R dependencies such as package versions
+        neatly
+
+    2.  precisely type functions and classes on-the-fly -\> especially
         for explainability scripts
 
-    2.  include basic test code by instantiating class and/or other
+    3.  include basic test code by instantiating class and/or other
         simple methods
 
-    3.  add mypy as an explicit part of testing the source code
+    4.  add mypy as an explicit part of testing the source code
 
-    4.  replace Union + None types with Optional type for conciseness
+    5.  replace Union + None types with Optional type for conciseness
 
-    5.  look into cases where List was replaced by Sequential and how
+    6.  look into cases where List was replaced by Sequential and how
         this can be changed or understood to keep consistency (ie. keep
         everything to List with overloads)
 
-5.  Documentation and clean-code
+4.  Documentation and clean-code
 
     1.  look again into argument parser which have `None` type defaults
         -\> they should be justified to be exceptional cases such as
@@ -236,6 +187,81 @@
         used, eg. remove pre-push hook
 
     16. test download and all other scripts to ensure they work
+
+### Limitations and further work
+
+1.  Model diversity
+
+    1.  run above explainability and comparison workflow on light models
+        first with different tau thresholds
+
+        1.  larger models could be further work pending regex efficiency
+            improvements
+
+2.  Modelling improvements (also limitations for future work)
+
+    1.  find single-threaded ways to speed up regular expression
+        searches -\> bottleneck appears to be search method
+
+        1.  multiprocessing with specific chunksize seems to have some
+            effect
+
+        2.  might need to have a very large batch size to see any
+            improvements with multiprocessing
+
+    2.  consider using finditer for regex lookup with trace, since we
+        should return all matches
+
+        1.  make activating text unique in case we return multiple texts
+            and not one -\> but then won\'t correspond to activating
+            regexes
+
+        2.  might not make a huge difference since we use short
+            sentences
+
+        3.  might be better for speed reasons to leave it as a search
+            method
+
+3.  Explore activation generalization methods
+
+    1.  improve baseline simplification and rational compression method
+
+        1.  handle **UNK** tokens on new data for either in regex OOP or
+            during simplification/compression -\> perhaps look for best
+            possible match given context -\> **might be well-enough
+            handled by wildcards**
+
+        2.  EITHER needs more features from simplification such as
+            nearest neighbours OR generate them with access to the model
+            again -\> use comparison scripts to determine which
+            improvements are necessary -\> this should go into the
+            SoPa++ neural model below trace functions -\> look into
+            legacy code for some hints -\> \*might be well enough
+            handled by looking into enough training samples
+
+    2.  think of taking tokens in a regex group and finding their
+        **K-nearest-neighbours** in transition space to expand on them
+        if possible -\> only do this if there are few samples and if
+        their neighbours have very close scores (within eps), see:
+        <https://discuss.pytorch.org/t/k-nearest-neighbor-in-pytorch/59695/2>
+
+        1.  would require extra neural class function to compute all
+            transition matrices
+
+        2.  hard to justify these as compression techniques, more closer
+            to simplificiation -\> but perhaps this is just a
+            technicality which can be addressed later on
+
+        3.  might not help too much since regex model appears
+            over-activated at the binary layer compared to the neural
+            model -\> these compression generalizations will just
+            increase activations; where we would rather expect sparsity
+            instead
+
+    3.  think of semantic clustering with digits or time or other means
+        -\> if there are no wildcards present -\> would require external
+        ontology such as WordNet -\> would be slightly more work
+        intensive and is perhaps better to leave this for further work
 
 ## Notes
 
@@ -342,7 +368,9 @@
 
     4.  ~~Topic registration: **01.02.2021**~~
 
-    5.  Manuscript submission: **31.03.2021**
+    5.  Projected manuscript completion: **31.03.2021**
+
+    6.  Offical manuscript submission: **10.04.2021**
 
 2.  Manuscript notes
 
@@ -459,6 +487,7 @@
             explainabilities closer together -\> if not then think of
             issues with this process -\> would be very interesting to
             explore this relationship on both smmall and large models
+            -\> binaries are saturated so maybe tau might help with this
 
         2.  think about why larger regex model tends to not be as close
             to neural as a smaller regex model -\> can also be
