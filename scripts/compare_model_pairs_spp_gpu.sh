@@ -4,9 +4,10 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: compare_dual_models_spp_cpu.sh [-h|--help] model_log_directory
+Usage: compare_model_pairs_spp_gpu.sh [-h|--help] model_log_directory
 
-Compare neural and regex SoPa++ models an evaluation data set on the CPU
+Compare neural and regex SoPa++ model pairs on an evaluation data set
+on a GPU
 
 Optional arguments:
   -h, --help                       Show this help message and exit
@@ -29,16 +30,16 @@ check_help() {
 }
 
 # define function
-compare_dual_models_spp_cpu() {
+compare_model_pairs_spp_gpu() {
   local model_log_directory
   model_log_directory="$1"
 
-  python3 -m src.compare_dual_models_spp \
+  python3 -m src.compare_model_pairs_spp \
     --eval-data "./data/facebook_multiclass_nlu/clean/test.uncased.data" \
     --eval-labels "./data/facebook_multiclass_nlu/clean/test.labels" \
-    --model-log-directory "$model_log_directory"
+    --model-log-directory "$model_log_directory" --gpu
 }
 
 # execute function
 check_help "$@"
-compare_dual_models_spp_cpu "$@"
+compare_model_pairs_spp_gpu "$@"
