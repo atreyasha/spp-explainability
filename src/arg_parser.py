@@ -160,7 +160,7 @@ def explain_simplify_arg_parser() -> argparse.ArgumentParser:
                           required=True,
                           type=file_path)
     required.add_argument("--neural-model-checkpoint",
-                          help=("Path to neural model checkpoint(s) with "
+                          help=("Glob path to neural model checkpoint(s) with "
                                 "'.pt' extension"),
                           required=True,
                           type=glob_path)
@@ -189,7 +189,7 @@ def explain_compress_arg_parser() -> argparse.ArgumentParser:
     # add group for required arguments
     required = parser.add_argument_group('required explainability arguments')
     required.add_argument("--regex-model-checkpoint",
-                          help=("Path to regex model checkpoint(s) "
+                          help=("Glob path to regex model checkpoint(s) "
                                 "with '.pt' extension"),
                           required=True,
                           type=glob_path)
@@ -210,15 +210,16 @@ def evaluate_arg_parser(compare: bool = False) -> argparse.ArgumentParser:
                           type=file_path)
     if compare:
         required.add_argument("--model-log-directory",
-                              help=("Model log directory/directories which "
+                              help=("Glob path to model log directory/"
+                                    "directories which "
                                     "contain both the best neural and "
                                     "compressed regex models"),
                               required=True,
                               type=glob_path)
     else:
         required.add_argument("--model-checkpoint",
-                              help=("Path to model checkpoint(s) with '.pt' "
-                                    "extension"),
+                              help=("Glob path to model checkpoint(s) with "
+                                    "'.pt' extension"),
                               required=True,
                               type=glob_path)
     # add group for optional arguments
