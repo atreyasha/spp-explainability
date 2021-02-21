@@ -2,7 +2,6 @@
 -   [Tasks](#tasks)
     -   [Current](#current)
     -   [Long-term](#long-term)
-    -   [Limitations and further work](#limitations-and-further-work)
 -   [Notes](#notes)
     -   [Research](#research)
     -   [Administrative](#administrative)
@@ -23,18 +22,31 @@
 
 1.  Manuscript
 
-    1.  set up all local writing tasks, extract tasks from notes below
-        to here
+    1.  **TODO** Set up all local writing tasks, extract
+        tasks from notes below to here and tidy up all notes
 
-    2.  compartmentalize certain tasks into further work section, and
-        leave others to current
+        1.  compartmentalize certain tasks into further work section,
+            and leave others to current
 
-    3.  find decent book template with sufficient but still small enough
-        spacings
+    2.  Thesis formatting
+
+        1.  fill up title page and other basic information
+
+        2.  remove red link color in table of contents, fix color of
+            citation dates
+
+        3.  attempt using two sided format but remove ghost pages if
+            possible
+
+        4.  add Uni-Potsdam declaration
+
+        5.  add remaining features by referring to master template such
+            as abstract, list of tables/figures/abbreviations,
+            appendices, and all others
 
 2.  Model diversity
 
-    1.  run above explainability and comparison workflow on light models
+    1.  Run above explainability and comparison workflow on light models
         first with different tau thresholds
 
         1.  will help to get decent sample sizes and effect of tau on
@@ -187,81 +199,6 @@
         used, eg. remove pre-push hook
 
     16. test download and all other scripts to ensure they work
-
-### Limitations and further work
-
-1.  Model diversity
-
-    1.  run above explainability and comparison workflow on light models
-        first with different tau thresholds
-
-        1.  larger models could be further work pending regex efficiency
-            improvements
-
-2.  Modelling improvements (also limitations for future work)
-
-    1.  find single-threaded ways to speed up regular expression
-        searches -\> bottleneck appears to be search method
-
-        1.  multiprocessing with specific chunksize seems to have some
-            effect
-
-        2.  might need to have a very large batch size to see any
-            improvements with multiprocessing
-
-    2.  consider using finditer for regex lookup with trace, since we
-        should return all matches
-
-        1.  make activating text unique in case we return multiple texts
-            and not one -\> but then won\'t correspond to activating
-            regexes
-
-        2.  might not make a huge difference since we use short
-            sentences
-
-        3.  might be better for speed reasons to leave it as a search
-            method
-
-3.  Explore activation generalization methods
-
-    1.  improve baseline simplification and rational compression method
-
-        1.  handle **UNK** tokens on new data for either in regex OOP or
-            during simplification/compression -\> perhaps look for best
-            possible match given context -\> **might be well-enough
-            handled by wildcards**
-
-        2.  EITHER needs more features from simplification such as
-            nearest neighbours OR generate them with access to the model
-            again -\> use comparison scripts to determine which
-            improvements are necessary -\> this should go into the
-            SoPa++ neural model below trace functions -\> look into
-            legacy code for some hints -\> \*might be well enough
-            handled by looking into enough training samples
-
-    2.  think of taking tokens in a regex group and finding their
-        **K-nearest-neighbours** in transition space to expand on them
-        if possible -\> only do this if there are few samples and if
-        their neighbours have very close scores (within eps), see:
-        <https://discuss.pytorch.org/t/k-nearest-neighbor-in-pytorch/59695/2>
-
-        1.  would require extra neural class function to compute all
-            transition matrices
-
-        2.  hard to justify these as compression techniques, more closer
-            to simplificiation -\> but perhaps this is just a
-            technicality which can be addressed later on
-
-        3.  might not help too much since regex model appears
-            over-activated at the binary layer compared to the neural
-            model -\> these compression generalizations will just
-            increase activations; where we would rather expect sparsity
-            instead
-
-    3.  think of semantic clustering with digits or time or other means
-        -\> if there are no wildcards present -\> would require external
-        ontology such as WordNet -\> would be slightly more work
-        intensive and is perhaps better to leave this for further work
 
 ## Notes
 
@@ -541,6 +478,84 @@
             approximate symbolic representations
 
         18. extension/recommendations -\> transducer for seq2seq tasks
+
+3.  Limitations and further work
+
+    1.  Model diversity
+
+        1.  run above explainability and comparison workflow on light
+            models first with different tau thresholds
+
+            1.  larger models could be further work pending regex
+                efficiency improvements
+
+    2.  Modelling improvements (also limitations for future work)
+
+        1.  find single-threaded ways to speed up regular expression
+            searches -\> bottleneck appears to be search method
+
+            1.  multiprocessing with specific chunksize seems to have
+                some effect
+
+            2.  might need to have a very large batch size to see any
+                improvements with multiprocessing
+
+        2.  consider using finditer for regex lookup with trace, since
+            we should return all matches
+
+            1.  make activating text unique in case we return multiple
+                texts and not one -\> but then won\'t correspond to
+                activating regexes
+
+            2.  might not make a huge difference since we use short
+                sentences
+
+            3.  might be better for speed reasons to leave it as a
+                search method
+
+    3.  Explore activation generalization methods
+
+        1.  improve baseline simplification and rational compression
+            method
+
+            1.  handle **UNK** tokens on new data for either in regex
+                OOP or during simplification/compression -\> perhaps
+                look for best possible match given context -\> **might
+                be well-enough handled by wildcards**
+
+            2.  EITHER needs more features from simplification such as
+                nearest neighbours OR generate them with access to the
+                model again -\> use comparison scripts to determine
+                which improvements are necessary -\> this should go into
+                the SoPa++ neural model below trace functions -\> look
+                into legacy code for some hints -\> \*might be well
+                enough handled by looking into enough training samples
+
+        2.  think of taking tokens in a regex group and finding their
+            **K-nearest-neighbours** in transition space to expand on
+            them if possible -\> only do this if there are few samples
+            and if their neighbours have very close scores (within eps),
+            see:
+            <https://discuss.pytorch.org/t/k-nearest-neighbor-in-pytorch/59695/2>
+
+            1.  would require extra neural class function to compute all
+                transition matrices
+
+            2.  hard to justify these as compression techniques, more
+                closer to simplificiation -\> but perhaps this is just a
+                technicality which can be addressed later on
+
+            3.  might not help too much since regex model appears
+                over-activated at the binary layer compared to the
+                neural model -\> these compression generalizations will
+                just increase activations; where we would rather expect
+                sparsity instead
+
+        3.  think of semantic clustering with digits or time or other
+            means -\> if there are no wildcards present -\> would
+            require external ontology such as WordNet -\> would be
+            slightly more work intensive and is perhaps better to leave
+            this for further work
 
 ## Completed
 

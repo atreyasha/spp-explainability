@@ -5,11 +5,17 @@
 ** Tasks
 *** Current
 **** Manuscript
-***** set up all local writing tasks, extract tasks from notes below to here
-***** compartmentalize certain tasks into further work section, and leave others to current
-***** find decent book template with sufficient but still small enough spacings
+***** TODO Set up all local writing tasks, extract tasks from notes below to here and tidy up all notes
+****** compartmentalize certain tasks into further work section, and leave others to current
+***** Thesis formatting
+****** fill up title page and other basic information
+****** remove red link color in table of contents, fix color of citation dates
+****** attempt using two sided format but remove ghost pages if possible
+****** add Uni-Potsdam declaration
+****** add remaining features by referring to master template such as abstract, list of tables/figures/abbreviations, appendices, and all others
+
 **** Model diversity
-***** run above explainability and comparison workflow on light models first with different tau thresholds
+***** Run above explainability and comparison workflow on light models first with different tau thresholds
 ****** will help to get decent sample sizes and effect of tau on explainability
 ****** would require overhead of running explainability workflow over all models -> could take some time
 **** Visualization and summary-statistics
@@ -61,28 +67,6 @@
 ***** update/remove git hooks depending on which features are finally used, eg. remove pre-push hook
 ***** test download and all other scripts to ensure they work
 
-*** Limitations and further work
-**** Model diversity
-***** run above explainability and comparison workflow on light models first with different tau thresholds
-****** larger models could be further work pending regex efficiency improvements
-**** Modelling improvements (also limitations for future work)
-***** find single-threaded ways to speed up regular expression searches -> bottleneck appears to be search method
-****** multiprocessing with specific chunksize seems to have some effect
-****** might need to have a very large batch size to see any improvements with multiprocessing
-***** consider using finditer for regex lookup with trace, since we should return all matches
-****** make activating text unique in case we return multiple texts and not one -> but then won't correspond to activating regexes
-****** might not make a huge difference since we use short sentences
-****** might be better for speed reasons to leave it as a search method
-**** Explore activation generalization methods
-***** improve baseline simplification and rational compression method
-****** handle *UNK* tokens on new data for either in regex OOP or during simplification/compression -> perhaps look for best possible match given context -> *might be well-enough handled by wildcards*
-****** EITHER needs more features from simplification such as nearest neighbours OR generate them with access to the model again -> use comparison scripts to determine which improvements are necessary -> this should go into the SoPa++ neural model below trace functions -> look into legacy code for some hints -> *might be well enough handled by looking into enough training samples
-***** think of taking tokens in a regex group and finding their *K-nearest-neighbours* in transition space to expand on them if possible -> only do this if there are few samples and if their neighbours have very close scores (within eps), see: https://discuss.pytorch.org/t/k-nearest-neighbor-in-pytorch/59695/2
-****** would require extra neural class function to compute all transition matrices
-****** hard to justify these as compression techniques, more closer to simplificiation -> but perhaps this is just a technicality which can be addressed later on
-****** might not help too much since regex model appears over-activated at the binary layer compared to the neural model -> these compression generalizations will just increase activations; where we would rather expect sparsity instead
-***** think of semantic clustering with digits or time or other means -> if there are no wildcards present -> would require external ontology such as WordNet -> would be slightly more work intensive and is perhaps better to leave this for further work
-      
 ** Notes
 *** Research
 **** SoPa++
@@ -182,7 +166,29 @@
 ****** FSA/WFSAs -> input theoretical CS, mathematics background to describe these
 ****** ANN's historical literature -> describe how ANNs approximate symbolic representations
 ****** extension/recommendations -> transducer for seq2seq tasks
-       
+
+**** Limitations and further work
+***** Model diversity
+****** run above explainability and comparison workflow on light models first with different tau thresholds
+******* larger models could be further work pending regex efficiency improvements
+***** Modelling improvements (also limitations for future work)
+****** find single-threaded ways to speed up regular expression searches -> bottleneck appears to be search method
+******* multiprocessing with specific chunksize seems to have some effect
+******* might need to have a very large batch size to see any improvements with multiprocessing
+****** consider using finditer for regex lookup with trace, since we should return all matches
+******* make activating text unique in case we return multiple texts and not one -> but then won't correspond to activating regexes
+******* might not make a huge difference since we use short sentences
+******* might be better for speed reasons to leave it as a search method
+***** Explore activation generalization methods
+****** improve baseline simplification and rational compression method
+******* handle *UNK* tokens on new data for either in regex OOP or during simplification/compression -> perhaps look for best possible match given context -> *might be well-enough handled by wildcards*
+******* EITHER needs more features from simplification such as nearest neighbours OR generate them with access to the model again -> use comparison scripts to determine which improvements are necessary -> this should go into the SoPa++ neural model below trace functions -> look into legacy code for some hints -> *might be well enough handled by looking into enough training samples
+****** think of taking tokens in a regex group and finding their *K-nearest-neighbours* in transition space to expand on them if possible -> only do this if there are few samples and if their neighbours have very close scores (within eps), see: https://discuss.pytorch.org/t/k-nearest-neighbor-in-pytorch/59695/2
+******* would require extra neural class function to compute all transition matrices
+******* hard to justify these as compression techniques, more closer to simplificiation -> but perhaps this is just a technicality which can be addressed later on
+******* might not help too much since regex model appears over-activated at the binary layer compared to the neural model -> these compression generalizations will just increase activations; where we would rather expect sparsity instead
+****** think of semantic clustering with digits or time or other means -> if there are no wildcards present -> would require external ontology such as WordNet -> would be slightly more work intensive and is perhaps better to leave this for further work
+        
 ** Completed
 ***** DONE modify normalizer to ignore calculation of all infinities via minimal value replacement
       CLOSED: [2021-01-27 Wed 19:19]
