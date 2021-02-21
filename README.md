@@ -334,8 +334,8 @@ required evaluation arguments:
   --eval-labels             <file_path>
                             Path to evaluation labels file (default: None)
   --model-checkpoint        <glob_path>
-                            Path to model checkpoint(s) with '.pt' extension
-                            (default: None)
+                            Glob path to model checkpoint(s) with '.pt'
+                            extension (default: None)
 
 optional evaluation arguments:
   --batch-size              <int>
@@ -427,8 +427,8 @@ optional arguments:
 
 required explainability arguments:
   --neural-model-checkpoint  <glob_path>
-                             Path to neural model checkpoint(s) with '.pt'
-                             extension (default: None)
+                             Glob path to neural model checkpoint(s) with
+                             '.pt' extension (default: None)
   --train-data               <file_path>
                              Path to train data file (default: None)
   --train-labels             <file_path>
@@ -502,7 +502,7 @@ optional arguments:
 
 required explainability arguments:
   --regex-model-checkpoint  <glob_path>
-                            Path to regex model checkpoint(s) with '.pt'
+                            Glob path to regex model checkpoint(s) with '.pt'
                             extension (default: None)
 
 optional logging arguments:
@@ -550,7 +550,7 @@ required evaluation arguments:
   --eval-labels         <file_path>
                         Path to evaluation labels file (default: None)
   --model-checkpoint    <glob_path>
-                        Path to model checkpoint(s) with '.pt' extension
+                        Glob path to model checkpoint(s) with '.pt' extension
                         (default: None)
 
 optional evaluation arguments:
