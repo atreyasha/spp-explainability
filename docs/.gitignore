@@ -18,3 +18,5 @@
 *.zip
 *.anthology.bib
 *-blx.bib
+*.lot
+*.lof
