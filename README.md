@@ -600,13 +600,13 @@ bash scripts/evaluate_regex_spp_gpu.sh "/glob/to/regex/model/*/checkpoint(s)"
 
 ### Neural vs. Regex SoPa++
 
-<details><summary>i. Dual comparison</summary>
+<details><summary>i. Model pair comparison</summary>
 <p>
 
-For comparing neural SoPa++ model(s) and corresponding regex SoPa++ model(s), we use `src/compare_dual_models_spp.py`:
+For comparing neural and corresponding regex SoPa++ model pair(s), we use `src/compare_model_pairs_spp.py`:
 
 ```
-usage: compare_dual_models_spp.py [-h] --eval-data <file_path> --eval-labels
+usage: compare_model_pairs_spp.py [-h] --eval-data <file_path> --eval-labels
                                   <file_path> --model-log-directory
                                   <glob_path> [--atol <float>]
                                   [--batch-size <int>] [--disable-tqdm]
@@ -626,9 +626,9 @@ required evaluation arguments:
   --eval-labels          <file_path>
                          Path to evaluation labels file (default: None)
   --model-log-directory  <glob_path>
-                         Model log directory/directories which contain both
-                         the best neural and compressed regex models (default:
-                         None)
+                         Glob path to model log directory/directories which
+                         contain both the best neural and compressed regex
+                         models (default: None)
 
 optional evaluation arguments:
   --atol                 <float>
@@ -666,13 +666,13 @@ optional progress-bar arguments:
 To compare neural and regex SoPa++ model pair(s) using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/compare_dual_models_spp_cpu.sh "/glob/to/model/log/*/director(ies)"
+bash scripts/compare_model_pairs_spp_cpu.sh "/glob/to/model/log/*/director(ies)"
 ```
 
 To compare neural and regex SoPa++ model pair(s) using our defaults on a GPU, execute:
 
 ```shell
-bash scripts/compare_dual_models_spp_gpu.sh "/glob/to/model/log/*/director(ies)"
+bash scripts/compare_model_pairs_spp_gpu.sh "/glob/to/model/log/*/director(ies)"
 ```
 
 </p>
