@@ -307,8 +307,7 @@ class SoftPatternClassifier(Module):
 
         # conditionally return different tensors depending on routine
         if interim:
-            interim_scores = torch.stack((interim_scores, scores), 1)
-            return interim_scores
+            return torch.stack((interim_scores, scores), 1)
         else:
             return self.linear.forward(scores)
 
