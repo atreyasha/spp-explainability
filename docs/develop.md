@@ -1,10 +1,12 @@
 ## Table of Contents
--   [Tasks](#tasks)
-    -   [Current](#current)
-    -   [Long-term](#long-term)
+-   [Current tasks](#current-tasks)
+    -   [Manuscript](#manuscript)
+    -   [Programming](#programming)
+-   [Future tasks](#future-tasks)
+    -   [Programming](#programming-1)
 -   [Notes](#notes)
-    -   [Research](#research)
-    -   [Administrative](#administrative)
+    -   [Manuscript](#manuscript-1)
+    -   [Admin](#admin)
 -   [Completed](#completed)
 -   [Legacy](#legacy)
     -   [Interpretable RNN
@@ -16,46 +18,200 @@
     -   [Inductive logic on NLP search
         spaces](#inductive-logic-on-nlp-search-spaces)
 
-## Tasks
+## Current tasks
 
-### Current
+### Manuscript
 
-1.  Manuscript
+1.  Structured content
 
-    1.  **TODO** Set up all local writing tasks, extract
-        tasks from notes below to here and tidy up all notes
+    1.  Introduction
 
-        1.  compartmentalize certain tasks into further work section,
-            and leave others to current
+        1.  add research questions to introduction
 
-    2.  Thesis formatting
+        2.  make \"highly performant\" more specific
 
-        1.  fill up title page and other basic information
+        3.  fix absolute terms such as \"automated reasoning\", or quote
+            directly from paper
 
-        2.  remove red link color in table of contents, fix color of
-            citation dates
+        4.  add more information on what competitive performance means
+            (eg. within few F_1 points)
 
-        3.  attempt using two sided format but remove ghost pages if
-            possible
+        5.  re-consider reference to Transformers for dynamic sub-word
+            level word-embeddings
 
-        4.  add Uni-Potsdam declaration
+        6.  make claim that SoPa++ explainability has a different
+            explainability taxonomy from that of vanilla SoPa, but
+            don\'t claim it is decisively better
 
-        5.  add remaining features by referring to master template such
+    2.  Background concepts
+
+        1.  ANN\'s historical literature -\> describe how ANNs
+            approximate symbolic representations
+
+        2.  Explainability
+
+            1.  qualify what does it mean to be explainable and how to
+                define this
+
+            2.  mention that explainability focuses on exposing the
+                model\'s logic and not on necessarily creating
+                rationality in the model
+
+            3.  make hierarchy for local vs. global explainability -\>
+                can provide hints of differences here
+
+            4.  explainability is only relevant if the oracle and mimic
+                models both **perform competitively and have similar
+                confusion matrix profiles**
+
+            5.  provide some metrics or tangible task-based insights to
+                show how new explainability works
+
+            6.  clarify meaning and concept of \"occlusion\" as
+                leave-one-out perturbation analysis
+
+            7.  improve arbitrary vs. contrained oracle phrasing -\>
+                perhaps black-box vs. white-box but more specific
+
+        3.  FSA/WFSAs -\> input theoretical CS, mathematics background
+            to describe these
+
+            1.  use more appropriate and generalized semiring
+                terminology from Peng et al. 2019 -\> more generalized
+                compared to SoPa paper
+
+            2.  semirings, abstract algebra and how they are used for
+                finite-state machines in Forward and Viterbi algorithms
+                -\> go deeper into this to get some background
+
+    3.  Methodologies
+
+        1.  Quantization/Binarization
+
+            1.  change STE citation to 2013 paper which is more
+                fundamental, use different name depending on context:
+                <https://arxiv.org/abs/1308.3432>
+
+            2.  cite and explain straight-through estimation (STE), and
+                what benefits this is supposed to bring
+
+            3.  how does binarizing help with explainability, justify
+                requirement for it in both training and testing
+
+        2.  Visualizations
+
+            1.  add visualization of in-depth computational graph in
+                paper for clarity -\> this can be automated
+
+            2.  produce manual computational graph using tikz, building
+                from what was made earlier
+
+    4.  Results
+
+        1.  Visualizations
+
+            1.  produce visualization of training performance using
+                python frameworks rather than R
+
+            2.  produce visualizations of regex ensembles which would be
+                interesting, and also pattern activations
+
+        2.  Compare results to that of other paper(s)
+
+    5.  Discussion
+
+        1.  addresss interesting observations and their implications
+
+        2.  expound on trade-off between performance and explainability
+            and process of mimic extraction
+
+        3.  how can a user make use of the mimic model and what benefits
+            are there for the user in terms of security/safety/etc -\>
+            or could add this to further work
+
+        4.  mention possibilities of fixing errors on the test set with
+            general changes to the regex model which are much easier to
+            do compared to the tensor model
+
+        5.  show cases where we could avoid adversarial cases using the
+            insight of the regex model
+
+        6.  run explainability and evaluation comparisons on models
+            trained with different and increasing tau values to
+            experiment how this affects performance/explainability -\>
+            hypothesis is that this might bring regex and neural
+            explainabilities closer together -\> if not then think of
+            issues with this process -\> would be very interesting to
+            explore this relationship on both smmall and large models
+            -\> binaries are saturated so maybe tau might help with this
+
+    6.  Conclusions
+
+        1.  summarize everything in manuscript and address research
+            questions
+
+    7.  Further work
+
+        1.  look into future programming tasks and add their content
+            here -\> there are many points to consider
+
+        2.  mention about how it is not easy to evaluate the \"quality
+            of explainability\" and to say one explainability is better
+            than the other -\> aside from a theoretical perspective
+
+        3.  perhaps suggest how this explainability could be evaluated
+            via conducting a survey and getting rating from people
+
+        4.  porting this technique to a transformer where possible -\>
+            but mention limitations of everything being context
+            dependent
+
+        5.  extension/recommendations -\> transducer for seq2seq tasks
+
+        6.  can map linear to decision tree to get clearer picture of
+            possibilities
+
+        7.  would be interesting to deterministically export which
+            patterns for sure lead to which class, could help to
+            identify adversarial samples via tinkering
+
+        8.  database with indexing could help improve regex lookup speed
+            -\> further work
+
+        9.  think about why larger regex model tends to not be as close
+            to neural as a smaller regex model -\> can also be
+            investigated with different models
+
+2.  Formatting
+
+    1.  Paper length
+
+        1.  20-90 pages thesis length -\> try to keep ideas
+            well-motivated yet succinct
+
+    2.  Points to address towards end
+
+        1.  improve capitalization with braces in bibtex file
+
+        2.  remove red link color in table of contents
+
+        3.  fine-tune citation color to be consistent with other colors
+
+        4.  change to two sided format before printing, as this works
+            well for binding/printing
+
+        5.  add Uni-Potsdam originality declaration, or modify current
+            one to fit
+
+        6.  add remaining features by referring to master template such
             as abstract, list of tables/figures/abbreviations,
             appendices, and all others
 
-2.  Model diversity
+        7.  perform spell-check of everything at the end
 
-    1.  Run above explainability and comparison workflow on light models
-        first with different tau thresholds
+### Programming
 
-        1.  will help to get decent sample sizes and effect of tau on
-            explainability
-
-        2.  would require overhead of running explainability workflow
-            over all models -\> could take some time
-
-3.  Visualization and summary-statistics
+1.  Visualization and summary-statistics
 
     1.  Cross-model comparisons
 
@@ -89,120 +245,147 @@
         1.  add visualization of computational graph function directly
             to sopa torch model
 
-### Long-term
-
-1.  Performance and explainability
-
-    1.  rename `explain_spp` to something related to global
-        explainability and mimic model construction, since another
-        script will be needed to conduct local explanations
-
-    2.  add check to ensure start, end and pad tokens don\'t occur
-        adversarially inside sequence -\> `nltk.word_tokenize` already
-        breaks these up
-
-    3.  add predict function for both mimic and oracle model which does
-        not need extra data to be loaded -\> can also accept stdin as
-        unix pipe
-
-    4.  when comparing model performance with other studies, consider
-        only lowercasing and not making unique the test set
-
-    5.  check if packed sequences could be incoporated into model
-
-    6.  ensure final published model has all new model parameters such
-        as `tau_threshold` and `bias_scale` specified
-
-2.  Re-check potential pitfalls
-
-    1.  add `with torch.no_grad()` scope indicator alongside
-        `model.eval()` to perform inference/validation correctly and
-        efficiently
-
-    2.  replace all legacy `tensor.data` calls with `tensor.detach()`
-        for safety and `tensor.detach().clone()` for cases where data is
-        being updated
-
-    3.  check code for `squeeze()` call which can be problematic for dim
-        1 tensors
-
-3.  Dependencies, typing and testing
+2.  Dependencies, typing and testing
 
     1.  if using R, document R dependencies such as package versions
-        neatly
+        neatly (avoid `renv`)
 
-    2.  precisely type functions and classes on-the-fly -\> especially
-        for explainability scripts
-
-    3.  include basic test code by instantiating class and/or other
+    2.  include basic test code by instantiating class and/or other
         simple methods
 
-    4.  add mypy as an explicit part of testing the source code
+    3.  add mypy as an explicit part of testing the source code
 
-    5.  replace Union + None types with Optional type for conciseness
+    4.  replace Union + None types with Optional type for conciseness
 
-    6.  look into cases where List was replaced by Sequential and how
+    5.  look into cases where List was replaced by Sequential and how
         this can be changed or understood to keep consistency (ie. keep
         everything to List with overloads)
 
-4.  Documentation and clean-code
+3.  Documentation and clean-code
 
-    1.  look again into argument parser which have `None` type defaults
-        -\> they should be justified to be exceptional cases such as
-        dynamic constants
-
-    2.  fix up filenames later on to keep things consistent, eg. `spp`
-        vs. `regex_spp` vs. `spp_regex` etc.
-
-    3.  clean out source code with newer and more efficient workflows,
-        consistent variable namings and function definitions on-the-fly
-
-    4.  add different usages for different types of models
-
-    5.  settle argument parser examples where some defaults are `None`,
-        perhaps we could use another way to specify what default values
-        will be chosen, or perhaps only leave arguments to `None` when
-        there is no other semantic choice
-
-    6.  remove cases where variables from argument namespace are
-        redefined as local variables, a common example of this is with
-        `args.model_log_directory` and `model_log_directory`
-
-    7.  find better naming for mimic/oracle models which is based on
+    1.  find better naming for mimic/oracle models which is based on
         research terminology -\> right now mix of neural and regex is
         being used; it would be good to have something more firm
 
-    8.  GPU/CPU runs not always reproducible depending on
+    2.  GPU/CPU runs not always reproducible depending on
         multi-threading, see:
         <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    9.  reduce source code lines, chunking and comments -\> pretty sort
+    3.  reduce source code lines, chunking and comments -\> pretty sort
         python code and function/class orders perhaps by length
 
-    10. add a comment to each code chunk which explains inner mechanisms
+    4.  add a comment to each code chunk which explains inner mechanisms
         better
 
-    11. update metadata eg. with comprehensive python/shell help
+    5.  update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    12. add information on best model downloads and preparation -\> add
+    6.  add information on best model downloads and preparation -\> add
         these to Google Drive later on
 
-    13. add pydocstrings to all functions and improve argparse
+    7.  add pydocstrings to all functions and improve argparse
         documentation
 
-    14. provide description of data structures (eg. data, labels)
-        required for training processes
+    8.  provide description of data structures (eg. data, labels)
+        required for training processes and lowercasing
 
-    15. update/remove git hooks depending on which features are finally
+    9.  update/remove git hooks depending on which features are finally
         used, eg. remove pre-push hook
 
-    16. test download and all other scripts to ensure they work
+    10. test download and all other scripts to ensure they work
+
+## Future tasks
+
+### Programming
+
+1.  Model diversity
+
+    1.  run above explainability and comparison workflow on larger
+        models after efficiency improvements
+
+2.  Modelling improvements
+
+    1.  check if packed sequences could be incoporated into model
+
+        1.  might increase efficiency related to batch latency
+
+    2.  find single-threaded ways to speed up regular expression
+        searches -\> bottleneck appears to be search method
+
+        1.  multiprocessing with specific chunksize seems to have some
+            effect
+
+        2.  might need to have a very large batch size to see any
+            improvements with multiprocessing
+
+    3.  consider using finditer for regex lookup with trace, since we
+        should return all matches
+
+        1.  make activating text unique in case we return multiple texts
+            and not one -\> but then won\'t correspond to activating
+            regexes
+
+        2.  might not make a huge difference since we use short
+            sentences
+
+        3.  might be better for speed reasons to leave it as a search
+            method
+
+3.  Model features
+
+    1.  add check to ensure start, end and pad tokens don\'t occur
+        adversarially inside sequence -\> `nltk.word_tokenize` already
+        breaks these up
+
+    2.  add predict function for both mimic and oracle model which does
+        not need extra data to be loaded -\> can also accept stdin as
+        unix pipe
+
+4.  Explore activation generalization methods
+
+    1.  improve baseline simplification and rational compression method
+
+        1.  handle **UNK** tokens on new data for either in regex OOP or
+            during simplification/compression -\> perhaps look for best
+            possible match given context -\> **might be well-enough
+            handled by wildcards**
+
+        2.  EITHER needs more features from simplification such as
+            nearest neighbours OR generate them with access to the model
+            again -\> use comparison scripts to determine which
+            improvements are necessary -\> this should go into the
+            SoPa++ neural model below trace functions -\> look into
+            legacy code for some hints -\> \*might be well enough
+            handled by looking into enough training samples
+
+    2.  think of taking tokens in a regex group and finding their
+        **K-nearest-neighbours** in transition space to expand on them
+        if possible -\> only do this if there are few samples and if
+        their neighbours have very close scores (within eps), see:
+        <https://discuss.pytorch.org/t/k-nearest-neighbor-in-pytorch/59695/2>
+
+        1.  would require extra neural class function to compute all
+            transition matrices
+
+        2.  hard to justify these as compression techniques, more closer
+            to simplificiation -\> but perhaps this is just a
+            technicality which can be addressed later on
+
+        3.  might not help too much since regex model appears
+            over-activated at the binary layer compared to the neural
+            model -\> these compression generalizations will just
+            increase activations; where we would rather expect sparsity
+            instead
+
+    3.  think of semantic clustering with digits or time or other means
+        -\> if there are no wildcards present -\> would require external
+        ontology such as WordNet -\> would be slightly more work
+        intensive and is perhaps better to leave this for further work
 
 ## Notes
 
-### Research
+### Manuscript
 
 1.  SoPa++
 
@@ -280,9 +463,11 @@
     2.  seq2cls tasks -\> eg. NLU/NLI/semantic tasks, try to work with
         simpler single (vs. double) sequence classification task
 
-    3.  base main ideas off peer-reviewed articles
+    3.  base main ideas off peer-reviewed artics
 
-6.  Research questions
+### Admin
+
+1.  Research questions
 
     1.  To what extent does SoPa++ contribute to competitive performance
         on NLU tasks?
@@ -293,9 +478,7 @@
     3.  What interesting and relevant explanations does SoPa++ provide
         on NLU task(s)?
 
-### Administrative
-
-1.  Timeline
+2.  Timeline
 
     1.  ~~Initial thesis document: **15.09.2020**~~
 
@@ -308,254 +491,6 @@
     5.  Projected manuscript completion: **31.03.2021**
 
     6.  Offical manuscript submission: **10.04.2021**
-
-2.  Manuscript notes
-
-    1.  Paper length
-
-        1.  20-90 pages thesis length -\> try to keep ideas
-            well-motivated yet succinct
-
-    2.  Feedback-based
-
-        1.  General
-
-            1.  make abstract more specific in terms of \"highly
-                performant\"
-
-            2.  fix absolute terms such as \"automated reasoning\", or
-                quote directly from paper
-
-            3.  re-consider reference to Transformers for dynamic
-                sub-word level word-embeddings
-
-            4.  improve capitalization with braces in bibtex file
-
-            5.  clarify meaning and concept of \"occlusion\" as
-                leave-one-out perturbation analysis
-
-            6.  improve arbitrary vs. contrained oracle phrasing -\>
-                perhaps black-box vs. white-box but more specific
-
-            7.  add more information on what competitive performance
-                means (eg. within few F_1 points)
-
-        2.  Visualizations
-
-            1.  add visualization of in-depth computational graph in
-                paper for clarity -\> this can be automated
-
-            2.  use graphical TikZ editor for creating graphs -\>
-                produce pretty graph to show processing
-
-            3.  produce visualization of training performance using
-                python frameworks rather than R
-
-            4.  produce visualizations of regex ensembles which would be
-                interesting, and also pattern activations
-
-        3.  Quantization/Binarization
-
-            1.  change STE citation to 2013 paper which is more
-                fundamental, use different name depending on context:
-                <https://arxiv.org/abs/1308.3432>
-
-            2.  cite and explain straight-through estimation (STE), and
-                what benefits this is supposed to bring
-
-            3.  how does binarizing help with explainability, justify
-                requirement for it in both training and testing
-
-        4.  Explainability
-
-            1.  qualify what does it mean to be explainable and how to
-                define this
-
-            2.  expound on trade-off between performance and
-                explainability and process of mimic extraction
-
-            3.  mention that explainability focuses on exposing the
-                model\'s logic and not on necessarily creating
-                rationality in the model
-
-            4.  how can a user make use of the mimic model and what
-                benefits are there for the user in terms of
-                security/safety/etc?
-
-            5.  look at correctly classified samples and see if
-                explanations make sense in general, also can do the same
-                for wrongly classified examples
-
-            6.  make claim that SoPa++ explainability is different from
-                that of vanilla SoPa, but don\'t necessarily say it is
-                better
-
-                1.  make hierarchy for local vs. global explainability
-                    -\> can provide hints of differences here
-
-                2.  explainability is only relevant if the oracle and
-                    mimic models both **perform competitively and have
-                    similar confusion matrix profiles**
-
-                3.  provide some metrics or tangible task-based insights
-                    to show how new explainability works
-
-        5.  Further work
-
-            1.  mention about how it is not easy to evaluate the
-                \"quality of explainability\" and to say one
-                explainability is better than the other -\> aside from a
-                theoretical perspective
-
-            2.  perhaps suggest how this explainability could be
-                evaluated via conducting a survey and getting rating
-                from people
-
-            3.  porting this technique to a transformer where possible
-                -\> but mention limitations of everything being context
-                dependent
-
-    3.  Own-thoughts
-
-        1.  run explainability and evaluation comparisons on models
-            trained with different and increasing tau values to
-            experiment how this affects performance/explainability -\>
-            hypothesis is that this might bring regex and neural
-            explainabilities closer together -\> if not then think of
-            issues with this process -\> would be very interesting to
-            explore this relationship on both smmall and large models
-            -\> binaries are saturated so maybe tau might help with this
-
-        2.  think about why larger regex model tends to not be as close
-            to neural as a smaller regex model -\> can also be
-            investigated with different models
-
-        3.  read paper again to get some familiarity with terms and
-            algorithms
-
-        4.  database with indexing could help improve regex lookup speed
-            -\> further work
-
-        5.  provide evidence for why different forms of compression
-            improve explainable model performance
-
-        6.  can map linear to decision tree as extra work
-
-        7.  make comparison of single-threaded sequential speeds of both
-            model over test set
-
-        8.  show possibilities of fixing errors on the test set with
-            general changes to the regex model which are much easier to
-            do compared to the tensor model
-
-        9.  show cases where we could avoid adversarial cases using the
-            insight of the regex model
-
-        10. would be interesting to deterministically export which
-            patterns for sure lead to which class, could help to
-            identify adversarial samples via tinkering
-
-        11. add information on memory compression resulting from regex
-            compression methods
-
-        12. compare oracle performance with those from other papers
-
-        13. semirings, abstract algebra and how they are used for
-            finite-state machines in Forward and Viterbi algorithms -\>
-            go deeper into this to get some background
-
-        14. use more appropriate and generalized semiring terminology
-            from Peng et al. 2019 -\> more generalized compared to SoPa
-            paper
-
-        15. Chomsky hierarchy of languages -\> might be relevant
-            especially relating to CFGs
-
-        16. FSA/WFSAs -\> input theoretical CS, mathematics background
-            to describe these
-
-        17. ANN\'s historical literature -\> describe how ANNs
-            approximate symbolic representations
-
-        18. extension/recommendations -\> transducer for seq2seq tasks
-
-3.  Limitations and further work
-
-    1.  Model diversity
-
-        1.  run above explainability and comparison workflow on light
-            models first with different tau thresholds
-
-            1.  larger models could be further work pending regex
-                efficiency improvements
-
-    2.  Modelling improvements (also limitations for future work)
-
-        1.  find single-threaded ways to speed up regular expression
-            searches -\> bottleneck appears to be search method
-
-            1.  multiprocessing with specific chunksize seems to have
-                some effect
-
-            2.  might need to have a very large batch size to see any
-                improvements with multiprocessing
-
-        2.  consider using finditer for regex lookup with trace, since
-            we should return all matches
-
-            1.  make activating text unique in case we return multiple
-                texts and not one -\> but then won\'t correspond to
-                activating regexes
-
-            2.  might not make a huge difference since we use short
-                sentences
-
-            3.  might be better for speed reasons to leave it as a
-                search method
-
-    3.  Explore activation generalization methods
-
-        1.  improve baseline simplification and rational compression
-            method
-
-            1.  handle **UNK** tokens on new data for either in regex
-                OOP or during simplification/compression -\> perhaps
-                look for best possible match given context -\> **might
-                be well-enough handled by wildcards**
-
-            2.  EITHER needs more features from simplification such as
-                nearest neighbours OR generate them with access to the
-                model again -\> use comparison scripts to determine
-                which improvements are necessary -\> this should go into
-                the SoPa++ neural model below trace functions -\> look
-                into legacy code for some hints -\> \*might be well
-                enough handled by looking into enough training samples
-
-        2.  think of taking tokens in a regex group and finding their
-            **K-nearest-neighbours** in transition space to expand on
-            them if possible -\> only do this if there are few samples
-            and if their neighbours have very close scores (within eps),
-            see:
-            <https://discuss.pytorch.org/t/k-nearest-neighbor-in-pytorch/59695/2>
-
-            1.  would require extra neural class function to compute all
-                transition matrices
-
-            2.  hard to justify these as compression techniques, more
-                closer to simplificiation -\> but perhaps this is just a
-                technicality which can be addressed later on
-
-            3.  might not help too much since regex model appears
-                over-activated at the binary layer compared to the
-                neural model -\> these compression generalizations will
-                just increase activations; where we would rather expect
-                sparsity instead
-
-        3.  think of semantic clustering with digits or time or other
-            means -\> if there are no wildcards present -\> would
-            require external ontology such as WordNet -\> would be
-            slightly more work intensive and is perhaps better to leave
-            this for further work
 
 ## Completed
 
