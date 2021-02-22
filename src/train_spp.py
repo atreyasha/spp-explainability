@@ -533,6 +533,10 @@ def train_inner(train_data: List[Tuple[List[int], int]],
 
     # loop over epochs
     for epoch in range(current_epoch, epochs):
+        # set model on train mode and enable autograd
+        model.train()
+        torch.autograd.set_grad_enabled(True)
+
         # initialize loop variables
         if resume_training and epoch == current_epoch and current_update != 0:
             train_loss: Union[float,
