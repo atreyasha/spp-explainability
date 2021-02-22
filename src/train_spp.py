@@ -709,7 +709,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                     # check for loss improvement and save model if necessary
                     # optionally increment patience counter or stop training
                     # NOTE: loss values are summed over all data (not mean)
-                    if valid_loss < best_valid_loss:
+                    if valid_loss.item() < best_valid_loss:
                         # log information and update records
                         LOGGER.info("New best validation loss")
                         if valid_acc > best_valid_acc:
