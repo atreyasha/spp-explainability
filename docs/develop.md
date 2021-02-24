@@ -26,27 +26,33 @@
 
     1.  Introduction
 
-        1.  add research questions to introduction
+        **DEADLINE:** *\<2021-02-25 Thu\>*
 
-        2.  make \"highly performant\" more specific
+        1.  make \"highly performant\" more specific
 
-        3.  fix absolute terms such as \"automated reasoning\", or quote
+        2.  fix absolute terms such as \"automated reasoning\", or quote
             directly from paper
 
-        4.  add more information on what competitive performance means
-            (eg. within few F_1 points)
-
-        5.  re-consider reference to Transformers for dynamic sub-word
+        3.  re-consider reference to Transformers for dynamic sub-word
             level word-embeddings
 
-        6.  make claim that SoPa++ explainability has a different
+        4.  make claim that SoPa++ explainability has a different
             explainability taxonomy from that of vanilla SoPa, but
             don\'t claim it is decisively better
 
+        5.  add links to chapters in thesis structure, possibly improve
+            the formatting of this bit
+
     2.  Background concepts
 
-        1.  ANN\'s historical literature -\> describe how ANNs
-            approximate symbolic representations
+        **DEADLINE:** *\<2021-03-02 Tue\>*
+
+        1.  ANN\'s historical literature
+
+            1.  describe how ANNs approximate symbolic representations
+
+            2.  perhaps mention STE from 2013 paper if this is relevant
+                here
 
         2.  Explainability
 
@@ -86,6 +92,8 @@
 
     3.  Methodologies
 
+        **DEADLINE:** *\<2021-03-06 Sat\>*
+
         1.  Quantization/Binarization
 
             1.  change STE citation to 2013 paper which is more
@@ -118,9 +126,17 @@
 
         2.  Compare results to that of other paper(s)
 
+            1.  mention that data set was altered to keep it in good
+                quality by removing duplicates, perhaps this can be
+                re-tested without such processing or used as a
+                limitation/further-work -\> although results appear to
+                show that performance metric improve when using original
+                data set because of duplicates and overlaps between
+                train and test sets
+
     5.  Discussion
 
-        1.  addresss interesting observations and their implications
+        1.  address interesting observations and their implications
 
         2.  expound on trade-off between performance and explainability
             and process of mimic extraction
@@ -193,25 +209,29 @@
 
         1.  improve capitalization with braces in bibtex file
 
-        2.  remove red link color in table of contents
+        2.  if possible, try to find non-arxiv citations for papers
 
-        3.  fine-tune citation color to be consistent with other colors
+        3.  remove red link color in table of contents
 
-        4.  change to two sided format before printing, as this works
+        4.  fine-tune citation color to be consistent with other colors
+
+        5.  change to two sided format before printing, as this works
             well for binding/printing
 
-        5.  add Uni-Potsdam originality declaration, or modify current
+        6.  add Uni-Potsdam originality declaration, or modify current
             one to fit
 
-        6.  add remaining features by referring to master template such
-            as abstract, list of tables/figures/abbreviations,
-            appendices, and all others
+        7.  add remaining features by referring to master template such
+            as abstract (short summarized introduction), list of
+            tables/figures/abbreviations, appendices, and all others
 
-        7.  perform spell-check of everything at the end
+        8.  perform spell-check of everything at the end
 
 ### Programming
 
 1.  Visualization and summary-statistics
+
+    **DEADLINE:** *\<2021-03-11 Thu\>*
 
     1.  Cross-model comparisons
 
@@ -472,8 +492,8 @@
     1.  To what extent does SoPa++ contribute to competitive performance
         on NLU tasks?
 
-    2.  To what extent does SoPa++ contribute to improved explainability
-        by simplification?
+    2.  To what extent does SoPa++ contribute to explainability by
+        simplification?
 
     3.  What interesting and relevant explanations does SoPa++ provide
         on NLU task(s)?
