@@ -20,9 +20,13 @@ def main(args: argparse.Namespace) -> None:
         args = parse_configs_to_args(args, "base_")
 
         # read grid_config into param_grid_mapping
-        with open(os.path.join(args.model_log_directory, "grid_config.json"),
-                  "r") as input_file_stream:
-            param_grid_mapping = json.load(input_file_stream)
+        grid_config = os.path.join(args.model_log_directory,
+                                   "grid_config.json")
+        if os.path.exists(grid_config):
+            with open(grid_config, "r") as input_file_stream:
+                param_grid_mapping = json.load(input_file_stream)
+        else:
+            raise FileNotFoundError("%s is missing" % grid_config)
 
         # convert args and param_grid_mapping into list of all args
         args_superset = get_grid_args_superset(args, param_grid_mapping)
