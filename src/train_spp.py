@@ -834,26 +834,17 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         # set initial random seeds
         set_random_seed(args)
 
-        if resume_training:
-            # load vocab from file
-            vocab_file = os.path.join(args.model_log_directory, "vocab.txt")
-            if os.path.exists(vocab_file):
-                vocab = Vocab.from_vocab_file(
-                    os.path.join(args.model_log_directory, "vocab.txt"))
-            else:
-                raise FileNotFoundError("%s is missing" % vocab_file)
+        # get input vocab
+        vocab_combined = get_vocab(args)
 
-            # read embeddings
-            _, embeddings, _ = get_embeddings(args, vocab)
-        else:
-            # get input vocab
-            vocab_combined = get_vocab(args)
-            # get final vocab, embeddings and word_dim
-            vocab, embeddings, word_dim = get_embeddings(args, vocab_combined)
-            # add word_dim into arguments
-            args.word_dim = word_dim
-            # show vocabulary diagnostics
-            get_vocab_diagnostics(vocab, vocab_combined, word_dim)
+        # get final vocab, embeddings and word_dim
+        vocab, embeddings, word_dim = get_embeddings(args, vocab_combined)
+
+        # add word_dim into arguments
+        args.word_dim = word_dim
+
+        # show vocabulary diagnostics
+        get_vocab_diagnostics(vocab, vocab_combined, word_dim)
 
         # get embeddings as torch Module
         embeddings = Embedding.from_pretrained(embeddings,
