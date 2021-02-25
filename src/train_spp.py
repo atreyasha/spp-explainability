@@ -247,16 +247,6 @@ def get_semiring(args: argparse.Namespace) -> Semiring:
     return semiring
 
 
-def dump_vocab(vocab: Vocab, model_log_directory: str) -> None:
-    # dump vocab indices for re-use
-    with open(os.path.join(model_log_directory, "vocab.txt"),
-              "w") as output_file_stream:
-        dict_list = [(key, value) for key, value in vocab.index.items()]
-        dict_list = sorted(dict_list, key=lambda x: x[1])
-        for item in dict_list:
-            output_file_stream.write("%s\n" % item[0])
-
-
 def dump_configs(args: argparse.Namespace,
                  model_log_directory: str,
                  prefix: str = "") -> None:
@@ -900,7 +890,7 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
                         sum(parameter.nelement()
                             for parameter in model.parameters()))
             dump_configs(args, args.model_log_directory)
-            dump_vocab(vocab, args.model_log_directory)
+            vocab.dump(args.model_log_directory)
 
         train_inner(train_data, valid_data, model, num_classes, args.epochs,
                     args.evaluation_period, args.only_epoch_eval,

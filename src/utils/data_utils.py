@@ -6,6 +6,7 @@ from typing import (Any, Iterable, Callable, Generator, List, Union, Tuple,
 from itertools import chain, islice
 import numpy as np
 import string
+import os
 
 # declare global variables
 PRINTABLE = set(string.printable)
@@ -171,6 +172,14 @@ class Vocab:
 
     def denumberize(self, doc: List[int]) -> Sequence[Union[int, str]]:
         return [self[index] for index in doc]
+
+    def dump(self, directory: str) -> None:
+        with open(os.path.join(directory, "vocab.txt"),
+                  "w") as output_file_stream:
+            dict_list = [(key, value) for key, value in self.index.items()]
+            dict_list = sorted(dict_list, key=lambda x: x[1])
+            for item in dict_list:
+                output_file_stream.write("%s\n" % item[0])
 
     @classmethod
     def from_docs(cls,
