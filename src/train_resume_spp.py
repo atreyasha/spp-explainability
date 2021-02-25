@@ -36,13 +36,7 @@ def main(args: argparse.Namespace) -> None:
 
     # loop and resume training
     for args in args_superset:
-        try:
-            train_outer(args, resume_training=True)
-        except FileNotFoundError:
-            if args.grid_training:
-                train_outer(args, resume_training=False)
-            else:
-                raise
+        train_outer(args, resume_training=True)
 
 
 if __name__ == '__main__':

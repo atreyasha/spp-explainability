@@ -414,17 +414,10 @@ def train_inner(train_data: List[Tuple[List[int], int]],
     patience_reached = False
 
     # load model checkpoint if training is being resumed
-    if resume_training:
-        try:
-            model_checkpoint = glob(
-                os.path.join(model_log_directory, "*last*.pt"))[0]
-        except IndexError:
-            raise FileNotFoundError("Model log directory present, but model "
-                                    "checkpoint with '.pt' "
-                                    "extension missing. Our suggestion is to "
-                                    "train the model again "
-                                    "from scratch")
-        model_checkpoint = torch.load(model_checkpoint,
+    if resume_training and len(
+            glob(os.path.join(model_log_directory, "*last*.pt"))) > 0:
+        model_checkpoint = torch.load(glob(
+            os.path.join(model_log_directory, "*last*.pt"))[0],
                                       map_location=torch.device("cpu"))
         model.load_state_dict(
             model_checkpoint["model_state_dict"])  # type: ignore
@@ -458,6 +451,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                            PATIENCE_REACHED)
             return None
     else:
+        resume_training = False
         current_epoch = 0
         current_update = 0
         best_valid_loss_index = 0
@@ -798,25 +792,34 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
                          os.path.join(args.model_log_directory, "session.log"))
 
         if resume_training:
-            args = parse_configs_to_args(args)
-            exit_code_file = os.path.join(args.model_log_directory,
-                                          "exit_code")
-            if not os.path.exists(exit_code_file):
-                LOGGER.info("Exit-code file not found, continuing training")
-            else:
-                exit_code = get_exit_code(exit_code_file)
-                if exit_code == 0:
-                    LOGGER.info(("Exit-code 0: training epochs have already "
-                                 "been reached"))
-                    return None
-                elif exit_code == 1:
-                    LOGGER.info(("Exit-code 1: patience threshold has already "
-                                 "been reached"))
-                    return None
-                elif exit_code == 2:
+            try:
+                args = parse_configs_to_args(args)
+                exit_code_file = os.path.join(args.model_log_directory,
+                                              "exit_code")
+                if not os.path.exists(exit_code_file):
                     LOGGER.info(
-                        ("Exit-code 2: interruption during previous training, "
-                         "continuing training"))
+                        "Exit-code file not found, continuing training")
+                else:
+                    exit_code = get_exit_code(exit_code_file)
+                    if exit_code == 0:
+                        LOGGER.info(
+                            ("Exit-code 0: training epochs have already "
+                             "been reached"))
+                        return None
+                    elif exit_code == 1:
+                        LOGGER.info(
+                            ("Exit-code 1: patience threshold has already "
+                             "been reached"))
+                        return None
+                    elif exit_code == 2:
+                        LOGGER.info(
+                            ("Exit-code 2: interruption during previous "
+                             "training, continuing training"))
+            except FileNotFoundError:
+                if args.grid_training:
+                    resume_training = False
+                else:
+                    raise
 
         # log namespace arguments and model directory
         LOGGER.info(args)
@@ -832,7 +835,7 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         set_random_seed(args)
 
         if resume_training:
-            # load vocab and embeddings
+            # load vocab from file
             vocab_file = os.path.join(args.model_log_directory, "vocab.txt")
             if os.path.exists(vocab_file):
                 vocab = Vocab.from_vocab_file(
@@ -840,12 +843,8 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
             else:
                 raise FileNotFoundError("%s is missing" % vocab_file)
 
-            # generate embeddings to fill up correct dimensions
-            embeddings = torch.zeros(len(vocab), args.word_dim)
-            embeddings = Embedding.from_pretrained(
-                embeddings,
-                freeze=args.static_embeddings,
-                padding_idx=PAD_TOKEN_INDEX)
+            # read embeddings
+            _, embeddings, _ = get_embeddings(args, vocab)
         else:
             # get input vocab
             vocab_combined = get_vocab(args)
@@ -855,11 +854,11 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
             args.word_dim = word_dim
             # show vocabulary diagnostics
             get_vocab_diagnostics(vocab, vocab_combined, word_dim)
-            # get embeddings as torch Module
-            embeddings = Embedding.from_pretrained(
-                embeddings,
-                freeze=args.static_embeddings,
-                padding_idx=PAD_TOKEN_INDEX)
+
+        # get embeddings as torch Module
+        embeddings = Embedding.from_pretrained(embeddings,
+                                               freeze=args.static_embeddings,
+                                               padding_idx=PAD_TOKEN_INDEX)
 
         # get training and validation data
         _, _, train_data, valid_data, num_classes = get_train_valid_data(
