@@ -7,10 +7,6 @@
 **** Structured content
 ***** Background concepts
       DEADLINE: <2021-03-02 Tue>
-****** FSA/WFSAs -> input theoretical CS, mathematics background to describe these
-******* use more appropriate and generalized semiring terminology from Peng et al. 2019 -> more generalized compared to SoPa paper
-******* semirings, abstract algebra and how they are used for finite-state machines in Forward and Viterbi algorithms -> go deeper into this to get some ba******* mention
-******* use definitions for all important and re-usable statements including for explainability
 ****** Explainability
 ******* qualify what does it mean to be explainable and how to define this 
 ******* mention that explainability focuses on exposing the model's logic and not on necessarily creating rationality in the model
@@ -26,6 +22,7 @@
 ***** Methodologies
       DEADLINE: <2021-03-06 Sat>
 ****** Make claim that SoPa++ explainability has a different explainability taxonomy from that of vanilla SoPa, but don't claim it is decisively better
+****** Motivate structure in terms of RNNs, CNNs and WFSA where possible 
 ****** Quantization/Binarization
 ******* change STE citation to 2013 paper which is more fundamental, use different name depending on context: https://arxiv.org/abs/1308.3432
 ******* cite and explain straight-through estimation (STE), and what benefits this is supposed to bring
@@ -63,6 +60,7 @@
 ***** Paper length
 ****** 20-90 pages thesis length -> try to keep ideas well-motivated yet succinct
 ***** Points to address towards end
+****** add C-like reference to explain what SoPa++ means like in i++
 ****** add links to chapters in thesis structure, improve formatting
 ****** improve capitalization with braces in bibtex file
 ****** if possible, try to find non-arxiv citations for papers
@@ -116,13 +114,6 @@
 ****** make activating text unique in case we return multiple texts and not one -> but then won't correspond to activating regexes
 ****** might not make a huge difference since we use short sentences
 ****** might be better for speed reasons to leave it as a search method
-***** allow training to be resumed from log file without a saved model, currently saved on the =better_resume= branch
-****** push if-clause and try-except blocks inside training script inner and outer functions, which can turn off training_resume boolean -> for the latter only when grid training is provide; if not exit with error
-****** remove try-except clause from resume script since it is not needed
-****** need to read embeddings from file instead of assign to zero, as this can cause reproducibility issues
-****** need to also find a way to break out of FileNotFoundError for missing vocab file -> this can also be re-read if configs are present -> remove vocab workflow altogether
-****** minimum for single -> model and train config, minimum for grid -> base model, base train and grid config -> add error block for when grid config is not found
-****** test out thoroughly with examples for both single and grid scenarios to see if things work effectively -> then merge into main later on
 **** Model features
 ***** add check to ensure start, end and pad tokens don't occur adversarially inside sequence -> =nltk.word_tokenize= already breaks these up
 ***** add predict function for both mimic and oracle model which does not need extra data to be loaded -> can also accept stdin as unix pipe
@@ -173,7 +164,7 @@
 ***** +Topic proposal draft: *06.11.2020*+
 ***** +Topic proposal final: *15.11.2020*+
 ***** +Topic registration: *01.02.2021*+
-***** Projected manuscript completion: *31.03.2021* 
+***** Manuscript draft submission: *31.03.2021* 
 ***** Offical manuscript submission: *10.04.2021*
 
 ** Completed

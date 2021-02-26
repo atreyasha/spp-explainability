@@ -28,22 +28,7 @@
 
         **DEADLINE:** *\<2021-03-02 Tue\>*
 
-        1.  FSA/WFSAs -\> input theoretical CS, mathematics background
-            to describe these
-
-            1.  use more appropriate and generalized semiring
-                terminology from Peng et al. 2019 -\> more generalized
-                compared to SoPa paper
-
-            2.  semirings, abstract algebra and how they are used for
-                finite-state machines in Forward and Viterbi algorithms
-                -\> go deeper into this to get some ba\*\*\*\*\*\*\*
-                mention
-
-            3.  use definitions for all important and re-usable
-                statements including for explainability
-
-        2.  Explainability
+        1.  Explainability
 
             1.  qualify what does it mean to be explainable and how to
                 define this
@@ -68,7 +53,7 @@
             7.  improve arbitrary vs. contrained oracle phrasing -\>
                 perhaps black-box vs. white-box but more specific
 
-        3.  ANN\'s historical literature
+        2.  ANN\'s historical literature
 
             1.  describe how ANNs approximate symbolic representations
 
@@ -83,7 +68,10 @@
             explainability taxonomy from that of vanilla SoPa, but
             don\'t claim it is decisively better
 
-        2.  Quantization/Binarization
+        2.  Motivate structure in terms of RNNs, CNNs and WFSA where
+            possible
+
+        3.  Quantization/Binarization
 
             1.  change STE citation to 2013 paper which is more
                 fundamental, use different name depending on context:
@@ -95,7 +83,7 @@
             3.  how does binarizing help with explainability, justify
                 requirement for it in both training and testing
 
-        3.  Visualizations
+        4.  Visualizations
 
             1.  add visualization of in-depth computational graph in
                 paper for clarity -\> this can be automated
@@ -196,28 +184,31 @@
 
     2.  Points to address towards end
 
-        1.  add links to chapters in thesis structure, improve
+        1.  add C-like reference to explain what SoPa++ means like in
+            i++
+
+        2.  add links to chapters in thesis structure, improve
             formatting
 
-        2.  improve capitalization with braces in bibtex file
+        3.  improve capitalization with braces in bibtex file
 
-        3.  if possible, try to find non-arxiv citations for papers
+        4.  if possible, try to find non-arxiv citations for papers
 
-        4.  remove red link color in table of contents
+        5.  remove red link color in table of contents
 
-        5.  fine-tune citation color to be consistent with other colors
+        6.  fine-tune citation color to be consistent with other colors
 
-        6.  change to two sided format before printing, as this works
+        7.  change to two sided format before printing, as this works
             well for binding/printing
 
-        7.  add Uni-Potsdam originality declaration, or modify current
+        8.  add Uni-Potsdam originality declaration, or modify current
             one to fit
 
-        8.  add remaining features by referring to master template such
+        9.  add remaining features by referring to master template such
             as abstract (short summarized introduction), list of
             tables/figures/abbreviations, appendices, and all others
 
-        9.  perform spell-check of everything at the end
+        10. perform spell-check of everything at the end
 
 ### Programming
 
@@ -338,32 +329,6 @@
 
         3.  might be better for speed reasons to leave it as a search
             method
-
-    4.  allow training to be resumed from log file without a saved
-        model, currently saved on the `better_resume` branch
-
-        1.  push if-clause and try-except blocks inside training script
-            inner and outer functions, which can turn off
-            training_resume boolean -\> for the latter only when grid
-            training is provide; if not exit with error
-
-        2.  remove try-except clause from resume script since it is not
-            needed
-
-        3.  need to read embeddings from file instead of assign to zero,
-            as this can cause reproducibility issues
-
-        4.  need to also find a way to break out of FileNotFoundError
-            for missing vocab file -\> this can also be re-read if
-            configs are present -\> remove vocab workflow altogether
-
-        5.  minimum for single -\> model and train config, minimum for
-            grid -\> base model, base train and grid config -\> add
-            error block for when grid config is not found
-
-        6.  test out thoroughly with examples for both single and grid
-            scenarios to see if things work effectively -\> then merge
-            into main later on
 
 2.  Model features
 
@@ -521,7 +486,7 @@
 
     4.  ~~Topic registration: **01.02.2021**~~
 
-    5.  Projected manuscript completion: **31.03.2021**
+    5.  Manuscript draft submission: **31.03.2021**
 
     6.  Offical manuscript submission: **10.04.2021**
 
