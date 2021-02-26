@@ -45,14 +45,15 @@ headsepline, % Uncomment to get a line under the header
 \usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
 \usepackage{amsthm}
+\usepackage{amsmath}
 \usepackage{chngcntr}
 
+\counterwithout{equation}{chapter}
 \counterwithout{figure}{chapter}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
 \theoremstyle{remark}
 \newtheorem{remark}{Remark}[definition]
-\newtheorem*{*remark}{Remark}
 \addbibresource{../bibtex.bib} % The filename of the bibliography
 \graphicspath{{../visuals/}}
 

@@ -4,35 +4,121 @@
 
 \section{Algebraic semirings}
 
-\begin{definition}[\citealt{kuich1986linear}]
-  A semiring is a set $\mathbb{K}$ along with two binary associative operations $\oplus$ (addition) and $\otimes$ (multiplication) and two identity elements: $\bar{0}$ for addition and $\bar{1}$ for multiplication. Semirings require that addition is commutative, multiplication distributes over addition, and that multiplication by $\bar{0}$ annihilates, i.e., $\bar{0} \otimes a = a \otimes \bar{0} = \bar{0}$. \\
-\end{definition}
-
-\vspace{-10pt}
+\begin{definition}[Semiring; \citealt{kuich1986linear}]
+  A semiring is a set $\mathbb{K}$ along with two binary associative operations $\oplus$ (addition) and $\otimes$ (multiplication) and two identity elements: $\bar{0}$ for addition and $\bar{1}$ for multiplication. Semirings require that addition is commutative, multiplication distributes over addition, and that multiplication by $\bar{0}$ annihilates, i.e., $\bar{0} \otimes a = a \otimes \bar{0} = \bar{0}$.
 
 \begin{remark}
   Semirings follow the following generic notation: $\langle \mathbb{K}, \oplus, \otimes, \bar{0}, \bar{1} \rangle$.
 \end{remark}
 
 \begin{remark}
-  A simple and common semiring is the \textbf{real} or plus-times semiring: $\langle \mathbb{R}, +, \times, 0, 1 \rangle$.
+  A simple and common semiring is the \textbf{real} or sum-product semiring: $\langle \mathbb{R}, +, \times, 0, 1 \rangle$. Two important semirings for this thesis are shown below.
 \end{remark}
 
 \begin{remark}
-  \textbf{Max-sum}: $\langle \mathbb{R} \cup \{-\infty\}, \text{max}, +, -\infty, 0 \rangle$ and \textbf{max-product}: $\langle \mathbb{R}_{>0} \cup \{-\infty\}, \text{max}, \times, -\infty, 1 \rangle$ semirings are relevant for this thesis
+  \textbf{Max-sum} semiring: $\langle \mathbb{R} \cup \{-\infty\}, \text{max}, +, -\infty, 0 \rangle$
 \end{remark}
 
-\section{Weighted Finite-State Automaton}
+\begin{remark}
+  \textbf{Max-product} semiring: $\langle \mathbb{R}_{>0} \cup \{-\infty\}, \text{max}, \times, -\infty, 1 \rangle$
+\end{remar}
 
-% WFSA:
-% Section on WFSA and how they work, what they mean etc.
-% Go through content to ensure it is not exactly copied from rational recurrences
-% Try to include as thorough explanations as possible and mention ignoring self-loops and epsilons
+\end{definition}
+
+\section{Weighted finite-state automata}
+
+\begin{definition}[Weighted finite-state automaton; \citealt{peng2018rational}]
+  A weighted finite-state automaton over a semiring $\mathbb{K}$ is a 5-tuple $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \mathcal{T}, \lambda, \rho \rangle$, with:
+
+  \begin{itemize}
+    \itemsep0em 
+    \item[--] a finite input alphabet $\Sigma$;
+    \item[--] a finite state set $\mathcal{Q}$;
+    \item[--] transition weights $\mathcal{T}: \mathcal{Q} \times \mathcal{Q} \times (\Sigma \cup \{\epsilon\}) \rightarrow \mathbb{K}$;
+    \item[--] initial weights $\lambda: \mathcal{Q} \rightarrow \mathbb{K}$; 
+    \item[--] and final weights $\rho: \mathcal{Q} \rightarrow \mathbb{K}$.
+  \end{itemize}
+
+  \begin{remark}
+    $\epsilon \notin \Sigma$ refers to special $\epsilon$-transitions that may be taken without consuming any input.
+  \end{remark}
+
+  \begin{remark}
+    Self-loop transitions in $\mathcal{A}$ refer to special transitions which consume an input while staying at the same state.
+  \end{remark}
+  
+  \begin{remark}
+    $\Sigma^{*}$ refers to the (possibly infinite) set of all strings over the alphabet $\Sigma$.
+  \end{remark}
+   
+\end{definition}
+
+\begin{definition}[Path score; \citealt{peng2018rational}]
+
+  Let $\pmb{\pi} = \langle \pi_1, \pi_2, \dots, \pi_n \rangle$ be a sequence of adjacent transitions in $\mathcal{A}$, with each $\pi_i = \langle q_i, q_{i+1}, z_i \rangle \in \mathcal{Q} \times \mathcal{Q} \times (\Sigma \cup \{\epsilon\})$. The path $\pmb{\pi}$ derives the $\epsilon$-free string $\pmb{x} = \langle x_1, x_2, \dots, x_m \rangle \in \Sigma^{*}$; which is a substring of the $\epsilon$-containing string $\pmb{z} = \langle z_1, z_2, \dots, z_n \rangle \in (\Sigma \cup \{\epsilon\})^{*}$. $\pmb{\pi}$'s score in $\mathcal{A}$ is given by:
+  
+\end{definition}
+
+\begin{equation}
+  \mathcal{A}[\pmb{\pi}] = \lambda(q_1) \otimes \Bigg( \bigotimes_{i=1}^n \mathcal{T}(\pi_i) \Bigg) \otimes \rho(q_{n+1})
+\end{equation}
+
+\begin{definition}[String score; \citealt{peng2018rational}]
+
+Let $\Pi(\pmb{x})$ denote the set of all paths in $\mathcal{A}$ that derive $\pmb{x}$. Then the string score assigned by $\mathcal{A}$ to string $\pmb{x}$ is given by:
+  
+\end{definition}
+
+\begin{equation}
+  \mathcal{A}[\![\pmb{x}]\!] = \bigoplus_{\pmb{\pi} \in \Pi(\pmb{x})} \mathcal{A}[\pmb{\pi}]
+\end{equation}
+
+\begin{remark}
+  Since $\mathbb{K}$ is a semiring, \mathcal{A}[\![\pmb{x}]\!] can be efficiently computed using the Forward algorithm \citep{baum1966statistical}. Its dynamic program is summarized below without $\epsilon$-transitions for simplicity. $\Omega_i(q)$ gives the aggregate score of all paths that derive the substring $\langle x_1, x_2, \dots, x_i \rangle$ and end in state $q$:
+ 
+\begin{subequations}
+  \begin{align}
+    \Omega_0(q) &= \lambda(q) \\
+    \Omega_{i+1}(q) &= \bigoplus_{q' \in \mathcal{Q}} \Omega_i(q') \otimes \mathcal{T}(q',q,x_i)  \\
+    \mathcal{A}[\![\pmb{x}]\!] &= \bigoplus_{q \in \mathcal{Q}} \Omega_n(q) \otimes \rho(q)
+  \end{align}
+\end{subequations}
+
+\end{remark}
+
+\begin{remark}
+  The Forward algorithm can be generalized to any semiring \citep{eisner2002parameter} and has a runtime of $O(|Q|^3 + |Q|^2|\pmb{x}|)$ \citep{schwartz2018sopa}, implying it has a linear runtime with respect to the length of the input string $\pmb{x}$.
+\end{remark}
+
+\begin{remark}
+  A special case of Forward is the Viterbi algorithm, where the addition $\oplus$ operator is contrained to the maximum function \citep{viterbi1967error}. We can infer that Viterbi returns the highest scoring path $\pmb{\pi}$ that derives the input string $\pmb{x}$.
+\end{remark}
 
 % Explainability and others:
+% Add images where possible
+% Move explainability as the first topic, if possible and relevant
+% Use definition environments as much as possible for re-referencing
 % Section on explainability definitions, methods, post-hoc techniques
 % Subsection on transparencies, taxonomies and hierarchies of explainability methods
-% Think of more things to add here, perhaps section on STE and other segments
+% Provide some method examples such as occlusion, LIME and others -> which can be mentioned again in the SoPa section
+
+% STE and quantized NNs:
+% Add images where possible
+% Add section on 2013 and recent STE papers to build on argument for it
+% Link to other tricks such as re-parameterization tricks as well
+
+% SoPa:
+% Add images where possible
+% Think about bolding/unbolding transition weights as this is different between the studies
+% Try to include as thorough explanations as possible and mention ignoring self-loops and epsilons
+% Mention we only use one start and end vectors and not all -> because must start and end there
+% Mention time complexity differences and other things that are different from definitions
+% Mention other deviations from main equation and ensemble of WFSAs, semirings etc
+% Mention self-loops and epsilon transitions as well
+% Go into specifics of original SoPa model
+% Talk about performance and other general basics, time complexities where relevant
+% Reference topics from explainability to mention current taxonomy/hierarchy
+% Use SoPa explanation here to talk about limitations and fixes in next chapter, which should provide a clean flow to the next chapter's content
 
 %%% Local Variables: 
 %%% mode: latex
