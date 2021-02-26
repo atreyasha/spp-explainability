@@ -791,6 +791,7 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         add_file_handler(LOGGER,
                          os.path.join(args.model_log_directory, "session.log"))
 
+        # check for configs and exit codes, decide next steps conditionally
         if resume_training:
             try:
                 args = parse_configs_to_args(args)
@@ -881,6 +882,7 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         dump_configs(args, args.model_log_directory)
         vocab.dump(args.model_log_directory)
 
+        # execute inner train function
         train_inner(train_data, valid_data, model, num_classes, args.epochs,
                     args.evaluation_period, args.only_epoch_eval,
                     args.model_log_directory, args.learning_rate,
