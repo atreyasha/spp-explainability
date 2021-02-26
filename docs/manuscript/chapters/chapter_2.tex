@@ -2,6 +2,38 @@
 
 \label{background}
 
+\section{Algebraic semirings}
+
+\begin{definition}[\citealt{kuich1986linear}]
+  A semiring is a set $\mathbb{K}$ along with two binary associative operations $\oplus$ (addition) and $\otimes$ (multiplication) and two identity elements: $\bar{0}$ for addition and $\bar{1}$ for multiplication. Semirings require that addition is commutative, multiplication distributes over addition, and that multiplication by $\bar{0}$ annihilates, i.e., $\bar{0} \otimes a = a \otimes \bar{0} = \bar{0}$. \\
+\end{definition}
+
+\vspace{-10pt}
+
+\begin{remark}
+  Semirings follow the following generic notation: $\langle \mathbb{K}, \oplus, \otimes, \bar{0}, \bar{1} \rangle$.
+\end{remark}
+
+\begin{remark}
+  A simple and common semiring is the \textbf{real} or plus-times semiring: $\langle \mathbb{R}, +, \times, 0, 1 \rangle$.
+\end{remark}
+
+\begin{remark}
+  \textbf{Max-sum}: $\langle \mathbb{R} \cup \{-\infty\}, \text{max}, +, -\infty, 0 \rangle$ and \textbf{max-product}: $\langle \mathbb{R}_{>0} \cup \{-\infty\}, \text{max}, \times, -\infty, 1 \rangle$ semirings are relevant for this thesis
+\end{remark}
+
+\section{Weighted Finite-State Automaton}
+
+% WFSA:
+% Section on WFSA and how they work, what they mean etc.
+% Go through content to ensure it is not exactly copied from rational recurrences
+% Try to include as thorough explanations as possible and mention ignoring self-loops and epsilons
+
+% Explainability and others:
+% Section on explainability definitions, methods, post-hoc techniques
+% Subsection on transparencies, taxonomies and hierarchies of explainability methods
+% Think of more things to add here, perhaps section on STE and other segments
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "../main"

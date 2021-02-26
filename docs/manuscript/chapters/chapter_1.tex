@@ -4,21 +4,28 @@
 
 \section{Motivation}
 
-With the recent progress of large deep learning models on a myriad of machine-learning and Natural Language Processing (NLP) tasks, several studies argue for focused research into Explainable Artificial Intelligence (XAI) to address emerging concerns such as adversarial security and inductive biases associated with black-box models \citep{doran2017does,townsend2019extracting,danilevsky2020survey,arrieta2020explainable}. Of these studies, \citet{arrieta2020explainable} conduct an extensive survey into the spectrum of XAI taxonomies and provide the following definition of XAI:
+With the recent progress of large deep learning models achieving State-Of-The-Art (SOTA) performance on a myriad of Natural Language Processing (NLP) tasks (Figure \ref{fig:nlp_progress}), several studies argue for focused research into Explainable Artificial Intelligence (XAI) to address emerging concerns such as security risks and inductive biases associated with such "black-box" models \citep{doran2017does,townsend2019extracting,danilevsky2020survey,arrieta2020explainable}. Of these studies, \citet{arrieta2020explainable} conduct an extensive survey into the spectrum of XAI taxonomies and provide the following definition of XAI:
 
 \begin{quote}
   \textit{``Given an audience, an \textbf{explainable} Artificial Intelligence is one that produces details or reasons to make its functioning clear or easy to understand.''}
 \end{quote}
 
-In addition, \citet{arrieta2020explainable} explore and classify a variety of machine-learning models depending on the degree of their transparencies; as well as document taxonomies of explainability methods associated with varying degrees of model transparencies. Of particular relevance to this study is the \textit{explainations by simplification} explainability method, which \citet{arrieta2020explainable} document as:
+In addition, \citet{arrieta2020explainable} explore and classify a variety of machine-learning models depending on the degree of their transparencies; as well as document taxonomies of explainability methods associated with the aforementioned models. Of particular relevance to this study is the \textit{explanations by simplification} post-hoc post-hoc explainability method, which \citet{arrieta2020explainable} document as:
 
 \begin{quote}
 \textit{``Explanations by simplification collectively denote those techniques in which a whole new system is rebuilt based on the trained model to be explained. This new, simplified model usually attempts at optimizing its resemblance to its antecedent functioning, while reducing its complexity, and keeping a similar performance score.''} 
 \end{quote}
 
-In this thesis, we build upon the work of \citet{schwartz2018sopa} by further developing their \textbf{So}ft \textbf{Pa}tterns (SoPa) model; which represents a hybridized RNN, CNN and Weighted Finite-State Automaton (WFSA) neural network architecture. We modify the SoPa model by changing key aspects of its architecture which ultimately allow us to conduct effective explanations by simplification; which was not possible with the previous SoPa architecture. We abbreviate this modified model as \textbf{SoPa++}, which signifies an improvement or major modification to the SoPa model.
+Through a survey of recent literature on explanations by simplification applied in the NLP field, we came across several prominent studies employing techniques to simplify Recurrent Neural Networks (RNNs) into constituent Finite-State Automata (FSA) and/or Weighted Finite-State Automata (WFSA) \citep{schwartz2018sopa,peng2018rational,DBLP:journals/corr/abs-1905-08701,wang2019state,jiang2020cold}.
 
-Finally, we evaluate both the performance and explainability of the SoPa++ model on the Facebook Multilingual Task Oriented Dialog data set (FMTOD; \citealt{schuster2018cross}); focusing on the English-language intent classification task.
+In this thesis, we build upon the work of \citet{schwartz2018sopa} by further developing their \textbf{So}ft \textbf{Pa}tterns (SoPa) model; which represents a hybridized RNN, CNN and Weighted Finite-State Automaton neural network architecture. We modify the SoPa model by changing key aspects of its architecture which ultimately allow us to conduct effective explanations by simplification; which was not possible with the previous SoPa architecture. We abbreviate this modified model as \textbf{SoPa++}, which signifies an improvement or major modification to the SoPa model. Finally, we evaluate both the performance and explainability of the SoPa++ model on the Facebook Multilingual Task Oriented Dialog data set (FMTOD; \citealt{schuster2018cross}); focusing on the English-language intent classification task.
+
+\begin{figure}[th]
+  \centering
+  \includegraphics[trim={0.5cm 0cm 0cm 0.5cm},clip,width=14cm]{images/nlp_sota_model_size_progress}
+  \caption{Parameter counts of recently released pre-trained language models which showed competitive or SOTA performance when fine-tuned over a range of NLP tasks \citep{sanh2019distilbert}}
+  \label{fig:nlp_progress}
+\end{figure}
 
 \section{Research questions}
 
@@ -26,7 +33,7 @@ With the aforementioned modifications to the SoPa architecture and the introduct
 
 \begin{enumerate}
   \item To what extent does SoPa++ contribute to competitive performance\footnote{We define competitive performance as the scenario where a mean performance metric on a certain data set falls within the range obtained from other recent studies on the same data set} on the FMTOD data set?
-  \item To what extent does SoPa++ contribute to effective explainations by simplification, as exemplified on the FMTOD data set?
+  \item To what extent does SoPa++ contribute to effective explanations by simplification on the FMTOD data set?
   \item What interesting and relevant explanations can SoPa++ provide on the FMTOD data set?
 \end{enumerate}
 
@@ -35,13 +42,13 @@ With the aforementioned modifications to the SoPa architecture and the introduct
 With the aforementioned research questions, we summarize the structure and contents of this thesis.
 
 \begin{description}[align=left]
-  \item [Chapter 1:] We introduce this thesis, its contents and our research questions.
-  \item [Chapter 2:] We describe the fundamental background concepts utilized in this thesis.
-  \item [Chapter 3:] We describe the methodologies pursued in this thesis.
-  \item [Chapter 4:] We describe the results obtained from our methodologies.
-  \item [Chapter 5:] We discuss the implications of the aforementioned results.
-  \item [Chapter 6:] We conclude this thesis by answering the research questions.
-  \item [Chapter 7:] We document future work to expand on our research questions.
+  \item [Chapter 1:] Introduce this thesis, its contents and our research questions.
+  \item [Chapter 2:] Describe the fundamental background concepts utilized in this thesis.
+  \item [Chapter 3:] Describe the methodologies pursued in this thesis.
+  \item [Chapter 4:] Describe the results obtained from our methodologies.
+  \item [Chapter 5:] Discuss the implications of the aforementioned results.
+  \item [Chapter 6:] Conclude this thesis by answering the research questions.
+  \item [Chapter 7:] Document future work to expand on our research questions.
 \end{description}
 
 %%% Local Variables: 
