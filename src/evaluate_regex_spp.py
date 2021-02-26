@@ -94,7 +94,7 @@ def evaluate_outer(args: argparse.Namespace) -> None:
         vocab = Vocab.from_vocab_file(
             os.path.join(args.model_log_directory, "vocab.txt"))
     else:
-        raise FileNotFoundError("%s is missing" % vocab_file)
+        raise FileNotFoundError("File not found: %s" % vocab_file)
 
     # load evaluation data here
     _, eval_text = read_docs(args.eval_data, vocab)

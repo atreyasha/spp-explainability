@@ -155,7 +155,7 @@ def explain_outer(args: argparse.Namespace) -> None:
         vocab = Vocab.from_vocab_file(
             os.path.join(args.model_log_directory, "vocab.txt"))
     else:
-        raise FileNotFoundError("%s is missing" % vocab_file)
+        raise FileNotFoundError("File not found: %s" % vocab_file)
 
     # generate embeddings to fill up correct dimensions
     embeddings = torch.zeros(len(vocab), args.word_dim)

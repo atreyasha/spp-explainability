@@ -80,7 +80,7 @@ def parse_configs_to_args(args: argparse.Namespace,
     # raise error if any of them are missing
     for json_file in json_files:
         if not os.path.exists(json_file):
-            raise FileNotFoundError("%s is missing" % json_file)
+            raise FileNotFoundError("File not found: %s" % json_file)
 
     # update argument namespace with information from json files
     for json_file in json_files:
