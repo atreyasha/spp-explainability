@@ -5,19 +5,12 @@
 ** Current tasks
 *** Manuscript
 **** Structured content
-***** Introduction
-      DEADLINE: <2021-02-25 Thu>
-****** make "highly performant" more specific
-****** fix absolute terms such as "automated reasoning", or quote directly from paper
-****** re-consider reference to Transformers for dynamic sub-word level word-embeddings
-****** make claim that SoPa++ explainability has a different explainability taxonomy from that of vanilla SoPa, but don't claim it is decisively better
-****** add links to chapters in thesis structure, possibly improve the formatting of this bit
-
 ***** Background concepts
       DEADLINE: <2021-03-02 Tue>
-****** ANN's historical literature
-******* describe how ANNs approximate symbolic representations
-******* perhaps mention STE from 2013 paper if this is relevant here
+****** FSA/WFSAs -> input theoretical CS, mathematics background to describe these
+******* use more appropriate and generalized semiring terminology from Peng et al. 2019 -> more generalized compared to SoPa paper
+******* semirings, abstract algebra and how they are used for finite-state machines in Forward and Viterbi algorithms -> go deeper into this to get some ba******* mention
+******* use definitions for all important and re-usable statements including for explainability
 ****** Explainability
 ******* qualify what does it mean to be explainable and how to define this 
 ******* mention that explainability focuses on exposing the model's logic and not on necessarily creating rationality in the model
@@ -26,11 +19,13 @@
 ******* provide some metrics or tangible task-based insights to show how new explainability works
 ******* clarify meaning and concept of "occlusion" as leave-one-out perturbation analysis
 ******* improve arbitrary vs. contrained oracle phrasing -> perhaps black-box vs. white-box but more specific
-****** FSA/WFSAs -> input theoretical CS, mathematics background to describe these
-******* use more appropriate and generalized semiring terminology from Peng et al. 2019 -> more generalized compared to SoPa paper
-******* semirings, abstract algebra and how they are used for finite-state machines in Forward and Viterbi algorithms -> go deeper into this to get some background
+****** ANN's historical literature
+******* describe how ANNs approximate symbolic representations
+******* perhaps mention STE from 2013 paper if this is relevant here
+
 ***** Methodologies
       DEADLINE: <2021-03-06 Sat>
+****** Make claim that SoPa++ explainability has a different explainability taxonomy from that of vanilla SoPa, but don't claim it is decisively better
 ****** Quantization/Binarization
 ******* change STE citation to 2013 paper which is more fundamental, use different name depending on context: https://arxiv.org/abs/1308.3432
 ******* cite and explain straight-through estimation (STE), and what benefits this is supposed to bring
@@ -38,7 +33,6 @@
 ****** Visualizations
 ******* add visualization of in-depth computational graph in paper for clarity -> this can be automated
 ******* produce manual computational graph using tikz, building from what was made earlier
-
 ***** Results
 ****** Visualizations
 ******* produce visualization of training performance using python frameworks rather than R
@@ -69,6 +63,7 @@
 ***** Paper length
 ****** 20-90 pages thesis length -> try to keep ideas well-motivated yet succinct
 ***** Points to address towards end
+****** add links to chapters in thesis structure, improve formatting
 ****** improve capitalization with braces in bibtex file
 ****** if possible, try to find non-arxiv citations for papers
 ****** remove red link color in table of contents
@@ -111,8 +106,6 @@
       
 ** Future tasks
 *** Programming
-**** Model diversity
-***** run above explainability and comparison workflow on larger models after efficiency improvements
 **** Modelling improvements
 ***** check if packed sequences could be incoporated into model
 ****** might increase efficiency related to batch latency
@@ -123,6 +116,13 @@
 ****** make activating text unique in case we return multiple texts and not one -> but then won't correspond to activating regexes
 ****** might not make a huge difference since we use short sentences
 ****** might be better for speed reasons to leave it as a search method
+***** allow training to be resumed from log file without a saved model, currently saved on the =better_resume= branch
+****** push if-clause and try-except blocks inside training script inner and outer functions, which can turn off training_resume boolean -> for the latter only when grid training is provide; if not exit with error
+****** remove try-except clause from resume script since it is not needed
+****** need to read embeddings from file instead of assign to zero, as this can cause reproducibility issues
+****** need to also find a way to break out of FileNotFoundError for missing vocab file -> this can also be re-read if configs are present -> remove vocab workflow altogether
+****** minimum for single -> model and train config, minimum for grid -> base model, base train and grid config -> add error block for when grid config is not found
+****** test out thoroughly with examples for both single and grid scenarios to see if things work effectively -> then merge into main later on
 **** Model features
 ***** add check to ensure start, end and pad tokens don't occur adversarially inside sequence -> =nltk.word_tokenize= already breaks these up
 ***** add predict function for both mimic and oracle model which does not need extra data to be loaded -> can also accept stdin as unix pipe

@@ -24,35 +24,24 @@
 
 1.  Structured content
 
-    1.  Introduction
-
-        **DEADLINE:** *\<2021-02-25 Thu\>*
-
-        1.  make \"highly performant\" more specific
-
-        2.  fix absolute terms such as \"automated reasoning\", or quote
-            directly from paper
-
-        3.  re-consider reference to Transformers for dynamic sub-word
-            level word-embeddings
-
-        4.  make claim that SoPa++ explainability has a different
-            explainability taxonomy from that of vanilla SoPa, but
-            don\'t claim it is decisively better
-
-        5.  add links to chapters in thesis structure, possibly improve
-            the formatting of this bit
-
-    2.  Background concepts
+    1.  Background concepts
 
         **DEADLINE:** *\<2021-03-02 Tue\>*
 
-        1.  ANN\'s historical literature
+        1.  FSA/WFSAs -\> input theoretical CS, mathematics background
+            to describe these
 
-            1.  describe how ANNs approximate symbolic representations
+            1.  use more appropriate and generalized semiring
+                terminology from Peng et al. 2019 -\> more generalized
+                compared to SoPa paper
 
-            2.  perhaps mention STE from 2013 paper if this is relevant
-                here
+            2.  semirings, abstract algebra and how they are used for
+                finite-state machines in Forward and Viterbi algorithms
+                -\> go deeper into this to get some ba\*\*\*\*\*\*\*
+                mention
+
+            3.  use definitions for all important and re-usable
+                statements including for explainability
 
         2.  Explainability
 
@@ -79,22 +68,22 @@
             7.  improve arbitrary vs. contrained oracle phrasing -\>
                 perhaps black-box vs. white-box but more specific
 
-        3.  FSA/WFSAs -\> input theoretical CS, mathematics background
-            to describe these
+        3.  ANN\'s historical literature
 
-            1.  use more appropriate and generalized semiring
-                terminology from Peng et al. 2019 -\> more generalized
-                compared to SoPa paper
+            1.  describe how ANNs approximate symbolic representations
 
-            2.  semirings, abstract algebra and how they are used for
-                finite-state machines in Forward and Viterbi algorithms
-                -\> go deeper into this to get some background
+            2.  perhaps mention STE from 2013 paper if this is relevant
+                here
 
-    3.  Methodologies
+    2.  Methodologies
 
         **DEADLINE:** *\<2021-03-06 Sat\>*
 
-        1.  Quantization/Binarization
+        1.  Make claim that SoPa++ explainability has a different
+            explainability taxonomy from that of vanilla SoPa, but
+            don\'t claim it is decisively better
+
+        2.  Quantization/Binarization
 
             1.  change STE citation to 2013 paper which is more
                 fundamental, use different name depending on context:
@@ -106,7 +95,7 @@
             3.  how does binarizing help with explainability, justify
                 requirement for it in both training and testing
 
-        2.  Visualizations
+        3.  Visualizations
 
             1.  add visualization of in-depth computational graph in
                 paper for clarity -\> this can be automated
@@ -114,7 +103,7 @@
             2.  produce manual computational graph using tikz, building
                 from what was made earlier
 
-    4.  Results
+    3.  Results
 
         1.  Visualizations
 
@@ -134,7 +123,7 @@
                 data set because of duplicates and overlaps between
                 train and test sets
 
-    5.  Discussion
+    4.  Discussion
 
         1.  address interesting observations and their implications
 
@@ -161,12 +150,12 @@
             explore this relationship on both smmall and large models
             -\> binaries are saturated so maybe tau might help with this
 
-    6.  Conclusions
+    5.  Conclusions
 
         1.  summarize everything in manuscript and address research
             questions
 
-    7.  Further work
+    6.  Further work
 
         1.  look into future programming tasks and add their content
             here -\> there are many points to consider
@@ -207,25 +196,28 @@
 
     2.  Points to address towards end
 
-        1.  improve capitalization with braces in bibtex file
+        1.  add links to chapters in thesis structure, improve
+            formatting
 
-        2.  if possible, try to find non-arxiv citations for papers
+        2.  improve capitalization with braces in bibtex file
 
-        3.  remove red link color in table of contents
+        3.  if possible, try to find non-arxiv citations for papers
 
-        4.  fine-tune citation color to be consistent with other colors
+        4.  remove red link color in table of contents
 
-        5.  change to two sided format before printing, as this works
+        5.  fine-tune citation color to be consistent with other colors
+
+        6.  change to two sided format before printing, as this works
             well for binding/printing
 
-        6.  add Uni-Potsdam originality declaration, or modify current
+        7.  add Uni-Potsdam originality declaration, or modify current
             one to fit
 
-        7.  add remaining features by referring to master template such
+        8.  add remaining features by referring to master template such
             as abstract (short summarized introduction), list of
             tables/figures/abbreviations, appendices, and all others
 
-        8.  perform spell-check of everything at the end
+        9.  perform spell-check of everything at the end
 
 ### Programming
 
@@ -319,12 +311,7 @@
 
 ### Programming
 
-1.  Model diversity
-
-    1.  run above explainability and comparison workflow on larger
-        models after efficiency improvements
-
-2.  Modelling improvements
+1.  Modelling improvements
 
     1.  check if packed sequences could be incoporated into model
 
@@ -352,7 +339,33 @@
         3.  might be better for speed reasons to leave it as a search
             method
 
-3.  Model features
+    4.  allow training to be resumed from log file without a saved
+        model, currently saved on the `better_resume` branch
+
+        1.  push if-clause and try-except blocks inside training script
+            inner and outer functions, which can turn off
+            training_resume boolean -\> for the latter only when grid
+            training is provide; if not exit with error
+
+        2.  remove try-except clause from resume script since it is not
+            needed
+
+        3.  need to read embeddings from file instead of assign to zero,
+            as this can cause reproducibility issues
+
+        4.  need to also find a way to break out of FileNotFoundError
+            for missing vocab file -\> this can also be re-read if
+            configs are present -\> remove vocab workflow altogether
+
+        5.  minimum for single -\> model and train config, minimum for
+            grid -\> base model, base train and grid config -\> add
+            error block for when grid config is not found
+
+        6.  test out thoroughly with examples for both single and grid
+            scenarios to see if things work effectively -\> then merge
+            into main later on
+
+2.  Model features
 
     1.  add check to ensure start, end and pad tokens don\'t occur
         adversarially inside sequence -\> `nltk.word_tokenize` already
@@ -362,7 +375,7 @@
         not need extra data to be loaded -\> can also accept stdin as
         unix pipe
 
-4.  Explore activation generalization methods
+3.  Explore activation generalization methods
 
     1.  improve baseline simplification and rational compression method
 
