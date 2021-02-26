@@ -111,18 +111,18 @@ class Semiring:
     def __init__(self,
                  zero: Callable[..., torch.Tensor],
                  one: Callable[..., torch.Tensor],
-                 plus: Callable[..., torch.Tensor],
-                 times: Callable[..., torch.Tensor],
-                 float_plus: Callable[..., Any],
-                 float_times: Callable[..., Any],
+                 addition: Callable[..., torch.Tensor],
+                 multiplication: Callable[..., torch.Tensor],
+                 float_addition: Callable[..., Any],
+                 float_multiplication: Callable[..., Any],
                  from_outer_to_semiring: Callable[..., torch.Tensor],
                  from_semiring_to_outer: Callable[..., torch.Tensor]) -> None:  # yapf: disable
         self.zero = zero
         self.one = one
-        self.plus = plus
-        self.times = times
-        self.float_plus = float_plus
-        self.float_times = float_times
+        self.addition = addition
+        self.multiplication = multiplication
+        self.float_addition = float_addition
+        self.float_multiplication = float_multiplication
         self.from_outer_to_semiring = from_outer_to_semiring
         self.from_semiring_to_outer = from_semiring_to_outer
 

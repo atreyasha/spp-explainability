@@ -184,7 +184,7 @@ class SoftPatternClassifier(Module):
             persistent=False)
 
     def get_wildcard_matrix(self) -> Union[torch.Tensor, None]:
-        return None if self.no_wildcards else self.semiring.times(
+        return None if self.no_wildcards else self.semiring.multiplication(
             self.wildcard_scale.clone(),  # type: ignore
             self.semiring.from_outer_to_semiring(self.wildcards))
 
@@ -223,7 +223,8 @@ class SoftPatternClassifier(Module):
         # adding the start state and main transition
         main_transitions = torch.cat(
             (restart_padding,
-             self.semiring.times(hiddens[:, :, :-1], transition_matrix)), 2)
+             self.semiring.multiplication(hiddens[:, :, :-1],
+                                          transition_matrix)), 2)
 
         # adding wildcard transitions
         if self.no_wildcards:
@@ -231,9 +232,11 @@ class SoftPatternClassifier(Module):
         else:
             wildcard_transitions = torch.cat(
                 (restart_padding,
-                 self.semiring.times(hiddens[:, :, :-1], wildcard_matrix)), 2)
+                 self.semiring.multiplication(hiddens[:, :, :-1],
+                                              wildcard_matrix)), 2)
             # either main transition or wildcard
-            return self.semiring.plus(main_transitions, wildcard_transitions)
+            return self.semiring.addition(main_transitions,
+                                          wildcard_transitions)
 
     def forward(self, batch: Batch, interim: bool = False) -> torch.Tensor:
         # start timer and get transition matrices
@@ -280,7 +283,7 @@ class SoftPatternClassifier(Module):
                          token_index), as_tuple=True)[0]  # yapf: disable
 
             # update scores with relevant tensor values
-            scores[active_doc_indices] = self.semiring.plus(
+            scores[active_doc_indices] = self.semiring.addition(
                 scores[active_doc_indices],
                 end_state_values[active_doc_indices])
 
@@ -338,7 +341,8 @@ class SoftPatternClassifier(Module):
             self.restart_padding_with_trace(token_index),
             lambda_back_pointers(
                 lambda back_pointer, transition_value: BackPointer(
-                    raw_score=self.semiring.float_times(  # type: ignore
+                    raw_score=self.semiring.
+                    float_multiplication(  # type: ignore
                         back_pointer.raw_score, transition_value),
                     binarized_score=0.,
                     pattern_index=back_pointer.pattern_index,
@@ -362,7 +366,8 @@ class SoftPatternClassifier(Module):
                 self.restart_padding_with_trace(token_index),
                 lambda_back_pointers(
                     lambda back_pointer, wildcard_value: BackPointer(
-                        raw_score=self.semiring.float_times(  # type: ignore
+                        raw_score=self.semiring.
+                        float_multiplication(  # type: ignore
                             back_pointer.raw_score, wildcard_value),
                         binarized_score=0.,
                         pattern_index=back_pointer.pattern_index,
@@ -377,7 +382,7 @@ class SoftPatternClassifier(Module):
 
             # return final object
             return lambda_back_pointers(
-                self.semiring.float_plus,  # type: ignore
+                self.semiring.float_addition,  # type: ignore
                 main_transitions,
                 wildcard_transitions,
                 end_states)
@@ -438,7 +443,7 @@ class SoftPatternClassifier(Module):
 
                 # extract end-states and compare with current bests
                 end_state_back_pointers = [
-                    self.semiring.float_plus(  # type: ignore
+                    self.semiring.float_addition(  # type: ignore
                         best_back_pointer, hidden_back_pointers[end_state])
                     for best_back_pointer, hidden_back_pointers, end_state in
                     zip(end_state_back_pointers, hiddens, end_states)
