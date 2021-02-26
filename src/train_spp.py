@@ -874,13 +874,12 @@ def train_outer(args: argparse.Namespace, resume_training=False) -> None:
         # log information about model
         LOGGER.info("Model: %s" % model)
 
-        if not resume_training:
-            # print model diagnostics and dump files
-            LOGGER.info("Total model parameters: %s" %
-                        sum(parameter.nelement()
-                            for parameter in model.parameters()))
-            dump_configs(args, args.model_log_directory)
-            vocab.dump(args.model_log_directory)
+        # print model diagnostics and dump files
+        LOGGER.info("Total model parameters: %s" %
+                    sum(parameter.nelement()
+                        for parameter in model.parameters()))
+        dump_configs(args, args.model_log_directory)
+        vocab.dump(args.model_log_directory)
 
         train_inner(train_data, valid_data, model, num_classes, args.epochs,
                     args.evaluation_period, args.only_epoch_eval,
