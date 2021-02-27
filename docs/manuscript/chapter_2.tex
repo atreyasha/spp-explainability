@@ -12,7 +12,7 @@
 \end{remark}
 
 \begin{remark}
-  A simple and common semiring is the \textbf{real} or sum-product semiring: $\langle \mathbb{R}, +, \times, 0, 1 \rangle$. Two important semirings for this thesis are shown below.
+  A simple and common semiring is the real or sum-product semiring: $\langle \mathbb{R}, +, \times, 0, 1 \rangle$. Two important semirings for this thesis are shown below.
 \end{remark}
 
 \begin{remark}
@@ -21,7 +21,7 @@
 
 \begin{remark}
   \textbf{Max-product} semiring: $\langle \mathbb{R}_{>0} \cup \{-\infty\}, \text{max}, \times, -\infty, 1 \rangle$
-\end{remar}
+\end{remark}
 
 \end{definition}
 
@@ -87,24 +87,44 @@ Let $\Pi(\pmb{x})$ denote the set of all paths in $\mathcal{A}$ that derive $\pm
 \end{remark}
 
 \begin{remark}
-  The Forward algorithm can be generalized to any semiring \citep{eisner2002parameter} and has a runtime of $O(|Q|^3 + |Q|^2|\pmb{x}|)$ \citep{schwartz2018sopa}, implying it has a linear runtime with respect to the length of the input string $\pmb{x}$.
+  The Forward algorithm can be generalized to any semiring \citep{eisner2002parameter} and has a runtime of $O(|Q|^3 + |Q|^2|\pmb{x}|)$ \citep{schwartz2018sopa}; notably with a linear runtime with respect to the length of the input string $\pmb{x}$.
 \end{remark}
 
 \begin{remark}
-  A special case of Forward is the Viterbi algorithm, where the addition $\oplus$ operator is contrained to the maximum function \citep{viterbi1967error}. We can infer that Viterbi returns the highest scoring path $\pmb{\pi}$ that derives the input string $\pmb{x}$.
+  A special case of Forward is the Viterbi algorithm, where the addition $\oplus$ operator is contrained to the maximum function \citep{viterbi1967error}. Viterbi therefore returns the highest scoring path $\pmb{\pi}$ that derives the input string $\pmb{x}$.
 \end{remark}
+
+\section{Explainable artificial intelligence}
 
 % Explainability and others:
 % Add images where possible
-% Move explainability as the first topic, if possible and relevant
 % Use definition environments as much as possible for re-referencing
 % Section on explainability definitions, methods, post-hoc techniques
 % Subsection on transparencies, taxonomies and hierarchies of explainability methods
 % Provide some method examples such as occlusion, LIME and others -> which can be mentioned again in the SoPa section
+% Improve phrasing of oracle vs. mimic model names -> maybe antecedent and proxy models
+
+% Notes from reading Arrieta et al. (2020) thoroughly:
+% First round: read for the sake of understanding
+% Second round: find portions relevant for use here, with definitions, quotes and other important factors
+% Black box models (opaque) vs. transparent models
+% They also have a rational for why XAI is so important -> What for section
+% They mention a trade-off between performance and transparency -> important
+% Mention contrast between previous AI surge vs. now (more black-box techniques)
+% Look into criteria to classify models as transparent vs. black-box -> can be used for justifications
+% Borrow definition of explainability
+% Borrow criteria for transparency and lack thereof -> black box models
+% Neural SoPa++ is a black-box (non-transparent) model, regex SoPa++ is a transparent model (need justification with definitions)
+% SoPa previously used local explanations and/or feature relevance techniques -> find evidence -> eg. SHAP, LIME
+% SoPa++ uses explanation by simplification (globally) -> find evidence -> not much use of global in paper, but we can make our own argument
+% Look out for hierarchies where possible -> important -> hard to find them, but we can argue that we tried a different explainability method, i.e. explanation by simplification with a global simplified model vs. local-explanations/feature-relevance -> possibly explanations are better when constrictive -> could be used to show SoPa++ is better
+% Problem of a lack of XAI metrics -> we could address this by our distance metrics to provide some insight but this might not be enough
+% Audience needed to evaluate -> link to future work -> but some psychological conclusions can be made about constrictiveness of explanations which is achieved by our model but not the previous one
 
 % STE and quantized NNs:
 % Add images where possible
 % Add section on 2013 and recent STE papers to build on argument for it
+% Add information from more recent paper on pitfalls of STE and other factors, perhaps a definition as well
 % Link to other tricks such as re-parameterization tricks as well
 
 % SoPa:
