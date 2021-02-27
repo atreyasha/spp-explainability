@@ -26,31 +26,34 @@
 
     1.  Background concepts
 
-        **DEADLINE:** *\<2021-03-02 Tue\>*
+        **DEADLINE:** *\<2021-03-03 Wed\>*
 
         1.  Explainability
 
-            1.  qualify what does it mean to be explainable and how to
+            1.  move explainability as the first topic, if possible and
+                relevant
+
+            2.  qualify what does it mean to be explainable and how to
                 define this
 
-            2.  mention that explainability focuses on exposing the
+            3.  mention that explainability focuses on exposing the
                 model\'s logic and not on necessarily creating
                 rationality in the model
 
-            3.  make hierarchy for local vs. global explainability -\>
+            4.  make hierarchy for local vs. global explainability -\>
                 can provide hints of differences here
 
-            4.  explainability is only relevant if the oracle and mimic
+            5.  explainability is only relevant if the oracle and mimic
                 models both **perform competitively and have similar
                 confusion matrix profiles**
 
-            5.  provide some metrics or tangible task-based insights to
+            6.  provide some metrics or tangible task-based insights to
                 show how new explainability works
 
-            6.  clarify meaning and concept of \"occlusion\" as
+            7.  clarify meaning and concept of \"occlusion\" as
                 leave-one-out perturbation analysis
 
-            7.  improve arbitrary vs. contrained oracle phrasing -\>
+            8.  improve arbitrary vs. contrained oracle phrasing -\>
                 perhaps black-box vs. white-box but more specific
 
         2.  ANN\'s historical literature
@@ -62,7 +65,7 @@
 
     2.  Methodologies
 
-        **DEADLINE:** *\<2021-03-06 Sat\>*
+        **DEADLINE:** *\<2021-03-07 Sun\>*
 
         1.  Make claim that SoPa++ explainability has a different
             explainability taxonomy from that of vanilla SoPa, but
@@ -71,7 +74,10 @@
         2.  Motivate structure in terms of RNNs, CNNs and WFSA where
             possible
 
-        3.  Quantization/Binarization
+        3.  Add pseudocode for various segments -\> would help to cement
+            certain concepts
+
+        4.  Quantization/Binarization
 
             1.  change STE citation to 2013 paper which is more
                 fundamental, use different name depending on context:
@@ -83,7 +89,7 @@
             3.  how does binarizing help with explainability, justify
                 requirement for it in both training and testing
 
-        4.  Visualizations
+        5.  Visualizations
 
             1.  add visualization of in-depth computational graph in
                 paper for clarity -\> this can be automated
@@ -101,6 +107,9 @@
             2.  produce visualizations of regex ensembles which would be
                 interesting, and also pattern activations
 
+            3.  look into other visualizations in programming tasks
+                which can be made
+
         2.  Compare results to that of other paper(s)
 
             1.  mention that data set was altered to keep it in good
@@ -110,6 +119,9 @@
                 show that performance metric improve when using original
                 data set because of duplicates and overlaps between
                 train and test sets
+
+        3.  Look into tau threshold comparisons and how they affect
+            explainability
 
     4.  Discussion
 
@@ -226,6 +238,9 @@
             misalignment, activation frequency and other useful metrics
             that can elucidate on-the-ground processes
 
+        3.  use error-bar plot to reflect random seed iterations for
+            binary misalignment and softmax norm differences
+
     2.  Regex OOP
 
         1.  add visualization of regex ensemble with graphviz -\> can
@@ -242,6 +257,8 @@
         1.  add visualizations of model runs using dedicated functions,
             preferably all using python libraries, or otherwise
             defaulting to R libraries
+
+        2.  use error-bar plot to reflect random seed iterations
 
     4.  SoPa++ computational graph
 

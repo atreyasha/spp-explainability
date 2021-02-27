@@ -6,8 +6,9 @@
 *** Manuscript
 **** Structured content
 ***** Background concepts
-      DEADLINE: <2021-03-02 Tue>
+      DEADLINE: <2021-03-03 Wed>
 ****** Explainability
+******* move explainability as the first topic, if possible and relevant
 ******* qualify what does it mean to be explainable and how to define this 
 ******* mention that explainability focuses on exposing the model's logic and not on necessarily creating rationality in the model
 ******* make hierarchy for local vs. global explainability -> can provide hints of differences here
@@ -20,9 +21,10 @@
 ******* perhaps mention STE from 2013 paper if this is relevant here
 
 ***** Methodologies
-      DEADLINE: <2021-03-06 Sat>
+      DEADLINE: <2021-03-07 Sun>
 ****** Make claim that SoPa++ explainability has a different explainability taxonomy from that of vanilla SoPa, but don't claim it is decisively better
 ****** Motivate structure in terms of RNNs, CNNs and WFSA where possible 
+****** Add pseudocode for various segments -> would help to cement certain concepts
 ****** Quantization/Binarization
 ******* change STE citation to 2013 paper which is more fundamental, use different name depending on context: https://arxiv.org/abs/1308.3432
 ******* cite and explain straight-through estimation (STE), and what benefits this is supposed to bring
@@ -30,12 +32,15 @@
 ****** Visualizations
 ******* add visualization of in-depth computational graph in paper for clarity -> this can be automated
 ******* produce manual computational graph using tikz, building from what was made earlier
+
 ***** Results
 ****** Visualizations
 ******* produce visualization of training performance using python frameworks rather than R
 ******* produce visualizations of regex ensembles which would be interesting, and also pattern activations
+******* look into other visualizations in programming tasks which can be made
 ****** Compare results to that of other paper(s)
 ******* mention that data set was altered to keep it in good quality by removing duplicates, perhaps this can be re-tested without such processing or used as a limitation/further-work -> although results appear to show that performance metric improve when using original data set because of duplicates and overlaps between train and test sets
+****** Look into tau threshold comparisons and how they affect explainability
 ***** Discussion
 ****** address interesting observations and their implications
 ****** expound on trade-off between performance and explainability and process of mimic extraction
@@ -77,11 +82,13 @@
 ***** Cross-model comparisons
 ****** visualize examples where regex and neural model align and misalign, eg. with a confusion matrix
 ****** compute statistics with random-seed deviations over inter-model comparisons such as average distance, misalignment, activation frequency and other useful metrics that can elucidate on-the-ground processes
+****** use error-bar plot to reflect random seed iterations for binary misalignment and softmax norm differences
 ***** Regex OOP
 ****** add visualization of regex ensemble with graphviz -> can specify which pattern to visualize and how to make large scale visualizations
 ****** visualize patterns as dots with internal pie charts which show magnitudes of each class; displayed as a colour with legend, will show relative importance of each binary neuron and can help us segment their purposes
 ***** Model runs
 ****** add visualizations of model runs using dedicated functions, preferably all using python libraries, or otherwise defaulting to R libraries
+****** use error-bar plot to reflect random seed iterations
 ***** SoPa++ computational graph
 ****** add visualization of computational graph function directly to sopa torch model
 **** Dependencies, typing and testing
