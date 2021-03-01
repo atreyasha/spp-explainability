@@ -53,7 +53,7 @@ class MaskedLayerNorm(Module):
                 input: torch.Tensor,
                 input_mask: Union[torch.Tensor, None] = None) -> torch.Tensor:
         if input_mask is None:
-            return torch.nn.functional.layer_norm(
+            return F.layer_norm(
                 input,
                 self.normalized_shape,  # type: ignore
                 self.weight,  # type: ignore
