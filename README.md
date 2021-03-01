@@ -96,25 +96,6 @@ usage: train_spp.py [-h] --embeddings <file_path> --train-data <file_path>
 optional arguments:
   -h, --help               show this help message and exit
 
-optional sopa-architecture arguments:
-  --bias-scale             <float>
-                           Scale biases by this parameter (default: 1.0)
-  --no-wildcards           Do not use wildcard transitions (default: False)
-  --patterns               <str>
-                           Pattern lengths and counts with the following
-                           syntax: PatternLength1-PatternCount1_PatternLength2
-                           -PatternCount2_... (default: 6-50_5-50_4-50_3-50)
-  --semiring               {MaxSumSemiring,MaxProductSemiring}
-                           Specify which semiring to use (default:
-                           MaxSumSemiring)
-  --static-embeddings      Freeze learning of token embeddings (default:
-                           False)
-  --tau-threshold          <float>
-                           Specify value of TauSTE binarizer tau threshold
-                           (default: 0.0)
-  --wildcard-scale         <float>
-                           Scale wildcard(s) by this parameter (default: None)
-
 required training arguments:
   --embeddings             <file_path>
                            Path to GloVe token embeddings file (default: None)
@@ -180,6 +161,25 @@ optional grid-training arguments:
   --num-random-iterations  <int>
                            Number of random iteration(s) for each grid
                            instance (default: 10)
+
+optional sopa-architecture arguments:
+  --bias-scale             <float>
+                           Scale biases by this parameter (default: 1.0)
+  --no-wildcards           Do not use wildcard transitions (default: False)
+  --patterns               <str>
+                           Pattern lengths and counts with the following
+                           syntax: PatternLength1-PatternCount1_PatternLength2
+                           -PatternCount2_... (default: 6-50_5-50_4-50_3-50)
+  --semiring               {MaxSumSemiring,MaxProductSemiring}
+                           Specify which semiring to use (default:
+                           MaxSumSemiring)
+  --static-embeddings      Freeze learning of token embeddings (default:
+                           False)
+  --tau-threshold          <float>
+                           Specify value of TauSTE binarizer tau threshold
+                           (default: 0.0)
+  --wildcard-scale         <float>
+                           Scale wildcard(s) by this parameter (default: None)
 
 optional hardware-acceleration arguments:
   --gpu                    Use GPU hardware acceleration (default: False)
