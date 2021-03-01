@@ -2,7 +2,25 @@
 
 \label{background}
 
-\section{Algebraic semirings}
+\section{Explainable artificial intelligence}
+
+In this section, we lay out background concepts for Explainable Artificial Intelligence (XAI) which have been largely adopted from \citet{arrieta2020explainable}. The study is particularly helpful for us since it consists of a vast literature review and survey of recent XAI techniques; as well as discussions into the future of XAI research. We start off by providing the following three definitions from the study:
+
+\begin{definition}[Transparency; \citealt{arrieta2020explainable}]
+  A model is considered to be transparent if by itself it is understandable. Since a model can feature different degrees of understandability, transparent models \textelp{} are divided into three categories: simulatable models, decomposable models and algorithmically transparent models. 
+\end{definition}
+
+\begin{definition}[Explainability; \citealt{arrieta2020explainable}]
+  Explainability is associated with the notion of explanation as an interface between humans and a decision maker that is, at the same time, both an accurate proxy of the decision maker and comprehensible to humans. 
+\end{definition}
+
+\begin{definition}[Explainable Artificial Intelligence; \citealt{arrieta2020explainable}]
+  Given an audience, an \textbf{explainable} Artificial Intelligence is one that produces details or reasons to make its functioning clear or easy to understand.
+\end{definition}
+
+\citet{arrieta2020explainable} notably concretize the presence of a target audience for XAI, implying that different XAI techniques should be employed for different target audiences. In their study, they provide examples of various target audiences such as domain experts, end-users and managers.
+
+\section{Weighted finite-state automaton}
 
 \begin{definition}[Semiring; \citealt{kuich1986linear}]
   A semiring is a set $\mathbb{K}$ along with two binary associative operations $\oplus$ (addition) and $\otimes$ (multiplication) and two identity elements: $\bar{0}$ for addition and $\bar{1}$ for multiplication. Semirings require that addition is commutative, multiplication distributes over addition, and that multiplication by $\bar{0}$ annihilates, i.e., $\bar{0} \otimes a = a \otimes \bar{0} = \bar{0}$.
@@ -24,8 +42,6 @@
 \end{remark}
 
 \end{definition}
-
-\section{Weighted finite-state automata}
 
 \begin{definition}[Weighted finite-state automaton; \citealt{peng2018rational}]
   A weighted finite-state automaton over a semiring $\mathbb{K}$ is a 5-tuple $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \mathcal{T}, \lambda, \rho \rangle$, with:
@@ -74,7 +90,7 @@ Let $\Pi(\pmb{x})$ denote the set of all paths in $\mathcal{A}$ that derive $\pm
 \end{equation}
 
 \begin{remark}
-  Since $\mathbb{K}$ is a semiring, \mathcal{A}[\![\pmb{x}]\!] can be efficiently computed using the Forward algorithm \citep{baum1966statistical}. Its dynamic program is summarized below without $\epsilon$-transitions for simplicity. $\Omega_i(q)$ gives the aggregate score of all paths that derive the substring $\langle x_1, x_2, \dots, x_i \rangle$ and end in state $q$:
+  Since $\mathbb{K}$ is a semiring, $\mathcal{A}[\![\pmb{x}]\!]$ can be efficiently computed using the Forward algorithm \citep{baum1966statistical}. Its dynamic program is summarized below without $\epsilon$-transitions for simplicity. $\Omega_i(q)$ gives the aggregate score of all paths that derive the substring $\langle x_1, x_2, \dots, x_i \rangle$ and end in state $q$:
  
 \begin{subequations}
   \begin{align}
@@ -93,52 +109,6 @@ Let $\Pi(\pmb{x})$ denote the set of all paths in $\mathcal{A}$ that derive $\pm
 \begin{remark}
   A special case of Forward is the Viterbi algorithm, where the addition $\oplus$ operator is contrained to the maximum function \citep{viterbi1967error}. Viterbi therefore returns the highest scoring path $\pmb{\pi}$ that derives the input string $\pmb{x}$.
 \end{remark}
-
-\section{Explainable artificial intelligence}
-
-% Explainability and others:
-% Add images where possible
-% Use definition environments as much as possible for re-referencing
-% Section on explainability definitions, methods, post-hoc techniques
-% Subsection on transparencies, taxonomies and hierarchies of explainability methods
-% Provide some method examples such as occlusion, LIME and others -> which can be mentioned again in the SoPa section
-% Improve phrasing of oracle vs. mimic model names -> maybe antecedent and proxy models
-
-% Notes from reading Arrieta et al. (2020) thoroughly:
-% First round: read for the sake of understanding
-% Second round: find portions relevant for use here, with definitions, quotes and other important factors
-% Black box models (opaque) vs. transparent models
-% They also have a rational for why XAI is so important -> What for section
-% They mention a trade-off between performance and transparency -> important
-% Mention contrast between previous AI surge vs. now (more black-box techniques)
-% Look into criteria to classify models as transparent vs. black-box -> can be used for justifications
-% Borrow definition of explainability
-% Borrow criteria for transparency and lack thereof -> black box models
-% Neural SoPa++ is a black-box (non-transparent) model, regex SoPa++ is a transparent model (need justification with definitions)
-% SoPa previously used local explanations and/or feature relevance techniques -> find evidence -> eg. SHAP, LIME
-% SoPa++ uses explanation by simplification (globally) -> find evidence -> not much use of global in paper, but we can make our own argument
-% Look out for hierarchies where possible -> important -> hard to find them, but we can argue that we tried a different explainability method, i.e. explanation by simplification with a global simplified model vs. local-explanations/feature-relevance -> possibly explanations are better when constrictive -> could be used to show SoPa++ is better
-% Problem of a lack of XAI metrics -> we could address this by our distance metrics to provide some insight but this might not be enough
-% Audience needed to evaluate -> link to future work -> but some psychological conclusions can be made about constrictiveness of explanations which is achieved by our model but not the previous one
-
-% STE and quantized NNs:
-% Add images where possible
-% Add section on 2013 and recent STE papers to build on argument for it
-% Add information from more recent paper on pitfalls of STE and other factors, perhaps a definition as well
-% Link to other tricks such as re-parameterization tricks as well
-
-% SoPa:
-% Add images where possible
-% Think about bolding/unbolding transition weights as this is different between the studies
-% Try to include as thorough explanations as possible and mention ignoring self-loops and epsilons
-% Mention we only use one start and end vectors and not all -> because must start and end there
-% Mention time complexity differences and other things that are different from definitions
-% Mention other deviations from main equation and ensemble of WFSAs, semirings etc
-% Mention self-loops and epsilon transitions as well
-% Go into specifics of original SoPa model
-% Talk about performance and other general basics, time complexities where relevant
-% Reference topics from explainability to mention current taxonomy/hierarchy
-% Use SoPa explanation here to talk about limitations and fixes in next chapter, which should provide a clean flow to the next chapter's content
 
 %%% Local Variables: 
 %%% mode: latex
