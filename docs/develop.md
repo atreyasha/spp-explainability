@@ -1,13 +1,11 @@
 ## Table of Contents
--   [Current tasks](#current-tasks)
+-   [Tasks](#tasks)
     -   [Manuscript](#manuscript)
-    -   [Programming](#programming)
--   [Future tasks](#future-tasks)
-    -   [Programming](#programming-1)
+    -   [Current Programming](#current-programming)
+    -   [Future programming](#future-programming)
 -   [Notes](#notes)
     -   [Manuscript](#manuscript-1)
     -   [Admin](#admin)
--   [Completed](#completed)
 -   [Legacy](#legacy)
     -   [Interpretable RNN
         architectures](#interpretable-rnn-architectures)
@@ -18,228 +16,129 @@
     -   [Inductive logic on NLP search
         spaces](#inductive-logic-on-nlp-search-spaces)
 
-## Current tasks
+## Tasks
 
 ### Manuscript
 
-1.  Structured content
+1.  Background concepts
 
-    1.  Background concepts
+    **DEADLINE:** *\<2021-03-05 Fri\>*
 
-        **DEADLINE:** *\<2021-03-03 Wed\>*
+    1.  Explainability
 
-        1.  Explainability
+        1.  Basics of transparent/black-box models
 
-            1.  move explainability as the first topic, if possible and
-                relevant
+            1.  perhaps add some remarks to explain transparency
+                categories -\> paraphrase these to keep things simple
 
-            2.  qualify what does it mean to be explainable and how to
-                define this
+            2.  define criteria to classify models into transparent vs.
+                black-box (as the opposite of transparent models) -\>
+                make these distinctions very clear
 
-            3.  mention that explainability focuses on exposing the
-                model\'s logic and not on necessarily creating
-                rationality in the model
+            3.  black box models (opaque) vs. transparent models -\>
+                give examples of each
 
-            4.  make hierarchy for local vs. global explainability -\>
-                can provide hints of differences here
+            4.  mention contrast between previous AI surge vs. now (more
+                black-box techniques) -\> also why it is important for
+                XAI to exist with more black-box models (repeat
+                introduction points)
 
-            5.  explainability is only relevant if the oracle and mimic
-                models both **perform competitively and have similar
-                confusion matrix profiles**
+        2.  Explainability techniques
 
-            6.  provide some metrics or tangible task-based insights to
-                show how new explainability works
+            1.  bring up different post-hoc explainability techniques,
+                with explanations by simplification definition and other
+                ones such as local explanations, feature-relevance and
+                examples such as occlusion, LIME and others
 
-            7.  clarify meaning and concept of \"occlusion\" as
-                leave-one-out perturbation analysis
+            2.  improve phrasing of oracle vs. mimic model names -\>
+                maybe antecedent and proxy models
 
-            8.  improve arbitrary vs. contrained oracle phrasing -\>
-                perhaps black-box vs. white-box but more specific
+            3.  mention examples of research conducting extraction of
+                FSA/WFSA from RNNs, link then to next section on WFSA
 
-        2.  ANN\'s historical literature
+        3.  Interesting insights
 
-            1.  describe how ANNs approximate symbolic representations
+            1.  bring up concept of trade-off between performance and
+                trasparency
 
-            2.  perhaps mention STE from 2013 paper if this is relevant
-                here
+            2.  problem of a lack of XAI metrics -\> we could address
+                this by our distance metrics to provide some insight but
+                this might not be enough
 
-    2.  Methodologies
+            3.  audience needed to evaluate -\> link to future work -\>
+                but some psychological conclusions can be made about
+                constrictiveness of explanations which is achieved by
+                our model but not the previous one
 
-        **DEADLINE:** *\<2021-03-07 Sun\>*
+            4.  possibly explanations are better when constrictive, can
+                use other reference to justify this too
 
-        1.  Make claim that SoPa++ explainability has a different
-            explainability taxonomy from that of vanilla SoPa, but
-            don\'t claim it is decisively better
+            5.  add images/visualizations where possible
 
-        2.  Motivate structure in terms of RNNs, CNNs and WFSA where
-            possible
+    2.  STE layer
 
-        3.  Add pseudocode for various segments -\> would help to cement
-            certain concepts
+        1.  Add historical literature from 2013/2016/2019 papers
 
-        4.  Quantization/Binarization
+            1.  justify forward and backward passes using the 2013/2016
+                papers, as well as the 2019 paper if possible
 
-            1.  change STE citation to 2013 paper which is more
-                fundamental, use different name depending on context:
-                <https://arxiv.org/abs/1308.3432>
+        2.  Add visual of STE function along with single-line (min-max)
+            and partial function equation representations
 
-            2.  cite and explain straight-through estimation (STE), and
-                what benefits this is supposed to bring
+    3.  Legacy SoPa
 
-            3.  how does binarizing help with explainability, justify
-                requirement for it in both training and testing
+        1.  Model
 
-        5.  Visualizations
+            1.  mention epsilons and self-loops
 
-            1.  add visualization of in-depth computational graph in
-                paper for clarity -\> this can be automated
+            2.  mention we only use one start and end vectors and not
+                all -\> because must start and end there
 
-            2.  produce manual computational graph using tikz, building
-                from what was made earlier
+            3.  mention time complexity differences and other things
+                that are different from definitions -\> sparse
+                transition matrix
 
-    3.  Results
+            4.  mention other deviations from main equation and ensemble
+                of WFSAs, semirings etc
 
-        1.  Visualizations
+            5.  talk about performance and other general basics, time
+                complexities where relevant
 
-            1.  produce visualization of training performance using
-                python frameworks rather than R
+        2.  Explainability
 
-            2.  produce visualizations of regex ensembles which would be
-                interesting, and also pattern activations
+            1.  SoPa is a black-box model -\> justify using previous
+                definitions
 
-            3.  look into other visualizations in programming tasks
-                which can be made
+            2.  SoPa uses local explanations and/or feature relevance
+                techniques -\> need evidence from background concepts
 
-        2.  Compare results to that of other paper(s)
+            3.  reference topics from explainability to mention current
+                taxonomy/hierarchy
 
-            1.  mention that data set was altered to keep it in good
-                quality by removing duplicates, perhaps this can be
-                re-tested without such processing or used as a
-                limitation/further-work -\> although results appear to
-                show that performance metric improve when using original
-                data set because of duplicates and overlaps between
-                train and test sets
+        3.  Use SoPa explanation here to talk about limitations and
+            fixes in next chapter, which should provide a clean flow to
+            the next chapter\'s content
 
-        3.  Look into tau threshold comparisons and how they affect
-            explainability
+            1.  add images where possible
 
-    4.  Discussion
-
-        1.  address interesting observations and their implications
-
-        2.  expound on trade-off between performance and explainability
-            and process of mimic extraction
-
-        3.  how can a user make use of the mimic model and what benefits
-            are there for the user in terms of security/safety/etc -\>
-            or could add this to further work
-
-        4.  mention possibilities of fixing errors on the test set with
-            general changes to the regex model which are much easier to
-            do compared to the tensor model
-
-        5.  show cases where we could avoid adversarial cases using the
-            insight of the regex model
-
-        6.  run explainability and evaluation comparisons on models
-            trained with different and increasing tau values to
-            experiment how this affects performance/explainability -\>
-            hypothesis is that this might bring regex and neural
-            explainabilities closer together -\> if not then think of
-            issues with this process -\> would be very interesting to
-            explore this relationship on both smmall and large models
-            -\> binaries are saturated so maybe tau might help with this
-
-    5.  Conclusions
-
-        1.  summarize everything in manuscript and address research
-            questions
-
-    6.  Further work
-
-        1.  look into future programming tasks and add their content
-            here -\> there are many points to consider
-
-        2.  mention about how it is not easy to evaluate the \"quality
-            of explainability\" and to say one explainability is better
-            than the other -\> aside from a theoretical perspective
-
-        3.  perhaps suggest how this explainability could be evaluated
-            via conducting a survey and getting rating from people
-
-        4.  porting this technique to a transformer where possible -\>
-            but mention limitations of everything being context
-            dependent
-
-        5.  extension/recommendations -\> transducer for seq2seq tasks
-
-        6.  can map linear to decision tree to get clearer picture of
-            possibilities
-
-        7.  would be interesting to deterministically export which
-            patterns for sure lead to which class, could help to
-            identify adversarial samples via tinkering
-
-        8.  database with indexing could help improve regex lookup speed
-            -\> further work
-
-        9.  think about why larger regex model tends to not be as close
-            to neural as a smaller regex model -\> can also be
-            investigated with different models
-
-2.  Formatting
-
-    1.  Paper length
-
-        1.  20-90 pages thesis length -\> try to keep ideas
-            well-motivated yet succinct
-
-    2.  Points to address towards end
-
-        1.  add C-like reference to explain what SoPa++ means like in
-            i++
-
-        2.  add links to chapters in thesis structure, improve
-            formatting
-
-        3.  improve capitalization with braces in bibtex file
-
-        4.  if possible, try to find non-arxiv citations for papers
-
-        5.  remove red link color in table of contents
-
-        6.  fine-tune citation color to be consistent with other colors
-
-        7.  change to two sided format before printing, as this works
-            well for binding/printing
-
-        8.  add Uni-Potsdam originality declaration, or modify current
-            one to fit
-
-        9.  add remaining features by referring to master template such
-            as abstract (short summarized introduction), list of
-            tables/figures/abbreviations, appendices, and all others
-
-        10. perform spell-check of everything at the end
-
-### Programming
-
-1.  Visualization and summary-statistics
+2.  Visualization and summary-statistics
 
     **DEADLINE:** *\<2021-03-11 Thu\>*
 
     1.  Cross-model comparisons
 
-        1.  visualize examples where regex and neural model align and
-            misalign, eg. with a confusion matrix
-
-        2.  compute statistics with random-seed deviations over
+        1.  compute statistics with random-seed deviations over
             inter-model comparisons such as average distance,
             misalignment, activation frequency and other useful metrics
             that can elucidate on-the-ground processes
 
-        3.  use error-bar plot to reflect random seed iterations for
-            binary misalignment and softmax norm differences
+        2.  use error-bar plot to reflect random seed iterations for
+            binary misalignment and softmax norm differences -\> analyze
+            relationship with tau threshold vs. performance vs.
+            softmax/binary distances
+
+        3.  visualize examples where regex and neural model align and
+            misalign, eg. with a confusion matrix
 
     2.  Regex OOP
 
@@ -258,14 +157,238 @@
             preferably all using python libraries, or otherwise
             defaulting to R libraries
 
-        2.  use error-bar plot to reflect random seed iterations
-
     4.  SoPa++ computational graph
 
-        1.  add visualization of computational graph function directly
-            to sopa torch model
+        1.  visualize STE function
 
-2.  Dependencies, typing and testing
+        2.  visualize TauSTE function
+
+        3.  add visualization of computational graph function using tikz
+
+        4.  add automated computational graph as well
+
+3.  Methodologies
+
+    1.  FMTOD data set
+
+        1.  provide summary statistics and explanation about the data
+            set
+
+        2.  mention that data set was altered to keep it in good quality
+            by removing duplicates, perhaps this can be re-tested
+            without such processing or used as a limitation/further-work
+            -\> although results appear to show that performance metric
+            improve when using original data set because of duplicates
+            and overlaps between train and test sets
+
+    2.  Model
+
+        1.  motivate structure in terms of RNNs, CNNs and WFSA where
+            possible
+
+        2.  add pseudocode for various segments -\> would help to cement
+            certain concepts
+
+        3.  add detailed information on how hard SoPa++ model differs
+            from SoPa related to transitions and other simplifications
+            -\> motivate them using idea of explainable simplification
+
+        4.  neural SoPa++ is a black-box (non-transparent) model, regex
+            SoPa++ is a transparent model -\> need justifications from
+            background concepts
+
+        5.  SoPa++ uses explanation by simplification (globally) -\>
+            need justification from background concepts -\> not much use
+            of global in paper, but we can make our own arguments
+
+    3.  Explainability
+
+        1.  explain how we make explanations by simplification work
+            altogether
+
+        2.  hard to find hierarchies of good vs. not-good
+            explainability, but we can argue that we tried a different
+            explainability method, i.e. explanation by simplification
+            with a global simplified model vs.
+            local-explanations/feature-relevance -\> also we can use the
+            constrictive argument from the paper
+
+        3.  make claim that SoPa++ explainability has a different
+            explainability taxonomy from that of vanilla SoPa, but
+            don\'t claim it is decisively better
+
+        4.  mention that the target audience of this explainability
+            method is domain experts, since it is still very complicated
+
+        5.  link back to background concepts when we discuss bringing
+            neural and regex model as close to each other as possible
+
+    4.  Quantization/Binarization
+
+        1.  explain how and why we modified STE to TauSTE
+
+        2.  how does binarizing help with explainability, justify
+            requirement for it in both training and testing
+
+    5.  Training/Evaluation/Explainability-evaluation
+
+        1.  provide extensive details of training setup
+
+        2.  provide extensive details of evaluating neural/regex models
+
+        3.  provide extensive details of evaluating explanations by
+            simplification \"metric\" of neural-regex models -\> which
+            should make results clearer
+
+        4.  **important:** everything shown in the \"Results\" section
+            should be motivated or introduced here
+
+    6.  Visualizations
+
+        1.  add visualization of TauSTE function
+
+        2.  produce manual computational graph using tikz, building from
+            what was made earlier
+
+        3.  add visualization of in-depth computational graph in paper
+            for clarity -\> this can be automated with PyTorch tools
+
+4.  Results
+
+    1.  Report F_1 scores and performances of neural models
+
+        1.  compare performance to that of other paper(s)
+
+        2.  mention again about test partition difference due to making
+            it unique
+
+        3.  consider making test-partition not unique so this could be
+            used to compare with other studies
+
+    2.  Relationship between tau threshold vs. performance vs.
+        softmax/binary distances
+
+    3.  Visualizations
+
+        1.  show visualization of training performance timelines, think
+            about how to keep most important information
+
+        2.  show visualizations of important patterns in a regex model
+            -\> something which is small and fits well into a page
+
+        3.  show visualization of tau threshold vs. performance vs.
+            softmax/binary distances with error bars for random seed
+            iterations
+
+        4.  show confusion matrix between regex and neural models to
+            show alignment/misalignment, if this is necessary -\> but it
+            will show interesting class differences
+
+5.  Discussion
+
+    1.  Expound on trade-off between performance and transparency by
+        looking at differently sized models
+
+    2.  Discuss relationship between tau threshold and the
+        softmax/binary distances
+
+    3.  Think about why larger regex models tend to show more
+        misalignment from neural counterparts compared to smaller models
+
+    4.  Visualizations
+
+        1.  show TikZ visualization of each binary neuron\'s relative
+            importance for classes -\> would be interesting to see how
+            saturated these are
+
+6.  Conclusions
+
+    1.  Summarize everything in manuscript
+
+    2.  Address research questions
+
+7.  Further work
+
+    1.  Quality of explainability
+
+        1.  this is subjective and a survey from the target audience
+            would be good to have
+
+    2.  Modelling
+
+        1.  extract relevant points from future programming tasks and
+            add them here
+
+        2.  extend to a finite-state transducer for seq2seq tasks
+
+        3.  can map linear to decision tree to get clearer picture of
+            possibilities
+
+        4.  human intervention inside regex model to monitor/improve
+            performance
+
+    3.  Analysis
+
+        1.  analyzing whether patterns can help discover possible
+            adversarial patterns
+
+        2.  for the target audience of end-users -\> how can a user make
+            use of the regex model
+
+8.  Formatting
+
+    1.  Paper length
+
+        1.  20-90 pages thesis length -\> try to keep ideas
+            well-motivated yet succinct
+
+    2.  Points to address towards end
+
+        1.  Introduction
+
+            1.  add C-like reference to explain what SoPa++ means like
+                in i++
+
+            2.  fix introduction with new details from other chapters
+
+            3.  update motivations from Arrieta et al. 2020 \"What for\"
+                section
+
+            4.  add links to chapters in thesis structure, improve
+                formatting
+
+        2.  Bibliography
+
+            1.  improve capitalization with braces in bibtex file
+
+            2.  if possible, try to find non-arxiv citations for papers
+
+            3.  remove red link color in table of contents
+
+            4.  fine-tune citation color to be consistent with other
+                colors
+
+        3.  Manuscript admin
+
+            1.  sort out all abbreviations and standardize formatting in
+                terms of where they are first declared
+
+            2.  change to two sided format before printing, as this
+                works well for binding/printing
+
+            3.  add Uni-Potsdam originality declaration, or modify
+                current one to fit
+
+            4.  add remaining features by referring to master template
+                such as abstract (short summarized introduction), list
+                of tables/figures/abbreviations, appendices, and all
+                others
+
+            5.  perform spell-check of everything at the end
+
+### Current Programming
+
+1.  Dependencies, typing and testing
 
     1.  if using R, document R dependencies such as package versions
         neatly (avoid `renv`)
@@ -281,7 +404,7 @@
         this can be changed or understood to keep consistency (ie. keep
         everything to List with overloads)
 
-3.  Documentation and clean-code
+2.  Documentation and clean-code
 
     1.  find better naming for mimic/oracle models which is based on
         research terminology -\> right now mix of neural and regex is
@@ -294,8 +417,8 @@
     3.  reduce source code lines, chunking and comments -\> pretty sort
         python code and function/class orders perhaps by length
 
-    4.  add a comment to each code chunk which explains inner mechanisms
-        better
+    4.  add a comment above each code chunk which explains inner
+        mechanisms better
 
     5.  update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
@@ -315,9 +438,7 @@
 
     10. test download and all other scripts to ensure they work
 
-## Future tasks
-
-### Programming
+### Future programming
 
 1.  Modelling improvements
 
@@ -334,6 +455,8 @@
         2.  might need to have a very large batch size to see any
             improvements with multiprocessing
 
+        3.  database with indexing could help improve regex lookup speed
+
     3.  consider using finditer for regex lookup with trace, since we
         should return all matches
 
@@ -347,17 +470,11 @@
         3.  might be better for speed reasons to leave it as a search
             method
 
-2.  Model features
-
-    1.  add check to ensure start, end and pad tokens don\'t occur
-        adversarially inside sequence -\> `nltk.word_tokenize` already
-        breaks these up
-
-    2.  add predict function for both mimic and oracle model which does
+    4.  add predict function for both mimic and oracle model which does
         not need extra data to be loaded -\> can also accept stdin as
         unix pipe
 
-3.  Explore activation generalization methods
+2.  Explore activation generalization methods
 
     1.  improve baseline simplification and rational compression method
 
@@ -506,240 +623,6 @@
     5.  Manuscript draft submission: **31.03.2021**
 
     6.  Offical manuscript submission: **10.04.2021**
-
-## Completed
-
-**DONE** modify normalizer to ignore calculation of all
-infinities via minimal value replacement
-
-**CLOSED:** *\[2021-01-27 Wed 19:19\]*
-
-**DONE** remove both epsilon/self-loops -\> use only simple
-transitions and hard wild cards
-
-**CLOSED:** *\[2021-01-27 Wed 15:01\]*
-
-**DONE** defaults from paper: semiring -\> max-product,
-batch-size -\> 128 (cpu), epochs -\> 200, patience -\> 30, word_dim -\>
-300
-
-**CLOSED:** *\[2021-01-02 Sat 14:23\]*
-
-**DONE** reduce circum-padding token count to 1 instead of
-length of longest pattern
-
-**CLOSED:** *\[2020-12-31 Thu 13:03\]*
-
-**DONE** test out to see if scheduler works and if its state
-gets incremented -\> need to train single model for long period of time
-and analyze state_dict of scheduler to see what has been recorded -\> it
-works well when clip threshold is set to zero and patience is observed
-
-**CLOSED:** *\[2020-12-31 Thu 13:01\]*
-
-**DONE** log model metrics with intra/inter-epoch frequency
-which can be shared with tqdm for displaying -\> would require some
-recoding with modulos -\> how to manage updates with batch vs. epochs
-conflict and how to continue training as well, think about whether to
-recompute accuracy as well on a batch-basis
-
-**CLOSED:** *\[2020-12-22 Tue 12:22\]*
-
-**DONE** add argparse option of how often to update tqdm
-metrics in training -\> should be shared parameter for tensorboard
-logging
-
-**CLOSED:** *\[2020-12-22 Tue 12:22\]*
-
-**DONE** make consistent use of `validation` versus `dev`
-throughout all source code -\> redo all log messages and also file
-naming especially related to inputs, preprocessing and argparse -\> will
-require time and effort
-
-**CLOSED:** *\[2020-12-20 Sun 17:49\]*
-
-**DONE** remove `rnn` option from code altogether -\> keep
-things simple for now
-
-**CLOSED:** *\[2020-12-19 Sat 02:33\]*
-
-**DONE** change argparse variable names within train script
-to reflect parser and make this consistent throughout, including in
-other auxiliary scripts
-
-**CLOSED:** *\[2020-12-19 Sat 01:33\]*
-
-**DONE** need to understand `nn.Module` functionality before
-anything else -\> investigate whether `fixed_var` function is indeed
-necessary or can be removed since `requires_grad` is set to False by
-default, but could be some conflict with `nn.Module` default parameter
-construction with `requires_grad = True` -\> left intact for now and
-appears to work well
-
-**CLOSED:** *\[2020-12-12 Sat 12:28\]*
-
-**DONE** look through `train.py` and make comments on general
-processes -\> fix minor issues where present such as variable naming,
-formatting etc.
-
-**CLOSED:** *\[2020-12-08 Tue 18:38\]*
-
-**DONE** major code refactoring for main model with
-conversion to recent PyTorch (eg. 1.\*) and CUDA versions (eg. 10.\*)
-
-**CLOSED:** *\[2020-12-05 Sat 18:47\]* **DEADLINE:** *\<2020-12-06
-Sun\>*
-
-**DONE** add tensorboard to explicit dependencies to view
-relevant logs during training
-
-**CLOSED:** *\[2020-12-03 Thu 14:40\]*
-
-**DONE** replace all Variable calls with simple Tensors and
-add `requires_grad` argument directly to tensors where this is
-necessary: see
-<https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable>
-
-**CLOSED:** *\[2020-12-02 Wed 21:50\]*
-
-**DONE** UserWarning: Implicit dimension choice for
-log_softmax has been deprecated. Change the call to include dim=X as an
-argument
-
-**CLOSED:** *\[2020-12-02 Wed 18:57\]*
-
-**DONE** UserWarning: size_average and reduce args will be
-deprecated, please use reduction=\'sum\' instead
-
-**CLOSED:** *\[2020-12-02 Wed 18:39\]*
-
-**DONE** make workflow to download Facebook Multilingual Task
-Oriented Dataset and pre-process to sopa-ready format -\> text data and
-labels with dictionary mapping as to what the labels mean
-
-**CLOSED:** *\[2020-12-01 Tue 20:29\]* **DEADLINE:** *\<2020-12-03
-Thu\>*
-
-**DONE** fixed: UserWarning: nn.functional.sigmoid is
-deprecated. Use torch.sigmoid instead
-
-**CLOSED:** *\[2020-11-30 Mon 18:16\]*
-
-**DONE** sort CLI arguments into proper groups, sort them
-alphabetically for easier reading
-
-**CLOSED:** *\[2020-11-30 Mon 18:07\]*
-
-**DONE** add types to `parser_utils.py` script internals
-
-**CLOSED:** *\[2020-11-30 Mon 18:07\]*
-
-**DONE** separate extras in `soft_patterns.py` into
-`utils.py` -\> test out how batch is utilized -\> fix batch issue, then
-move on to other steps -\> batch mini-vocab appears to be a hack to
-create a meta-vocabulary for indices -\> try to push with this again
-another time -\> consider reverting Vocab index/token defaults in case
-this was wrong
-
-**CLOSED:** *\[2020-11-30 Mon 18:07\]*
-
-**DONE** appears to be major bug in Batch class, try to
-verify if it is indeed a bug and how it can be fixed
-
-**CLOSED:** *\[2020-11-30 Mon 18:07\]*
-
-**DONE** extract all arg parser chunks and place in dedicated
-file
-
-**CLOSED:** *\[2020-11-30 Mon 18:07\]*
-
-**DONE** clean preprocessing script for GloVe vectors and
-understand inner mechanisms
-
-**CLOSED:** *\[2020-11-28 Sat 17:02\]*
-
-**DONE** find better location to place code from `util.py`
-
-**CLOSED:** *\[2020-11-27 Fri 19:38\]*
-
-**DONE** migrate to soft-patterns-pp and clean from there
-
-**CLOSED:** *\[2020-11-26 Thu 20:11\]*
-
-**DONE** update proposal with comments from supervisors -\>
-update same information here
-
-**CLOSED:** *\[2020-11-17 Tue 14:52\]* **DEADLINE:** *\<2020-11-17
-Tue\>*
-
-**DONE** write proposal with key research questions -\>
-address points directly from step 3 document requirements -\> prepare
-some basic accuracy metrics and interpretations from best model
-
-**CLOSED:** *\[2020-11-10 Tue 18:45\]* **DEADLINE:** *\<2020-11-06
-Fri\>*
-
-**DONE** analyze pattern log more closely with code on the
-side to understand what it means -\> can start writing early when things
-start to make sense
-
-**CLOSED:** *\[2020-11-10 Tue 18:44\]* **DEADLINE:** *\<2020-11-05
-Thu\>*
-
-**DONE** add large amounts of binary data for testing with
-CPU/GPU -\> requires pre-processing
-
-**CLOSED:** *\[2020-11-10 Tue 18:21\]*
-
-**DONE** find re-usable code for running grid search -\>
-otherwise construct makeshift quick code
-
-**CLOSED:** *\[2020-11-05 Thu 20:38\]*
-
-**DONE** test SoPa on sample data in repository to ensure it
-works out-of-the-box -\> try this on laptop and s3it
-
-**CLOSED:** *\[2020-11-02 Mon 16:40\]*
-
-**DONE** make workflow to reproduce virtual environment
-cleanly via poetry
-
-**CLOSED:** *\[2020-11-02 Mon 16:34\]*
-
-**DONE** make workflow to download simple but high-quality
-NLU dataset and glove data sets
-
-**CLOSED:** *\[2020-11-01 Sun 20:15\]* **DEADLINE:** *\<2020-11-01
-Sun\>*
-
-**DONE** read more into these tasks and find one that has
-potential for interpretability -\> likely reduce task to binary case for
-easier processing (eg. entailment)
-
-**CLOSED:** *\[2020-10-28 Wed 15:32\]* **DEADLINE:** *\<2020-10-28
-Wed\>*
-
-**DONE** search for popular NLI datasets which have existing
-RNN models as (almost) SOTAs, possibly use ones that were already tested
-for eg. RTC or ones used in papers that may have semantic element
-
-**CLOSED:** *\[2020-10-26 Mon 17:57\]* **DEADLINE:** *\<2020-10-28
-Wed\>*
-
-**DONE** explore below frameworks (by preference) and find
-most feasible one
-
-**CLOSED:** *\[2020-10-26 Mon 14:28\]* **DEADLINE:** *\<2020-10-26
-Mon\>*
-
-**DONE** add org-mode hook to remove startup visibility
-headers in org-mode to markdown conversion
-
-**CLOSED:** *\[2020-10-22 Thu 13:28\]*
-
-**DONE** Set up repo, manuscript and develop log
-
-**CLOSED:** *\[2020-10-22 Thu 12:36\]*
 
 ## Legacy
 
