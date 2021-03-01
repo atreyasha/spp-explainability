@@ -48,7 +48,7 @@ if __name__ == '__main__':
         formatter_class=ArgparseFormatter,
         parents=[
             train_resume_arg_parser(),
-            grid_train_arg_parser(start_training=False),
+            grid_train_arg_parser(resume_training=True),
             hardware_arg_parser(),
             logging_arg_parser(),
             tqdm_arg_parser()
