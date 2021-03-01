@@ -110,7 +110,7 @@ optional sopa-architecture arguments:
   --static-embeddings      Freeze learning of token embeddings (default:
                            False)
   --tau-threshold          <float>
-                           Specify value of STE binarizer tau threshold
+                           Specify value of TauSTE binarizer tau threshold
                            (default: 0.0)
   --wildcard-scale         <float>
                            Scale wildcard(s) by this parameter (default: None)
