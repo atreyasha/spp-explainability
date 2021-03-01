@@ -100,8 +100,8 @@ def main(args: argparse.Namespace) -> None:
     assert len(set(train).intersection(set(test))) == 0
     train, valid = remove_commons_from_first(train, valid)
     assert len(set(train).intersection(set(valid))) == 0
-    test, valid = remove_commons_from_first(test, valid)
-    assert len(set(test).intersection(set(valid))) == 0
+    valid, test = remove_commons_from_first(valid, test)
+    assert len(set(valid).intersection(set(test))) == 0
     train = cast(List[Tuple[str, int]], train)
     valid = cast(List[Tuple[str, int]], valid)
     test = cast(List[Tuple[str, int]], test)
