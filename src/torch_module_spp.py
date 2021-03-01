@@ -8,34 +8,29 @@ from .utils.explain_utils import (pad_back_pointers, lambda_back_pointers,
                                   BackPointer)
 from .utils.model_utils import Semiring, Batch
 from .utils.data_utils import Vocab
+import torch.nn.functional as F
 import numbers
 import torch
 
 
-class STEFunction(torch.autograd.Function):
+class TauSTEFunction(torch.autograd.Function):
     @staticmethod
     def forward(  # type: ignore
             ctx: Any, tau_threshold: float, input: Any) -> Any:
-        ctx.save_for_backward(input)
         return (input > tau_threshold).float()
 
     @staticmethod
     def backward(ctx: Any, grad_output: Any) -> Any:  # type: ignore
-        input, = ctx.saved_tensors
-        grad_input = grad_output.clone()
-        grad_output[input > 1] = 0
-        grad_output[input < -1] = 0
-        return None, grad_input
+        return None, F.hardtanh(grad_output)
 
 
-class STE(Module):
+class TauSTE(Module):
     def __init__(self, tau_threshold: float = 0.) -> None:
-        super(STE, self).__init__()
+        super(TauSTE, self).__init__()
         self.tau_threshold = tau_threshold
 
     def forward(self, batch: torch.Tensor) -> torch.Tensor:
-        batch = STEFunction.apply(self.tau_threshold, batch)
-        return batch
+        return TauSTEFunction.apply(self.tau_threshold, batch)
 
     def extra_repr(self) -> str:
         return 'tau_threshold={}'.format(self.tau_threshold)
@@ -114,7 +109,7 @@ class SoftPatternClassifier(Module):
         self.no_wildcards = no_wildcards
         self.dropout = Dropout(dropout)
         self.normalizer = MaskedLayerNorm(self.total_num_patterns)
-        self.binarizer = STE(tau_threshold)
+        self.binarizer = TauSTE(tau_threshold)
 
         # create transition matrix diagonal and bias tensors
         diags_size = (self.total_num_patterns * (self.max_pattern_length - 1))
