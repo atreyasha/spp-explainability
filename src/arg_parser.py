@@ -21,7 +21,7 @@ def spp_arg_parser() -> argparse.ArgumentParser:
                       choices=["MaxSumSemiring", "MaxProductSemiring"],
                       type=str)
     sopa.add_argument("--tau-threshold",
-                      help="Specify value of STE binarizer tau threshold",
+                      help="Specify value of TauSTE binarizer tau threshold",
                       default=0.,
                       type=float)
     sopa.add_argument("--bias-scale",
