@@ -26,54 +26,26 @@
 
     1.  Explainability
 
-        1.  Basics of transparent/black-box models
+        1.  Key insights
 
-            1.  perhaps add some remarks to explain transparency
-                categories -\> paraphrase these to keep things simple
+            1.  add figure with qualitative graph
 
-            2.  define criteria to classify models into transparent vs.
-                black-box (as the opposite of transparent models) -\>
-                make these distinctions very clear
-
-            3.  black box models (opaque) vs. transparent models -\>
-                give examples of each
-
-            4.  mention contrast between previous AI surge vs. now (more
-                black-box techniques) -\> also why it is important for
-                XAI to exist with more black-box models (repeat
-                introduction points)
-
-        2.  Explainability techniques
-
-            1.  bring up different post-hoc explainability techniques,
-                with explanations by simplification definition and other
-                ones such as local explanations, feature-relevance and
-                examples such as occlusion, LIME and others
-
-            2.  improve phrasing of oracle vs. mimic model names -\>
-                maybe antecedent and proxy models
-
-            3.  mention examples of research conducting extraction of
-                FSA/WFSA from RNNs, link then to next section on WFSA
-
-        3.  Interesting insights
-
-            1.  bring up concept of trade-off between performance and
+            2.  bring up concept of trade-off between performance and
                 trasparency
 
-            2.  problem of a lack of XAI metrics -\> we could address
+            3.  problem of a lack of XAI metrics -\> we could address
                 this by our distance metrics to provide some insight but
                 this might not be enough
 
-            3.  audience needed to evaluate -\> link to future work -\>
+            4.  audience needed to evaluate -\> link to future work -\>
                 but some psychological conclusions can be made about
                 constrictiveness of explanations which is achieved by
                 our model but not the previous one
 
-            4.  possibly explanations are better when constrictive, can
+            5.  possibly explanations are better when constrictive, can
                 use other reference to justify this too
 
-            5.  add images/visualizations where possible
+            6.  add images/visualizations where possible
 
     2.  STE layer
 
@@ -83,7 +55,8 @@
                 papers, as well as the 2019 paper if possible
 
         2.  Add visual of STE function along with single-line (min-max)
-            and partial function equation representations
+            and partial function equation representations -\> perhaps
+            use internal tikz code for this
 
     3.  Legacy SoPa
 
@@ -121,11 +94,30 @@
 
             1.  add images where possible
 
+    4.  Think more about whether to include definition environments or
+        replace them with subsections
+
 2.  Visualization and summary-statistics
 
     **DEADLINE:** *\<2021-03-11 Thu\>*
 
-    1.  Cross-model comparisons
+    1.  Model runs
+
+        1.  add visualizations of model runs using dedicated functions,
+            preferably all using python libraries, or otherwise
+            defaulting to R libraries
+
+    2.  SoPa++ computational graph
+
+        1.  visualize STE function -\> use embedded tikz code
+
+        2.  visualize TauSTE function -\> use embedded tikz code
+
+        3.  add visualization of computational graph function using tikz
+
+        4.  add automated computational graph as well
+
+    3.  Cross-model comparisons
 
         1.  compute statistics with random-seed deviations over
             inter-model comparisons such as average distance,
@@ -140,7 +132,10 @@
         3.  visualize examples where regex and neural model align and
             misalign, eg. with a confusion matrix
 
-    2.  Regex OOP
+        4.  add visualisation of data statistics with different
+            partitions
+
+    4.  Regex OOP
 
         1.  add visualization of regex ensemble with graphviz -\> can
             specify which pattern to visualize and how to make large
@@ -151,22 +146,6 @@
             legend, will show relative importance of each binary neuron
             and can help us segment their purposes
 
-    3.  Model runs
-
-        1.  add visualizations of model runs using dedicated functions,
-            preferably all using python libraries, or otherwise
-            defaulting to R libraries
-
-    4.  SoPa++ computational graph
-
-        1.  visualize STE function
-
-        2.  visualize TauSTE function
-
-        3.  add visualization of computational graph function using tikz
-
-        4.  add automated computational graph as well
-
 3.  Methodologies
 
     1.  FMTOD data set
@@ -174,7 +153,9 @@
         1.  provide summary statistics and explanation about the data
             set
 
-        2.  mention that data set was altered to keep it in good quality
+        2.  provide a visualization on the data set and its splits
+
+        3.  mention that data set was altered to keep it in good quality
             by removing duplicates, perhaps this can be re-tested
             without such processing or used as a limitation/further-work
             -\> although results appear to show that performance metric
@@ -195,11 +176,15 @@
 
         4.  neural SoPa++ is a black-box (non-transparent) model, regex
             SoPa++ is a transparent model -\> need justifications from
-            background concepts
+            background concepts, might need significant text on this
+            portion
 
         5.  SoPa++ uses explanation by simplification (globally) -\>
             need justification from background concepts -\> not much use
             of global in paper, but we can make our own arguments
+
+        6.  try to link as much as possible with the background concepts
+            for models/explainability concepts
 
     3.  Explainability
 
@@ -346,18 +331,27 @@
 
         1.  Introduction
 
-            1.  add C-like reference to explain what SoPa++ means like
-                in i++
+            1.  fine-tune introduction with new details from other
+                chapters
 
-            2.  fix introduction with new details from other chapters
-
-            3.  update motivations from Arrieta et al. 2020 \"What for\"
+            2.  update motivations from Arrieta et al. 2020 \"What for\"
                 section
+
+            3.  add C-like reference to explain what SoPa++ means like
+                in i++
 
             4.  add links to chapters in thesis structure, improve
                 formatting
 
-        2.  Bibliography
+        2.  Background concepts
+
+            1.  include a section on risks on large NLP models and why
+                explainability is necessary with different study
+
+            2.  if possible, try to reduce references to Arrieta et al.
+                2020 to reduce perceived over-dependence
+
+        3.  Bibliography
 
             1.  improve capitalization with braces in bibtex file
 
@@ -368,23 +362,29 @@
             4.  fine-tune citation color to be consistent with other
                 colors
 
-        3.  Manuscript admin
+        4.  Manuscript admin
 
-            1.  sort out all abbreviations and standardize formatting in
+            1.  remove sub-enumeration for single remarks under a
+                definition
+
+            2.  add links to different sections later on once structure
+                and content is clear
+
+            3.  sort out all abbreviations and standardize formatting in
                 terms of where they are first declared
 
-            2.  change to two sided format before printing, as this
+            4.  change to two sided format before printing, as this
                 works well for binding/printing
 
-            3.  add Uni-Potsdam originality declaration, or modify
+            5.  add Uni-Potsdam originality declaration, or modify
                 current one to fit
 
-            4.  add remaining features by referring to master template
+            6.  add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, and all
                 others
 
-            5.  perform spell-check of everything at the end
+            7.  perform spell-check of everything at the end
 
 ### Current Programming
 

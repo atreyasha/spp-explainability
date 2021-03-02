@@ -7,16 +7,8 @@
 **** Background concepts
      DEADLINE: <2021-03-05 Fri>
 ***** Explainability
-****** Basics of transparent/black-box models 
-******* perhaps add some remarks to explain transparency categories -> paraphrase these to keep things simple
-******* define criteria to classify models into transparent vs. black-box (as the opposite of transparent models) -> make these distinctions very clear
-******* black box models (opaque) vs. transparent models -> give examples of each
-******* mention contrast between previous AI surge vs. now (more black-box techniques) -> also why it is important for XAI to exist with more black-box models (repeat introduction points)
-****** Explainability techniques
-******* bring up different post-hoc explainability techniques, with explanations by simplification definition and other ones such as local explanations, feature-relevance and examples such as occlusion, LIME and others
-******* improve phrasing of oracle vs. mimic model names -> maybe antecedent and proxy models
-******* mention examples of research conducting extraction of FSA/WFSA from RNNs, link then to next section on WFSA
-****** Interesting insights
+****** Key insights
+******* add figure with qualitative graph
 ******* bring up concept of trade-off between performance and trasparency
 ******* problem of a lack of XAI metrics -> we could address this by our distance metrics to provide some insight but this might not be enough
 ******* audience needed to evaluate -> link to future work -> but some psychological conclusions can be made about constrictiveness of explanations which is achieved by our model but not the previous one
@@ -26,7 +18,7 @@
 ***** STE layer
 ****** Add historical literature from 2013/2016/2019 papers
 ******* justify forward and backward passes using the 2013/2016 papers, as well as the 2019 paper if possible
-****** Add visual of STE function along with single-line (min-max) and partial function equation representations
+****** Add visual of STE function along with single-line (min-max) and partial function equation representations -> perhaps use internal tikz code for this
 
 ***** Legacy SoPa
 ****** Model
@@ -40,35 +32,39 @@
 ******* SoPa uses local explanations and/or feature relevance techniques -> need evidence from background concepts
 ******* reference topics from explainability to mention current taxonomy/hierarchy
 ****** Use SoPa explanation here to talk about limitations and fixes in next chapter, which should provide a clean flow to the next chapter's content
-******* add images where possible
-       
+******* add images where possible  
+***** Think more about whether to include definition environments or replace them with subsections
+
 **** Visualization and summary-statistics 
     DEADLINE: <2021-03-11 Thu>
+***** Model runs
+****** add visualizations of model runs using dedicated functions, preferably all using python libraries, or otherwise defaulting to R libraries
+***** SoPa++ computational graph
+****** visualize STE function -> use embedded tikz code
+****** visualize TauSTE function -> use embedded tikz code
+****** add visualization of computational graph function using tikz
+****** add automated computational graph as well
 ***** Cross-model comparisons
 ****** compute statistics with random-seed deviations over inter-model comparisons such as average distance, misalignment, activation frequency and other useful metrics that can elucidate on-the-ground processes
 ****** use error-bar plot to reflect random seed iterations for binary misalignment and softmax norm differences -> analyze relationship with tau threshold vs. performance vs. softmax/binary distances
 ****** visualize examples where regex and neural model align and misalign, eg. with a confusion matrix
+****** add visualisation of data statistics with different partitions
 ***** Regex OOP
 ****** add visualization of regex ensemble with graphviz -> can specify which pattern to visualize and how to make large scale visualizations
 ****** visualize patterns as dots with internal pie charts which show magnitudes of each class; displayed as a colour with legend, will show relative importance of each binary neuron and can help us segment their purposes
-***** Model runs
-****** add visualizations of model runs using dedicated functions, preferably all using python libraries, or otherwise defaulting to R libraries
-***** SoPa++ computational graph
-****** visualize STE function
-****** visualize TauSTE function
-****** add visualization of computational graph function using tikz
-****** add automated computational graph as well
  
 **** Methodologies
 ***** FMTOD data set
 ****** provide summary statistics and explanation about the data set
+****** provide a visualization on the data set and its splits
 ****** mention that data set was altered to keep it in good quality by removing duplicates, perhaps this can be re-tested without such processing or used as a limitation/further-work -> although results appear to show that performance metric improve when using original data set because of duplicates and overlaps between train and test sets
 ***** Model
 ****** motivate structure in terms of RNNs, CNNs and WFSA where possible 
 ****** add pseudocode for various segments -> would help to cement certain concepts
 ****** add detailed information on how hard SoPa++ model differs from SoPa related to transitions and other simplifications -> motivate them using idea of explainable simplification
-****** neural SoPa++ is a black-box (non-transparent) model, regex SoPa++ is a transparent model -> need justifications from background concepts
+****** neural SoPa++ is a black-box (non-transparent) model, regex SoPa++ is a transparent model -> need justifications from background concepts, might need significant text on this portion
 ****** SoPa++ uses explanation by simplification (globally) -> need justification from background concepts -> not much use of global in paper, but we can make our own arguments
+****** try to link as much as possible with the background concepts for models/explainability concepts
 ***** Explainability
 ****** explain how we make explanations by simplification work altogether 
 ****** hard to find hierarchies of good vs. not-good explainability, but we can argue that we tried a different explainability method, i.e. explanation by simplification with a global simplified model vs. local-explanations/feature-relevance -> also we can use the constrictive argument from the paper
@@ -128,16 +124,21 @@
 ****** 20-90 pages thesis length -> try to keep ideas well-motivated yet succinct
 ***** Points to address towards end
 ****** Introduction
-******* add C-like reference to explain what SoPa++ means like in i++
-******* fix introduction with new details from other chapters
+******* fine-tune introduction with new details from other chapters
 ******* update motivations from Arrieta et al. 2020 "What for" section
+******* add C-like reference to explain what SoPa++ means like in i++
 ******* add links to chapters in thesis structure, improve formatting
+****** Background concepts
+******* include a section on risks on large NLP models and why explainability is necessary with different study
+******* if possible, try to reduce references to Arrieta et al. 2020 to reduce perceived over-dependence
 ****** Bibliography
 ******* improve capitalization with braces in bibtex file
 ******* if possible, try to find non-arxiv citations for papers
 ******* remove red link color in table of contents
 ******* fine-tune citation color to be consistent with other colors
 ****** Manuscript admin
+******* remove sub-enumeration for single remarks under a definition 
+******* add links to different sections later on once structure and content is clear
 ******* sort out all abbreviations and standardize formatting in terms of where they are first declared
 ******* change to two sided format before printing, as this works well for binding/printing
 ******* add Uni-Potsdam originality declaration, or modify current one to fit
