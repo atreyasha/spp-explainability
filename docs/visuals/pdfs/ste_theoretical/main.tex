@@ -23,14 +23,8 @@
     \addplot[solid-dot] coordinates{(0,0)}; 
     \nextgroupplot[title={STE (Backward)}, ymax=3, ymin=-3, ytick distance = 1,
     ytick={-2, -1, 0, 1, 2}] 
-    \addplot[domain=-2:-1,red] {-1};
-    \addplot[domain=1:2,red] {1}; 
-    \addplot[domain=-1:1,red,name path=A] {x};
+    \addplot[domain=-3:3,red] {x};
     \addplot[dashed] coordinates {(0,-3)(0,3)};
-    \path[name path=axis] (axis cs:0,-1) -- (axis cs:0,0);
-    \path[name path=axis-next] (axis cs:0,1) -- (axis cs:0,0);
-    \addplot[pattern=north west lines, pattern color=gray!50!white] fill between[of=A and axis];
-    \addplot[pattern=north west lines, pattern color=gray!50!white] fill between[of=A and axis-next];
   \end{groupplot}
 \end{tikzpicture}
 
