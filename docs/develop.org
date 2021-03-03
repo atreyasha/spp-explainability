@@ -6,15 +6,6 @@
 *** Manuscript
 **** Background concepts
      DEADLINE: <2021-03-05 Fri>
-***** Explainability
-****** Key insights
-******* add figure with qualitative graph
-******* bring up concept of trade-off between performance and trasparency
-******* problem of a lack of XAI metrics -> we could address this by our distance metrics to provide some insight but this might not be enough
-******* audience needed to evaluate -> link to future work -> but some psychological conclusions can be made about constrictiveness of explanations which is achieved by our model but not the previous one
-******* possibly explanations are better when constrictive, can use other reference to justify this too
-******* add images/visualizations where possible
-
 ***** STE layer
 ****** Add historical literature from 2013/2016/2019 papers
 ******* justify forward and backward passes using the 2013/2016 papers, as well as the 2019 paper if possible
@@ -40,8 +31,6 @@
 ***** Model runs
 ****** add visualizations of model runs using dedicated functions, preferably all using python libraries, or otherwise defaulting to R libraries
 ***** SoPa++ computational graph
-****** visualize STE function -> use embedded tikz code
-****** visualize TauSTE function -> use embedded tikz code
 ****** add visualization of computational graph function using tikz
 ****** add automated computational graph as well
 ***** Cross-model comparisons
@@ -66,8 +55,8 @@
 ****** SoPa++ uses explanation by simplification (globally) -> need justification from background concepts -> not much use of global in paper, but we can make our own arguments
 ****** try to link as much as possible with the background concepts for models/explainability concepts
 ***** Explainability
-****** explain how we make explanations by simplification work altogether 
-****** hard to find hierarchies of good vs. not-good explainability, but we can argue that we tried a different explainability method, i.e. explanation by simplification with a global simplified model vs. local-explanations/feature-relevance -> also we can use the constrictive argument from the paper
+****** explain how we make explanations by simplification work altogether
+****** hard to find hierarchies of good vs. not-good explainability, but we can argue that we tried a different explainability method, i.e. explanation by simplification with a global simplified model vs. local-explanations/feature-relevance -> also we can use the constrictive argument from the paper and others
 ****** make claim that SoPa++ explainability has a different explainability taxonomy from that of vanilla SoPa, but don't claim it is decisively better
 ****** mention that the target audience of this explainability method is domain experts, since it is still very complicated
 ****** link back to background concepts when we discuss bringing neural and regex model as close to each other as possible
@@ -129,6 +118,7 @@
 ******* add C-like reference to explain what SoPa++ means like in i++
 ******* add links to chapters in thesis structure, improve formatting
 ****** Background concepts
+******* think about providing an additional definition for "understandability" 
 ******* include a section on risks on large NLP models and why explainability is necessary with different study
 ******* if possible, try to reduce references to Arrieta et al. 2020 to reduce perceived over-dependence
 ****** Bibliography
@@ -136,7 +126,10 @@
 ******* if possible, try to find non-arxiv citations for papers
 ******* remove red link color in table of contents
 ******* fine-tune citation color to be consistent with other colors
+******* think about citing Arrieta et al. 2020 in each definition, or perhaps it is overkill
+******* look into oracel/proxy names and if these can be improved
 ****** Manuscript admin
+******* fine tune WFSA to mean either automata or automaton
 ******* remove sub-enumeration for single remarks under a definition 
 ******* add links to different sections later on once structure and content is clear
 ******* sort out all abbreviations and standardize formatting in terms of where they are first declared

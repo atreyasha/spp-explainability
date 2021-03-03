@@ -24,30 +24,7 @@
 
     **DEADLINE:** *\<2021-03-05 Fri\>*
 
-    1.  Explainability
-
-        1.  Key insights
-
-            1.  add figure with qualitative graph
-
-            2.  bring up concept of trade-off between performance and
-                trasparency
-
-            3.  problem of a lack of XAI metrics -\> we could address
-                this by our distance metrics to provide some insight but
-                this might not be enough
-
-            4.  audience needed to evaluate -\> link to future work -\>
-                but some psychological conclusions can be made about
-                constrictiveness of explanations which is achieved by
-                our model but not the previous one
-
-            5.  possibly explanations are better when constrictive, can
-                use other reference to justify this too
-
-            6.  add images/visualizations where possible
-
-    2.  STE layer
+    1.  STE layer
 
         1.  Add historical literature from 2013/2016/2019 papers
 
@@ -58,7 +35,7 @@
             and partial function equation representations -\> perhaps
             use internal tikz code for this
 
-    3.  Legacy SoPa
+    2.  Legacy SoPa
 
         1.  Model
 
@@ -94,7 +71,7 @@
 
             1.  add images where possible
 
-    4.  Think more about whether to include definition environments or
+    3.  Think more about whether to include definition environments or
         replace them with subsections
 
 2.  Visualization and summary-statistics
@@ -109,13 +86,9 @@
 
     2.  SoPa++ computational graph
 
-        1.  visualize STE function -\> use embedded tikz code
+        1.  add visualization of computational graph function using tikz
 
-        2.  visualize TauSTE function -\> use embedded tikz code
-
-        3.  add visualization of computational graph function using tikz
-
-        4.  add automated computational graph as well
+        2.  add automated computational graph as well
 
     3.  Cross-model comparisons
 
@@ -196,7 +169,7 @@
             explainability method, i.e. explanation by simplification
             with a global simplified model vs.
             local-explanations/feature-relevance -\> also we can use the
-            constrictive argument from the paper
+            constrictive argument from the paper and others
 
         3.  make claim that SoPa++ explainability has a different
             explainability taxonomy from that of vanilla SoPa, but
@@ -345,10 +318,13 @@
 
         2.  Background concepts
 
-            1.  include a section on risks on large NLP models and why
+            1.  think about providing an additional definition for
+                \"understandability\"
+
+            2.  include a section on risks on large NLP models and why
                 explainability is necessary with different study
 
-            2.  if possible, try to reduce references to Arrieta et al.
+            3.  if possible, try to reduce references to Arrieta et al.
                 2020 to reduce perceived over-dependence
 
         3.  Bibliography
@@ -362,29 +338,37 @@
             4.  fine-tune citation color to be consistent with other
                 colors
 
+            5.  think about citing Arrieta et al. 2020 in each
+                definition, or perhaps it is overkill
+
+            6.  look into oracel/proxy names and if these can be
+                improved
+
         4.  Manuscript admin
 
-            1.  remove sub-enumeration for single remarks under a
+            1.  fine tune WFSA to mean either automata or automaton
+
+            2.  remove sub-enumeration for single remarks under a
                 definition
 
-            2.  add links to different sections later on once structure
+            3.  add links to different sections later on once structure
                 and content is clear
 
-            3.  sort out all abbreviations and standardize formatting in
+            4.  sort out all abbreviations and standardize formatting in
                 terms of where they are first declared
 
-            4.  change to two sided format before printing, as this
+            5.  change to two sided format before printing, as this
                 works well for binding/printing
 
-            5.  add Uni-Potsdam originality declaration, or modify
+            6.  add Uni-Potsdam originality declaration, or modify
                 current one to fit
 
-            6.  add remaining features by referring to master template
+            7.  add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, and all
                 others
 
-            7.  perform spell-check of everything at the end
+            8.  perform spell-check of everything at the end
 
 ### Current Programming
 
