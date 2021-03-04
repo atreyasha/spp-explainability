@@ -6,42 +6,30 @@
 *** Manuscript
 **** Background concepts
      DEADLINE: <2021-03-05 Fri>
-***** STE layer
-****** Add historical literature from 2013/2016/2019 papers
-******* justify forward and backward passes using the 2013/2016 papers, as well as the 2019 paper if possible
-****** Add visual of STE function along with single-line (min-max) and partial function equation representations -> perhaps use internal tikz code for this
-
 ***** Legacy SoPa
-****** Model
-******* mention epsilons and self-loops
-******* mention we only use one start and end vectors and not all -> because must start and end there
-******* mention time complexity differences and other things that are different from definitions -> sparse transition matrix
-******* mention other deviations from main equation and ensemble of WFSAs, semirings etc
-******* talk about performance and other general basics, time complexities where relevant
+****** Model specifications
+******* describe the native explainability used; describing the two methods offered; they will be further classified in the next subsection
 ****** Explainability
-******* SoPa is a black-box model -> justify using previous definitions
-******* SoPa uses local explanations and/or feature relevance techniques -> need evidence from background concepts
-******* reference topics from explainability to mention current taxonomy/hierarchy
-****** Use SoPa explanation here to talk about limitations and fixes in next chapter, which should provide a clean flow to the next chapter's content
-******* add images where possible  
-***** Think more about whether to include definition environments or replace them with subsections
+******* justify with previous definitions why SoPa is a black-box model
+******* justify with previous definitions why model's explainability proposed corresponds to partial local explanations and feature relevance 
+******* discuss if the explanations fulfil constrictive, causal links and selectiveness
 
 **** Visualization and summary-statistics 
     DEADLINE: <2021-03-11 Thu>
-***** Model runs
+***** [#A] Model runs
 ****** add visualizations of model runs using dedicated functions, preferably all using python libraries, or otherwise defaulting to R libraries
-***** SoPa++ computational graph
-****** add visualization of computational graph function using tikz
-****** add automated computational graph as well
-***** Cross-model comparisons
+***** [#A] FMTOD
+****** add visualisation of data statistics with different partitions, perhaps as a stacked bar chart
+***** [#A] Cross-model comparisons
 ****** compute statistics with random-seed deviations over inter-model comparisons such as average distance, misalignment, activation frequency and other useful metrics that can elucidate on-the-ground processes
 ****** use error-bar plot to reflect random seed iterations for binary misalignment and softmax norm differences -> analyze relationship with tau threshold vs. performance vs. softmax/binary distances
 ****** visualize examples where regex and neural model align and misalign, eg. with a confusion matrix
-****** add visualisation of data statistics with different partitions
-***** Regex OOP
+***** [#B] SoPa++ computational graph
+****** add visualization of computational graph function using tikz
+***** [#C] Regex OOP
 ****** add visualization of regex ensemble with graphviz -> can specify which pattern to visualize and how to make large scale visualizations
 ****** visualize patterns as dots with internal pie charts which show magnitudes of each class; displayed as a colour with legend, will show relative importance of each binary neuron and can help us segment their purposes
- 
+
 **** Methodologies
 ***** FMTOD data set
 ****** provide summary statistics and explanation about the data set
@@ -50,14 +38,17 @@
 ***** Model
 ****** motivate structure in terms of RNNs, CNNs and WFSA where possible 
 ****** add pseudocode for various segments -> would help to cement certain concepts
+****** try to find literature-based justification for wildcard transition -> if not use omega symbol to differentiate from the Kleene star symbol
 ****** add detailed information on how hard SoPa++ model differs from SoPa related to transitions and other simplifications -> motivate them using idea of explainable simplification
 ****** neural SoPa++ is a black-box (non-transparent) model, regex SoPa++ is a transparent model -> need justifications from background concepts, might need significant text on this portion
 ****** SoPa++ uses explanation by simplification (globally) -> need justification from background concepts -> not much use of global in paper, but we can make our own arguments
 ****** try to link as much as possible with the background concepts for models/explainability concepts
+****** add github link to repo as a footnote
 ***** Explainability
 ****** explain how we make explanations by simplification work altogether
 ****** hard to find hierarchies of good vs. not-good explainability, but we can argue that we tried a different explainability method, i.e. explanation by simplification with a global simplified model vs. local-explanations/feature-relevance -> also we can use the constrictive argument from the paper and others
 ****** make claim that SoPa++ explainability has a different explainability taxonomy from that of vanilla SoPa, but don't claim it is decisively better
+****** use the three good explainability criteria to show that our technique might be better theoretically, but the real test would have to be done with a target audience's survey
 ****** mention that the target audience of this explainability method is domain experts, since it is still very complicated
 ****** link back to background concepts when we discuss bringing neural and regex model as close to each other as possible
 ***** Quantization/Binarization
@@ -75,13 +66,13 @@
 
 **** Results
 ***** Report F_1 scores and performances of neural models
+****** report parameter counts in scores as well
 ****** compare performance to that of other paper(s)
 ****** mention again about test partition difference due to making it unique
 ****** consider making test-partition not unique so this could be used to compare with other studies
 ***** Relationship between tau threshold vs. performance vs. softmax/binary distances 
 ***** Visualizations
 ****** show visualization of training performance timelines, think about how to keep most important information
-****** show visualizations of important patterns in a regex model -> something which is small and fits well into a page
 ****** show visualization of tau threshold vs. performance vs. softmax/binary distances with error bars for random seed iterations
 ****** show confusion matrix between regex and neural models to show alignment/misalignment, if this is necessary -> but it will show interesting class differences
 
@@ -90,6 +81,7 @@
 ***** Discuss relationship between tau threshold and the softmax/binary distances
 ***** Think about why larger regex models tend to show more misalignment from neural counterparts compared to smaller models
 ***** Visualizations
+****** show visualizations of important patterns in a regex model -> something which is small and fits well into a page
 ****** show TikZ visualization of each binary neuron's relative importance for classes -> would be interesting to see how saturated these are
 
 **** Conclusions
@@ -129,6 +121,7 @@
 ******* think about citing Arrieta et al. 2020 in each definition, or perhaps it is overkill
 ******* look into oracel/proxy names and if these can be improved
 ****** Manuscript admin
+******* think about whether to include borrowed figures or make own -> check if permission is necessary
 ******* fine tune WFSA to mean either automata or automaton
 ******* remove sub-enumeration for single remarks under a definition 
 ******* add links to different sections later on once structure and content is clear

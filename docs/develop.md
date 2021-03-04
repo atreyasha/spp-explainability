@@ -24,73 +24,42 @@
 
     **DEADLINE:** *\<2021-03-05 Fri\>*
 
-    1.  STE layer
+    1.  Legacy SoPa
 
-        1.  Add historical literature from 2013/2016/2019 papers
+        1.  Model specifications
 
-            1.  justify forward and backward passes using the 2013/2016
-                papers, as well as the 2019 paper if possible
-
-        2.  Add visual of STE function along with single-line (min-max)
-            and partial function equation representations -\> perhaps
-            use internal tikz code for this
-
-    2.  Legacy SoPa
-
-        1.  Model
-
-            1.  mention epsilons and self-loops
-
-            2.  mention we only use one start and end vectors and not
-                all -\> because must start and end there
-
-            3.  mention time complexity differences and other things
-                that are different from definitions -\> sparse
-                transition matrix
-
-            4.  mention other deviations from main equation and ensemble
-                of WFSAs, semirings etc
-
-            5.  talk about performance and other general basics, time
-                complexities where relevant
+            1.  describe the native explainability used; describing the
+                two methods offered; they will be further classified in
+                the next subsection
 
         2.  Explainability
 
-            1.  SoPa is a black-box model -\> justify using previous
-                definitions
+            1.  justify with previous definitions why SoPa is a
+                black-box model
 
-            2.  SoPa uses local explanations and/or feature relevance
-                techniques -\> need evidence from background concepts
+            2.  justify with previous definitions why model\'s
+                explainability proposed corresponds to partial local
+                explanations and feature relevance
 
-            3.  reference topics from explainability to mention current
-                taxonomy/hierarchy
-
-        3.  Use SoPa explanation here to talk about limitations and
-            fixes in next chapter, which should provide a clean flow to
-            the next chapter\'s content
-
-            1.  add images where possible
-
-    3.  Think more about whether to include definition environments or
-        replace them with subsections
+            3.  discuss if the explanations fulfil constrictive, causal
+                links and selectiveness
 
 2.  Visualization and summary-statistics
 
     **DEADLINE:** *\<2021-03-11 Thu\>*
 
-    1.  Model runs
+    1.  \[\#A\] Model runs
 
         1.  add visualizations of model runs using dedicated functions,
             preferably all using python libraries, or otherwise
             defaulting to R libraries
 
-    2.  SoPa++ computational graph
+    2.  \[\#A\] FMTOD
 
-        1.  add visualization of computational graph function using tikz
+        1.  add visualisation of data statistics with different
+            partitions, perhaps as a stacked bar chart
 
-        2.  add automated computational graph as well
-
-    3.  Cross-model comparisons
+    3.  \[\#A\] Cross-model comparisons
 
         1.  compute statistics with random-seed deviations over
             inter-model comparisons such as average distance,
@@ -105,10 +74,11 @@
         3.  visualize examples where regex and neural model align and
             misalign, eg. with a confusion matrix
 
-        4.  add visualisation of data statistics with different
-            partitions
+    4.  \[\#B\] SoPa++ computational graph
 
-    4.  Regex OOP
+        1.  add visualization of computational graph function using tikz
+
+    5.  \[\#C\] Regex OOP
 
         1.  add visualization of regex ensemble with graphviz -\> can
             specify which pattern to visualize and how to make large
@@ -143,21 +113,27 @@
         2.  add pseudocode for various segments -\> would help to cement
             certain concepts
 
-        3.  add detailed information on how hard SoPa++ model differs
+        3.  try to find literature-based justification for wildcard
+            transition -\> if not use omega symbol to differentiate from
+            the Kleene star symbol
+
+        4.  add detailed information on how hard SoPa++ model differs
             from SoPa related to transitions and other simplifications
             -\> motivate them using idea of explainable simplification
 
-        4.  neural SoPa++ is a black-box (non-transparent) model, regex
+        5.  neural SoPa++ is a black-box (non-transparent) model, regex
             SoPa++ is a transparent model -\> need justifications from
             background concepts, might need significant text on this
             portion
 
-        5.  SoPa++ uses explanation by simplification (globally) -\>
+        6.  SoPa++ uses explanation by simplification (globally) -\>
             need justification from background concepts -\> not much use
             of global in paper, but we can make our own arguments
 
-        6.  try to link as much as possible with the background concepts
+        7.  try to link as much as possible with the background concepts
             for models/explainability concepts
+
+        8.  add github link to repo as a footnote
 
     3.  Explainability
 
@@ -175,10 +151,14 @@
             explainability taxonomy from that of vanilla SoPa, but
             don\'t claim it is decisively better
 
-        4.  mention that the target audience of this explainability
+        4.  use the three good explainability criteria to show that our
+            technique might be better theoretically, but the real test
+            would have to be done with a target audience\'s survey
+
+        5.  mention that the target audience of this explainability
             method is domain experts, since it is still very complicated
 
-        5.  link back to background concepts when we discuss bringing
+        6.  link back to background concepts when we discuss bringing
             neural and regex model as close to each other as possible
 
     4.  Quantization/Binarization
@@ -215,12 +195,14 @@
 
     1.  Report F_1 scores and performances of neural models
 
-        1.  compare performance to that of other paper(s)
+        1.  report parameter counts in scores as well
 
-        2.  mention again about test partition difference due to making
+        2.  compare performance to that of other paper(s)
+
+        3.  mention again about test partition difference due to making
             it unique
 
-        3.  consider making test-partition not unique so this could be
+        4.  consider making test-partition not unique so this could be
             used to compare with other studies
 
     2.  Relationship between tau threshold vs. performance vs.
@@ -231,14 +213,11 @@
         1.  show visualization of training performance timelines, think
             about how to keep most important information
 
-        2.  show visualizations of important patterns in a regex model
-            -\> something which is small and fits well into a page
-
-        3.  show visualization of tau threshold vs. performance vs.
+        2.  show visualization of tau threshold vs. performance vs.
             softmax/binary distances with error bars for random seed
             iterations
 
-        4.  show confusion matrix between regex and neural models to
+        3.  show confusion matrix between regex and neural models to
             show alignment/misalignment, if this is necessary -\> but it
             will show interesting class differences
 
@@ -255,7 +234,10 @@
 
     4.  Visualizations
 
-        1.  show TikZ visualization of each binary neuron\'s relative
+        1.  show visualizations of important patterns in a regex model
+            -\> something which is small and fits well into a page
+
+        2.  show TikZ visualization of each binary neuron\'s relative
             importance for classes -\> would be interesting to see how
             saturated these are
 
@@ -346,29 +328,32 @@
 
         4.  Manuscript admin
 
-            1.  fine tune WFSA to mean either automata or automaton
+            1.  think about whether to include borrowed figures or make
+                own -\> check if permission is necessary
 
-            2.  remove sub-enumeration for single remarks under a
+            2.  fine tune WFSA to mean either automata or automaton
+
+            3.  remove sub-enumeration for single remarks under a
                 definition
 
-            3.  add links to different sections later on once structure
+            4.  add links to different sections later on once structure
                 and content is clear
 
-            4.  sort out all abbreviations and standardize formatting in
+            5.  sort out all abbreviations and standardize formatting in
                 terms of where they are first declared
 
-            5.  change to two sided format before printing, as this
+            6.  change to two sided format before printing, as this
                 works well for binding/printing
 
-            6.  add Uni-Potsdam originality declaration, or modify
+            7.  add Uni-Potsdam originality declaration, or modify
                 current one to fit
 
-            7.  add remaining features by referring to master template
+            8.  add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, and all
                 others
 
-            8.  perform spell-check of everything at the end
+            9.  perform spell-check of everything at the end
 
 ### Current Programming
 
