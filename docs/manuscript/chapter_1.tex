@@ -1,24 +1,20 @@
 \chapter{Introduction}
 
-\label{introduction}
+\label{chapter:introduction}
 
 \section{Motivation}
 
-With the recent trend of increasingly large deep learning models achieving State-Of-The-Art (SOTA) performance on a myriad of Machine Learning (ML) tasks (Figure \ref{fig:nlp_progress}), several studies argue for focused research into Explainable Artificial Intelligence (XAI) to address emerging concerns such as security risks and inductive biases associated with such black-box models \citep{doran2017does,townsend2019extracting,danilevsky2020survey,arrieta2020explainable}. Of these studies, \citet{arrieta2020explainable} conduct an extensive survey into the spectrum of XAI taxonomies and provide the following definition of XAI:
+With the recent trend of increasingly large deep learning models achieving State-Of-The-Art (SOTA) performance on a myriad of Machine Learning (ML) tasks (Figure \ref{fig:nlp_progress}), several studies argue for focused research into Explainable Artificial Intelligence (XAI) to address emerging concerns such as security risks and inductive biases associated with black-box models \citep{doran2017does,townsend2019extracting,danilevsky2020survey,arrieta2020explainable}. Of these studies, \citet{arrieta2020explainable} conduct an extensive survey into the spectrum of XAI taxonomies and provide the following novel definition of XAI:
 
 \begin{quote}
   \textit{``Given an audience, an \textbf{explainable} Artificial Intelligence is one that produces details or reasons to make its functioning clear or easy to understand.''}
 \end{quote}
 
-In addition, \citet{arrieta2020explainable} explore and classify a variety of machine-learning models depending on the degree of their transparencies; as well as document taxonomies of explainability methods associated with the aforementioned models. Of particular relevance to this study is the \textit{explanations by simplification} post-hoc post-hoc explainability method, which \citet{arrieta2020explainable} describe as:
-
-\begin{quote}
-\textit{``Explanations by simplification collectively denote those techniques in which a whole new system is rebuilt based on the trained model to be explained. This new, simplified model usually attempts at optimizing its resemblance to its antecedent functioning, while reducing its complexity, and keeping a similar performance score.''} 
-\end{quote}
+In addition, \citet{arrieta2020explainable} explore and classify a variety of machine-learning models into transparent and black-box categories depending on their degrees of transparency. Furthermore, they explore taxonomies of post-hoc explainability methods aimed at effectively explaining black-box models. Of high relevance to this study are the local explanations, feature relevance and explanations by simplification post-hoc explainability techniques. 
 
 Through a survey of recent literature on explanations by simplification applied in the Natural Language Processing (NLP) field, we came across several prominent studies employing techniques to simplify black-box neural networks into constituent Finite-State Automata (FSAs) and/or Weighted Finite-State Automata (WFSAs) \citep{schwartz2018sopa,peng2018rational,DBLP:journals/corr/abs-1905-08701,wang2019state,jiang2020cold}.
 
-In this thesis, we build upon the work of \citet{schwartz2018sopa} by further developing their \textbf{So}ft \textbf{Pa}tterns (SoPa) model; which represents a hybridized RNN, CNN and Weighted Finite-State Automaton neural network architecture. We modify the SoPa model by changing key aspects of its architecture which ultimately allow us to conduct effective explanations by simplification; which was not possible with the previous SoPa architecture. We abbreviate this modified model as \textbf{SoPa++}, which signifies an improvement or major modification to the SoPa model. Finally, we evaluate both the performance and explainability of the SoPa++ model on the Facebook Multilingual Task Oriented Dialog data set (FMTOD; \citealt{schuster2018cross}); focusing on the English-language intent classification task.
+In this thesis, we build upon the work of \citet{schwartz2018sopa} by further developing their \textbf{So}ft \textbf{Pa}tterns (SoPa) model; which represents a hybridized RNN, CNN and Weighted Finite-State Automaton neural network architecture. We modify the SoPa model by changing key aspects of its architecture which ultimately allows us to conduct effective explanations by simplification; which was not possible with the previous SoPa architecture. We abbreviate this modified model as \textbf{SoPa++}, which signifies an improvement or major modification to the SoPa model. Finally, we evaluate both the performance and explainability of the SoPa++ model on the Facebook Multilingual Task Oriented Dialog data set (FMTOD; \citealt{schuster2018cross}); focusing on the English-language intent classification task.
 
 \begin{figure}[th]
   \centering
