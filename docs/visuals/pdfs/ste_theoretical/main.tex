@@ -12,19 +12,21 @@
   \begin{groupplot}[group style={group size= 2 by 1},
     grid=both, minor tick num=1,
     xmin=-2, xmax=2,
-    tick label style={font=\footnotesize},
+    tick label style={font=\large},
+    label style={font=\large},
+    title style={font=\large},
     xlabel={Input}]
     \nextgroupplot[ylabel={Output}, title={STE (Forward)},
     ymin=-1, ymax=2]
-    \addplot[domain=-2:0,red] {0};
-    \addplot[domain=0:2,red] {1};
-    \draw[dashed] (axis cs:0,-1) -- (axis cs:0,2);
+    \addplot[thick,domain=-2:0,red] {0};
+    \addplot[thick,domain=0:2,red] {1};
+    \draw[thick, dashed] (axis cs:0,-1) -- (axis cs:0,2);
     \addplot[hollow-dot] coordinates{(0,1)}; 
     \addplot[solid-dot] coordinates{(0,0)}; 
     \nextgroupplot[title={STE (Backward)}, ymax=3, ymin=-3, ytick distance = 1,
     ytick={-2, -1, 0, 1, 2}] 
-    \addplot[domain=-3:3,red] {x};
-    \addplot[dashed] coordinates {(0,-3)(0,3)};
+    \addplot[thick,domain=-3:3,red] {x};
+    \addplot[thick, dashed] coordinates {(0,-3)(0,3)};
   \end{groupplot}
 \end{tikzpicture}
 
