@@ -20,31 +20,7 @@
 
 ### Manuscript
 
-1.  Background concepts
-
-    **DEADLINE:** *\<2021-03-05 Fri\>*
-
-    1.  Legacy SoPa
-
-        1.  Model specifications
-
-            1.  describe the native explainability used; describing the
-                two methods offered; they will be further classified in
-                the next subsection
-
-        2.  Explainability
-
-            1.  justify with previous definitions why SoPa is a
-                black-box model
-
-            2.  justify with previous definitions why model\'s
-                explainability proposed corresponds to partial local
-                explanations and feature relevance
-
-            3.  discuss if the explanations fulfil constrictive, causal
-                links and selectiveness
-
-2.  Visualization and summary-statistics
+1.  Visualization and summary-statistics
 
     **DEADLINE:** *\<2021-03-11 Thu\>*
 
@@ -54,12 +30,7 @@
             preferably all using python libraries, or otherwise
             defaulting to R libraries
 
-    2.  \[\#A\] FMTOD
-
-        1.  add visualisation of data statistics with different
-            partitions, perhaps as a stacked bar chart
-
-    3.  \[\#A\] Cross-model comparisons
+    2.  \[\#A\] Cross-model comparisons
 
         1.  compute statistics with random-seed deviations over
             inter-model comparisons such as average distance,
@@ -74,22 +45,29 @@
         3.  visualize examples where regex and neural model align and
             misalign, eg. with a confusion matrix
 
-    4.  \[\#B\] SoPa++ computational graph
+    3.  \[\#A\] Model OOP
 
-        1.  add visualization of computational graph function using tikz
+        1.  visualize patterns as dots with internal pie charts which
+            show magnitudes of each class; displayed as a colour with
+            legend, will show relative importance of each binary neuron
+            and can help us segment their purposes
 
-    5.  \[\#C\] Regex OOP
+    4.  \[\#A\] Regex OOP
 
         1.  add visualization of regex ensemble with graphviz -\> can
             specify which pattern to visualize and how to make large
             scale visualizations
 
-        2.  visualize patterns as dots with internal pie charts which
-            show magnitudes of each class; displayed as a colour with
-            legend, will show relative importance of each binary neuron
-            and can help us segment their purposes
+    5.  \[\#B\] SoPa++ computational graph
 
-3.  Methodologies
+        1.  add visualization of computational graph function using tikz
+
+    6.  \[\#B\] FMTOD
+
+        1.  add visualisation of data statistics with different
+            partitions, perhaps as a stacked bar chart
+
+2.  Methodologies
 
     1.  FMTOD data set
 
@@ -105,10 +83,15 @@
             improve when using original data set because of duplicates
             and overlaps between train and test sets
 
+        4.  talk about lowercasing, upsampling and other important
+            information
+
     2.  Model
 
-        1.  motivate structure in terms of RNNs, CNNs and WFSA where
-            possible
+        1.  update the WFSA definitions to signify wildcard transitions
+            and mention why this is found here and not in the background
+            concepts since we could not find literature which defined it
+            in a similar way
 
         2.  add pseudocode for various segments -\> would help to cement
             certain concepts
@@ -121,44 +104,60 @@
             from SoPa related to transitions and other simplifications
             -\> motivate them using idea of explainable simplification
 
-        5.  neural SoPa++ is a black-box (non-transparent) model, regex
+        5.  comb through terms and iron out usage of patterns vs.
+            substrings vs. WFSAs -\> make these consistent and have them
+            only refer to one consistent entity, also do not mix
+            colloquial and technical terms
+
+        6.  talk about GloVe embeddings, lowercasing and other important
+            things
+
+        7.  neural SoPa++ is a black-box (non-transparent) model, regex
             SoPa++ is a transparent model -\> need justifications from
             background concepts, might need significant text on this
             portion
 
-        6.  SoPa++ uses explanation by simplification (globally) -\>
+        8.  SoPa++ uses explanation by simplification (globally) -\>
             need justification from background concepts -\> not much use
             of global in paper, but we can make our own arguments
 
-        7.  try to link as much as possible with the background concepts
+        9.  try to link as much as possible with the background concepts
             for models/explainability concepts
 
-        8.  add github link to repo as a footnote
+        10. add github link to repo as a footnote
 
     3.  Explainability
 
         1.  explain how we make explanations by simplification work
             altogether
 
-        2.  hard to find hierarchies of good vs. not-good
+        2.  utilize antecendent/proxy model terminologies
+
+        3.  mention tangible metric for simplification -\> how close is
+            proxy to antecedent
+
+        4.  untangible metric is how satisfying the proxy model is to a
+            target audience -\> future work
+
+        5.  hard to find hierarchies of good vs. not-good
             explainability, but we can argue that we tried a different
             explainability method, i.e. explanation by simplification
             with a global simplified model vs.
             local-explanations/feature-relevance -\> also we can use the
             constrictive argument from the paper and others
 
-        3.  make claim that SoPa++ explainability has a different
+        6.  make claim that SoPa++ explainability has a different
             explainability taxonomy from that of vanilla SoPa, but
             don\'t claim it is decisively better
 
-        4.  use the three good explainability criteria to show that our
+        7.  use the three good explainability criteria to show that our
             technique might be better theoretically, but the real test
             would have to be done with a target audience\'s survey
 
-        5.  mention that the target audience of this explainability
+        8.  mention that the target audience of this explainability
             method is domain experts, since it is still very complicated
 
-        6.  link back to background concepts when we discuss bringing
+        9.  link back to background concepts when we discuss bringing
             neural and regex model as close to each other as possible
 
     4.  Quantization/Binarization
@@ -191,7 +190,7 @@
         3.  add visualization of in-depth computational graph in paper
             for clarity -\> this can be automated with PyTorch tools
 
-4.  Results
+3.  Results
 
     1.  Report F_1 scores and performances of neural models
 
@@ -221,7 +220,7 @@
             show alignment/misalignment, if this is necessary -\> but it
             will show interesting class differences
 
-5.  Discussion
+4.  Discussion
 
     1.  Expound on trade-off between performance and transparency by
         looking at differently sized models
@@ -241,13 +240,13 @@
             importance for classes -\> would be interesting to see how
             saturated these are
 
-6.  Conclusions
+5.  Conclusions
 
     1.  Summarize everything in manuscript
 
     2.  Address research questions
 
-7.  Further work
+6.  Further work
 
     1.  Quality of explainability
 
@@ -275,7 +274,7 @@
         2.  for the target audience of end-users -\> how can a user make
             use of the regex model
 
-8.  Formatting
+7.  Formatting
 
     1.  Paper length
 
@@ -309,6 +308,10 @@
             3.  if possible, try to reduce references to Arrieta et al.
                 2020 to reduce perceived over-dependence
 
+            4.  revisit sopa explainability evaluation with three
+                guidelines to check if it makes sense after having
+                evaluated sopa++ with the same guidelines
+
         3.  Bibliography
 
             1.  improve capitalization with braces in bibtex file
@@ -323,37 +326,40 @@
             5.  think about citing Arrieta et al. 2020 in each
                 definition, or perhaps it is overkill
 
-            6.  look into oracel/proxy names and if these can be
+            6.  look into antecedent/proxy names and if these can be
                 improved
 
         4.  Manuscript admin
 
-            1.  think about whether to include borrowed figures or make
-                own -\> check if permission is necessary
+            1.  talk to supervisors about many definitions and if these
+                are alright
 
-            2.  fine tune WFSA to mean either automata or automaton
+            2.  always mention \"figure taken from study (year)\" when
+                using external figures
 
-            3.  remove sub-enumeration for single remarks under a
+            3.  fine tune WFSA to mean either automata or automaton
+
+            4.  remove sub-enumeration for single remarks under a
                 definition
 
-            4.  add links to different sections later on once structure
+            5.  add links to different sections later on once structure
                 and content is clear
 
-            5.  sort out all abbreviations and standardize formatting in
+            6.  sort out all abbreviations and standardize formatting in
                 terms of where they are first declared
 
-            6.  change to two sided format before printing, as this
+            7.  change to two sided format before printing, as this
                 works well for binding/printing
 
-            7.  add Uni-Potsdam originality declaration, or modify
+            8.  add Uni-Potsdam originality declaration, or modify
                 current one to fit
 
-            8.  add remaining features by referring to master template
+            9.  add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, and all
                 others
 
-            9.  perform spell-check of everything at the end
+            10. perform spell-check of everything at the end
 
 ### Current Programming
 
@@ -375,37 +381,40 @@
 
 2.  Documentation and clean-code
 
-    1.  find better naming for mimic/oracle models which is based on
+    1.  consider removing NLU term and just keep the task as
+        intent-detection, as mentioned on the repo
+
+    2.  find better naming for mimic/oracle models which is based on
         research terminology -\> right now mix of neural and regex is
         being used; it would be good to have something more firm
 
-    2.  GPU/CPU runs not always reproducible depending on
+    3.  GPU/CPU runs not always reproducible depending on
         multi-threading, see:
         <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    3.  reduce source code lines, chunking and comments -\> pretty sort
+    4.  reduce source code lines, chunking and comments -\> pretty sort
         python code and function/class orders perhaps by length
 
-    4.  add a comment above each code chunk which explains inner
+    5.  add a comment above each code chunk which explains inner
         mechanisms better
 
-    5.  update metadata eg. with comprehensive python/shell help
+    6.  update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    6.  add information on best model downloads and preparation -\> add
+    7.  add information on best model downloads and preparation -\> add
         these to Google Drive later on
 
-    7.  add pydocstrings to all functions and improve argparse
+    8.  add pydocstrings to all functions and improve argparse
         documentation
 
-    8.  provide description of data structures (eg. data, labels)
+    9.  provide description of data structures (eg. data, labels)
         required for training processes and lowercasing
 
-    9.  update/remove git hooks depending on which features are finally
+    10. update/remove git hooks depending on which features are finally
         used, eg. remove pre-push hook
 
-    10. test download and all other scripts to ensure they work
+    11. test download and all other scripts to ensure they work
 
 ### Future programming
 

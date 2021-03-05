@@ -4,48 +4,45 @@
 
 ** Tasks
 *** Manuscript
-**** Background concepts
-     DEADLINE: <2021-03-05 Fri>
-***** Legacy SoPa
-****** Model specifications
-******* describe the native explainability used; describing the two methods offered; they will be further classified in the next subsection
-****** Explainability
-******* justify with previous definitions why SoPa is a black-box model
-******* justify with previous definitions why model's explainability proposed corresponds to partial local explanations and feature relevance 
-******* discuss if the explanations fulfil constrictive, causal links and selectiveness
-
 **** Visualization and summary-statistics 
     DEADLINE: <2021-03-11 Thu>
 ***** [#A] Model runs
 ****** add visualizations of model runs using dedicated functions, preferably all using python libraries, or otherwise defaulting to R libraries
-***** [#A] FMTOD
-****** add visualisation of data statistics with different partitions, perhaps as a stacked bar chart
 ***** [#A] Cross-model comparisons
 ****** compute statistics with random-seed deviations over inter-model comparisons such as average distance, misalignment, activation frequency and other useful metrics that can elucidate on-the-ground processes
 ****** use error-bar plot to reflect random seed iterations for binary misalignment and softmax norm differences -> analyze relationship with tau threshold vs. performance vs. softmax/binary distances
 ****** visualize examples where regex and neural model align and misalign, eg. with a confusion matrix
+***** [#A] Model OOP
+****** visualize patterns as dots with internal pie charts which show magnitudes of each class; displayed as a colour with legend, will show relative importance of each binary neuron and can help us segment their purposes
+***** [#A] Regex OOP
+****** add visualization of regex ensemble with graphviz -> can specify which pattern to visualize and how to make large scale visualizations
 ***** [#B] SoPa++ computational graph
 ****** add visualization of computational graph function using tikz
-***** [#C] Regex OOP
-****** add visualization of regex ensemble with graphviz -> can specify which pattern to visualize and how to make large scale visualizations
-****** visualize patterns as dots with internal pie charts which show magnitudes of each class; displayed as a colour with legend, will show relative importance of each binary neuron and can help us segment their purposes
+***** [#B] FMTOD
+****** add visualisation of data statistics with different partitions, perhaps as a stacked bar chart
 
 **** Methodologies
 ***** FMTOD data set
 ****** provide summary statistics and explanation about the data set
 ****** provide a visualization on the data set and its splits
 ****** mention that data set was altered to keep it in good quality by removing duplicates, perhaps this can be re-tested without such processing or used as a limitation/further-work -> although results appear to show that performance metric improve when using original data set because of duplicates and overlaps between train and test sets
+****** talk about lowercasing, upsampling and other important information
 ***** Model
-****** motivate structure in terms of RNNs, CNNs and WFSA where possible 
+****** update the WFSA definitions to signify wildcard transitions and mention why this is found here and not in the background concepts since we could not find literature which defined it in a similar way
 ****** add pseudocode for various segments -> would help to cement certain concepts
 ****** try to find literature-based justification for wildcard transition -> if not use omega symbol to differentiate from the Kleene star symbol
 ****** add detailed information on how hard SoPa++ model differs from SoPa related to transitions and other simplifications -> motivate them using idea of explainable simplification
+****** comb through terms and iron out usage of patterns vs. substrings vs. WFSAs -> make these consistent and have them only refer to one consistent entity, also do not mix colloquial and technical terms
+****** talk about GloVe embeddings, lowercasing and other important things
 ****** neural SoPa++ is a black-box (non-transparent) model, regex SoPa++ is a transparent model -> need justifications from background concepts, might need significant text on this portion
 ****** SoPa++ uses explanation by simplification (globally) -> need justification from background concepts -> not much use of global in paper, but we can make our own arguments
 ****** try to link as much as possible with the background concepts for models/explainability concepts
 ****** add github link to repo as a footnote
 ***** Explainability
 ****** explain how we make explanations by simplification work altogether
+****** utilize antecendent/proxy model terminologies
+****** mention tangible metric for simplification -> how close is proxy to antecedent
+****** untangible metric is how satisfying the proxy model is to a target audience -> future work
 ****** hard to find hierarchies of good vs. not-good explainability, but we can argue that we tried a different explainability method, i.e. explanation by simplification with a global simplified model vs. local-explanations/feature-relevance -> also we can use the constrictive argument from the paper and others
 ****** make claim that SoPa++ explainability has a different explainability taxonomy from that of vanilla SoPa, but don't claim it is decisively better
 ****** use the three good explainability criteria to show that our technique might be better theoretically, but the real test would have to be done with a target audience's survey
@@ -113,15 +110,17 @@
 ******* think about providing an additional definition for "understandability" 
 ******* include a section on risks on large NLP models and why explainability is necessary with different study
 ******* if possible, try to reduce references to Arrieta et al. 2020 to reduce perceived over-dependence
+******* revisit sopa explainability evaluation with three guidelines to check if it makes sense after having evaluated sopa++ with the same guidelines
 ****** Bibliography
 ******* improve capitalization with braces in bibtex file
 ******* if possible, try to find non-arxiv citations for papers
 ******* remove red link color in table of contents
 ******* fine-tune citation color to be consistent with other colors
 ******* think about citing Arrieta et al. 2020 in each definition, or perhaps it is overkill
-******* look into oracel/proxy names and if these can be improved
+******* look into antecedent/proxy names and if these can be improved
 ****** Manuscript admin
-******* think about whether to include borrowed figures or make own -> check if permission is necessary
+******* talk to supervisors about many definitions and if these are alright
+******* always mention "figure taken from study (year)" when using external figures
 ******* fine tune WFSA to mean either automata or automaton
 ******* remove sub-enumeration for single remarks under a definition 
 ******* add links to different sections later on once structure and content is clear
@@ -139,6 +138,7 @@
 ***** replace Union + None types with Optional type for conciseness
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List with overloads)
 **** Documentation and clean-code
+***** consider removing NLU term and just keep the task as intent-detection, as mentioned on the repo
 ***** find better naming for mimic/oracle models which is based on research terminology -> right now mix of neural and regex is being used; it would be good to have something more firm
 ***** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility
 ***** reduce source code lines, chunking and comments -> pretty sort python code and function/class orders perhaps by length
