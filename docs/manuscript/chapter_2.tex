@@ -4,6 +4,8 @@
 
 \section{Explainable artificial intelligence}
 
+\label{section:xai}
+
 In this section, we lay out background concepts for Explainable Artificial Intelligence (XAI) which have been largely adopted from \citet{arrieta2020explainable}. The study is particularly helpful for us since it summarizes the findings of approximately 400 XAI contributions and presents these findings in the form of well-defined concepts and taxonomies. In addition, the study discusses future directions of XAI research. We start off by providing definitions from the study, along with accompanying remarks.
 
 \subsection{Interpretability and transparency}
@@ -48,16 +50,18 @@ Examples of well-known transparent Machine Learning (ML) models are linear/logis
   Given an audience, an \textbf{explainable} Artificial Intelligence is one that produces details or reasons to make its functioning clear or easy to understand.
 \end{definition}
 
-\citet{arrieta2020explainable} observe that black-box ML models are increasingly being employed to make important predictions in critical contexts, citing high-risk areas such as precision medicine and autonomous vehicles. Of particular relevance to the field of Natural Language Processing (NLP), the study notes a myriad of issues related to inductive biases within training data sets and the ethical issues involved in using black-box models trained on such data sets. As a result, they describe an increased demand for transparency in black-box ML models from the various stakeholders in Artificial Intelligence (AI). In addition, \citet{arrieta2020explainable} concretize the presence of a target audience for XAI; implying that different XAI techniques should be employed for different target audiences. In their study, they provide examples of target audiences such as domain experts, end-users and managers (Figure \ref{fig:xai_target_audience}).
+\citet{arrieta2020explainable} observe that black-box ML models are increasingly being employed to make important predictions in critical contexts, citing high-risk areas such as precision medicine and autonomous vehicles. Of particular relevance to the field of Natural Language Processing (NLP), the study notes a myriad of issues related to inductive biases within training data sets and the ethical issues involved in using black-box models trained on such data sets. As a result, they describe an increased demand for transparency in black-box ML models from the various stakeholders in Artificial Intelligence (AI). In addition, \citet{arrieta2020explainable} emphasize the presence of a target audience for XAI; implying that different XAI techniques should be employed for different target audiences. In their study, they provide examples of target audiences such as domain experts, end-users and managers (Figure \ref{fig:xai-target-audience}).
 
 \begin{figure}[t]
   \centering
   \includegraphics[trim={0.1cm 0.1cm 0.1cm 0.1cm},clip,width=14cm]{pdfs/xai_target_audience}
-  \caption{Examples of various target audiences in XAI \citep{arrieta2020explainable}}
-  \label{fig:xai_target_audience}
+  \caption{Examples of various target audiences in XAI; figure taken from \citet{arrieta2020explainable}}
+  \label{fig:xai-target-audience}
 \end{figure}
 
 \subsection{Terminology clarifications}
+
+\label{section:xai-terminology}
 
 Based on an extensive literature review, \citet{arrieta2020explainable} observe that many studies tend to misuse the terms interpretability and explainability by using them interchangeably. To address this, they provide clear conceptual differences between the terms. For example, \citet{arrieta2020explainable} state that \textit{``interpretability refers to a passive characteristic of a model referring to the level at which a given model makes sense for a human observer.''} They state that this same feature can also be expressed as transparency. In contrast, they state that \textit{``explainability can be viewed as an active characteristic of a model, denoting any action or procedure taken by a model with the intent of clarifying or detailing its internal functions.''}
 
@@ -65,9 +69,11 @@ In summary, we gather that both interpretability and transparency refer to the s
 
 \subsection{Explainability techniques}
 
+\label{section:xai-techniques}
+
 Based on the aforementioned classification of ML models into transparent and black-box models, \citet{arrieta2020explainable} expound on explainability techniques for each of these model types. Due to their transparent nature, the study states that transparent ML models are usually explainable in themselves to most target audiences and therefore usually do not require any external technique to extract explanations. The study does however highlight some target audiences, such as non-expert users, who may require external explainability techniques such as model output visualizations in order to explain the inner workings of transparent ML models.
 
-For the case of non-transparent or black-box models, \citet{arrieta2020explainable} argue that separate or external techniques must be utilized in order to reasonably explain these models. Such explainability techniques are referred to in the study as post-hoc explainability techniques; which is derived from the idea that explanations for such models are usually extracted post-modelling. Notable examples of post-hoc explainability techniques include local explanations, feature relevance and explanations by simplification. Below we provide definitions for these methods.
+For the case of non-transparent or black-box models, \citet{arrieta2020explainable} argue that separate or external techniques must be utilized in order to reasonably explain these models. Such explainability techniques are referred to in the study as post-hoc explainability techniques; which is derived from the idea that explanations for such models are usually extracted post-modeling. Notable examples of post-hoc explainability techniques include local explanations, feature relevance and explanations by simplification. Below we provide definitions for these methods.
 
 \begin{definition}[Local explanations; \citealt{arrieta2020explainable}]
   Local explanations tackle explainability by segmenting the solution space and giving explanations to less complex solution subspaces that are relevant for the whole model.
@@ -98,7 +104,7 @@ Explanations can be formed by means of techniques with the differentiating prope
 \end{definition}
 
 \begin{remark}
-  We refer to the original black-box model as an \textit{antecedent} model and the simplified version as the \textit{proxy} model. Furthermore, we qualify that all proxy models must be designed to globally approximate their respective antecedent models. This is in constrast to local explanations which require that simplified models approximate only subsets of the original black-box model.
+  We refer to the original black-box model as an \textit{antecedent} model and the simplified version as the \textit{proxy} model. Furthermore, we qualify that all proxy models must be designed to globally approximate their respective antecedent models. This is in contrast to local explanations which require that simplified models approximate only subsets of the original black-box model.
 \end{remark}
 
 \begin{remark}
@@ -110,27 +116,29 @@ Through a survey of recent literature on explanations by simplification applied 
 \begin{figure}[t]
   \centering
   \includegraphics[width=14cm]{pdfs/performance_transparency_tradeoff.pdf}
-  \caption{Schematic visualizing the performance-interpretability tradeoff \citep{arrieta2020explainable}}
+  \caption{Schematic visualizing the performance-interpretability tradeoff; figure taken from \citet{arrieta2020explainable}}
   \label{fig:performance_interpretability_tradeoff}
 \end{figure}
 
 \subsection{Performance-interpretability tradeoff}
 
-An interesting and insightful contribution of \citet{arrieta2020explainable} is their introduction of the performance-interpretability tradeoff. According to the study, \textit{``the matter of interpretability versus performance is one that repeats itself through time, but as any other big statement, has its surroundings filled with myths and misconceptions.''} To address some of the aforementioned myths and misconceptions, \citet{arrieta2020explainable} first disprove the generic statement that more complex models are always more accurate by pointing to certain case studies to support this argument. In particular, they show that complex models are not necessarily more accurate in cases where the function to be modelled is not complex, data is well-structured and input features are available with high quality.
+An interesting and insightful contribution of \citet{arrieta2020explainable} is their introduction of the performance-interpretability tradeoff. According to the study, \textit{``the matter of interpretability versus performance is one that repeats itself through time, but as any other big statement, has its surroundings filled with myths and misconceptions.''} To address some of the aforementioned myths and misconceptions, \citet{arrieta2020explainable} first disprove the generic statement that more complex models are always more accurate by pointing to certain case studies to support this argument. In particular, they show that complex models are not necessarily more accurate in cases where the function to be modeled is not complex, data is well-structured and input features are available with high quality.
 
-Next, \citet{arrieta2020explainable} provide the case where the aforementioned statement, that complex models perform better, tends to be true. According to the study, this is usually true when the function to be modelled is sufficiently complex and where the input data has high diversity or variance; and possibly contains significant noise. In such cases, \citet{arrieta2020explainable} argue that the performance-interpretability tradeoff can be observed; as exemplified in Figure \ref{fig:performance_interpretability_tradeoff}.
+Next, \citet{arrieta2020explainable} provide the case where the aforementioned statement, that complex models perform better, tends to be true. According to the study, this is usually true when the function to be modeled is sufficiently complex and where the input data has high diversity or variance; and possibly contains significant noise. In such cases, \citet{arrieta2020explainable} argue that the performance-interpretability tradeoff can be observed; as exemplified in Figure \ref{fig:performance_interpretability_tradeoff}.
  
 \subsection{Explainability metrics}
 
-Towards the end of their study, \citet{arrieta2020explainable} note two major limitations of the current state of XAI research. Firstly, they observe the lack of a unified conceptualization of explainability between various studies. They furthermore acknowledge that their study, while limited, could provide a good starting point for other XAI studies. Secondly, \citet{arrieta2020explainable} note the lack of a unified metric that denotes how explainable any given model is. They further explain why developing such a metric has been a difficult process for many XAI studies; particularly because such a metric would entail incorporating psychological, sociological and cognitive elements to accomodate the goodness of fit of an explainability method to a certain target audience. Furthermore, incorporating such elements might involve significant amounts of subjectivity in the desired metric.
+\label{section:xai-metrics}
+
+Towards the end of their study, \citet{arrieta2020explainable} note two major limitations of the current state of XAI research. Firstly, they observe the lack of a unified conceptualization of explainability between various studies. They furthermore acknowledge that their study, while limited, could provide a good starting point for other XAI studies. Secondly, \citet{arrieta2020explainable} note the lack of a unified metric that denotes how explainable any given model is. They further explain why developing such a metric has been a difficult process for many XAI studies; particularly because such a metric would entail incorporating psychological, sociological and cognitive elements to accommodate the goodness of fit of an explainability method to a certain target audience. Furthermore, incorporating such elements might involve significant amounts of subjectivity in the desired metric.
 
 To reduce some of the aforementioned subjectivity involved, \citet{MILLER20191} and \citet{arrieta2020explainable}  provide basic guidelines of what could constitute a good explanation based on human psychology, sociology and cognitive sciences. Firstly, they observe that explanations are better when \textit{constrictive}; meaning an explanation is good if it not only explains why a model made decision X, but also why it made decision X over decision Y. Next, they suggest that good explanations should be able to communicate causal links over probabilities; which could be a challenge for black-box models which generally compute aggregate probabilities without necessarily considering causal links. Finally, they recommend that explanations are better when \textit{selective}; meaning that a good explanation should be able to selectively provide the most important causal links instead of all possible causal links as these might be irrelevant or confusing to the target audience.
 
 \section{Straight-through estimator}
 
-Activation quantized neural networks refer to neural networks that contain layers which transmit piecewise discrete signals. One of the main challenges in training such activation quantized neural networks is that their gradients tend to vanish almost everywhere because their derivatives typically default to zero. \citep{bengio2013estimating,courbariaux2016binarized,yin2019understanding}.
+Activation quantized neural networks refer to neural networks that contain layers which transmit piece-wise discrete signals. One of the main challenges in training such activation quantized neural networks is that their gradients tend to vanish almost everywhere because their derivatives typically default to zero. \citep{bengio2013estimating,courbariaux2016binarized,yin2019understanding}.
 
-One significant workaround for this issue was proposed by \citet{bengio2013estimating} through the introduction of the Straight-Through Estimator (STE). In the vanilla version of the STE, the STE neuron emits a signal of 1 when its input is strictly positive, and emits a zero signal in all other cases (Equation \ref{eq:ste-forward}). The STE then uses a simple identity function to estimate the gradient during the backward pass (Equation \ref{eq:ste-backward}). The vanilla STE is visualized through a schematic in Figure \ref{fig:straight_through_estimator}.
+One significant workaround for this issue was proposed by \citet{bengio2013estimating} through the introduction of the Straight-Through Estimator (STE). In the vanilla version of the STE, the STE neuron emits a signal of 1 when its input is strictly positive, and emits a zero signal in all other cases (Equation \ref{eq:ste-forward}). The STE then uses a simple identity function to estimate the gradient during the backward pass (Equation \ref{eq:ste-backward}). The vanilla STE is visualized through a schematic in Figure \ref{fig:straight-through-estimator}.
 
 \begin{equation}
   \label{eq:ste-forward}
@@ -149,11 +157,11 @@ One significant workaround for this issue was proposed by \citet{bengio2013estim
 \begin{figure}[t]
   \centering
   \includegraphics[width=14cm]{pdfs/ste_theoretical/main.pdf}
-  \caption{Schematic visualizing the vanilla STE \citep{bengio2013estimating}}
-  \label{fig:straight_through_estimator}
+  \caption{Schematic visualizing the vanilla STE's forward and backward passes}
+  \label{fig:straight-through-estimator}
 \end{figure}
 
-Aside from the vanilla STE, several other flavours of STEs have been proposed by studies such as \citet{courbariaux2016binarized} and \citet{yin2019understanding}. In general, these studies have shown that activation quantized neural networks perform competitively with their non-quantized counterparts; while providing performance-related benefits related to lower precision computing as well as enabling further research into threshold driven neural activation functions.
+Aside from the vanilla STE, several other flavors of STEs have been proposed by studies such as \citet{courbariaux2016binarized} and \citet{yin2019understanding}. In general, these studies have shown that activation quantized neural networks perform competitively with their non-quantized counterparts; while providing performance-related benefits related to lower precision computing as well as enabling further research into threshold driven neural activation functions.
 
 \section{Weighted finite-state automaton}
 
@@ -193,6 +201,10 @@ Aside from the vanilla STE, several other flavours of STEs have been proposed by
     \item[--] and final weights $\rho: \mathcal{Q} \rightarrow \mathbb{K}$.
   \end{itemize}
 
+  \begin{remark}
+    Several studies refer to the transition weights $\mathcal{T}$ as the transition matrix, and the initial $\lambda$ and final $\rho$ weights as the initial and final weight vectors respectively \citep{schwartz2018sopa,jiang2020cold}. As a result, we may use these terms interchangeably when referring to different studies.
+  \end{remark}
+  
   \begin{remark}
     $\epsilon \notin \Sigma$ refers to special $\epsilon$-transitions that may be taken without consuming any input.
   \end{remark}
@@ -246,37 +258,68 @@ Let $\Pi(\pmb{x})$ denote the set of all paths in $\mathcal{A}$ that derive $\pm
 \end{remark}
 
 \begin{remark}
-  A special case of Forward is the Viterbi algorithm, where the addition $\oplus$ operator is contrained to the maximum function \citep{viterbi1967error}. Viterbi therefore returns the highest scoring path $\pmb{\pi}$ that derives the input string $\pmb{x}$.
+  A special case of Forward is the Viterbi algorithm, where the addition $\oplus$ operator is constrained to the maximum function \citep{viterbi1967error}. Viterbi therefore returns the highest scoring path $\pmb{\pi}$ that derives the input string $\pmb{x}$.
 \end{remark}
 
 \section{Soft patterns}
 
 \label{section:soft-patterns}
 
-\citet{schwartz2018sopa} presented a novel hybridized RNN, CNN and WFSA-based neural architecture called \textbf{So}ft \textbf{Pa}tterns (SoPa). This architecture resembles a RNN because it processes text sequentially and can encode strings of arbitrary lengths. Similarly, the architecture contains a variable number of constrained linear-chain WFSAs with variable pattern lengths or window sizes; which resembles both one-layer CNNs and an ensemble of constrained linear-chain WFSAs. The combination of the aforementioned neural features allows SoPa to learn soft versions of traditional textual surface patterns.
+\citet{schwartz2018sopa} present a novel hybridized RNN, CNN and WFSA-based neural architecture called \textbf{So}ft \textbf{Pa}tterns (SoPa). This architecture resembles a RNN because it processes text sequentially and can encode strings of arbitrary lengths. Similarly, the architecture contains a variable number of constrained linear-chain WFSAs with variable pattern lengths or window sizes; which resembles both one-layer CNNs and an ensemble of constrained linear-chain WFSAs. The combination of the aforementioned neural features allows SoPa to learn soft versions of traditional textual surface patterns.
 
-In their study, \citet{schwartz2018sopa} test the SoPa architecture on three separate sentiment classification tasks and compared the results with four baselines which included a bidirectional LSTM and a CNN. With their results, they were able to show that SoPa perfomed on par or better than all baselines on all tasks. Additionally, they were able to show that SoPa outperformed all baselines significantly in low-data settings. Finally, the authors presented a simple method to explain the SoPa model using both local explanations and feature relevance.
+In their study, \citet{schwartz2018sopa} test the SoPa architecture on three separate sentiment classification tasks and compare the results with four baselines which included a bidirectional LSTM and a CNN. With their results, they show that SoPa performed on par or better than all baselines on all tasks. Additionally, they show that SoPa outperformed all baselines significantly in low-data settings. Finally, the authors present a simple method to explain the SoPa model using both local explanations and feature relevance.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[trim={0.5cm 0.5cm 0.5cm 0.5cm},clip,width=14cm]{images/sopa.png}
-  \caption{Schematic visualizing the SoPa model framework \citep{schwartz2018sopa}}
-  \label{fig:sopa}
+  \includegraphics[trim={0.5cm 0.5cm 0.5cm 0.5cm},clip,width=13cm]{images/fsa.png}
+  \caption{Schematic visualizing a linear-chain (weighted) finite-state automaton with one start and end state, $\epsilon$-transitions, self-loops and a wildcard transition shown as \textbf{X}; note that wildcard transitions are not allowed in the SoPa model; figure taken from \citet{schwartz2018sopa}}
+  \label{fig:fsa}
 \end{figure}
 
 \subsection{Model specifications}
 
-\paragraph{WFSAs:} In regards to the WFSAs used in SoPa, \citet{schwartz2018sopa} only utilized the max-sum and max-product semirings. Next, they employed constraints on the model's WFSAs in order to reduce the runtime of SoPa further. Firstly, they fixed the initial $\lambda$ and final $\rho$ weights to static vectors instead of state-dependent vectors found in Definition \ref{def:wfsa}. Next, they constrained $\epsilon$-transitions to only occur at most once in each transition. Finally, they enforced a linear-chain WFSA structure which only allows consecutive-state transitions and therefore disallows transitions to previous states. This results in the transition matrix $\mathcal{T}$ becoming a sparse diagonal matrix. These constraints resulted in the runtime of the linear-chain WFSAs being reduced to $O(|Q||\pmb{x}|)$ compared to the original runtime in Remark \ref{rmk:old-runtime}. 
+\paragraph{WFSAs:} In regards to the WFSAs used in SoPa, \citet{schwartz2018sopa} only utilize the max-sum and max-product semirings; as well as $\epsilon$-transitions and self-loops. Next, they employ constraints on the model's WFSAs in order to reduce the runtime of SoPa further. Of these, they firstly only allow one start and end state; which results in the initial $\lambda$ and final $\rho$ weights being reduced to static unitary values instead of state-dependent weights found in Definition \ref{def:wfsa}. Next, they constrain $\epsilon$-transitions to only occur at most once in each transition. Finally, they enforce a linear-chain WFSA structure which only allows consecutive-state transitions and therefore disallows transitions to previous states (Figure \ref{fig:fsa}). This results in the transition matrix $\mathcal{T}$ being reduced to a sparse diagonal matrix. These constraints result in the runtime of the linear-chain WFSAs being reduced to $O(|Q||\pmb{x}|)$ compared to the original runtime in Remark \ref{rmk:old-runtime}.
 
-\paragraph{String vs. document score:} Defintion \ref{def:string-score} describes how a WFSA can be used to compute a string score. Since SoPa was intended to compute scores for entire documents and not just short strings, \citet{schwartz2018sopa} proposed computing the string score over all consecutive fixed-length strings in the document. The document score would represent an aggregated score over all consecutive substrings and would therefore also depend on the semiring used in the WFSAs. In the case of max-based semirings using the Viterbi algorithm, the document score would reflect the highest scoring substring.
+\paragraph{WFSAs as patterns:} The relationship between regular expressions and (weighted) finite-state automata has been well-established in the theory of finite-state automata; with several algorithms detailing a deterministic conversion process between these entities \citep{thompson1968programming,jiang2020cold}. Since the relationship between regular expressions and textual patterns is clear, \citet{schwartz2018sopa} refer to the linear-chain WFSAs in SoPa simply as \textit{``patterns''}. For brevity, we adopt the same terminology.
 
-\paragraph{Computational graph:} Figure \ref{fig:sopa} shows a sample computational graph for the SoPa model with two WFSAs highlighted in blue and red. The WFSAs compute consecutive string scores as they traverse the document. Given max-based semirings, the max-pooled scores accumulate in an output layer as shown on the top of Figure \ref{fig:sopa}. After traversing the full document, the max-pooled scores are passed through a Multi-Layer Perceptron (MLP) which conducts the final classification to an output label. It is worth noting that without $\epsilon$-transitions and self-loops, a pattern with length $d$ should always consume $d-1$ tokens. However, by allowing the aforementioned special transitions; it is possible that strings of variable lengths match the pattern since an $\epsilon$-transition can reduce the match length while a self-loop can increase it. This is indeed the case for Pattern 2 when a self-loop is encountered between the tokens \textit{``and''} and \textit{``most''} in Figure \ref{fig:sopa}.
+\paragraph{String vs. document score:} Definition \ref{def:string-score} describes how a WFSA can be used to compute a string score. Since SoPa was intended to compute scores for entire documents and not just short strings, \citet{schwartz2018sopa} propose computing the string score over all consecutive substrings in the document. The document score for a WFSA would represent an aggregated score over all consecutive substrings and would therefore also depend on the semiring used in the WFSAs. In the case of max-based semirings using the Viterbi algorithm, the document score would reflect the highest scoring substring for a WFSA.
 
-\paragraph{Hyperparameters:} The SoPa model requires both commonly used and special hyperparameters. Commonly used hyperparameters include the learning rate, neuron dropout and word dropout. A special hyparameter in the SoPa model is the pattern hyperparameter and it contains information on the number of patterns or WFSAs allowed, as well as the lengths of the patterns. This hyperparameter is encoded as a string with the following syntax: \texttt{Length$_{1}$-Count$_{1}$\_$\dots$\_Length$_{n}$-Count$_{n}$}. An example of this hyperparameter could be \texttt{3-5\_4-10\_5-15}, which would signify 5 patterns of length 3, 10 patterns of length 4 and 15 patterns of length 5.
+\paragraph{Computational graph:} Figure \ref{fig:sopa} shows a sample computational graph for the SoPa model with two WFSAs highlighted in blue and red. The WFSAs compute consecutive string scores as they traverse the document. Given max-based semirings, the max-pooled scores accumulate in an output layer as shown on the top of Figure \ref{fig:sopa}. After traversing the full document, the max-pooled scores are passed through a Multi-Layer Perceptron (MLP) which conducts the final classification to an output label. It is worth noting that without $\epsilon$-transitions and self-loops, a linear-chain WFSA with $|\mathcal{Q}|$ states should always consume $\mathcal{|Q|}-1$ tokens. However, by allowing the aforementioned special transitions; it is possible for strings of variable lengths to be consumed since an $\epsilon$-transition can transition to the next state without consuming tokens while a self-loop can consume tokens without transitioning to the next state. This is indeed the case for Pattern 2 in Figure \ref{fig:sopa}, when a self-loop is encountered in the transition from the token \textit{``and''} to the token \textit{``most''}.
 
-\subsection{Explainability}
+\begin{figure}[t]
+  \centering
+  \includegraphics[trim={0.5cm 0.5cm 0.5cm 0.5cm},clip,width=14cm]{images/sopa.png}
+  \caption{Schematic visualizing the SoPa model framework with two constituent WFSAs highlighted in blue and red; figure taken from \citet{schwartz2018sopa}}
+  \label{fig:sopa}
+\end{figure}
+
+\paragraph{Hyperparameters:} Creating and training the SoPa model requires both commonly used and special hyperparameters. Commonly used hyperparameters include the learning rate, neuron dropout and word dropout. A special hyperparameter in the SoPa model is the pattern hyperparameter and it contains information on the number of patterns or WFSAs allowed, as well as the lengths of the patterns or the number of states in the WFSAs. This hyperparameter is encoded as a string with the following syntax: \texttt{Length$_{1}$-Count$_{1}$\_$\dots$\_Length$_{n}$-Count$_{n}$}. An example of this hyperparameter could be \texttt{3-5\_4-10\_5-15}, which would signify 5 patterns of length 3, 10 patterns of length 4 and 15 patterns of length 5.
+
+\paragraph{Explainability:} In their study, \citet{schwartz2018sopa} describe simple methods of \textit{``interpreting''} the SoPa model. One method involves the usage of back-pointers during the Viterbi computation to determine the patterns and substrings in a document which contributed the highest pattern scores. Another method involves zeroing out the corresponding patterns or WFSAs via the occlusion sensitivity method to determine which pattern had the greatest impact on each classification decision. It is worth noting that the usage of \textit{interpretation} in \citet{schwartz2018sopa} is likely inconsistent with our definitions presented in Section \ref{section:xai}. Given the common terminology misuse described in Section \ref{section:xai-terminology}, it is more accurate to present the aforementioned \textit{``interpretability''} method as an explainability method. We analyze the explainability-related features of SoPa in greater detail in Sections \ref{section:sopa-transparency} and \ref{section:sopa-explainability}. 
+
+\subsection{Transparency of SoPa}
+
+\label{section:sopa-transparency}
+
+Since we expounded on XAI in Section \ref{section:xai} and made a case for viewing ML models from the lens of XAI, it would only make sense to extend the same standards to the SoPa model. Based on the arguments made by \citet{arrieta2020explainable}, we can classify the SoPa model as a black-box model since it closely resembles RNNs and CNNs; and a strong case has already been made in their study regarding the black-box natures of both RNNs and CNNs. Naturally, this would imply that post-hoc explainability methods are required to explain the SoPa model. 
+
+\subsection{Post-hoc explainability methods}
+
+\label{section:sopa-explainability}
+
+Using the post-hoc explainability taxonomies described in Section \ref{section:xai-techniques}, we can correspondingly classify the explainability methods presented in \citet{schwartz2018sopa} using terminology consistent with XAI research. The first explainability method uses individual text samples to determine the highest scoring substrings in documents; as well as the patterns or WFSAs corresponding to them. Since this analysis is conducted at an individual document level and is never synthesized to a more global context, we would classify this under the local explanations explainability method. The next technique involves an occlusion or sensitivity analysis over all patterns and documents to determine which pattern had the greatest impact for each class. Since this involves systematic perturbation to determine the importance of pattern features, we would classify this method as a feature relevance explainability method.
+
+Section \ref{section:xai-metrics} describes basic guidelines that could help elucidate what constitutes a good explanation; namely that a good explanation should be constrictive, provide causal links and be selective. We attempt to apply these guidelines with the aforementioned explainability techniques presented in SoPa. For the constrictive quality, it is likely that the explainability methods do not meet this criterion since they only highlight individual features that were important for SoPa, and do not necessarily go into detail regarding why these features superseded adjacent features. Next, the explainability methods likely do not fulfill the criterion of providing causal links; since they generally provide explanations by aggregating (ultimately) probabilistic quantities inside SoPa. Finally in contrast, the explainability methods likely pass the criterion of being selective since they only provide the most important features for an explanation. 
 
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "main"
 %%% End: 
+
+% LocalWords:  XAI Interpretability understandability simulatable decomposable
+% LocalWords:  algorithmically Simulatability Decomposability regressors NLP
+% LocalWords:  Explainability interpretability explainability subspaces Shapley
+% LocalWords:  Interpretable SHAP Automata FSAs WFSAs pdfs tradeoff pdf ste MLP
+% LocalWords:  quantized STE's STEs Semiring semiring Semirings semirings WFSA
+% LocalWords:  substring Viterbi CNNs LSTM automata substrings Perceptron RNNs
+% LocalWords:  Hyperparameters hyperparameters tterns hyperparameter
