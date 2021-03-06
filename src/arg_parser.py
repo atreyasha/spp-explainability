@@ -139,60 +139,35 @@ def train_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def explain_simplify_arg_parser() -> argparse.ArgumentParser:
+def grid_train_arg_parser(
+        resume_training: bool = False) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    # add group for required arguments
-    required = parser.add_argument_group('required explainability arguments')
-    required.add_argument("--train-data",
-                          help="Path to train data file",
-                          required=True,
-                          type=file_path)
-    required.add_argument("--train-labels",
-                          help="Path to train labels file",
-                          required=True,
-                          type=file_path)
-    required.add_argument("--valid-data",
-                          help="Path to validation data file",
-                          required=True,
-                          type=file_path)
-    required.add_argument("--valid-labels",
-                          help="Path to validation labels file",
-                          required=True,
-                          type=file_path)
-    required.add_argument("--neural-model-checkpoint",
-                          help=("Glob path to neural model checkpoint(s) with "
-                                "'.pt' extension"),
-                          required=True,
-                          type=glob_path)
-    # add group for optional arguments
-    explain = parser.add_argument_group('optional explainability arguments')
-    explain.add_argument("--atol",
-                         help=("Specify absolute tolerance when comparing "
-                               "equivalences between tensors"),
-                         default=1e-6,
-                         type=float)
-    explain.add_argument("--batch-size",
-                         help="Batch size for explainability",
-                         default=256,
-                         type=int)
-    explain.add_argument("--num-train-instances",
-                         help="Maximum number of training instances",
-                         type=int)
-    explain.add_argument("--max-doc-len",
-                         help="Maximum document length allowed",
-                         type=int)
+    grid = parser.add_argument_group('optional grid-training arguments')
+    if not resume_training:
+        grid.add_argument(
+            "--grid-config",
+            help="Path to grid configuration file",
+            default="./src/resources/flat_grid_heavy_config.json",
+            type=file_path)
+        grid.add_argument(
+            "--num-random-iterations",
+            help="Number of random iteration(s) for each grid instance",
+            default=10,
+            type=int)
+    grid.add_argument("--grid-training",
+                      help="Use grid-training instead of single-training",
+                      action="store_true")
     return parser
 
 
-def explain_compress_arg_parser() -> argparse.ArgumentParser:
+def train_resume_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    # add group for required arguments
-    required = parser.add_argument_group('required explainability arguments')
-    required.add_argument("--regex-model-checkpoint",
-                          help=("Glob path to regex model checkpoint(s) "
-                                "with '.pt' extension"),
+    required = parser.add_argument_group('required training arguments')
+    required.add_argument("--model-log-directory",
+                          help=("Base model directory containing model "
+                                "data to be resumed for training"),
                           required=True,
-                          type=glob_path)
+                          type=dir_path)
     return parser
 
 
@@ -266,35 +241,72 @@ def grid_evaluate_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def grid_train_arg_parser(
-        resume_training: bool = False) -> argparse.ArgumentParser:
+def explain_simplify_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    grid = parser.add_argument_group('optional grid-training arguments')
-    if not resume_training:
-        grid.add_argument(
-            "--grid-config",
-            help="Path to grid configuration file",
-            default="./src/resources/flat_grid_heavy_config.json",
-            type=file_path)
-        grid.add_argument(
-            "--num-random-iterations",
-            help="Number of random iteration(s) for each grid instance",
-            default=10,
-            type=int)
-    grid.add_argument("--grid-training",
-                      help="Use grid-training instead of single-training",
-                      action="store_true")
+    # add group for required arguments
+    required = parser.add_argument_group('required explainability arguments')
+    required.add_argument("--train-data",
+                          help="Path to train data file",
+                          required=True,
+                          type=file_path)
+    required.add_argument("--train-labels",
+                          help="Path to train labels file",
+                          required=True,
+                          type=file_path)
+    required.add_argument("--valid-data",
+                          help="Path to validation data file",
+                          required=True,
+                          type=file_path)
+    required.add_argument("--valid-labels",
+                          help="Path to validation labels file",
+                          required=True,
+                          type=file_path)
+    required.add_argument("--neural-model-checkpoint",
+                          help=("Glob path to neural model checkpoint(s) with "
+                                "'.pt' extension"),
+                          required=True,
+                          type=glob_path)
+    # add group for optional arguments
+    explain = parser.add_argument_group('optional explainability arguments')
+    explain.add_argument("--atol",
+                         help=("Specify absolute tolerance when comparing "
+                               "equivalences between tensors"),
+                         default=1e-6,
+                         type=float)
+    explain.add_argument("--batch-size",
+                         help="Batch size for explainability",
+                         default=256,
+                         type=int)
+    explain.add_argument("--num-train-instances",
+                         help="Maximum number of training instances",
+                         type=int)
+    explain.add_argument("--max-doc-len",
+                         help="Maximum document length allowed",
+                         type=int)
     return parser
 
 
-def train_resume_arg_parser() -> argparse.ArgumentParser:
+def explain_compress_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    required = parser.add_argument_group('required training arguments')
-    required.add_argument("--model-log-directory",
-                          help=("Base model directory containing model "
-                                "data to be resumed for training"),
+    # add group for required arguments
+    required = parser.add_argument_group('required explainability arguments')
+    required.add_argument("--regex-model-checkpoint",
+                          help=("Glob path to regex model checkpoint(s) "
+                                "with '.pt' extension"),
                           required=True,
-                          type=dir_path)
+                          type=glob_path)
+    return parser
+
+
+def tensorboard_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(add_help=False)
+    # add group for required arguments
+    required = parser.add_argument_group('required tensorboard arguments')
+    required.add_argument("--tb-event-directory",
+                          help=("Glob path to tensorboard event "
+                                "director(ies)"),
+                          required=True,
+                          type=glob_path)
     return parser
 
 
