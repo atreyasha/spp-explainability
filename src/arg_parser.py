@@ -307,6 +307,11 @@ def tensorboard_arg_parser() -> argparse.ArgumentParser:
                                 "director(ies)"),
                           required=True,
                           type=glob_path)
+    # add group for optional arguments
+    tb = parser.add_argument_group('optional tensorboard arguments')
+    tb.add_argument("--force",
+                    help="Force overwrite existing tensorboard csv files",
+                    action="store_true")
     return parser
 
 

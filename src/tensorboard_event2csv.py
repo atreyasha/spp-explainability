@@ -89,10 +89,16 @@ def main(args: argparse.Namespace) -> None:
     tb_event_directories = glob(args.tb_event_directory)
     # loop over log directories
     for tb_event_directory in tb_event_directories:
-        LOGGER.info("Processing: %s", tb_event_directory)
-        out = tabulate_events(tb_event_directory)
-        LOGGER.info("Writing results to directory: %s", tb_event_directory)
-        dict2csv(out, tb_event_directory)
+        if os.path.exists(
+                os.path.join(
+                    tb_event_directory, "%s.csv" %
+                    os.path.basename(tb_event_directory))) and not args.force:
+            continue
+        else:
+            LOGGER.info("Processing: %s", tb_event_directory)
+            out = tabulate_events(tb_event_directory)
+            LOGGER.info("Writing results to directory: %s", tb_event_directory)
+            dict2csv(out, tb_event_directory)
 
 
 if __name__ == "__main__":
