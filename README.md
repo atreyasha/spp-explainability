@@ -12,7 +12,7 @@ This repository documents thesis research with the title *"SoPa++: Leveraging ex
 
     **Note:** If you intend to use the GPU, the `torch==1.7.0` dependency in `requirements.txt` works out-of-the-box with CUDA version `10.2`. If you have a different version of CUDA, refer to the official [PyTorch](https://pytorch.org/get-started/locally/) webpage for alternative `pip` installation commands which will provide `torch` optimized for your CUDA version.
 
-2. We use `R` for visualizations integreated with `TikZ`. Below is the `sessionInfo()` output, which can be used for replicating our dependencies explicitly.
+2. We use `R` for visualizations integrated with `TikZ` and `ggplot`. Below is the `sessionInfo()` output, which can be used for replicating our dependencies explicitly.
 
     ```
     R version 4.0.4 (2021-02-15)
