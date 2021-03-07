@@ -21,7 +21,7 @@ def dict2csv(out: Dict[str, List], dpath: str) -> None:
 
     Args:
         out: Dictionary containing values/steps to write
-        dpath: Path of the directory containing tensoboard logs
+        dpath: Path of the directory containing tensorboard logs
     """
     with open(os.path.join(dpath, "%s.csv" % os.path.basename(dpath)),
               "w") as f:
@@ -84,8 +84,8 @@ def tabulate_events(dpath: str) -> Dict[str, List]:
 
 
 def main(args: argparse.Namespace) -> None:
-    """ Main function to tabulate tensoboard data and write to disk as csv """
-    # parse for tensoboard logs
+    """ Main function to tabulate tensorboard data and write to disk as csv """
+    # parse for tensorboard logs
     tb_event_directories = glob(args.tb_event_directory)
     # loop over log directories
     for tb_event_directory in tb_event_directories:
