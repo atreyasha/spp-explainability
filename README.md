@@ -433,7 +433,7 @@ bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/neural/model/*/checkpoints"
 
 ### Regex SoPa++
 
-<details><summary>i. Explainability</summary>
+<details><summary>i. Explanations by simplification</summary>
 <p>
 
 For explaining neural SoPa++ model(s) by simplifying it into a regex SoPa++ model, we use `src/explain_simplify_regex_spp.py`:
