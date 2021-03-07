@@ -13,8 +13,8 @@ Optional arguments:
   -h, --help                      Show this help message and exit
 
 Required arguments:
-  tb_event_directory <glob_path>  Tensorboard event log
-                                  directory/directories
+  tb_event_directory <glob_path>  Tensorboard event log directory/
+                                  directories
 EOF
 }
 
