@@ -4,13 +4,43 @@ This repository documents thesis research with the title *"SoPa++: Leveraging ex
 
 ## Dependencies :neckbeard:
 
-This repository's code was tested with Python versions `3.7.*`. To sync dependencies, we recommend creating a virtual environment and installing the relevant packages via `pip`:
+1. This repository's code was tested with Python versions `3.7.*`. To sync dependencies, we recommend creating a virtual environment and installing the relevant packages via `pip`:
 
-```shell
-pip install -r requirements.txt
-```
+    ```shell
+    pip install -r requirements.txt
+    ```
 
-**Note:** If you intend to use the GPU, the `torch==1.7.0` dependency in `requirements.txt` works out-of-the-box with CUDA version `10.2`. If you have a different version of CUDA, refer to the official [PyTorch](https://pytorch.org/get-started/locally/) webpage for alternative `pip` installation commands which will provide `torch` optimized for your CUDA version.
+    **Note:** If you intend to use the GPU, the `torch==1.7.0` dependency in `requirements.txt` works out-of-the-box with CUDA version `10.2`. If you have a different version of CUDA, refer to the official [PyTorch](https://pytorch.org/get-started/locally/) webpage for alternative `pip` installation commands which will provide `torch` optimized for your CUDA version.
+
+2. We use `R` for visualizations integreated with `TikZ`. Below is the `sessionInfo()` output, which can be used for replicating our dependencies explicitly.
+
+    ```
+    R version 4.0.4 (2021-02-15)
+    Platform: x86_64-pc-linux-gnu (64-bit)
+    Running under: Arch Linux
+
+    Matrix products: default
+    BLAS:   /usr/lib/libblas.so.3.9.0
+    LAPACK: /usr/lib/liblapack.so.3.9.0
+
+    locale:
+     [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+     [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+     [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+     [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+     [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+    [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+    attached base packages:
+    [1] grid      tools     stats     graphics  grDevices utils     datasets 
+    [8] methods   base     
+
+    other attached packages:
+     [1] plyr_1.8.6          reshape2_1.4.4      gridExtra_2.3      
+     [4] optparse_1.6.6      tikzDevice_0.12.3.1 fields_11.6        
+     [7] spam_2.6-0          dotCall64_1.0-1     rjson_0.2.20       
+    [10] ggh4x_0.1.2.1       ggplot2_3.3.3      
+    ```
 
 ## Repository initialization :fire:
 
