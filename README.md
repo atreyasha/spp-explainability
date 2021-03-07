@@ -713,7 +713,7 @@ bash scripts/compare_model_pairs_spp_gpu.sh "/glob/to/model/log/*/director(ies)"
 <details><summary>i. Grid-training performance</summary>
 <p>
 
-For visualizing grid-training performance, we use `src/tensorboard_event2csv.py` to convert tensorboard event logs to `csv` files and then use `src/visualize.R` to plot them. These two scripts are bound together with `scripts/visualize_train_spp_grid.sh`:
+For visualizing grid-training performance, we use `src/tensorboard_event2csv.py` to convert tensorboard event logs to `csv` files and apply functions from `src/visualize.R` to plot them. These two scripts are bound together by `scripts/visualize_train_spp_grid.sh`:
 
 ```
 Usage: visualize_train_spp_grid.sh [-h|--help] tb_event_directory
@@ -725,8 +725,8 @@ Optional arguments:
   -h, --help                      Show this help message and exit
 
 Required arguments:
-  tb_event_directory <glob_path>  Tensorboard event log
-                                  directory/directories
+  tb_event_directory <glob_path>  Tensorboard event log directory/
+                                  directories
 ```
 
 To produce a facet-based visualization of the grid-training cases, simply execute:
@@ -735,7 +735,7 @@ To produce a facet-based visualization of the grid-training cases, simply execut
 bash scripts/visualize_train_spp_grid.sh "/glob/to/tb/event/*/director(ies)"
 ```
 
-**Note:** We can only use this script for grid-training scenarios where the following three training/model arguments are explicitly varied: `patterns`, `tau_threshold` and `seed`. Plots of any other type of grid structure would require a minor refactoring of the `R` source code.
+**Note:** This script has been hard-coded for grid-training scenarios where only the following three training/model arguments are varied: `patterns`, `tau_threshold` and `seed`.
 
 </p>
 </details>
