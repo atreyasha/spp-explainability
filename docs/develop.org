@@ -6,18 +6,19 @@
 *** Manuscript
 **** Visualization and summary-statistics 
     DEADLINE: <2021-03-11 Thu>
-***** [#A] Model runs
-****** add visualizations of model runs using dedicated functions, preferably all using python libraries, or otherwise defaulting to R libraries
 ***** [#A] Cross-model comparisons
-****** compute statistics with random-seed deviations over inter-model comparisons such as average distance, misalignment, activation frequency and other useful metrics that can elucidate on-the-ground processes
 ****** use error-bar plot to reflect random seed iterations for binary misalignment and softmax norm differences -> analyze relationship with tau threshold vs. performance vs. softmax/binary distances
-****** visualize examples where regex and neural model align and misalign, eg. with a confusion matrix
+****** perhaps change name of visualization scripts to imply it is constrained -> can be done later on to keep names consistent with other scripts as well
+****** keep visualization scripts hard-coded and specific for now, they can be made more generalized later on
+****** change R dependencies later on depending on new json parser
 ***** [#A] Model OOP
-****** visualize patterns as dots with internal pie charts which show magnitudes of each class; displayed as a colour with legend, will show relative importance of each binary neuron and can help us segment their purposes
+****** visualize patterns as dots with internal pie charts which show magnitudes of each class; displayed as a colour with legend, will show relative importance of each binary neuron and can help us segment their purposes -> this should be juxtaposed with regex samples to show importance vs. samples
 ***** [#A] Regex OOP
 ****** add visualization of regex ensemble with graphviz -> can specify which pattern to visualize and how to make large scale visualizations
 ***** [#B] SoPa++ computational graph
 ****** add visualization of computational graph function using tikz
+***** [#B] Extra cross-model comparisons
+****** visualize examples/classes where regex and neural model align and misalign, eg. with a confusion matrix
 ***** [#B] FMTOD
 ****** add visualisation of data statistics with different partitions, perhaps as a stacked bar chart
 
@@ -68,6 +69,7 @@
 ****** mention again about test partition difference due to making it unique
 ****** consider making test-partition not unique so this could be used to compare with other studies
 ***** Relationship between tau threshold vs. performance vs. softmax/binary distances 
+****** compute statistics with random-seed deviations over inter-model comparisons such as average distance, misalignment, activation frequency and other useful metrics that can elucidate on-the-ground processes
 ***** Visualizations
 ****** show visualization of training performance timelines, think about how to keep most important information
 ****** show visualization of tau threshold vs. performance vs. softmax/binary distances with error bars for random seed iterations
@@ -112,16 +114,18 @@
 ******* if possible, try to reduce references to Arrieta et al. 2020 to reduce perceived over-dependence
 ******* revisit sopa explainability evaluation with three guidelines to check if it makes sense after having evaluated sopa++ with the same guidelines
 ****** Bibliography
+******* try to paraphrase as much as possible in background concepts otherwise quote statements or definitions to signify they are borrowed
 ******* improve capitalization with braces in bibtex file
 ******* if possible, try to find non-arxiv citations for papers
 ******* remove red link color in table of contents
 ******* fine-tune citation color to be consistent with other colors
 ******* think about citing Arrieta et al. 2020 in each definition, or perhaps it is overkill
 ******* look into antecedent/proxy names and if these can be improved
+******* return to this chapter to add/remove content based on requirements of later chapters
 ****** Manuscript admin
 ******* talk to supervisors about many definitions and if these are alright
 ******* always mention "figure taken from study (year)" when using external figures
-******* fine tune WFSA to mean either automata or automaton
+******* fine tune WFSA to mean either automata or automaton, make plural abbreviation clear as well
 ******* remove sub-enumeration for single remarks under a definition 
 ******* add links to different sections later on once structure and content is clear
 ******* sort out all abbreviations and standardize formatting in terms of where they are first declared
@@ -132,7 +136,7 @@
        
 *** Current Programming
 **** Dependencies, typing and testing
-***** if using R, document R dependencies such as package versions neatly (avoid =renv=)
+***** if using R, document R dependencies with =sessioninfo=
 ***** include basic test code by instantiating class and/or other simple methods
 ***** add mypy as an explicit part of testing the source code
 ***** replace Union + None types with Optional type for conciseness

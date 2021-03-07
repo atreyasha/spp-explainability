@@ -24,43 +24,44 @@
 
     **DEADLINE:** *\<2021-03-11 Thu\>*
 
-    1.  \[\#A\] Model runs
+    1.  \[\#A\] Cross-model comparisons
 
-        1.  add visualizations of model runs using dedicated functions,
-            preferably all using python libraries, or otherwise
-            defaulting to R libraries
-
-    2.  \[\#A\] Cross-model comparisons
-
-        1.  compute statistics with random-seed deviations over
-            inter-model comparisons such as average distance,
-            misalignment, activation frequency and other useful metrics
-            that can elucidate on-the-ground processes
-
-        2.  use error-bar plot to reflect random seed iterations for
+        1.  use error-bar plot to reflect random seed iterations for
             binary misalignment and softmax norm differences -\> analyze
             relationship with tau threshold vs. performance vs.
             softmax/binary distances
 
-        3.  visualize examples where regex and neural model align and
-            misalign, eg. with a confusion matrix
+        2.  perhaps change name of visualization scripts to imply it is
+            constrained -\> can be done later on to keep names
+            consistent with other scripts as well
 
-    3.  \[\#A\] Model OOP
+        3.  keep visualization scripts hard-coded and specific for now,
+            they can be made more generalized later on
+
+        4.  change R dependencies later on depending on new json parser
+
+    2.  \[\#A\] Model OOP
 
         1.  visualize patterns as dots with internal pie charts which
             show magnitudes of each class; displayed as a colour with
             legend, will show relative importance of each binary neuron
-            and can help us segment their purposes
+            and can help us segment their purposes -\> this should be
+            juxtaposed with regex samples to show importance vs. samples
 
-    4.  \[\#A\] Regex OOP
+    3.  \[\#A\] Regex OOP
 
         1.  add visualization of regex ensemble with graphviz -\> can
             specify which pattern to visualize and how to make large
             scale visualizations
 
-    5.  \[\#B\] SoPa++ computational graph
+    4.  \[\#B\] SoPa++ computational graph
 
         1.  add visualization of computational graph function using tikz
+
+    5.  \[\#B\] Extra cross-model comparisons
+
+        1.  visualize examples/classes where regex and neural model
+            align and misalign, eg. with a confusion matrix
 
     6.  \[\#B\] FMTOD
 
@@ -207,6 +208,11 @@
     2.  Relationship between tau threshold vs. performance vs.
         softmax/binary distances
 
+        1.  compute statistics with random-seed deviations over
+            inter-model comparisons such as average distance,
+            misalignment, activation frequency and other useful metrics
+            that can elucidate on-the-ground processes
+
     3.  Visualizations
 
         1.  show visualization of training performance timelines, think
@@ -314,20 +320,27 @@
 
         3.  Bibliography
 
-            1.  improve capitalization with braces in bibtex file
+            1.  try to paraphrase as much as possible in background
+                concepts otherwise quote statements or definitions to
+                signify they are borrowed
 
-            2.  if possible, try to find non-arxiv citations for papers
+            2.  improve capitalization with braces in bibtex file
 
-            3.  remove red link color in table of contents
+            3.  if possible, try to find non-arxiv citations for papers
 
-            4.  fine-tune citation color to be consistent with other
+            4.  remove red link color in table of contents
+
+            5.  fine-tune citation color to be consistent with other
                 colors
 
-            5.  think about citing Arrieta et al. 2020 in each
+            6.  think about citing Arrieta et al. 2020 in each
                 definition, or perhaps it is overkill
 
-            6.  look into antecedent/proxy names and if these can be
+            7.  look into antecedent/proxy names and if these can be
                 improved
+
+            8.  return to this chapter to add/remove content based on
+                requirements of later chapters
 
         4.  Manuscript admin
 
@@ -337,7 +350,8 @@
             2.  always mention \"figure taken from study (year)\" when
                 using external figures
 
-            3.  fine tune WFSA to mean either automata or automaton
+            3.  fine tune WFSA to mean either automata or automaton,
+                make plural abbreviation clear as well
 
             4.  remove sub-enumeration for single remarks under a
                 definition
@@ -365,8 +379,7 @@
 
 1.  Dependencies, typing and testing
 
-    1.  if using R, document R dependencies such as package versions
-        neatly (avoid `renv`)
+    1.  if using R, document R dependencies with `sessioninfo`
 
     2.  include basic test code by instantiating class and/or other
         simple methods
