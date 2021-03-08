@@ -6,19 +6,12 @@
 *** Manuscript
 **** Visualization and summary-statistics 
     DEADLINE: <2021-03-11 Thu>
-***** [#A] Cross-model comparisons
-****** use error-bar plot to reflect random seed iterations for binary misalignment and softmax norm differences -> analyze relationship with tau threshold vs. performance vs. softmax/binary distances
-****** perhaps change name of visualization scripts to imply it is constrained -> can be done later on to keep names consistent with other scripts as well
-****** keep visualization scripts hard-coded and specific for now, they can be made more generalized later on
-****** change R dependencies later on depending on new json parser
 ***** [#A] Model OOP
 ****** visualize patterns as dots with internal pie charts which show magnitudes of each class; displayed as a colour with legend, will show relative importance of each binary neuron and can help us segment their purposes -> this should be juxtaposed with regex samples to show importance vs. samples
 ***** [#A] Regex OOP
 ****** add visualization of regex ensemble with graphviz -> can specify which pattern to visualize and how to make large scale visualizations
 ***** [#B] SoPa++ computational graph
 ****** add visualization of computational graph function using tikz
-***** [#B] Extra cross-model comparisons
-****** visualize examples/classes where regex and neural model align and misalign, eg. with a confusion matrix
 ***** [#B] FMTOD
 ****** add visualisation of data statistics with different partitions, perhaps as a stacked bar chart
 
@@ -31,6 +24,7 @@
 ***** Model
 ****** update the WFSA definitions to signify wildcard transitions and mention why this is found here and not in the background concepts since we could not find literature which defined it in a similar way
 ****** add pseudocode for various segments -> would help to cement certain concepts
+****** look out for misconception between tau and transition matrix symbol 
 ****** try to find literature-based justification for wildcard transition -> if not use omega symbol to differentiate from the Kleene star symbol
 ****** add detailed information on how hard SoPa++ model differs from SoPa related to transitions and other simplifications -> motivate them using idea of explainable simplification
 ****** comb through terms and iron out usage of patterns vs. substrings vs. WFSAs -> make these consistent and have them only refer to one consistent entity, also do not mix colloquial and technical terms
@@ -64,6 +58,7 @@
 
 **** Results
 ***** Report F_1 scores and performances of neural models
+****** modify visualize scripts to aggregate and print summary stats in script to re-use later in paper with means and standard deviations across random seeds
 ****** report parameter counts in scores as well
 ****** compare performance to that of other paper(s)
 ****** mention again about test partition difference due to making it unique
@@ -98,6 +93,7 @@
 ***** Analysis
 ****** analyzing whether patterns can help discover possible adversarial patterns
 ****** for the target audience of end-users -> how can a user make use of the regex model
+****** visualize examples/classes where regex and neural model align and misalign, eg. with a confusion matrix
 
 **** Formatting
 ***** Paper length
@@ -110,18 +106,19 @@
 ******* add links to chapters in thesis structure, improve formatting
 ****** Background concepts
 ******* think about providing an additional definition for "understandability" 
+******* add a Kleene-star operator mention to remark 9.4
 ******* include a section on risks on large NLP models and why explainability is necessary with different study
 ******* if possible, try to reduce references to Arrieta et al. 2020 to reduce perceived over-dependence
 ******* revisit sopa explainability evaluation with three guidelines to check if it makes sense after having evaluated sopa++ with the same guidelines
-****** Bibliography
+******* think about citing Arrieta et al. 2020 in each definition, or perhaps it is overkill
 ******* try to paraphrase as much as possible in background concepts otherwise quote statements or definitions to signify they are borrowed
+******* look into antecedent/proxy names and if these can be improved
+******* return to this chapter to add/remove content based on requirements of later chapters
+****** Bibliography
 ******* improve capitalization with braces in bibtex file
 ******* if possible, try to find non-arxiv citations for papers
 ******* remove red link color in table of contents
 ******* fine-tune citation color to be consistent with other colors
-******* think about citing Arrieta et al. 2020 in each definition, or perhaps it is overkill
-******* look into antecedent/proxy names and if these can be improved
-******* return to this chapter to add/remove content based on requirements of later chapters
 ****** Manuscript admin
 ******* talk to supervisors about many definitions and if these are alright
 ******* always mention "figure taken from study (year)" when using external figures
@@ -142,6 +139,7 @@
 ***** replace Union + None types with Optional type for conciseness
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List with overloads)
 **** Documentation and clean-code
+***** perform spell-check on readme 
 ***** consider removing NLU term and just keep the task as intent-detection, as mentioned on the repo
 ***** find better naming for mimic/oracle models which is based on research terminology -> right now mix of neural and regex is being used; it would be good to have something more firm
 ***** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility

@@ -24,23 +24,7 @@
 
     **DEADLINE:** *\<2021-03-11 Thu\>*
 
-    1.  \[\#A\] Cross-model comparisons
-
-        1.  use error-bar plot to reflect random seed iterations for
-            binary misalignment and softmax norm differences -\> analyze
-            relationship with tau threshold vs. performance vs.
-            softmax/binary distances
-
-        2.  perhaps change name of visualization scripts to imply it is
-            constrained -\> can be done later on to keep names
-            consistent with other scripts as well
-
-        3.  keep visualization scripts hard-coded and specific for now,
-            they can be made more generalized later on
-
-        4.  change R dependencies later on depending on new json parser
-
-    2.  \[\#A\] Model OOP
+    1.  \[\#A\] Model OOP
 
         1.  visualize patterns as dots with internal pie charts which
             show magnitudes of each class; displayed as a colour with
@@ -48,22 +32,17 @@
             and can help us segment their purposes -\> this should be
             juxtaposed with regex samples to show importance vs. samples
 
-    3.  \[\#A\] Regex OOP
+    2.  \[\#A\] Regex OOP
 
         1.  add visualization of regex ensemble with graphviz -\> can
             specify which pattern to visualize and how to make large
             scale visualizations
 
-    4.  \[\#B\] SoPa++ computational graph
+    3.  \[\#B\] SoPa++ computational graph
 
         1.  add visualization of computational graph function using tikz
 
-    5.  \[\#B\] Extra cross-model comparisons
-
-        1.  visualize examples/classes where regex and neural model
-            align and misalign, eg. with a confusion matrix
-
-    6.  \[\#B\] FMTOD
+    4.  \[\#B\] FMTOD
 
         1.  add visualisation of data statistics with different
             partitions, perhaps as a stacked bar chart
@@ -97,35 +76,38 @@
         2.  add pseudocode for various segments -\> would help to cement
             certain concepts
 
-        3.  try to find literature-based justification for wildcard
+        3.  look out for misconception between tau and transition matrix
+            symbol
+
+        4.  try to find literature-based justification for wildcard
             transition -\> if not use omega symbol to differentiate from
             the Kleene star symbol
 
-        4.  add detailed information on how hard SoPa++ model differs
+        5.  add detailed information on how hard SoPa++ model differs
             from SoPa related to transitions and other simplifications
             -\> motivate them using idea of explainable simplification
 
-        5.  comb through terms and iron out usage of patterns vs.
+        6.  comb through terms and iron out usage of patterns vs.
             substrings vs. WFSAs -\> make these consistent and have them
             only refer to one consistent entity, also do not mix
             colloquial and technical terms
 
-        6.  talk about GloVe embeddings, lowercasing and other important
+        7.  talk about GloVe embeddings, lowercasing and other important
             things
 
-        7.  neural SoPa++ is a black-box (non-transparent) model, regex
+        8.  neural SoPa++ is a black-box (non-transparent) model, regex
             SoPa++ is a transparent model -\> need justifications from
             background concepts, might need significant text on this
             portion
 
-        8.  SoPa++ uses explanation by simplification (globally) -\>
+        9.  SoPa++ uses explanation by simplification (globally) -\>
             need justification from background concepts -\> not much use
             of global in paper, but we can make our own arguments
 
-        9.  try to link as much as possible with the background concepts
+        10. try to link as much as possible with the background concepts
             for models/explainability concepts
 
-        10. add github link to repo as a footnote
+        11. add github link to repo as a footnote
 
     3.  Explainability
 
@@ -195,14 +177,18 @@
 
     1.  Report F_1 scores and performances of neural models
 
-        1.  report parameter counts in scores as well
+        1.  modify visualize scripts to aggregate and print summary
+            stats in script to re-use later in paper with means and
+            standard deviations across random seeds
 
-        2.  compare performance to that of other paper(s)
+        2.  report parameter counts in scores as well
 
-        3.  mention again about test partition difference due to making
+        3.  compare performance to that of other paper(s)
+
+        4.  mention again about test partition difference due to making
             it unique
 
-        4.  consider making test-partition not unique so this could be
+        5.  consider making test-partition not unique so this could be
             used to compare with other studies
 
     2.  Relationship between tau threshold vs. performance vs.
@@ -280,6 +266,9 @@
         2.  for the target audience of end-users -\> how can a user make
             use of the regex model
 
+        3.  visualize examples/classes where regex and neural model
+            align and misalign, eg. with a confusion matrix
+
 7.  Formatting
 
     1.  Paper length
@@ -308,39 +297,41 @@
             1.  think about providing an additional definition for
                 \"understandability\"
 
-            2.  include a section on risks on large NLP models and why
+            2.  add a Kleene-star operator mention to remark 9.4
+
+            3.  include a section on risks on large NLP models and why
                 explainability is necessary with different study
 
-            3.  if possible, try to reduce references to Arrieta et al.
+            4.  if possible, try to reduce references to Arrieta et al.
                 2020 to reduce perceived over-dependence
 
-            4.  revisit sopa explainability evaluation with three
+            5.  revisit sopa explainability evaluation with three
                 guidelines to check if it makes sense after having
                 evaluated sopa++ with the same guidelines
-
-        3.  Bibliography
-
-            1.  try to paraphrase as much as possible in background
-                concepts otherwise quote statements or definitions to
-                signify they are borrowed
-
-            2.  improve capitalization with braces in bibtex file
-
-            3.  if possible, try to find non-arxiv citations for papers
-
-            4.  remove red link color in table of contents
-
-            5.  fine-tune citation color to be consistent with other
-                colors
 
             6.  think about citing Arrieta et al. 2020 in each
                 definition, or perhaps it is overkill
 
-            7.  look into antecedent/proxy names and if these can be
+            7.  try to paraphrase as much as possible in background
+                concepts otherwise quote statements or definitions to
+                signify they are borrowed
+
+            8.  look into antecedent/proxy names and if these can be
                 improved
 
-            8.  return to this chapter to add/remove content based on
+            9.  return to this chapter to add/remove content based on
                 requirements of later chapters
+
+        3.  Bibliography
+
+            1.  improve capitalization with braces in bibtex file
+
+            2.  if possible, try to find non-arxiv citations for papers
+
+            3.  remove red link color in table of contents
+
+            4.  fine-tune citation color to be consistent with other
+                colors
 
         4.  Manuscript admin
 
@@ -379,7 +370,8 @@
 
 1.  Dependencies, typing and testing
 
-    1.  if using R, document R dependencies with `sessioninfo`
+    1.  if using R, document R dependencies with
+        `sessioninfo`{.verbatim}
 
     2.  include basic test code by instantiating class and/or other
         simple methods
@@ -394,40 +386,42 @@
 
 2.  Documentation and clean-code
 
-    1.  consider removing NLU term and just keep the task as
+    1.  perform spell-check on readme
+
+    2.  consider removing NLU term and just keep the task as
         intent-detection, as mentioned on the repo
 
-    2.  find better naming for mimic/oracle models which is based on
+    3.  find better naming for mimic/oracle models which is based on
         research terminology -\> right now mix of neural and regex is
         being used; it would be good to have something more firm
 
-    3.  GPU/CPU runs not always reproducible depending on
+    4.  GPU/CPU runs not always reproducible depending on
         multi-threading, see:
         <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    4.  reduce source code lines, chunking and comments -\> pretty sort
+    5.  reduce source code lines, chunking and comments -\> pretty sort
         python code and function/class orders perhaps by length
 
-    5.  add a comment above each code chunk which explains inner
+    6.  add a comment above each code chunk which explains inner
         mechanisms better
 
-    6.  update metadata eg. with comprehensive python/shell help
+    7.  update metadata eg. with comprehensive python/shell help
         scripts, comments describing functionality and readme
         descriptions for git hooks
 
-    7.  add information on best model downloads and preparation -\> add
+    8.  add information on best model downloads and preparation -\> add
         these to Google Drive later on
 
-    8.  add pydocstrings to all functions and improve argparse
+    9.  add pydocstrings to all functions and improve argparse
         documentation
 
-    9.  provide description of data structures (eg. data, labels)
+    10. provide description of data structures (eg. data, labels)
         required for training processes and lowercasing
 
-    10. update/remove git hooks depending on which features are finally
+    11. update/remove git hooks depending on which features are finally
         used, eg. remove pre-push hook
 
-    11. test download and all other scripts to ensure they work
+    12. test download and all other scripts to ensure they work
 
 ### Future programming
 
