@@ -712,7 +712,7 @@ bash scripts/compare_model_pairs_spp_gpu.sh "/glob/to/model/log/*/director(ies)"
 <details><summary>i. Grid-training</summary>
 <p>
 
-For visualizing grid-training performance, we use `src/tensorboard_event2csv.py` to convert tensorboard event logs to `csv` files and apply functions from `src/visualize.R` to plot them. These two scripts are bound together by `scripts/visualize_train_spp_grid.sh`:
+For visualizing grid-training performance, we use `src/tensorboard_event2csv.py` to convert tensorboard event logs to `csv` files and apply functions from `src/visualize_spp.R` to plot them. These two scripts are bound together by `scripts/visualize_train_spp_grid.sh`:
 
 ```
 Usage: visualize_train_spp_grid.sh [-h|--help] tb_event_directory
@@ -740,10 +740,10 @@ bash scripts/visualize_train_spp_grid.sh "/glob/to/tb/event/*/director(ies)"
 </p>
 </details>
 
-<details><summary>i. Grid-evaluation</summary>
+<details><summary>ii. Grid-evaluation</summary>
 <p>
 
-For visualizing grid-evaluation performance and model-pair distances, we apply functions from `src/visualize.R`. This workflow is wrapped using `scripts/visualize_evaluate_spp_grid.sh`:
+For visualizing grid-evaluation performance and model-pair distances, we apply functions from `src/visualize_spp.R`. This workflow is wrapped using `scripts/visualize_evaluate_spp_grid.sh`:
 
 ```
 Usage: visualize_evaluate_spp_grid.sh [-h|--help] model_log_directory
