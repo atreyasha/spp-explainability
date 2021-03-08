@@ -709,7 +709,7 @@ bash scripts/compare_model_pairs_spp_gpu.sh "/glob/to/model/log/*/director(ies)"
 
 ### Visualization
 
-<details><summary>i. Grid-training performance</summary>
+<details><summary>i. Grid-training</summary>
 <p>
 
 For visualizing grid-training performance, we use `src/tensorboard_event2csv.py` to convert tensorboard event logs to `csv` files and apply functions from `src/visualize.R` to plot them. These two scripts are bound together by `scripts/visualize_train_spp_grid.sh`:
@@ -717,8 +717,9 @@ For visualizing grid-training performance, we use `src/tensorboard_event2csv.py`
 ```
 Usage: visualize_train_spp_grid.sh [-h|--help] tb_event_directory
 
-Visualize grid training performance for SoPa++, given that grid allows
-for the following varying arguments: patterns, tau_threshold, seed
+Visualize grid training performance for SoPa++ neural models,
+given that grid allows for the following varying arguments:
+patterns, tau_threshold, seed
 
 Optional arguments:
   -h, --help                      Show this help message and exit
