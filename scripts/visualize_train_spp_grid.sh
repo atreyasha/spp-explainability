@@ -6,8 +6,9 @@ usage() {
   cat <<EOF
 Usage: visualize_train_spp_grid.sh [-h|--help] tb_event_directory
 
-Visualize grid training performance for SoPa++, given that grid allows
-for the following varying arguments: patterns, tau_threshold, seed
+Visualize grid training performance for SoPa++ neural models,
+given that grid allows for the following varying arguments:
+patterns, tau_threshold, seed
 
 Optional arguments:
   -h, --help                      Show this help message and exit
