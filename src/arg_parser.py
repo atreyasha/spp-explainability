@@ -304,7 +304,7 @@ def tensorboard_arg_parser() -> argparse.ArgumentParser:
     required = parser.add_argument_group('required tensorboard arguments')
     required.add_argument("--tb-event-directory",
                           help=("Glob path to tensorboard event "
-                                "director(ies)"),
+                                "directory/directories"),
                           required=True,
                           type=glob_path)
     # add group for optional arguments
