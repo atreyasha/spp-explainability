@@ -32,14 +32,13 @@ This repository documents thesis research with the title *"SoPa++: Leveraging ex
     [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
     attached base packages:
-    [1] grid      tools     stats     graphics  grDevices utils     datasets 
-    [8] methods   base     
+    [1] tools     stats     graphics  grDevices utils     datasets  methods  
+    [8] base     
 
     other attached packages:
-     [1] plyr_1.8.6          reshape2_1.4.4      gridExtra_2.3      
-     [4] optparse_1.6.6      tikzDevice_0.12.3.1 fields_11.6        
-     [7] spam_2.6-0          dotCall64_1.0-1     rjson_0.2.20       
-    [10] ggh4x_0.1.2.1       ggplot2_3.3.3      
+    [1] RColorBrewer_1.1-2  plyr_1.8.6          reshape2_1.4.4     
+    [4] gridExtra_2.3       optparse_1.6.6      tikzDevice_0.12.3.1
+    [7] rjson_0.2.20        ggh4x_0.1.2.1       ggplot2_3.3.3      
     ```
 
 ## Repository initialization :fire:
