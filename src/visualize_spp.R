@@ -4,13 +4,13 @@
 library(tools)
 library(ggh4x)
 library(rjson)
-library(fields)
 library(ggplot2)
 library(tikzDevice)
 library(optparse)
 library(gridExtra)
 library(reshape2)
 library(plyr)
+library(RColorBrewer)
 
 g_legend <- function(ggobject) {
   # source: https://stackoverflow.com/a/13650878
@@ -35,11 +35,18 @@ post_process <- function(tex_file) {
   unlink("Rplots.pdf")
 }
 
-visualize_train_spp_grid <- function(input_glob) {
+visualize_train_spp_grid <- function(input_glob,
+                                     training_log_watch =
+                                       c(
+                                         "accuracy.valid_accuracy",
+                                         "loss.valid_loss"
+                                       ),
+                                     ensure_varying_args = c(
+                                       "patterns",
+                                       "tau_threshold", "seed"
+                                     )) {
   # find all csvs and declare variables to monitor
   events <- Sys.glob(file.path(input_glob, "events.csv"))
-  training_log_watch <- c("accuracy.valid_accuracy", "loss.valid_loss")
-  ensure_varying_args <- c("patterns", "tau_threshold", "seed")
 
   # accumulate all data into collections
   collections <- lapply(events, function(event) {
@@ -158,6 +165,7 @@ visualize_train_spp_grid <- function(input_glob) {
     labs(color = "Random\nseed") +
     theme_bw() +
     theme(
+      text = element_text(size = 15),
       strip.background = element_blank(),
       legend.position = "bottom",
       strip.text = element_text(face = "bold"),
@@ -165,7 +173,7 @@ visualize_train_spp_grid <- function(input_glob) {
       axis.ticks.length = unit(.15, "cm"),
       axis.title.y = element_text(
         margin =
-          margin(t = 0, r = 15, b = 0, l = 10)
+          margin(t = 0, r = 10, b = 0, l = 0)
       )
     ) +
     scale_color_brewer(palette = "Paired") +
@@ -178,7 +186,7 @@ visualize_train_spp_grid <- function(input_glob) {
 
   # plot object and convert to pdf via tikz
   tex_file <- paste0(
-    "train_spp_grid_patterns_tau_seed_",
+    "train_spp_grid_",
     as.integer(as.POSIXct(Sys.time())), ".tex"
   )
   tikz(tex_file,
@@ -190,14 +198,195 @@ visualize_train_spp_grid <- function(input_glob) {
   post_process(tex_file)
 }
 
+visualize_evaluate_spp_grid <- function(input_glob,
+                                        ensure_varying_args = c(
+                                          "patterns",
+                                          "tau_threshold",
+                                          "seed"
+                                        )) {
+  # start collecting raw data
+  model_directories <- Sys.glob(input_glob)
+  collections <- lapply(model_directories, function(model_directory) {
+    comparison <- fromJSON(file = Sys.glob(
+      file.path(model_directory, "compare_*.json")
+    ))
+    distances <- colMeans(do.call(rbind, lapply(comparison[["comparisons"]], function(x) {
+      return(c(
+        x[["inter_model_distance_metrics"]][["softmax_difference_norm"]],
+        x[["inter_model_distance_metrics"]][["binary_misalignment_rate"]]
+      ))
+    })))
+    model_config <- fromJSON(file = Sys.glob(
+      file.path(
+        model_directory,
+        "model_config.json"
+      )
+    ))
+    seed <- fromJSON(file = Sys.glob(
+      file.path(
+        model_directory,
+        "training_config.json"
+      )
+    ))[["seed"]]
+    tau_threshold <- model_config[["tau_threshold"]]
+    patterns <- model_config[["patterns"]]
+    spp_f1 <- fromJSON(file = Sys.glob(
+      file.path(
+        model_directory,
+        "spp_*_classification_*.json"
+      )
+    ))[["weighted avg"]][["f1-score"]]
+    regex_f1 <- fromJSON(file = Sys.glob(
+      file.path(
+        model_directory,
+        "regex_*_classification_*.json"
+      )
+    ))[["weighted avg"]][["f1-score"]]
+    return(data.frame(
+      patterns = patterns, tau_threshold = tau_threshold,
+      seed = seed, spp_f1 = spp_f1, regex_f1 = regex_f1,
+      softmax_distance = distances[1],
+      binary_distance = distances[2]
+    ))
+  })
+
+  # transform data frame to be nicer
+  collections <- do.call(rbind, collections)
+  collections[["tau_threshold"]] <- as.factor(collections[["tau_threshold"]])
+  collections <- melt(collections, id.var = c("patterns", "tau_threshold", "seed"))
+
+  # compute varying arguments here
+  varying_args <- unlist(sapply(names(collections), function(colname) {
+    if (nrow(unique(collections[colname])) != 1) {
+      return(colname)
+    }
+  }))
+  varying_args <- varying_args[which(varying_args != "variable" & varying_args != "value")]
+
+  # check to ensure sanity of arguments
+  if (!setequal(varying_args, ensure_varying_args)) {
+    stop(paste0(
+      "Varying arguments are strictly different from patterns,",
+      " tau_threshold and seed"
+    ))
+  }
+
+  # convert to mathematical notations
+  collections$patterns <- factor(collections$patterns)
+  levels(collections$patterns) <- paste0(
+    "$P=\\texttt{",
+    gsub(
+      "\\_", "\\\\_",
+      levels(collections$patterns)
+    ),
+    "}$"
+  )
+  collections$type <- factor(gsub(
+    ".*\\_distance",
+    "Model pair distance",
+    gsub(
+      ".*\\_f1", "Weighted F$_{1}$",
+      collections$variable
+    )
+  ),
+  levels = c("Weighted F$_{1}$", "Model pair distance")
+  )
+  collections$variable <- gsub(
+    "spp\\_f1", "SoPa++\nantecedent",
+    collections$variable
+  )
+  collections$variable <- gsub(
+    "regex\\_f1", "Regex\nproxy",
+    collections$variable
+  )
+  collections$variable <- gsub(
+    "softmax\\_distance", "Softmax\ndifference\n2-norm",
+    collections$variable
+  )
+  collections$variable <- gsub(
+    "binary\\_distance", "Binary\ndifference\nrate",
+    collections$variable
+  )
+  collections$variable <- factor(collections$variable, levels = c(
+    "SoPa++\nantecedent",
+    "Regex\nproxy",
+    "Softmax\ndifference\n2-norm",
+    "Binary\ndifference\nrate"
+  ))
+
+  # make ggplot object
+  g <- ggplot(collections, aes(x = tau_threshold, y = value, fill = variable)) +
+    stat_boxplot(
+      geom = "errorbar", width = 0.2,
+      position = position_dodge(width = 1)
+    ) +
+    geom_boxplot(
+      position = position_dodge(width = 1), outlier.shape = 1,
+      outlier.size = 2
+    ) +
+    xlab("\\mbox{\\large$\\tau$}") +
+    ylab("Metric") +
+    labs(fill = "") +
+    theme_bw() +
+    theme(
+      text = element_text(size = 15),
+      strip.background = element_blank(),
+      legend.position = "bottom",
+      strip.text = element_text(face = "bold"),
+      panel.grid = element_line(size = 1),
+      axis.ticks.length = unit(.15, "cm"),
+      axis.title.y = element_text(
+        margin =
+          margin(t = 0, r = 10, b = 0, l = 0)
+      ),
+      axis.title.x = element_text(
+        margin =
+          margin(t = 10, r = 0, b = -5, l = 0)
+      )
+    ) +
+    scale_fill_manual(values = brewer.pal(6, "Paired")[c(5, 6, 1, 2)]) +
+    facet_nested(type ~ patterns, scales = "free")
+
+  # plot object and convert to pdf via tikz
+  tex_file <- paste0(
+    "evaluate_spp_grid_",
+    as.integer(as.POSIXct(Sys.time())), ".tex"
+  )
+  tikz(tex_file,
+    width = 12, height = 7, standAlone = TRUE,
+    engine = "luatex"
+  )
+  print(g)
+  dev.off()
+  post_process(tex_file)
+}
+
 # create option parser
 parser <- OptionParser()
-parser <- add_option(parser, c("-t", "--train-grid"),
+parser <- add_option(parser,
+  c(
+    "-t",
+    "--train-grid"
+  ),
   action = "store_true",
   default = FALSE,
   help = paste0(
-    "Flag for plotting grid performance ",
-    "with patterns, tau and seed being varied ",
+    "Flag for plotting grid training performance ",
+    "with patterns, tau_threshold and seed being varied ",
+    "[default: %default]"
+  )
+)
+parser <- add_option(parser,
+  c(
+    "-e",
+    "--evaluate-grid"
+  ),
+  action = "store_true",
+  default = FALSE,
+  help = paste0(
+    "Flag for plotting evaluation relationships between ",
+    "tau_threshold, patterns, performances and model pair distances ",
+    "with patterns, tau_threshold and seed being varied ",
     "[default: %default]"
   )
 )
@@ -210,4 +399,6 @@ parser <- add_option(parser, c("-g", "--glob"),
 args <- parse_args(parser)
 if (args$t) {
   visualize_train_spp_grid(args$g)
+} else if (args$e) {
+  visualize_evaluate_spp_grid(args$g)
 }
