@@ -740,6 +740,38 @@ bash scripts/visualize_train_spp_grid.sh "/glob/to/tb/event/*/director(ies)"
 </p>
 </details>
 
+<details><summary>i. Grid-evaluation</summary>
+<p>
+
+For visualizing grid-evaluation performance and model-pair distances, we apply functions from `src/visualize.R`. This workflow is wrapped using `scripts/visualize_evaluate_spp_grid.sh`:
+
+```
+Usage: visualize_evaluate_spp_grid.sh [-h|--help] model_log_directory
+
+Visualize grid evaluations with SoPa++ neural and regex
+models, given that grid allows for the following varying arguments:
+patterns, tau_threshold, seed
+
+Optional arguments:
+  -h, --help                       Show this help message and exit
+
+Required arguments:
+  model_log_directory <glob_path>  Model log directory/directories
+                                   containing SoPa++ neural and regex
+                                   models, as well as evaluation json's
+```
+
+To produce a facet-based visualization of the grid-evaluation cases, simply execute:
+
+```shell
+bash scripts/visualize_evaluate_spp_grid.sh "/glob/to/model/log/*/director(ies)"
+```
+
+**Note:** This script has been hard-coded for grid-evaluation scenarios where only the following three training/model arguments are varied: `patterns`, `tau_threshold` and `seed`.
+
+</p>
+</details>
+
 ## Development :snail:
 
 Ongoing development of this repository is documented in this [log](./docs/develop.md).
