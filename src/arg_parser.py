@@ -7,36 +7,36 @@ import argparse
 
 def spp_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
-    sopa = parser.add_argument_group('optional sopa-architecture arguments')
+    spp = parser.add_argument_group('optional spp-architecture arguments')
     # numeric and character-accepting options
-    sopa.add_argument(
+    spp.add_argument(
         "--patterns",
         help=("Pattern lengths and counts with the following syntax: " +
               "PatternLength1-PatternCount1_PatternLength2-PatternCount2_..."),
         default="6-50_5-50_4-50_3-50",
         type=str)
-    sopa.add_argument("--semiring",
+    spp.add_argument("--semiring",
                       help="Specify which semiring to use",
                       default="MaxSumSemiring",
                       choices=["MaxSumSemiring", "MaxProductSemiring"],
                       type=str)
-    sopa.add_argument("--tau-threshold",
+    spp.add_argument("--tau-threshold",
                       help="Specify value of TauSTE binarizer tau threshold",
                       default=0.,
                       type=float)
-    sopa.add_argument("--bias-scale",
+    spp.add_argument("--bias-scale",
                       help="Scale biases by this parameter",
                       default=1.,
                       type=float)
-    sopa.add_argument("--wildcard-scale",
+    spp.add_argument("--wildcard-scale",
                       help="Scale wildcard(s) by this parameter",
                       type=float)
-    sopa.add_argument("--word-dim", help=argparse.SUPPRESS, type=int)
+    spp.add_argument("--word-dim", help=argparse.SUPPRESS, type=int)
     # boolean flags
-    sopa.add_argument("--no-wildcards",
+    spp.add_argument("--no-wildcards",
                       help="Do not use wildcard transitions",
                       action='store_true')
-    sopa.add_argument("--static-embeddings",
+    spp.add_argument("--static-embeddings",
                       help="Freeze learning of token embeddings",
                       action='store_true')
     return parser
@@ -320,7 +320,7 @@ def preprocess_arg_parser() -> argparse.ArgumentParser:
     preprocess = parser.add_argument_group('optional preprocessing arguments')
     preprocess.add_argument("--data-directory",
                             help="Data directory containing clean input data",
-                            default="./data/facebook_multiclass_nlu/",
+                            default="./data/fmtod/",
                             type=dir_path)
     preprocess.add_argument(
         "--truecase",
