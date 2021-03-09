@@ -12,15 +12,6 @@ library(reshape2)
 library(plyr)
 library(RColorBrewer)
 
-g_legend <- function(ggobject) {
-  # source: https://stackoverflow.com/a/13650878
-  # extract legend from custom ggplot object
-  tmp <- ggplot_gtable(ggplot_build(ggobject))
-  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-  legend <- tmp$grobs[[leg]]
-  return(legend)
-}
-
 post_process <- function(tex_file) {
   # plots post-processing
   no_ext_name <- gsub("\\.tex", "", tex_file)
