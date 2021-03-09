@@ -1,6 +1,6 @@
 # SoPa++
 
-This repository documents thesis research with the title *"SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted finite-state neural architectures"*.
+This repository documents M.Sc. thesis research with the title *"SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted finite-state neural architectures"*. A manuscript for this thesis can be found [here](./docs/manuscript/main.pdf).
 
 ## Dependencies :neckbeard:
 
@@ -43,16 +43,16 @@ This repository documents thesis research with the title *"SoPa++: Leveraging ex
 
 ## Repository initialization :fire:
 
-1. Download and prepare [GloVe](https://nlp.stanford.edu/projects/glove/) word embeddings and Facebook's multi-class Natural Language Understanding (NLU) [data set](https://research.fb.com/publications/cross-lingual-transfer-learning-for-multilingual-task-oriented-dialog/):
+1. Download and prepare [GloVe-6B](https://nlp.stanford.edu/projects/glove/) word embeddings and the Facebook Multilingual Task Oriented Dialogue (FMTOD) [data set](https://research.fb.com/publications/cross-lingual-transfer-learning-for-multilingual-task-oriented-dialog/):
 
     ```shell
     bash scripts/prepare_data.sh
     ```
 
-2. **Optional:** Set up git hooks to manage development workflows such as formatting shell scripts and keeping python dependencies up-to-date:
+2. **Optional:** Prepare git hooks to manage development workflows such as formatting shell scripts and keeping python dependencies up-to-date:
 
     ```shell
-    bash scripts/setup_git_hooks.sh
+    bash scripts/prepare_git_hooks.sh
     ```
 
 ## Usage :snowflake:
@@ -62,13 +62,13 @@ This repository documents thesis research with the title *"SoPa++: Leveraging ex
 <details><summary>i. Preprocessing</summary>
 <p>
 
-For preprocessing Facebook's multi-class NLU data set, we use `src/preprocess_multiclass_nlu.py`:
+For preprocessing the FMTOD data set, we use `src/preprocess_fmtod.py`:
 
 ```
-usage: preprocess_multiclass_nlu.py [-h] [--data-directory <dir_path>]
-                                    [--disable-upsampling]
-                                    [--logging-level {debug,info,warning,error,critical}]
-                                    [--truecase]
+usage: preprocess_fmtod.py [-h] [--data-directory <dir_path>]
+                           [--disable-upsampling]
+                           [--logging-level {debug,info,warning,error,critical}]
+                           [--truecase]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -76,7 +76,7 @@ optional arguments:
 optional preprocessing arguments:
   --data-directory      <dir_path>
                         Data directory containing clean input data (default:
-                        ./data/facebook_multiclass_nlu/)
+                        ./data/fmtod/)
   --disable-upsampling  Disable upsampling on the train and validation data
                         sets (default: False)
   --truecase            Retain true casing when preprocessing data. Otherwise
@@ -87,10 +87,10 @@ optional logging arguments:
                         Set logging level (default: info)
 ```
 
-The default workflow cleans the original NLU data, forces it to lowercased format and upsamples all minority classes. To run the default workflow, execute:
+The default workflow cleans the original FMTOD data, forces it to lowercased format and upsamples all minority classes. To run the default workflow, execute:
 
 ```shell
-bash scripts/preprocess_multiclass_nlu.sh
+bash scripts/preprocess_fmtod.sh
 ```
 
 </p>
@@ -191,7 +191,7 @@ optional grid-training arguments:
                            Number of random iteration(s) for each grid
                            instance (default: 10)
 
-optional sopa-architecture arguments:
+optional spp-architecture arguments:
   --bias-scale             <float>
                            Scale biases by this parameter (default: 1.0)
   --no-wildcards           Do not use wildcard transitions (default: False)
@@ -236,7 +236,7 @@ optional progress-bar arguments:
 To train a single neural SoPa++ model using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/train_spp_cpu.sh
+bash scripts/train_spp.sh
 ```
 
 To train a single neural SoPa++ model using our defaults on a single GPU, execute:
@@ -250,7 +250,7 @@ bash scripts/train_spp_gpu.sh
 To apply grid-based training on neural SoPa++ models using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/train_spp_grid_cpu.sh
+bash scripts/train_spp_grid.sh
 ```
 
 To apply grid-based training on neural SoPa++ models using our defaults on a single GPU, execute:
@@ -313,7 +313,7 @@ optional progress-bar arguments:
 To resume training of a single neural SoPa++ model using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/train_resume_spp_cpu.sh /path/to/model/log/directory
+bash scripts/train_resume_spp.sh /path/to/model/log/directory
 ```
 
 To resume training of a single neural SoPa++ model using our defaults on a single GPU, execute:
@@ -327,7 +327,7 @@ bash scripts/train_resume_spp_gpu.sh /path/to/model/log/directory
 To resume grid-based training of neural SoPa++ models using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/train_resume_spp_grid_cpu.sh /path/to/model/log/directory
+bash scripts/train_resume_spp_grid.sh /path/to/model/log/directory
 ```
 
 To resume grid-based training of neural SoPa++ models using our defaults on a single GPU, execute:
@@ -401,13 +401,13 @@ optional logging arguments:
 
 #### Neural SoPa++ model evaluation
 
-To evaluate single or multiple neural SoPa++ model(s) using our defaults on the CPU, execute:
+To evaluate neural SoPa++ model(s) using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/evaluate_spp_cpu.sh "/glob/to/neural/model/*/checkpoint(s)"
+bash scripts/evaluate_spp.sh "/glob/to/neural/model/*/checkpoint(s)"
 ```
 
-To evaluate single or multiple neural SoPa++ model(s) using our defaults on a single GPU, execute:
+To evaluate neural SoPa++ model(s) using our defaults on a single GPU, execute:
 
 ```shell
 bash scripts/evaluate_spp_gpu.sh "/glob/to/neural/model/*/checkpoint(s)"
@@ -418,7 +418,7 @@ bash scripts/evaluate_spp_gpu.sh "/glob/to/neural/model/*/checkpoint(s)"
 To evaluate grid-based neural SoPa++ models using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/evaluate_spp_grid_cpu.sh "/glob/to/neural/model/*/checkpoints"
+bash scripts/evaluate_spp_grid.sh "/glob/to/neural/model/*/checkpoints"
 ```
 
 To evaluate grid-based neural SoPa++ models using our defaults on a single GPU, execute:
@@ -430,26 +430,25 @@ bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/neural/model/*/checkpoints"
 </p>
 </details>
 
-### Regex SoPa++
+### Regex proxy
 
 <details><summary>i. Explanations by simplification</summary>
 <p>
 
-For explaining neural SoPa++ model(s) by simplifying it into a regex SoPa++ model, we use `src/explain_simplify_regex_spp.py`:
+For explaining neural SoPa++ model(s) by simplifying it into a regex proxy model, we use `src/explain_simplify_spp.py`:
 
 ```
-usage: explain_simplify_regex_spp.py [-h] --neural-model-checkpoint
-                                     <glob_path> --train-data <file_path>
-                                     --train-labels <file_path> --valid-data
-                                     <file_path> --valid-labels <file_path>
-                                     [--atol <float>] [--batch-size <int>]
-                                     [--disable-tqdm] [--gpu]
-                                     [--gpu-device <str>]
-                                     [--logging-level {debug,info,warning,error,critical}]
-                                     [--max-doc-len <int>]
-                                     [--num-train-instances <int>]
-                                     [--torch-num-threads <int>]
-                                     [--tqdm-update-period <int>]
+usage: explain_simplify_spp.py [-h] --neural-model-checkpoint <glob_path>
+                               --train-data <file_path> --train-labels
+                               <file_path> --valid-data <file_path>
+                               --valid-labels <file_path> [--atol <float>]
+                               [--batch-size <int>] [--disable-tqdm] [--gpu]
+                               [--gpu-device <str>]
+                               [--logging-level {debug,info,warning,error,critical}]
+                               [--max-doc-len <int>]
+                               [--num-train-instances <int>]
+                               [--torch-num-threads <int>]
+                               [--tqdm-update-period <int>]
 
 optional arguments:
   -h, --help                 show this help message and exit
@@ -500,16 +499,16 @@ optional progress-bar arguments:
                              diagnostics (default: 5)
 ```
 
-To simplify single or multiple neural SoPa++ models using our defaults on the CPU, execute:
+To simplify neural SoPa++ model(s) using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/explain_simplify_regex_spp_cpu.sh "/glob/to/neural/model/*/checkpoint(s)"
+bash scripts/explain_simplify_spp.sh "/glob/to/neural/model/*/checkpoint(s)"
 ```
 
-To simplify single or multiple neural SoPa++ models using our defaults on a GPU, execute:
+To simplify neural SoPa++ model(s) using our defaults on a GPU, execute:
 
 ```shell
-bash scripts/explain_simplify_regex_spp_gpu.sh "/glob/to/neural/model/*/checkpoint(s)"
+bash scripts/explain_simplify_spp_gpu.sh "/glob/to/neural/model/*/checkpoint(s)"
 ```
 
 </p>
@@ -518,13 +517,13 @@ bash scripts/explain_simplify_regex_spp_gpu.sh "/glob/to/neural/model/*/checkpoi
 <details><summary>ii. Compression</summary>
 <p>
 
-For compressing regex SoPa++ model(s), we use `src/explain_compress_regex_spp.py`:
+For compressing regex proxy model(s), we use `src/explain_compress_regex.py`:
 
 ```
-usage: explain_compress_regex_spp.py [-h] --regex-model-checkpoint <glob_path>
-                                     [--disable-tqdm]
-                                     [--logging-level {debug,info,warning,error,critical}]
-                                     [--tqdm-update-period <int>]
+usage: explain_compress_regex.py [-h] --regex-model-checkpoint <glob_path>
+                                 [--disable-tqdm]
+                                 [--logging-level {debug,info,warning,error,critical}]
+                                 [--tqdm-update-period <int>]
 
 optional arguments:
   -h, --help                show this help message and exit
@@ -546,10 +545,10 @@ optional progress-bar arguments:
                             diagnostics (default: 5)
 ```
 
-To compress single or multiple regex SoPa++ models using our defaults, execute:
+To compress regex proxy model(s) using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/explain_compress_regex_spp.sh "/glob/to/regex/model/*/checkpoint(s)"
+bash scripts/explain_compress_regex.sh "/glob/to/regex/model/*/checkpoint(s)"
 ```
 
 </p>
@@ -558,17 +557,17 @@ bash scripts/explain_compress_regex_spp.sh "/glob/to/regex/model/*/checkpoint(s)
 <details><summary>iii. Evaluation</summary>
 <p>
 
-For evaluating regex SoPa++ model(s), we use `src/evaluate_regex_spp.py`:
+For evaluating regex proxy model(s), we use `src/evaluate_regex.py`:
 
 ```
-usage: evaluate_regex_spp.py [-h] --eval-data <file_path> --eval-labels
-                             <file_path> --model-checkpoint <glob_path>
-                             [--batch-size <int>] [--disable-tqdm] [--gpu]
-                             [--gpu-device <str>]
-                             [--logging-level {debug,info,warning,error,critical}]
-                             [--max-doc-len <int>] [--output-prefix <str>]
-                             [--torch-num-threads <int>]
-                             [--tqdm-update-period <int>]
+usage: evaluate_regex.py [-h] --eval-data <file_path> --eval-labels
+                         <file_path> --model-checkpoint <glob_path>
+                         [--batch-size <int>] [--disable-tqdm] [--gpu]
+                         [--gpu-device <str>]
+                         [--logging-level {debug,info,warning,error,critical}]
+                         [--max-doc-len <int>] [--output-prefix <str>]
+                         [--torch-num-threads <int>]
+                         [--tqdm-update-period <int>]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -612,39 +611,37 @@ optional progress-bar arguments:
                         (default: 5)
 ```
 
-To evaluate single or multiple regex SoPa++ model(s) using our defaults on the CPU, execute:
+To evaluate regex proxy model(s) using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/evaluate_regex_spp_cpu.sh "/glob/to/regex/model/*/checkpoint(s)"
+bash scripts/evaluate_regex.sh "/glob/to/regex/model/*/checkpoint(s)"
 ```
 
-To evaluate single or multiple regex SoPa++ model(s) using our defaults on a single GPU, execute:
+To evaluate regex proxy model(s) using our defaults on a single GPU, execute:
 
 ```shell
-bash scripts/evaluate_regex_spp_gpu.sh "/glob/to/regex/model/*/checkpoint(s)"
+bash scripts/evaluate_regex_gpu.sh "/glob/to/regex/model/*/checkpoint(s)"
 ```
 
 </p>
 </details>
 
-### Neural vs. Regex SoPa++
+### Comparisons and visualizations
 
 <details><summary>i. Model pair comparison</summary>
 <p>
 
-For comparing neural and corresponding regex SoPa++ model pair(s), we use `src/compare_model_pairs_spp.py`:
+For comparing neural SoPa++ and regex proxy model pair(s), we use `src/compare_model_pairs.py`:
 
 ```
-usage: compare_model_pairs_spp.py [-h] --eval-data <file_path> --eval-labels
-                                  <file_path> --model-log-directory
-                                  <glob_path> [--atol <float>]
-                                  [--batch-size <int>] [--disable-tqdm]
-                                  [--gpu] [--gpu-device <str>]
-                                  [--logging-level {debug,info,warning,error,critical}]
-                                  [--max-doc-len <int>]
-                                  [--output-prefix <str>]
-                                  [--torch-num-threads <int>]
-                                  [--tqdm-update-period <int>]
+usage: compare_model_pairs.py [-h] --eval-data <file_path> --eval-labels
+                              <file_path> --model-log-directory <glob_path>
+                              [--atol <float>] [--batch-size <int>]
+                              [--disable-tqdm] [--gpu] [--gpu-device <str>]
+                              [--logging-level {debug,info,warning,error,critical}]
+                              [--max-doc-len <int>] [--output-prefix <str>]
+                              [--torch-num-threads <int>]
+                              [--tqdm-update-period <int>]
 
 optional arguments:
   -h, --help             show this help message and exit
@@ -692,32 +689,30 @@ optional progress-bar arguments:
                          (default: 5)
 ```
 
-To compare neural and regex SoPa++ model pair(s) using our defaults on the CPU, execute:
+To compare neural SoPa++ and regex proxy model pair(s) using our defaults on the CPU, execute:
 
 ```shell
-bash scripts/compare_model_pairs_spp_cpu.sh "/glob/to/model/log/*/director(ies)"
+bash scripts/compare_model_pairs.sh "/glob/to/model/log/*/director(ies)"
 ```
 
-To compare neural and regex SoPa++ model pair(s) using our defaults on a GPU, execute:
+To compare neural SoPa++ and regex proxy model pair(s) using our defaults on a GPU, execute:
 
 ```shell
-bash scripts/compare_model_pairs_spp_gpu.sh "/glob/to/model/log/*/director(ies)"
+bash scripts/compare_model_pairs_gpu.sh "/glob/to/model/log/*/director(ies)"
 ```
 
 </p>
 </details>
 
-### Visualization
-
-<details><summary>i. Grid-based training</summary>
+<details><summary>ii. Grid-based training</summary>
 <p>
 
-For visualizing grid-based training performance, we use `src/tensorboard_event2csv.py` to convert tensorboard event logs to `csv` files and apply functions from `src/visualize_spp.R` to plot them. These two scripts are bound together by `scripts/visualize_train_spp_grid.sh`:
+For visualizing grid-based training performance, we use `src/tensorboard_event2csv.py` to convert tensorboard event logs to `csv` files and apply functions from `src/visualize_grid.R` to plot them. These two scripts are bound together by `scripts/visualize_grid_train.sh`:
 
 ```
-Usage: visualize_train_spp_grid.sh [-h|--help] tb_event_directory
+Usage: visualize_grid_train.sh [-h|--help] tb_event_directory
 
-Visualize grid training performance for SoPa++ neural models,
+Visualize grid training performance for SoPa++ models,
 given that grid allows for the following varying arguments:
 patterns, tau_threshold, seed
 
@@ -732,7 +727,7 @@ Required arguments:
 To produce a facet-based visualization of grid-based training, simply execute:
 
 ```shell
-bash scripts/visualize_train_spp_grid.sh "/glob/to/tb/event/*/director(ies)"
+bash scripts/visualize_grid_train.sh "/glob/to/tb/event/*/director(ies)"
 ```
 
 **Note:** This script has been hard-coded for grid-based training scenarios where only the following three training/model arguments are varied: `patterns`, `tau_threshold` and `seed`.
@@ -740,16 +735,16 @@ bash scripts/visualize_train_spp_grid.sh "/glob/to/tb/event/*/director(ies)"
 </p>
 </details>
 
-<details><summary>ii. Grid-based evaluation</summary>
+<details><summary>iii. Grid-based evaluation</summary>
 <p>
 
-For visualizing grid-based evaluation performance and model-pair distances, we apply functions from `src/visualize_spp.R`. This workflow is wrapped using `scripts/visualize_evaluate_spp_grid.sh`:
+For visualizing grid-based evaluation performance and model-pair distances, we apply functions from `src/visualize_grid.R`. This workflow is wrapped using `scripts/visualize_grid_evaluate.sh`:
 
 ```
-Usage: visualize_evaluate_spp_grid.sh [-h|--help] model_log_directory
+Usage: visualize_grid_evaluate.sh [-h|--help] model_log_directory
 
-Visualize grid evaluations with SoPa++ neural and regex
-models, given that grid allows for the following varying arguments:
+Visualize grid evaluations for neural SoPa++ and regex
+model pairs, given that grid allows for the following varying arguments:
 patterns, tau_threshold, seed
 
 Optional arguments:
@@ -757,14 +752,14 @@ Optional arguments:
 
 Required arguments:
   model_log_directory <glob_path>  Model log directory/directories
-                                   containing SoPa++ neural and regex
-                                   models, as well as evaluation json's
+                                   containing neural SoPa++ and regex
+                                   models, as well as all evaluation json's
 ```
 
 To produce a facet-based visualization of grid-based evaluation, simply execute:
 
 ```shell
-bash scripts/visualize_evaluate_spp_grid.sh "/glob/to/model/log/*/director(ies)"
+bash scripts/visualize_grid_evaluate.sh "/glob/to/model/log/*/director(ies)"
 ```
 
 **Note:** This script has been hard-coded for grid-based evaluation scenarios where only the following three training/model arguments are varied: `patterns`, `tau_threshold` and `seed`.
