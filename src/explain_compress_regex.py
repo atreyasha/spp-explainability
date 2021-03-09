@@ -8,7 +8,7 @@ from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .arg_parser import (explain_compress_arg_parser, logging_arg_parser,
                          tqdm_arg_parser)
-from .explain_simplify_regex_spp import save_regex_model
+from .explain_simplify_spp import save_regex_model
 import argparse
 import torch
 
