@@ -546,10 +546,10 @@ optional progress-bar arguments:
                             diagnostics (default: 5)
 ```
 
-To compress single or multiple regex SoPa++ models using our defaults on the CPU, execute:
+To compress single or multiple regex SoPa++ models using our defaults, execute:
 
 ```shell
-bash scripts/explain_compress_regex_spp_cpu.sh "/glob/to/regex/model/*/checkpoint(s)"
+bash scripts/explain_compress_regex_spp.sh "/glob/to/regex/model/*/checkpoint(s)"
 ```
 
 </p>
