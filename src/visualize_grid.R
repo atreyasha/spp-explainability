@@ -26,7 +26,7 @@ post_process <- function(tex_file) {
   unlink("Rplots.pdf")
 }
 
-visualize_train_grid <- function(input_glob,
+visualize_grid_train <- function(input_glob,
                                  training_log_watch =
                                    c(
                                      "accuracy.valid_accuracy",
@@ -189,7 +189,7 @@ visualize_train_grid <- function(input_glob,
   post_process(tex_file)
 }
 
-visualize_evaluate_grid <- function(input_glob,
+visualize_grid_evaluate <- function(input_glob,
                                     ensure_varying_args = c(
                                       "patterns",
                                       "tau_threshold",
@@ -389,7 +389,7 @@ parser <- add_option(parser, c("-g", "--glob"),
 # parse arguments and assign function
 args <- parse_args(parser)
 if (args$t) {
-  visualize_train_grid(args$g)
+  visualize_grid_train(args$g)
 } else if (args$e) {
-  visualize_evaluate_grid(args$g)
+  visualize_grid_evaluate(args$g)
 }
