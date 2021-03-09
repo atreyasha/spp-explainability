@@ -26,16 +26,16 @@ post_process <- function(tex_file) {
   unlink("Rplots.pdf")
 }
 
-visualize_train_spp_grid <- function(input_glob,
-                                     training_log_watch =
-                                       c(
-                                         "accuracy.valid_accuracy",
-                                         "loss.valid_loss"
-                                       ),
-                                     ensure_varying_args = c(
-                                       "patterns",
-                                       "tau_threshold", "seed"
-                                     )) {
+visualize_train_grid <- function(input_glob,
+                                 training_log_watch =
+                                   c(
+                                     "accuracy.valid_accuracy",
+                                     "loss.valid_loss"
+                                   ),
+                                 ensure_varying_args = c(
+                                   "patterns",
+                                   "tau_threshold", "seed"
+                                 )) {
   # find all csvs and declare variables to monitor
   events <- Sys.glob(file.path(input_glob, "events.csv"))
 
@@ -189,12 +189,12 @@ visualize_train_spp_grid <- function(input_glob,
   post_process(tex_file)
 }
 
-visualize_evaluate_spp_grid <- function(input_glob,
-                                        ensure_varying_args = c(
-                                          "patterns",
-                                          "tau_threshold",
-                                          "seed"
-                                        )) {
+visualize_evaluate_grid <- function(input_glob,
+                                    ensure_varying_args = c(
+                                      "patterns",
+                                      "tau_threshold",
+                                      "seed"
+                                    )) {
   # start collecting raw data
   model_directories <- Sys.glob(input_glob)
   collections <- lapply(model_directories, function(model_directory) {
@@ -389,7 +389,7 @@ parser <- add_option(parser, c("-g", "--glob"),
 # parse arguments and assign function
 args <- parse_args(parser)
 if (args$t) {
-  visualize_train_spp_grid(args$g)
+  visualize_train_grid(args$g)
 } else if (args$e) {
-  visualize_evaluate_spp_grid(args$g)
+  visualize_evaluate_grid(args$g)
 }
