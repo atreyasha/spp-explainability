@@ -4,10 +4,9 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: explain_simplify_regex_spp_cpu.sh [-h|--help] neural_model_checkpoint
+Usage: explain_simplify_spp.sh [-h|--help] neural_model_checkpoint
 
-Explain and simplify a given SoPa++ model into a regular expression
-model on the CPU
+Explain and simplify SoPa++ model(s) into regex model(s)
 
 Optional arguments:
   -h, --help                           Show this help message and exit
@@ -29,18 +28,18 @@ check_help() {
 }
 
 # define function
-explain_simplify_regex_spp_cpu() {
+explain_simplify_spp() {
   local neural_model_checkpoint
   neural_model_checkpoint="$1"
 
-  python3 -m src.explain_simplify_regex_spp \
-    --train-data "./data/facebook_multiclass_nlu/clean/train.uncased.data" \
-    --train-labels "./data/facebook_multiclass_nlu/clean/train.labels" \
-    --valid-data "./data/facebook_multiclass_nlu/clean/valid.uncased.data" \
-    --valid-labels "./data/facebook_multiclass_nlu/clean/valid.labels" \
+  python3 -m src.explain_simplify_spp \
+    --train-data "./data/fmtod/clean/train.uncased.data" \
+    --train-labels "./data/fmtod/clean/train.labels" \
+    --valid-data "./data/fmtod/clean/valid.uncased.data" \
+    --valid-labels "./data/fmtod/clean/valid.labels" \
     --neural-model-checkpoint "$neural_model_checkpoint"
 }
 
 # execute function
 check_help "$@"
-explain_simplify_regex_spp_cpu "$@"
+explain_simplify_spp "$@"

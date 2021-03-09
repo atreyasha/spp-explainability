@@ -4,10 +4,10 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: visualize_evaluate_spp_grid.sh [-h|--help] model_log_directory
+Usage: visualize_grid_evaluate.sh [-h|--help] model_log_directory
 
-Visualize grid evaluations with SoPa++ neural and regex
-models, given that grid allows for the following varying arguments:
+Visualize grid evaluations for SoPa++ neural and regex
+model pairs, given that grid allows for the following varying arguments:
 patterns, tau_threshold, seed
 
 Optional arguments:
@@ -16,7 +16,7 @@ Optional arguments:
 Required arguments:
   model_log_directory <glob_path>  Model log directory/directories
                                    containing SoPa++ neural and regex
-                                   models, as well as evaluation json's
+                                   models, as well as all evaluation json's
 EOF
 }
 
@@ -31,13 +31,13 @@ check_help() {
 }
 
 # define function
-visualize_evaluate_spp_grid() {
+visualize_grid_evaluate() {
   local model_log_directory
   model_log_directory="$1"
 
-  Rscript src/visualize_spp.R -e -g "$model_log_directory"
+  Rscript src/visualize_grid.R -e -g "$model_log_directory"
 }
 
 # execute function
 check_help "$@"
-visualize_evaluate_spp_grid "$@"
+visualize_grid_evaluate "$@"

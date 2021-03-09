@@ -6,7 +6,7 @@ usage() {
   cat <<EOF
 Usage: test_typecheck.sh [-h|--help]
 
-Test source code typing consistency with mypy
+Test source-code typing-consistency with mypy
 
 Optional arguments:
   -h, --help    Show this help message and exit

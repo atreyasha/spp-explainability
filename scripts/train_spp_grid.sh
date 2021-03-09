@@ -4,10 +4,9 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: train_spp_grid_cpu.sh [-h|--help] [grid_config]
+Usage: train_spp_grid.sh [-h|--help] [grid_config]
 
-Execute SoPa++ model grid training run using repository defaults
-on the CPU
+Execute SoPa++ model grid training using repository defaults
 
 Optional arguments:
   -h, --help               Show this help message and exit
@@ -26,29 +25,29 @@ check_help() {
 }
 
 # define function
-train_spp_grid_cpu() {
+train_spp_grid() {
   local grid_config
   grid_config="$1"
 
   if [ -z "$grid_config" ]; then
     python3 -m src.train_spp \
       --embeddings "./data/glove_6B_uncased/glove.6B.300d.txt" \
-      --train-data "./data/facebook_multiclass_nlu/clean/train.upsampled.uncased.data" \
-      --train-labels "./data/facebook_multiclass_nlu/clean/train.upsampled.labels" \
-      --valid-data "./data/facebook_multiclass_nlu/clean/valid.upsampled.uncased.data" \
-      --valid-labels "./data/facebook_multiclass_nlu/clean/valid.upsampled.labels" \
+      --train-data "./data/fmtod/clean/train.upsampled.uncased.data" \
+      --train-labels "./data/fmtod/clean/train.upsampled.labels" \
+      --valid-data "./data/fmtod/clean/valid.upsampled.uncased.data" \
+      --valid-labels "./data/fmtod/clean/valid.upsampled.labels" \
       --grid-training
   else
     python3 -m src.train_spp \
       --embeddings "./data/glove_6B_uncased/glove.6B.300d.txt" \
-      --train-data "./data/facebook_multiclass_nlu/clean/train.upsampled.uncased.data" \
-      --train-labels "./data/facebook_multiclass_nlu/clean/train.upsampled.labels" \
-      --valid-data "./data/facebook_multiclass_nlu/clean/valid.upsampled.uncased.data" \
-      --valid-labels "./data/facebook_multiclass_nlu/clean/valid.upsampled.labels" \
+      --train-data "./data/fmtod/clean/train.upsampled.uncased.data" \
+      --train-labels "./data/fmtod/clean/train.upsampled.labels" \
+      --valid-data "./data/fmtod/clean/valid.upsampled.uncased.data" \
+      --valid-labels "./data/fmtod/clean/valid.upsampled.labels" \
       --grid-training --grid-config "$grid_config"
   fi
 }
 
 # execute function
 check_help "$@"
-train_spp_grid_cpu "$@"
+train_spp_grid "$@"

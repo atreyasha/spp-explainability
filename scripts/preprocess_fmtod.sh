@@ -4,9 +4,9 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: preprocess_multiclass_nlu.sh [-h|--help]
+Usage: preprocess_fmtod.sh [-h|--help]
 
-Preprocess Facebook multiclass NLU data using repository defaults
+Preprocess the FMTOD data set
 
 Optional arguments:
   -h, --help    Show this help message and exit
@@ -24,10 +24,10 @@ check_help() {
 }
 
 # define function
-preprocess_multiclass_nlu() {
-  python3 -m src.preprocess_multiclass_nlu
+preprocess_fmtod() {
+  python3 -m src.preprocess_fmtod
 }
 
 # execute all functions
 check_help "$@"
-preprocess_multiclass_nlu
+preprocess_fmtod

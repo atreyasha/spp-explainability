@@ -4,9 +4,9 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: visualize_train_spp_grid.sh [-h|--help] tb_event_directory
+Usage: visualize_grid_train.sh [-h|--help] tb_event_directory
 
-Visualize grid training performance for SoPa++ neural models,
+Visualize grid training performance for SoPa++ models,
 given that grid allows for the following varying arguments:
 patterns, tau_threshold, seed
 
@@ -30,14 +30,14 @@ check_help() {
 }
 
 # define function
-visualize_train_spp_grid() {
+visualize_grid_train() {
   local tb_event_directory
   tb_event_directory="$1"
 
   python3 -m src.tensorboard_event2csv --tb-event-directory "$tb_event_directory"
-  Rscript src/visualize_spp.R -t -g "$tb_event_directory"
+  Rscript src/visualize_grid.R -t -g "$tb_event_directory"
 }
 
 # execute function
 check_help "$@"
-visualize_train_spp_grid "$@"
+visualize_grid_train "$@"

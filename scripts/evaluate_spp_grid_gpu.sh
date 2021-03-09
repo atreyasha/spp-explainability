@@ -6,7 +6,7 @@ usage() {
   cat <<EOF
 Usage: evaluate_spp_grid_gpu.sh [-h|--help] neural_model_checkpoint
 
-Evaluate SoPa++ model on an evaluation data set on a GPU
+Evaluate SoPa++ model(s) on an evaluation data set on a GPU
 for a model grid directory, which has the benefit of summarizing
 the best model performance
 
@@ -35,8 +35,8 @@ evaluate_spp_grid_gpu() {
   neural_model_checkpoint="$1"
 
   python3 -m src.evaluate_spp \
-    --eval-data "./data/facebook_multiclass_nlu/clean/test.uncased.data" \
-    --eval-labels "./data/facebook_multiclass_nlu/clean/test.labels" \
+    --eval-data "./data/fmtod/clean/test.uncased.data" \
+    --eval-labels "./data/fmtod/clean/test.labels" \
     --model-checkpoint "$neural_model_checkpoint" --grid-evaluation --gpu
 }
 

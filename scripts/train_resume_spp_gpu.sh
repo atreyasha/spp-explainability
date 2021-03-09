@@ -6,15 +6,16 @@ usage() {
   cat <<EOF
 Usage: train_resume_spp_gpu.sh [-h|--help] model_log_directory
 
-Resume single SoPa++ model training run with previously-used defaults
+Resume single SoPa++ model training run with previously used defaults
 on a GPU
 
 Optional arguments:
   -h, --help                      Show this help message and exit
 
 Required arguments:
-  model_log_directory <dir_path>  Path to model log directory where previously saved
-                                  model checkpoints are located
+  model_log_directory <dir_path>  Path to model log directory where
+                                  previously saved model checkpoints
+                                  are located
 EOF
 }
 

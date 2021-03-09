@@ -4,11 +4,11 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: evaluate_spp_grid_cpu.sh [-h|--help] neural_model_checkpoint
+Usage: evaluate_spp_grid.sh [-h|--help] neural_model_checkpoint
 
-Evaluate SoPa++ model on an evaluation data set on the CPU
-for a model grid directory, which has the benefit of summarizing
-the best model performance
+Evaluate SoPa++ model(s) on an evaluation data set for a model grid
+directory, which has the benefit of summarizing the best model
+performance
 
 Optional arguments:
   -h, --help                           Show this help message and exit
@@ -30,16 +30,16 @@ check_help() {
 }
 
 # define function
-evaluate_spp_grid_cpu() {
+evaluate_spp_grid() {
   local neural_model_checkpoint
   neural_model_checkpoint="$1"
 
   python3 -m src.evaluate_spp \
-    --eval-data "./data/facebook_multiclass_nlu/clean/test.uncased.data" \
-    --eval-labels "./data/facebook_multiclass_nlu/clean/test.labels" \
+    --eval-data "./data/fmtod/clean/test.uncased.data" \
+    --eval-labels "./data/fmtod/clean/test.labels" \
     --model-checkpoint "$neural_model_checkpoint" --grid-evaluation
 }
 
 # execute function
 check_help "$@"
-evaluate_spp_grid_cpu "$@"
+evaluate_spp_grid "$@"

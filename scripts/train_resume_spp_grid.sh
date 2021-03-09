@@ -4,17 +4,17 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: train_resume_spp_grid_cpu.sh [-h|--help] model_log_directory
+Usage: train_resume_spp_grid.sh [-h|--help] model_log_directory
 
-Resume SoPa++ model grid training run with previously-used defaults
-on the CPU
+Resume SoPa++ model grid training run with previously used defaults
 
 Optional arguments:
   -h, --help                      Show this help message and exit
 
 Required arguments:
-  model_log_directory <dir_path>  Path to model log directory where previously saved
-                                  model checkpoints are located
+  model_log_directory <dir_path>  Path to grid model log directory where
+                                  previously saved model checkpoints
+                                  are located
 EOF
 }
 
@@ -29,7 +29,7 @@ check_help() {
 }
 
 # define function
-train_resume_spp_grid_cpu() {
+train_resume_spp_grid() {
   local model_log_directory
   model_log_directory="$1"
 
@@ -39,4 +39,4 @@ train_resume_spp_grid_cpu() {
 
 # execute function
 check_help "$@"
-train_resume_spp_grid_cpu "$@"
+train_resume_spp_grid "$@"

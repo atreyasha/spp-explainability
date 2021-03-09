@@ -6,7 +6,8 @@ usage() {
   cat <<EOF
 Usage: prepare_data.sh [-h|--help]
 
-Download and prepare data sets for SoPa++
+Download and prepare GloVe-6B uncased word-vectors
+and the FMTOD data set to be used in this repository
 
 Optional arguments:
   -h, --help    Show this help message and exit
@@ -24,8 +25,8 @@ check_help() {
 }
 
 # download and prepare Facebook multi-class NLU data set
-facebook_multiclass_nlu() {
-  local directory="./data/facebook_multiclass_nlu/raw"
+fmtod() {
+  local directory="./data/fmtod/raw"
   mkdir -p "$directory"
   wget -N -P "$directory" "https://download.pytorch.org/data/multilingual_task_oriented_dialog_slotfilling.zip"
   unzip "$directory/multilingual_task_oriented_dialog_slotfilling.zip" -d "$directory"
@@ -41,5 +42,5 @@ glove_6B() {
 
 # execute all functions
 check_help "$@"
-facebook_multiclass_nlu
+fmtod
 glove_6B

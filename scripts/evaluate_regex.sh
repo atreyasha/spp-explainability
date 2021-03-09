@@ -4,9 +4,9 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: evaluate_regex_spp_cpu.sh [-h|--help] regex_model_checkpoint
+Usage: evaluate_regex.sh [-h|--help] regex_model_checkpoint
 
-Evaluate SoPa++ regex model on an evaluation data set on the CPU
+Evaluate regex model(s) on an evaluation data set
 
 Optional arguments:
   -h, --help                          Show this help message and exit
@@ -28,16 +28,16 @@ check_help() {
 }
 
 # define function
-evaluate_regex_spp_cpu() {
+evaluate_regex() {
   local regex_model_checkpoint
   regex_model_checkpoint="$1"
 
-  python3 -m src.evaluate_regex_spp \
-    --eval-data "./data/facebook_multiclass_nlu/clean/test.uncased.data" \
-    --eval-labels "./data/facebook_multiclass_nlu/clean/test.labels" \
+  python3 -m src.evaluate_regex \
+    --eval-data "./data/fmtod/clean/test.uncased.data" \
+    --eval-labels "./data/fmtod/clean/test.labels" \
     --model-checkpoint "$regex_model_checkpoint"
 }
 
 # execute function
 check_help "$@"
-evaluate_regex_spp_cpu "$@"
+evaluate_regex "$@"

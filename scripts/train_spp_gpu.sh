@@ -28,10 +28,10 @@ check_help() {
 train_spp_gpu() {
   python3 -m src.train_spp \
     --embeddings "./data/glove_6B_uncased/glove.6B.300d.txt" \
-    --train-data "./data/facebook_multiclass_nlu/clean/train.upsampled.uncased.data" \
-    --train-labels "./data/facebook_multiclass_nlu/clean/train.upsampled.labels" \
-    --valid-data "./data/facebook_multiclass_nlu/clean/valid.upsampled.uncased.data" \
-    --valid-labels "./data/facebook_multiclass_nlu/clean/valid.upsampled.labels" \
+    --train-data "./data/fmtod/clean/train.upsampled.uncased.data" \
+    --train-labels "./data/fmtod/clean/train.upsampled.labels" \
+    --valid-data "./data/fmtod/clean/valid.upsampled.uncased.data" \
+    --valid-labels "./data/fmtod/clean/valid.upsampled.labels" \
     --gpu
 }
 
