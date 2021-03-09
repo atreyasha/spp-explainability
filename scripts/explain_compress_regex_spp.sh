@@ -4,9 +4,9 @@ set -e
 # usage function
 usage() {
   cat <<EOF
-Usage: explain_compress_regex_spp_cpu.sh [-h|--help] regex_model_checkpoint
+Usage: explain_compress_regex_spp.sh [-h|--help] regex_model_checkpoint
 
-Compress a regex SoPa++ model via custom algorithm on the CPU
+Compress a regex SoPa++ model using a basic compression algorithm
 
 Optional arguments:
   -h, --help                          Show this help message and exit
@@ -28,7 +28,7 @@ check_help() {
 }
 
 # define function
-explain_compress_regex_spp_cpu() {
+explain_compress_regex_spp() {
   local regex_model_checkpoint
   regex_model_checkpoint="$1"
 
@@ -38,4 +38,4 @@ explain_compress_regex_spp_cpu() {
 
 # execute function
 check_help "$@"
-explain_compress_regex_spp_cpu "$@"
+explain_compress_regex_spp "$@"
