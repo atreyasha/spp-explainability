@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from glob import glob
-from typing import Dict, List
+from typing import Dict, List, Any
 from collections import defaultdict
 from tensorboard.backend.event_processing.event_accumulator import (
     EventAccumulator)
@@ -15,7 +15,7 @@ import os
 import csv
 
 
-def dict2csv(out: Dict[str, List], dpath: str) -> None:
+def dict2csv(out: Dict[str, List[Any]], dpath: str) -> None:
     """
     Function to write dictionary object as csv file
 
@@ -31,7 +31,7 @@ def dict2csv(out: Dict[str, List], dpath: str) -> None:
             writer.writerow({key: out[key][i] for key in out.keys()})
 
 
-def tabulate_events(dpath: str) -> Dict[str, List]:
+def tabulate_events(dpath: str) -> Dict[str, List[Any]]:
     """
     Function to tabulate and aggregate event logs into single dictionary
     with post-processing to ensure data sanity
@@ -65,7 +65,7 @@ def tabulate_events(dpath: str) -> Dict[str, List]:
         steps = sorted(list(steps))
         out["steps"].extend(steps)
         for tag in tags:
-            hold = []
+            hold: List[Any] = []
             for event in summary_iterator.Scalars(tag):
                 current_steps = [] if hold == [] else list(zip(*hold))[0]
                 if event.step in steps and event.step not in current_steps:
