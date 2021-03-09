@@ -709,10 +709,10 @@ bash scripts/compare_model_pairs_spp_gpu.sh "/glob/to/model/log/*/director(ies)"
 
 ### Visualization
 
-<details><summary>i. Grid-training</summary>
+<details><summary>i. Grid-based training</summary>
 <p>
 
-For visualizing grid-training performance, we use `src/tensorboard_event2csv.py` to convert tensorboard event logs to `csv` files and apply functions from `src/visualize_spp.R` to plot them. These two scripts are bound together by `scripts/visualize_train_spp_grid.sh`:
+For visualizing grid-based training performance, we use `src/tensorboard_event2csv.py` to convert tensorboard event logs to `csv` files and apply functions from `src/visualize_spp.R` to plot them. These two scripts are bound together by `scripts/visualize_train_spp_grid.sh`:
 
 ```
 Usage: visualize_train_spp_grid.sh [-h|--help] tb_event_directory
@@ -729,21 +729,21 @@ Required arguments:
                                   directories
 ```
 
-To produce a facet-based visualization of the grid-training cases, simply execute:
+To produce a facet-based visualization of grid-based training, simply execute:
 
 ```shell
 bash scripts/visualize_train_spp_grid.sh "/glob/to/tb/event/*/director(ies)"
 ```
 
-**Note:** This script has been hard-coded for grid-training scenarios where only the following three training/model arguments are varied: `patterns`, `tau_threshold` and `seed`.
+**Note:** This script has been hard-coded for grid-based training scenarios where only the following three training/model arguments are varied: `patterns`, `tau_threshold` and `seed`.
 
 </p>
 </details>
 
-<details><summary>ii. Grid-evaluation</summary>
+<details><summary>ii. Grid-based evaluation</summary>
 <p>
 
-For visualizing grid-evaluation performance and model-pair distances, we apply functions from `src/visualize_spp.R`. This workflow is wrapped using `scripts/visualize_evaluate_spp_grid.sh`:
+For visualizing grid-based evaluation performance and model-pair distances, we apply functions from `src/visualize_spp.R`. This workflow is wrapped using `scripts/visualize_evaluate_spp_grid.sh`:
 
 ```
 Usage: visualize_evaluate_spp_grid.sh [-h|--help] model_log_directory
@@ -761,13 +761,13 @@ Required arguments:
                                    models, as well as evaluation json's
 ```
 
-To produce a facet-based visualization of the grid-evaluation cases, simply execute:
+To produce a facet-based visualization of grid-based evaluation, simply execute:
 
 ```shell
 bash scripts/visualize_evaluate_spp_grid.sh "/glob/to/model/log/*/director(ies)"
 ```
 
-**Note:** This script has been hard-coded for grid-evaluation scenarios where only the following three training/model arguments are varied: `patterns`, `tau_threshold` and `seed`.
+**Note:** This script has been hard-coded for grid-based evaluation scenarios where only the following three training/model arguments are varied: `patterns`, `tau_threshold` and `seed`.
 
 </p>
 </details>
