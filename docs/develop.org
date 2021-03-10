@@ -6,10 +6,10 @@
 *** Manuscript
 **** Visualization and summary-statistics 
     DEADLINE: <2021-03-11 Thu>
-***** [#A] Model OOP
-****** use matplotlib nested pie charts for importances (with subtypes from class serialization), pipe output using ~tikzplotlib~ and build to pdf using the shell script
-***** [#A] Regex OOP
-****** add visualization of regex ensemble with graphviz -> can specify which pattern to visualize and how to make large scale visualizations
+***** [#A] Binary neurons and regex's
+****** use python script to pipe softmax values to temporary csv file and plot them with ~ggplot~ in ~R~
+****** add visualization of regex ensemble with graphviz which can be done fully in python
+****** think about file naming again given this situation with mixed functionalities
 ***** [#B] SoPa++ computational graph
 ****** add visualization of computational graph function using tikz
 ***** [#B] FMTOD
@@ -126,6 +126,7 @@
 ******* remove red link color in table of contents
 ******* fine-tune citation color to be consistent with other colors
 ****** Manuscript admin
+******* consider replacing legacy-sopa figures with pdf extracts instead of screenshots
 ******* talk to supervisors about many definitions and if these are alright
 ******* always mention "figure taken from study (year)" when using external figures
 ******* fine tune WFSA to mean either automata or automaton, make plural abbreviation clear as well
@@ -169,7 +170,7 @@
 ***** +Topic proposal final: *15.11.2020*+
 ***** +Topic registration: *01.02.2021*+
 ***** Manuscript draft submission: *31.03.2021* 
-***** Offical manuscript submission: *10.04.2021*
+***** Offical manuscript submission: *11.04.2021*
 
 ** Legacy
 *** Interpretable RNN architectures

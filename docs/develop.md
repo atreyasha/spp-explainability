@@ -22,23 +22,22 @@
 
     **DEADLINE:** *\<2021-03-11 Thu\>*
 
-    1.  \[\#A\] Model OOP
+    1.  \[\#A\] Binary neurons and regex\'s
 
-        1.  use matplotlib nested pie charts for importances (with
-            subtypes from class serialization), pipe output using
-            `tikzplotlib` and build to pdf using the shell script
+        1.  use python script to pipe softmax values to temporary csv
+            file and plot them with `ggplot` in `R`
 
-    2.  \[\#A\] Regex OOP
+        2.  add visualization of regex ensemble with graphviz which can
+            be done fully in python
 
-        1.  add visualization of regex ensemble with graphviz -\> can
-            specify which pattern to visualize and how to make large
-            scale visualizations
+        3.  think about file naming again given this situation with
+            mixed functionalities
 
-    3.  \[\#B\] SoPa++ computational graph
+    2.  \[\#B\] SoPa++ computational graph
 
         1.  add visualization of computational graph function using tikz
 
-    4.  \[\#B\] FMTOD
+    3.  \[\#B\] FMTOD
 
         1.  add visualisation of data statistics with different
             partitions, perhaps as a stacked bar chart
@@ -346,36 +345,39 @@
 
         4.  Manuscript admin
 
-            1.  talk to supervisors about many definitions and if these
+            1.  consider replacing legacy-sopa figures with pdf extracts
+                instead of screenshots
+
+            2.  talk to supervisors about many definitions and if these
                 are alright
 
-            2.  always mention \"figure taken from study (year)\" when
+            3.  always mention \"figure taken from study (year)\" when
                 using external figures
 
-            3.  fine tune WFSA to mean either automata or automaton,
+            4.  fine tune WFSA to mean either automata or automaton,
                 make plural abbreviation clear as well
 
-            4.  remove sub-enumeration for single remarks under a
+            5.  remove sub-enumeration for single remarks under a
                 definition
 
-            5.  add links to different sections later on once structure
+            6.  add links to different sections later on once structure
                 and content is clear
 
-            6.  sort out all abbreviations and standardize formatting in
+            7.  sort out all abbreviations and standardize formatting in
                 terms of where they are first declared
 
-            7.  change to two sided format before printing, as this
+            8.  change to two sided format before printing, as this
                 works well for binding/printing
 
-            8.  add Uni-Potsdam originality declaration, or modify
+            9.  add Uni-Potsdam originality declaration, or modify
                 current one to fit
 
-            9.  add remaining features by referring to master template
+            10. add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, and all
                 others
 
-            10. perform spell-check of everything at the end
+            11. perform spell-check of everything at the end
 
 ### Programming
 
@@ -455,7 +457,7 @@
 
     5.  Manuscript draft submission: **31.03.2021**
 
-    6.  Offical manuscript submission: **10.04.2021**
+    6.  Offical manuscript submission: **11.04.2021**
 
 ## Legacy
 
