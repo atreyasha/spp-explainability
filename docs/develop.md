@@ -1,10 +1,8 @@
 ## Table of Contents
 -   [Tasks](#tasks)
     -   [Manuscript](#manuscript)
-    -   [Current Programming](#current-programming)
-    -   [Future programming](#future-programming)
+    -   [Programming](#programming)
 -   [Notes](#notes)
-    -   [Manuscript](#manuscript-1)
     -   [Admin](#admin)
 -   [Legacy](#legacy)
     -   [Interpretable RNN
@@ -26,11 +24,9 @@
 
     1.  \[\#A\] Model OOP
 
-        1.  visualize patterns as dots with internal pie charts which
-            show magnitudes of each class; displayed as a colour with
-            legend, will show relative importance of each binary neuron
-            and can help us segment their purposes -\> this should be
-            juxtaposed with regex samples to show importance vs. samples
+        1.  use matplotlib nested pie charts for importances (with
+            subtypes from class serialization), pipe output using
+            `tikzplotlib` and build to pdf using the shell script
 
     2.  \[\#A\] Regex OOP
 
@@ -96,7 +92,7 @@
             things
 
         8.  neural SoPa++ is a black-box (non-transparent) model, regex
-            SoPa++ is a transparent model -\> need justifications from
+            proxy is a transparent model -\> need justifications from
             background concepts, might need significant text on this
             portion
 
@@ -245,28 +241,47 @@
         1.  this is subjective and a survey from the target audience
             would be good to have
 
-    2.  Modelling
+    2.  Modeling
 
-        1.  extract relevant points from future programming tasks and
-            add them here
+        1.  use packed sequences for fast processing
 
-        2.  extend to a finite-state transducer for seq2seq tasks
+        2.  use multiple-threads for extracting regular expressions, or
+            store them in a database
 
-        3.  can map linear to decision tree to get clearer picture of
+        3.  more thorough regex lookup since now only the first one
+            causes a loop breakage
+
+        4.  add predict function for people to test with arbitrary
+            sequences
+
+        5.  consider using nearest-neighbours to expand adjacent tokens
+            on already found regex\'s
+
+        6.  consider internal regex UNK token handling cases other than
+            wildcard presence
+
+        7.  consider semantic clustering of digits or other objects to
+            help achieve generality
+
+        8.  extend to a finite-state transducer for seq2seq tasks
+
+        9.  can map linear to decision tree to get clearer picture of
             possibilities
 
-        4.  human intervention inside regex model to monitor/improve
+        10. human intervention inside regex model to monitor/improve
             performance
 
     3.  Analysis
 
-        1.  analyzing whether patterns can help discover possible
+        1.  extension to more NLU data sets such as SNIPS, ATIS
+
+        2.  analyzing whether patterns can help discover possible
             adversarial patterns
 
-        2.  for the target audience of end-users -\> how can a user make
+        3.  for the target audience of end-users -\> how can a user make
             use of the regex model
 
-        3.  visualize examples/classes where regex and neural model
+        4.  visualize examples/classes where regex and neural model
             align and misalign, eg. with a confusion matrix
 
 7.  Formatting
@@ -297,29 +312,25 @@
             1.  think about providing an additional definition for
                 \"understandability\"
 
-            2.  add a Kleene-star operator mention to remark 9.4
+            2.  consider quoting all definitions to further imply that
+                they are exactly taken from other studies
 
-            3.  include a section on risks on large NLP models and why
+            3.  add a Kleene-star operator mention to remark 9.4
+
+            4.  include a section on risks on large NLP models and why
                 explainability is necessary with different study
 
-            4.  if possible, try to reduce references to Arrieta et al.
+            5.  if possible, try to reduce references to Arrieta et al.
                 2020 to reduce perceived over-dependence
 
-            5.  revisit sopa explainability evaluation with three
+            6.  revisit sopa explainability evaluation with three
                 guidelines to check if it makes sense after having
                 evaluated sopa++ with the same guidelines
 
-            6.  think about citing Arrieta et al. 2020 in each
-                definition, or perhaps it is overkill
-
-            7.  try to paraphrase as much as possible in background
-                concepts otherwise quote statements or definitions to
-                signify they are borrowed
-
-            8.  look into antecedent/proxy names and if these can be
+            7.  look into antecedent/proxy names and if these can be
                 improved
 
-            9.  return to this chapter to add/remove content based on
+            8.  return to this chapter to add/remove content based on
                 requirements of later chapters
 
         3.  Bibliography
@@ -366,236 +377,73 @@
 
             10. perform spell-check of everything at the end
 
-### Current Programming
+### Programming
 
 1.  Dependencies, typing and testing
 
-    1.  if using R, document R dependencies with
-        `sessioninfo`{.verbatim}
+    1.  if using R, document R dependencies with `sessionInfo()`
 
-    2.  include basic test code by instantiating class and/or other
-        simple methods
+    2.  add mypy as an explicit part of testing the source code
 
-    3.  add mypy as an explicit part of testing the source code
+    3.  replace Union + None types with Optional type for conciseness
 
-    4.  replace Union + None types with Optional type for conciseness
-
-    5.  look into cases where List was replaced by Sequential and how
+    4.  look into cases where List was replaced by Sequential and how
         this can be changed or understood to keep consistency (ie. keep
         everything to List with overloads)
 
+    5.  include basic test code by instantiating class and/or other
+        simple methods
+
 2.  Documentation and clean-code
 
-    1.  perform spell-check on readme
+    1.  Terminology-based modifications post-paper
 
-    2.  consider removing NLU term and just keep the task as
-        intent-detection, as mentioned on the repo
+        1.  if necessary, apply further script renaming using antecedent
+            and proxy terminologies -\> update readme and usages
 
-    3.  find better naming for mimic/oracle models which is based on
-        research terminology -\> right now mix of neural and regex is
-        being used; it would be good to have something more firm
+        2.  consider removing `utils` extension from all utils scripts
+            since these might be unnecessary
 
-    4.  GPU/CPU runs not always reproducible depending on
-        multi-threading, see:
-        <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
+        3.  test out all shell-scripts and python code to make sure
+            everything works the same after major renamings
 
-    5.  reduce source code lines, chunking and comments -\> pretty sort
-        python code and function/class orders perhaps by length
+    2.  Others
 
-    6.  add a comment above each code chunk which explains inner
-        mechanisms better
+        1.  GPU/CPU runs not always reproducible depending on
+            multi-threading, see:
+            <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    7.  update metadata eg. with comprehensive python/shell help
-        scripts, comments describing functionality and readme
-        descriptions for git hooks
+        2.  reduce source code lines, chunking and comments -\> pretty
+            sort python code and function/class orders perhaps by length
 
-    8.  add information on best model downloads and preparation -\> add
-        these to Google Drive later on
+        3.  add a comment above each code chunk which explains inner
+            mechanisms better
 
-    9.  add pydocstrings to all functions and improve argparse
-        documentation
+        4.  update metadata eg. with comprehensive python/shell help
+            scripts, comments describing functionality and readme
+            descriptions for git hooks
 
-    10. provide description of data structures (eg. data, labels)
-        required for training processes and lowercasing
+        5.  add information on best model downloads and preparation -\>
+            add these to Google Drive later on
 
-    11. update/remove git hooks depending on which features are finally
-        used, eg. remove pre-push hook
+        6.  add pydocstrings to all functions and improve argparse
+            documentation
 
-    12. test download and all other scripts to ensure they work
+        7.  provide description of data structures (eg. data, labels)
+            required for training processes and lowercasing
 
-### Future programming
+        8.  update/remove git hooks depending on which features are
+            finally used, eg. remove pre-push hook
 
-1.  Modelling improvements
+        9.  test download and all other scripts to ensure they work
 
-    1.  check if packed sequences could be incoporated into model
-
-        1.  might increase efficiency related to batch latency
-
-    2.  find single-threaded ways to speed up regular expression
-        searches -\> bottleneck appears to be search method
-
-        1.  multiprocessing with specific chunksize seems to have some
-            effect
-
-        2.  might need to have a very large batch size to see any
-            improvements with multiprocessing
-
-        3.  database with indexing could help improve regex lookup speed
-
-    3.  consider using finditer for regex lookup with trace, since we
-        should return all matches
-
-        1.  make activating text unique in case we return multiple texts
-            and not one -\> but then won\'t correspond to activating
-            regexes
-
-        2.  might not make a huge difference since we use short
-            sentences
-
-        3.  might be better for speed reasons to leave it as a search
-            method
-
-    4.  add predict function for both mimic and oracle model which does
-        not need extra data to be loaded -\> can also accept stdin as
-        unix pipe
-
-2.  Explore activation generalization methods
-
-    1.  improve baseline simplification and rational compression method
-
-        1.  handle **UNK** tokens on new data for either in regex OOP or
-            during simplification/compression -\> perhaps look for best
-            possible match given context -\> **might be well-enough
-            handled by wildcards**
-
-        2.  EITHER needs more features from simplification such as
-            nearest neighbours OR generate them with access to the model
-            again -\> use comparison scripts to determine which
-            improvements are necessary -\> this should go into the
-            SoPa++ neural model below trace functions -\> look into
-            legacy code for some hints -\> \*might be well enough
-            handled by looking into enough training samples
-
-    2.  think of taking tokens in a regex group and finding their
-        **K-nearest-neighbours** in transition space to expand on them
-        if possible -\> only do this if there are few samples and if
-        their neighbours have very close scores (within eps), see:
-        <https://discuss.pytorch.org/t/k-nearest-neighbor-in-pytorch/59695/2>
-
-        1.  would require extra neural class function to compute all
-            transition matrices
-
-        2.  hard to justify these as compression techniques, more closer
-            to simplificiation -\> but perhaps this is just a
-            technicality which can be addressed later on
-
-        3.  might not help too much since regex model appears
-            over-activated at the binary layer compared to the neural
-            model -\> these compression generalizations will just
-            increase activations; where we would rather expect sparsity
-            instead
-
-    3.  think of semantic clustering with digits or time or other means
-        -\> if there are no wildcards present -\> would require external
-        ontology such as WordNet -\> would be slightly more work
-        intensive and is perhaps better to leave this for further work
+        10. perform spell-check on readme
 
 ## Notes
 
-### Manuscript
-
-1.  SoPa++
-
-    1.  extensions
-
-        1.  leverage dynamic sub-word-level embeddings from recent
-            advancements in Transformer-based language modeling.
-
-        2.  modify the architecture and hyperparameters to use more
-            wildcards or self-loops, and verify the usefulness of these
-            in the mimic WFSA models.
-
-        3.  modify the output multi-layer perceptron layer to a general
-            additive layer, such as a linear regression layer, with
-            various basis functions. This would allow for easier
-            interpretation of the importance of patterns without the use
-            of occlusion -\> perhaps consider adding soft logic
-            functions which could emulate negation/inclusion of rules,
-            or possibly a soft decision tree at the top layer
-
-        4.  test SoPa++ on multi-class text classification tasks
-
-2.  SoPa
-
-    1.  goods: practical new architecture which maps to RNN-CNN mix via
-        WFSAs, decent code quality in PyTorch (still functional),
-        contact made with author and could get advice for possible
-        extensions
-
-    2.  limitations
-
-        1.  SoPa utilizes static word-level token embeddings which might
-            contribute to less dynamic learning and more overfitting
-            towards particular tokens
-
-        2.  SoPa encourages minimal learning of wildcards/self-loops and
-            $\epsilon$-transitions, which leads to increased overfitting
-            on rare words such as proper nouns
-
-        3.  while SoPa provides an interpretable architecture to learn
-            discrete word-level patterns, it is also utilizes occlusion
-            to determine the importance of various patterns. Occlusion
-            is usually a technique reserved for uninterpretable model
-            architectures and contributes little to global
-            explainability
-
-        4.  SoPa was only tested empirically on binary text
-            classification tasks
-
-    3.  general: likely higher performance due to direct inference and
-        less costly conversion methods
-
-3.  Data sets
-
-    1.  NLU data sets -\> single sequence intent classification,
-        typically many classes involved -\> eg. ATIS, Snips,
-        AskUbuntuCorpus, FB task oriented dataset (mostly intent
-        classifications)
-
-    2.  SOTA scores for NLU can be found on
-        <https://github.com/nghuyong/rasa-nlu-benchmark#result>
-
-    3.  vary training data sizes from 10% to 70% for perspective on data
-        settings
-
-4.  Extension to new data sets
-
-    1.  could extend workflow to ATIS and/or SNIPS since all other code
-        is established
-
-5.  Constraints
-
-    1.  work with RNNs only
-
-    2.  seq2cls tasks -\> eg. NLU/NLI/semantic tasks, try to work with
-        simpler single (vs. double) sequence classification task
-
-    3.  base main ideas off peer-reviewed artics
-
 ### Admin
 
-1.  Research questions
-
-    1.  To what extent does SoPa++ contribute to competitive performance
-        on NLU tasks?
-
-    2.  To what extent does SoPa++ contribute to explainability by
-        simplification?
-
-    3.  What interesting and relevant explanations does SoPa++ provide
-        on NLU task(s)?
-
-2.  Timeline
+1.  Timeline
 
     1.  ~~Initial thesis document: **15.09.2020**~~
 
