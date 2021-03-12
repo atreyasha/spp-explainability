@@ -15,7 +15,7 @@ import torch
 
 
 def compression_inner(pattern_regex: List[str],
-                      cleanup: bool = False) -> List[str]:
+                      cleanup: bool = False) -> List[List[str]]:
     # intitialize storage list
     compressed_pattern_regex = []
     if not cleanup:
