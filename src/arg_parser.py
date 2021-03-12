@@ -16,29 +16,29 @@ def spp_arg_parser() -> argparse.ArgumentParser:
         default="6-50_5-50_4-50_3-50",
         type=str)
     spp.add_argument("--semiring",
-                      help="Specify which semiring to use",
-                      default="MaxSumSemiring",
-                      choices=["MaxSumSemiring", "MaxProductSemiring"],
-                      type=str)
+                     help="Specify which semiring to use",
+                     default="MaxSumSemiring",
+                     choices=["MaxSumSemiring", "MaxProductSemiring"],
+                     type=str)
     spp.add_argument("--tau-threshold",
-                      help="Specify value of TauSTE binarizer tau threshold",
-                      default=0.,
-                      type=float)
+                     help="Specify value of TauSTE binarizer tau threshold",
+                     default=0.,
+                     type=float)
     spp.add_argument("--bias-scale",
-                      help="Scale biases by this parameter",
-                      default=1.,
-                      type=float)
+                     help="Scale biases by this parameter",
+                     default=1.,
+                     type=float)
     spp.add_argument("--wildcard-scale",
-                      help="Scale wildcard(s) by this parameter",
-                      type=float)
+                     help="Scale wildcard(s) by this parameter",
+                     type=float)
     spp.add_argument("--word-dim", help=argparse.SUPPRESS, type=int)
     # boolean flags
     spp.add_argument("--no-wildcards",
-                      help="Do not use wildcard transitions",
-                      action='store_true')
+                     help="Do not use wildcard transitions",
+                     action='store_true')
     spp.add_argument("--static-embeddings",
-                      help="Freeze learning of token embeddings",
-                      action='store_true')
+                     help="Freeze learning of token embeddings",
+                     action='store_true')
     return parser
 
 
