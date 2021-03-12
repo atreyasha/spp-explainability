@@ -3,6 +3,7 @@
 
 from glob import glob
 from tqdm import tqdm
+from itertools import chain
 from typing import cast, List, Dict
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
@@ -13,13 +14,15 @@ import argparse
 import torch
 
 
-def compression(pattern_regex: List[str]) -> List[str]:
+def compression_inner(pattern_regex: List[str],
+                      cleanup: bool = False) -> List[str]:
     # intitialize storage list
     compressed_pattern_regex = []
-    pattern_regex = list(
-        map(
-            lambda x: x.replace("(\\s|^)(", "").replace(")(\\s|$)", "").split(
-            ), pattern_regex))
+    if not cleanup:
+        pattern_regex = list(
+            map(
+                lambda x: x.replace("(\\s|^)(", "").replace(")(\\s|$)", "").
+                split(), pattern_regex))
 
     # loop over pattern regular expressions until all processed
     while len(pattern_regex) != 0:
@@ -64,6 +67,14 @@ def compression(pattern_regex: List[str]) -> List[str]:
                     regex[key] for regex in index_segmenter[key]
                 ]
 
+                # perform cleanup if necessary
+                if cleanup:
+                    join_list = list(
+                        chain(*[
+                            token.replace("(", "").replace(")", "").split("|")
+                            for token in join_list
+                        ]))
+
                 # make join_list unique
                 join_list = list(set(join_list))
 
@@ -81,6 +92,15 @@ def compression(pattern_regex: List[str]) -> List[str]:
                 # finally append to tracking list
                 compressed_pattern_regex.append(joint)
 
+    # return final object
+    return compressed_pattern_regex
+
+
+def compression_outer(pattern_regex: List[str]) -> List[str]:
+    # run inner function
+    compressed_pattern_regex = compression_inner(pattern_regex,
+                                                 cleanup=False)
+
     # correct total wildcards
     if any([
             True if regex.count("[^\\s]+") == len(regex) else False
@@ -88,6 +108,10 @@ def compression(pattern_regex: List[str]) -> List[str]:
     ]):
         compressed_pattern_regex = [["[^\\s]+"] *
                                     len(compressed_pattern_regex[0])]
+
+    # redo checking process to combine partial wildcards
+    compressed_pattern_regex = compression_inner(compressed_pattern_regex,
+                                                 cleanup=True)
 
     # add boundary conditions
     compressed_pattern_regex = [
@@ -111,7 +135,7 @@ def main(args: argparse.Namespace) -> None:
         # conduct compression as required
         LOGGER.info("Compressing regex model")
         model["activating_regex"] = {
-            key: compression(model["activating_regex"][key])
+            key: compression_outer(model["activating_regex"][key])
             for key in tqdm(model["activating_regex"],
                             disable=args.disable_tqdm)
         }
