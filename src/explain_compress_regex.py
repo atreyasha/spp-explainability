@@ -4,7 +4,7 @@
 from glob import glob
 from tqdm import tqdm
 from itertools import chain
-from typing import cast, List, Dict
+from typing import cast, List, Dict, Union
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
 from .arg_parser import (explain_compress_arg_parser, logging_arg_parser,
@@ -14,15 +14,18 @@ import argparse
 import torch
 
 
-def compression_inner(pattern_regex: List[str],
+def compression_inner(pattern_regex: Union[List[str], List[List[str]]],
                       cleanup: bool = False) -> List[List[str]]:
     # intitialize storage list
     compressed_pattern_regex = []
     if not cleanup:
+        pattern_regex = cast(List[str], pattern_regex)
         pattern_regex = list(
             map(
                 lambda x: x.replace("(\\s|^)(", "").replace(")(\\s|$)", "").
                 split(), pattern_regex))
+    else:
+        pattern_regex = cast(List[List[str]], pattern_regex)
 
     # loop over pattern regular expressions until all processed
     while len(pattern_regex) != 0:
