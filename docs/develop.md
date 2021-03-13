@@ -18,29 +18,8 @@
 
 ### Manuscript
 
-1.  Visualization and summary-statistics
-
-    **DEADLINE:** *\<2021-03-11 Thu\>*
-
-    1.  \[\#A\] Binary neurons and regex\'s
-
-        1.  use python script to pipe softmax values to temporary csv
-            file and plot them with `ggplot` in `R`
-
-        2.  add visualization of regex ensemble with graphviz which can
-            be done fully in python
-
-        3.  think about file naming again given this situation with
-            mixed functionalities
-
-    2.  \[\#B\] SoPa++ computational graph
-
-        1.  add visualization of computational graph function using tikz
-
-    3.  \[\#B\] FMTOD
-
-        1.  add visualisation of data statistics with different
-            partitions, perhaps as a stacked bar chart
+1.  **TODO** Clean up all notes and add new deadlines to
+    segments
 
 2.  Methodologies
 
@@ -76,7 +55,8 @@
 
         4.  try to find literature-based justification for wildcard
             transition -\> if not use omega symbol to differentiate from
-            the Kleene star symbol
+            the Kleene star symbol -\> use UTF-8 symbol for graphviz
+            plots
 
         5.  add detailed information on how hard SoPa++ model differs
             from SoPa related to transitions and other simplifications
@@ -165,9 +145,6 @@
         2.  produce manual computational graph using tikz, building from
             what was made earlier
 
-        3.  add visualization of in-depth computational graph in paper
-            for clarity -\> this can be automated with PyTorch tools
-
 3.  Results
 
     1.  Report F_1 scores and performances of neural models
@@ -194,6 +171,10 @@
             misalignment, activation frequency and other useful metrics
             that can elucidate on-the-ground processes
 
+        2.  go into details on how effective compression algorithm was
+            in terms of reducing the memory and number of regex\'s -\>
+            can tabulate all of these
+
     3.  Visualizations
 
         1.  show visualization of training performance timelines, think
@@ -218,10 +199,23 @@
     3.  Think about why larger regex models tend to show more
         misalignment from neural counterparts compared to smaller models
 
-    4.  Visualizations
+    4.  If possible, add some minor human evaluation of explainability
+        otherwise leave it to future work
+
+    5.  Explain discussion figures very clearly and show the relevance
+        to the third research question, can talk about neurons
+        responsible for certain decisions, as well as distributed
+        representations in neurons where there is really no clear neuron
+        responsible for one-thing -\> which is an impediment to
+        explainability
+
+    6.  Visualizations
 
         1.  show visualizations of important patterns in a regex model
             -\> something which is small and fits well into a page
+
+            1.  figures must be manually put together later directly in
+                latex
 
         2.  show TikZ visualization of each binary neuron\'s relative
             importance for classes -\> would be interesting to see how
@@ -283,7 +277,7 @@
         4.  visualize examples/classes where regex and neural model
             align and misalign, eg. with a confusion matrix
 
-7.  Formatting
+7.  Post-paper iteration/formatting
 
     1.  Paper length
 
@@ -294,90 +288,119 @@
 
         1.  Introduction
 
-            1.  fine-tune introduction with new details from other
+            1.  abstract and introduction should already mention
+                results, and should not leave this to conclusions
+
+            2.  fine-tune introduction with new details from other
                 chapters
 
-            2.  update motivations from Arrieta et al. 2020 \"What for\"
+            3.  update motivations from Arrieta et al. 2020 \"What for\"
                 section
 
-            3.  add C-like reference to explain what SoPa++ means like
+            4.  add C-like reference to explain what SoPa++ means like
                 in i++
 
-            4.  add links to chapters in thesis structure, improve
+            5.  add links to chapters in thesis structure, improve
                 formatting
 
         2.  Background concepts
 
-            1.  think about providing an additional definition for
+            1.  explain vanilla SoPa more clearly to motivate everything
+                else -\> perhaps need more information on FSAs with
+                starting and accepting states
+
+            2.  EITHER quote + indent sentences directly taken from
+                other studies (cite pages and paragraphs) OR paraphrase
+                them and leave them in a definition environment
+
+            3.  be very clear on what is directly taken from another
+                study versus what is paraphrased
+
+            4.  definition/remark structure might need to be revised to
+                something more narrative-suited
+
+            5.  think about providing an additional definition for
                 \"understandability\"
 
-            2.  consider quoting all definitions to further imply that
+            6.  consider quoting all definitions to further imply that
                 they are exactly taken from other studies
 
-            3.  add a Kleene-star operator mention to remark 9.4
+            7.  add a Kleene-star operator mention to remark 9.4
 
-            4.  include a section on risks on large NLP models and why
+            8.  include a section on risks on large NLP models and why
                 explainability is necessary with different study
 
-            5.  if possible, try to reduce references to Arrieta et al.
+            9.  if possible, try to reduce references to Arrieta et al.
                 2020 to reduce perceived over-dependence
 
-            6.  revisit sopa explainability evaluation with three
+            10. revisit sopa explainability evaluation with three
                 guidelines to check if it makes sense after having
                 evaluated sopa++ with the same guidelines
 
-            7.  look into antecedent/proxy names and if these can be
+            11. look into antecedent/proxy names and if these can be
                 improved
 
-            8.  return to this chapter to add/remove content based on
+            12. return to this chapter to add/remove content based on
                 requirements of later chapters
 
         3.  Bibliography
 
-            1.  improve capitalization with braces in bibtex file
+            1.  change FMTOD citation to NAACL, look for
+                journal/conference alternative citations for current
+                papers
 
-            2.  if possible, try to find non-arxiv citations for papers
+            2.  improve capitalization with braces in bibtex file
 
-            3.  remove red link color in table of contents
+            3.  if possible, try to find non-arxiv citations for papers
 
-            4.  fine-tune citation color to be consistent with other
+            4.  remove red link color in table of contents
+
+            5.  fine-tune citation color to be consistent with other
                 colors
 
         4.  Manuscript admin
 
-            1.  consider replacing legacy-sopa figures with pdf extracts
+            1.  read manuscript and ensure there is an easily followable
+                narrative for someone who is a non-expert
+
+            2.  improve file structure of visuals with explicit folders
+                for directly copied figures
+
+            3.  add titles to all figures in the manuscript
+
+            4.  consider replacing legacy-sopa figures with pdf extracts
                 instead of screenshots
 
-            2.  talk to supervisors about many definitions and if these
+            5.  talk to supervisors about many definitions and if these
                 are alright
 
-            3.  always mention \"figure taken from study (year)\" when
+            6.  always mention \"figure taken from study (year)\" when
                 using external figures
 
-            4.  fine tune WFSA to mean either automata or automaton,
+            7.  fine tune WFSA to mean either automata or automaton,
                 make plural abbreviation clear as well
 
-            5.  remove sub-enumeration for single remarks under a
+            8.  remove sub-enumeration for single remarks under a
                 definition
 
-            6.  add links to different sections later on once structure
+            9.  add links to different sections later on once structure
                 and content is clear
 
-            7.  sort out all abbreviations and standardize formatting in
+            10. sort out all abbreviations and standardize formatting in
                 terms of where they are first declared
 
-            8.  change to two sided format before printing, as this
+            11. change to two sided format before printing, as this
                 works well for binding/printing
 
-            9.  add Uni-Potsdam originality declaration, or modify
+            12. add Uni-Potsdam originality declaration, or modify
                 current one to fit
 
-            10. add remaining features by referring to master template
+            13. add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, and all
                 others
 
-            11. perform spell-check of everything at the end
+            14. perform spell-check of everything at the end
 
 ### Programming
 
@@ -411,35 +434,41 @@
 
     2.  Others
 
-        1.  GPU/CPU runs not always reproducible depending on
+        1.  find a better way of naming visualization pdfs to attribute
+            to specific model
+
+        2.  fix terminology of STE/output neurons consistently after
+            paper
+
+        3.  GPU/CPU runs not always reproducible depending on
             multi-threading, see:
             <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-        2.  reduce source code lines, chunking and comments -\> pretty
+        4.  reduce source code lines, chunking and comments -\> pretty
             sort python code and function/class orders perhaps by length
 
-        3.  add a comment above each code chunk which explains inner
+        5.  add a comment above each code chunk which explains inner
             mechanisms better
 
-        4.  update metadata eg. with comprehensive python/shell help
+        6.  update metadata eg. with comprehensive python/shell help
             scripts, comments describing functionality and readme
             descriptions for git hooks
 
-        5.  add information on best model downloads and preparation -\>
+        7.  add information on best model downloads and preparation -\>
             add these to Google Drive later on
 
-        6.  add pydocstrings to all functions and improve argparse
+        8.  add pydocstrings to all functions and improve argparse
             documentation
 
-        7.  provide description of data structures (eg. data, labels)
+        9.  provide description of data structures (eg. data, labels)
             required for training processes and lowercasing
 
-        8.  update/remove git hooks depending on which features are
+        10. update/remove git hooks depending on which features are
             finally used, eg. remove pre-push hook
 
-        9.  test download and all other scripts to ensure they work
+        11. test download and all other scripts to ensure they work
 
-        10. perform spell-check on readme
+        12. perform spell-check on readme
 
 ## Notes
 

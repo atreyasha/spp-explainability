@@ -4,17 +4,7 @@
 
 ** Tasks
 *** Manuscript
-**** Visualization and summary-statistics 
-    DEADLINE: <2021-03-11 Thu>
-***** [#A] Binary neurons and regex's
-****** use python script to pipe softmax values to temporary csv file and plot them with ~ggplot~ in ~R~
-****** add visualization of regex ensemble with graphviz which can be done fully in python
-****** think about file naming again given this situation with mixed functionalities
-***** [#B] SoPa++ computational graph
-****** add visualization of computational graph function using tikz
-***** [#B] FMTOD
-****** add visualisation of data statistics with different partitions, perhaps as a stacked bar chart
-
+**** TODO Clean up all notes and add new deadlines to segments
 **** Methodologies
 ***** FMTOD data set
 ****** provide summary statistics and explanation about the data set
@@ -25,7 +15,7 @@
 ****** update the WFSA definitions to signify wildcard transitions and mention why this is found here and not in the background concepts since we could not find literature which defined it in a similar way
 ****** add pseudocode for various segments -> would help to cement certain concepts
 ****** look out for misconception between tau and transition matrix symbol 
-****** try to find literature-based justification for wildcard transition -> if not use omega symbol to differentiate from the Kleene star symbol
+****** try to find literature-based justification for wildcard transition -> if not use omega symbol to differentiate from the Kleene star symbol -> use UTF-8 symbol for graphviz plots
 ****** add detailed information on how hard SoPa++ model differs from SoPa related to transitions and other simplifications -> motivate them using idea of explainable simplification
 ****** comb through terms and iron out usage of patterns vs. substrings vs. WFSAs -> make these consistent and have them only refer to one consistent entity, also do not mix colloquial and technical terms
 ****** talk about GloVe embeddings, lowercasing and other important things
@@ -54,7 +44,6 @@
 ***** Visualizations
 ****** add visualization of TauSTE function
 ****** produce manual computational graph using tikz, building from what was made earlier
-****** add visualization of in-depth computational graph in paper for clarity -> this can be automated with PyTorch tools
 
 **** Results
 ***** Report F_1 scores and performances of neural models
@@ -65,6 +54,7 @@
 ****** consider making test-partition not unique so this could be used to compare with other studies
 ***** Relationship between tau threshold vs. performance vs. softmax/binary distances 
 ****** compute statistics with random-seed deviations over inter-model comparisons such as average distance, misalignment, activation frequency and other useful metrics that can elucidate on-the-ground processes
+****** go into details on how effective compression algorithm was in terms of reducing the memory and number of regex's -> can tabulate all of these
 ***** Visualizations
 ****** show visualization of training performance timelines, think about how to keep most important information
 ****** show visualization of tau threshold vs. performance vs. softmax/binary distances with error bars for random seed iterations
@@ -74,9 +64,12 @@
 ***** Expound on trade-off between performance and transparency by looking at differently sized models
 ***** Discuss relationship between tau threshold and the softmax/binary distances
 ***** Think about why larger regex models tend to show more misalignment from neural counterparts compared to smaller models
+***** If possible, add some minor human evaluation of explainability otherwise leave it to future work
+***** Explain discussion figures very clearly and show the relevance to the third research question, can talk about neurons responsible for certain decisions, as well as distributed representations in neurons where there is really no clear neuron responsible for one-thing -> which is an impediment to explainability
 ***** Visualizations
 ****** show visualizations of important patterns in a regex model -> something which is small and fits well into a page
-****** show TikZ visualization of each binary neuron's relative importance for classes -> would be interesting to see how saturated these are
+******* figures must be manually put together later directly in latex
+****** show TikZ visualization of each binary neuron's relative importance for classes -> would be interesting to see how saturated these are 
 
 **** Conclusions
 ***** Summarize everything in manuscript
@@ -102,16 +95,21 @@
 ****** for the target audience of end-users -> how can a user make use of the regex model
 ****** visualize examples/classes where regex and neural model align and misalign, eg. with a confusion matrix
 
-**** Formatting
+**** Post-paper iteration/formatting
 ***** Paper length
 ****** 20-90 pages thesis length -> try to keep ideas well-motivated yet succinct
 ***** Points to address towards end
 ****** Introduction
+******* abstract and introduction should already mention results, and should not leave this to conclusions
 ******* fine-tune introduction with new details from other chapters
 ******* update motivations from Arrieta et al. 2020 "What for" section
 ******* add C-like reference to explain what SoPa++ means like in i++
 ******* add links to chapters in thesis structure, improve formatting
 ****** Background concepts
+******* explain vanilla SoPa more clearly to motivate everything else -> perhaps need more information on FSAs with starting and accepting states
+******* EITHER quote + indent sentences directly taken from other studies (cite pages and paragraphs) OR paraphrase them and leave them in a definition environment
+******* be very clear on what is directly taken from another study versus what is paraphrased
+******* definition/remark structure might need to be revised to something more narrative-suited
 ******* think about providing an additional definition for "understandability" 
 ******* consider quoting all definitions to further imply that they are exactly taken from other studies
 ******* add a Kleene-star operator mention to remark 9.4
@@ -121,11 +119,15 @@
 ******* look into antecedent/proxy names and if these can be improved
 ******* return to this chapter to add/remove content based on requirements of later chapters
 ****** Bibliography
+******* change FMTOD citation to NAACL, look for journal/conference alternative citations for current papers
 ******* improve capitalization with braces in bibtex file
 ******* if possible, try to find non-arxiv citations for papers
 ******* remove red link color in table of contents
 ******* fine-tune citation color to be consistent with other colors
 ****** Manuscript admin
+******* read manuscript and ensure there is an easily followable narrative for someone who is a non-expert
+******* improve file structure of visuals with explicit folders for directly copied figures
+******* add titles to all figures in the manuscript
 ******* consider replacing legacy-sopa figures with pdf extracts instead of screenshots
 ******* talk to supervisors about many definitions and if these are alright
 ******* always mention "figure taken from study (year)" when using external figures
@@ -151,6 +153,8 @@
 ****** consider removing ~utils~ extension from all utils scripts since these might be unnecessary
 ****** test out all shell-scripts and python code to make sure everything works the same after major renamings
 ***** Others
+****** find a better way of naming visualization pdfs to attribute to specific model
+****** fix terminology of STE/output neurons consistently after paper
 ****** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility
 ****** reduce source code lines, chunking and comments -> pretty sort python code and function/class orders perhaps by length
 ****** add a comment above each code chunk which explains inner mechanisms better
@@ -161,7 +165,7 @@
 ****** update/remove git hooks depending on which features are finally used, eg. remove pre-push hook
 ****** test download and all other scripts to ensure they work
 ****** perform spell-check on readme 
-
+       
 ** Notes
 *** Admin
 **** Timeline
