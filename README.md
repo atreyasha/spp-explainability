@@ -767,6 +767,70 @@ bash scripts/visualize_grid_evaluate.sh "/glob/to/model/log/*/director(ies)"
 </p>
 </details>
 
+<details><summary>iv. STE neurons and regex samples</summary>
+<p>
+
+For visualizing STE neurons and regex samples, we use `src/visualize_regex.py`:
+
+```
+usage: visualize_regex.py [-h] --class-mapping-config <file_path>
+                          --regex-model-checkpoint <glob_path>
+                          [--disable-tqdm]
+                          [--logging-level {debug,info,warning,error,critical}]
+                          [--max-transition-tokens <int>] [--num-regex <int>]
+                          [--only-neurons] [--seed <int>]
+                          [--tqdm-update-period <int>]
+
+optional arguments:
+  -h, --help                show this help message and exit
+
+required visualization arguments:
+  --class-mapping-config    <file_path>
+                            Path to class mapping configuration (default:
+                            None)
+  --regex-model-checkpoint  <glob_path>
+                            Glob path to regex model checkpoint(s) with '.pt'
+                            extension (default: None)
+
+optional visualization arguments:
+  --max-transition-tokens   <int>
+                            Maximum number of tokens to display per transition
+                            (default: 5)
+  --num-regex               <int>
+                            Number of regex's to produce for each STE neuron
+                            (default: 5)
+  --only-neurons            Only produces plots of neurons without regex's
+                            (default: False)
+  --seed                    <int>
+                            Random seed for numpy (default: 42)
+
+optional logging arguments:
+  --logging-level           {debug,info,warning,error,critical}
+                            Set logging level (default: info)
+
+optional progress-bar arguments:
+  --disable-tqdm            Disable tqdm progress bars (default: False)
+  --tqdm-update-period      <int>
+                            Specify after how many training updates should the
+                            tqdm progress bar be updated with model
+                            diagnostics (default: 5)
+```
+
+To visualize STE neurons with activating regex samples, execute the following:
+
+```shell
+bash scripts/visualize_regex_with_neurons.sh "/glob/to/regex/model/*/checkpoint(s)" 
+```
+
+To visualize only STE neurons without activating regex samples, execute the following:
+
+```shell
+bash scripts/visualize_regex_only_neurons.sh "/glob/to/regex/model/*/checkpoint(s)" 
+```
+
+</p>
+</details>
+
 ## Development :snail:
 
 Ongoing development of this repository is documented in this [log](./docs/develop.md).
