@@ -37,8 +37,8 @@ This repository documents M.Sc. thesis research titled *"SoPa++: Leveraging expl
 
     other attached packages:
     [1] RColorBrewer_1.1-2  plyr_1.8.6          reshape2_1.4.4     
-    [4] gridExtra_2.3       optparse_1.6.6      tikzDevice_0.12.3.1
-    [7] rjson_0.2.20        ggh4x_0.1.2.1       ggplot2_3.3.3      
+    [4] optparse_1.6.6      tikzDevice_0.12.3.1 rjson_0.2.20       
+    [7] ggh4x_0.1.2.1       ggplot2_3.3.3      
     ```
 
 ## Repository initialization :fire:
@@ -704,7 +704,30 @@ bash scripts/compare_model_pairs_gpu.sh "/glob/to/model/log/*/director(ies)"
 </p>
 </details>
 
-<details><summary>ii. Grid-based training</summary>
+<details><summary>ii. FMTOD summary statistics</summary>
+<p>
+
+For visualizing the FMTOD data set summary statistics, we apply functions from `src/visualize_fmtod.R`. This workflow is wrapped using `scripts/visualize_fmtod.sh`:
+
+```
+Usage: visualize_fmtod.sh [-h|--help]
+
+Visualize FMTOD data set summary statistics
+
+Optional arguments:
+  -h, --help  Show this help message and exit
+```
+
+To visualize the FMTOD data set summary statistics, simply execute:
+
+```shell
+bash scripts/visualize_fmtod.sh
+```
+
+</p>
+</details>
+
+<details><summary>iii. Grid-based training</summary>
 <p>
 
 For visualizing grid-based training performance, we use `src/tensorboard_event2csv.py` to convert tensorboard event logs to `csv` files and apply functions from `src/visualize_grid.R` to plot them. These two scripts are bound together by `scripts/visualize_grid_train.sh`:
@@ -735,7 +758,7 @@ bash scripts/visualize_grid_train.sh "/glob/to/tb/event/*/director(ies)"
 </p>
 </details>
 
-<details><summary>iii. Grid-based evaluation</summary>
+<details><summary>iv. Grid-based evaluation</summary>
 <p>
 
 For visualizing grid-based evaluation performance and model-pair distances, we apply functions from `src/visualize_grid.R`. This workflow is wrapped using `scripts/visualize_grid_evaluate.sh`:
@@ -767,7 +790,7 @@ bash scripts/visualize_grid_evaluate.sh "/glob/to/model/log/*/director(ies)"
 </p>
 </details>
 
-<details><summary>iv. Regex samples and STE neurons</summary>
+<details><summary>v. Regex samples and STE neurons</summary>
 <p>
 
 For visualizing regex samples and STE neurons, we use `src/visualize_regex.py`:
