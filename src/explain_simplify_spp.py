@@ -31,16 +31,16 @@ def save_regex_model(pattern_specs: 'OrderedDict[int, int]',
         }, filename)
 
 
-def explain_inner(explain_data: List[Tuple[List[int], int]],
-                  explain_text: List[List[str]],
-                  model: Module,
-                  neural_model_checkpoint: str,
-                  model_log_directory: str,
-                  batch_size: int,
-                  atol: float,
-                  gpu_device: Union[torch.device, None],
-                  max_doc_len: Union[int, None] = None,
-                  disable_tqdm: bool = False) -> None:
+def simplify_inner(explain_data: List[Tuple[List[int], int]],
+                   explain_text: List[List[str]],
+                   model: Module,
+                   neural_model_checkpoint: str,
+                   model_log_directory: str,
+                   batch_size: int,
+                   atol: float,
+                   gpu_device: Union[torch.device, None],
+                   max_doc_len: Union[int, None] = None,
+                   disable_tqdm: bool = False) -> None:
     # load model checkpoint
     neural_model_checkpoint_loaded = torch.load(
         neural_model_checkpoint, map_location=torch.device("cpu"))
@@ -138,7 +138,7 @@ def explain_inner(explain_data: List[Tuple[List[int], int]],
         model_filename)
 
 
-def explain_outer(args: argparse.Namespace) -> None:
+def simplify_outer(args: argparse.Namespace) -> None:
     # log namespace arguments and model directory
     LOGGER.info(args)
     LOGGER.info("Model log directory: %s" % args.model_log_directory)
@@ -189,10 +189,10 @@ def explain_outer(args: argparse.Namespace) -> None:
     LOGGER.info("Model: %s" % model)
 
     # execute inner function here
-    explain_inner(explain_data, explain_text, model,
-                  args.neural_model_checkpoint, args.model_log_directory,
-                  args.batch_size, args.atol, gpu_device, args.max_doc_len,
-                  args.disable_tqdm)
+    simplify_inner(explain_data, explain_text, model,
+                   args.neural_model_checkpoint, args.model_log_directory,
+                   args.batch_size, args.atol, gpu_device, args.max_doc_len,
+                   args.disable_tqdm)
 
 
 def main(args: argparse.Namespace) -> None:
@@ -205,7 +205,7 @@ def main(args: argparse.Namespace) -> None:
         args.model_log_directory = os.path.dirname(
             args.neural_model_checkpoint)
         args = parse_configs_to_args(args, training=False)
-        explain_outer(args)
+        simplify_outer(args)
 
 
 if __name__ == '__main__':

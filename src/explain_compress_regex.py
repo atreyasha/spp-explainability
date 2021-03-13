@@ -14,8 +14,8 @@ import argparse
 import torch
 
 
-def compression_inner(pattern_regex: Union[List[str], List[List[str]]],
-                      cleanup: bool = False) -> List[List[str]]:
+def compress_inner(pattern_regex: Union[List[str], List[List[str]]],
+                   cleanup: bool = False) -> List[List[str]]:
     # intitialize storage list
     compressed_pattern_regex = []
     if not cleanup:
@@ -99,10 +99,9 @@ def compression_inner(pattern_regex: Union[List[str], List[List[str]]],
     return compressed_pattern_regex
 
 
-def compression_outer(pattern_regex: List[str]) -> List[str]:
+def compress_outer(pattern_regex: List[str]) -> List[str]:
     # run inner function
-    compressed_pattern_regex = compression_inner(pattern_regex,
-                                                 cleanup=False)
+    compressed_pattern_regex = compress_inner(pattern_regex, cleanup=False)
 
     # correct total wildcards
     if any([
@@ -113,8 +112,8 @@ def compression_outer(pattern_regex: List[str]) -> List[str]:
                                     len(compressed_pattern_regex[0])]
 
     # redo checking process to combine partial wildcards
-    compressed_pattern_regex = compression_inner(compressed_pattern_regex,
-                                                 cleanup=True)
+    compressed_pattern_regex = compress_inner(compressed_pattern_regex,
+                                              cleanup=True)
 
     # add boundary conditions
     compressed_pattern_regex = [
@@ -138,7 +137,7 @@ def main(args: argparse.Namespace) -> None:
         # conduct compression as required
         LOGGER.info("Compressing regex model")
         model["activating_regex"] = {
-            key: compression_outer(model["activating_regex"][key])
+            key: compress_outer(model["activating_regex"][key])
             for key in tqdm(model["activating_regex"],
                             disable=args.disable_tqdm)
         }
