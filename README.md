@@ -1,6 +1,6 @@
 # SoPa++
 
-This repository documents M.Sc. thesis research with the title *"SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted finite-state neural architectures"*. A manuscript for this thesis can be found [here](./docs/manuscript/main.pdf).
+This repository documents M.Sc. thesis research titled *"SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted finite-state neural architectures"*. The manuscript for this thesis can be found [here](./docs/manuscript/main.pdf).
 
 ## Dependencies :neckbeard:
 
