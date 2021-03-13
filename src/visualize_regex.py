@@ -117,17 +117,8 @@ def visualize_regex_neurons(args: argparse.Namespace) -> None:
     model_dict, weights = get_model_linear_weights(args.regex_model_checkpoint)
     rev_class_mapping = get_rev_class_mapping(args.class_mapping_config)
 
-    # create hard-coded colors
-    alarm = to_rgba("red")
-    reminder = to_rgba("black")
-    weather = to_rgba("dodgerblue")
-    alarms = np.tile(alarm, [6, 1])
-    reminders = np.tile(reminder, [3, 1])
-    weathers = np.tile(weather, [3, 1])
-    alarms[:, -1] = np.linspace(0.4, 0.9, 6)
-    reminders[:, -1] = np.linspace(0.6, 0.9, 3)
-    weathers[:, -1] = np.linspace(0.6, 0.9, 3)
-    colors = np.concatenate((alarms, reminders, weathers))
+    # get pre-defined neuron colors
+    colors = get_neuron_colors()
 
     # create legend patches
     patches = [
@@ -217,9 +208,8 @@ def visualize_regex_neurons(args: argparse.Namespace) -> None:
                               "activating_regex_sample_%s" % i),
                  cleanup=True)
 
-        # create figure and get colors
+        # create figure outline
         fig, ax = plt.subplots(figsize=(8, 5))
-        colors = get_neuron_colors()
 
         # embed pie chart
         ax.pie(weights[i],
