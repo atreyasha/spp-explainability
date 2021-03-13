@@ -767,10 +767,10 @@ bash scripts/visualize_grid_evaluate.sh "/glob/to/model/log/*/director(ies)"
 </p>
 </details>
 
-<details><summary>iv. STE neurons and regex samples</summary>
+<details><summary>iv. Regex samples and STE neurons</summary>
 <p>
 
-For visualizing STE neurons and regex samples, we use `src/visualize_regex.py`:
+For visualizing regex samples and STE neurons, we use `src/visualize_regex.py`:
 
 ```
 usage: visualize_regex.py [-h] --class-mapping-config <file_path>
@@ -816,13 +816,13 @@ optional progress-bar arguments:
                             diagnostics (default: 5)
 ```
 
-To visualize STE neurons with activating regex samples, execute the following:
+To visualize activating regex samples with corresponding STE neurons, execute the following:
 
 ```shell
 bash scripts/visualize_regex_with_neurons.sh "/glob/to/regex/model/*/checkpoint(s)" 
 ```
 
-To visualize only STE neurons without activating regex samples, execute the following:
+To visualize only STE neurons, execute the following:
 
 ```shell
 bash scripts/visualize_regex_only_neurons.sh "/glob/to/regex/model/*/checkpoint(s)" 
