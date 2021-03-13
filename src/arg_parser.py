@@ -315,6 +315,39 @@ def tensorboard_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def visualize_regex_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(add_help=False)
+    # add group for required arguments
+    required = parser.add_argument_group('required visualization arguments')
+    required.add_argument("--regex-model-checkpoint",
+                          help=("Glob path to regex model checkpoint(s) "
+                                "with '.pt' extension"),
+                          required=True,
+                          type=glob_path)
+    required.add_argument("--class-mapping-config",
+                          help="Path to class mapping configuration",
+                          required=True,
+                          type=file_path)
+    # add group for optional arguments
+    vis = parser.add_argument_group('optional visualization arguments')
+    vis.add_argument("--num-regex",
+                     help="Number of regex's to produce for each STE neuron",
+                     default=5,
+                     type=int)
+    vis.add_argument("--max-transition-tokens",
+                     help="Maximum number of tokens to display per transition",
+                     default=5,
+                     type=int)
+    vis.add_argument("--seed",
+                     help="Random seed for numpy",
+                     default=42,
+                     type=int)
+    vis.add_argument("--only-neurons",
+                     help="Only produces plots of neurons without regex's",
+                     action="store_true")
+    return parser
+
+
 def preprocess_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=False)
     preprocess = parser.add_argument_group('optional preprocessing arguments')
