@@ -1,16 +1,15 @@
 #!/usr/bin/env Rscript
 # -*- coding: utf-8 -*-
 
-library(tools)
 library(ggh4x)
 library(rjson)
 library(ggplot2)
 library(tikzDevice)
 library(optparse)
-library(gridExtra)
 library(reshape2)
 library(plyr)
 library(RColorBrewer)
+library(tools)
 
 post_process <- function(tex_file) {
   # plots post-processing
