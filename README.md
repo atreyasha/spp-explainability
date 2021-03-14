@@ -49,7 +49,7 @@ This repository documents M.Sc. thesis research titled *"SoPa++: Leveraging expl
     bash scripts/prepare_data.sh
     ```
 
-2. **Optional:** Prepare git hooks to manage development workflows such as formatting shell scripts and keeping python dependencies up-to-date:
+2. **Optional:** Prepare git hooks to manage development workflows such as linting shell/R scripts, keeping python dependencies up-to-date and formatting the development log:
 
     ```shell
     bash scripts/prepare_git_hooks.sh
