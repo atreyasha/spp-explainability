@@ -25,10 +25,7 @@ check_help() {
 
 # define function
 prepare_git_hooks() {
-  local input
-  for input in ./hooks/*; do
-    cp "$input" "./.git/hooks/"
-  done
+  cp "./hooks/pre-commit" "./.git/hooks/"
 }
 
 # execute function
