@@ -20,7 +20,7 @@ post_process <- function(tex_file) {
     texi2dvi = Sys.which("lualatex")
   )
   file.remove(tex_file)
-  file.rename(pdf_file, paste0("./docs/visuals/pdfs/", pdf_file))
+  file.rename(pdf_file, paste0("./docs/visuals/pdfs/generated/", pdf_file))
   unlink(paste0(no_ext_name, "*.png"))
   unlink("Rplots.pdf")
 }

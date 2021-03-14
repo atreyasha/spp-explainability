@@ -107,7 +107,7 @@ def visualize_only_neurons(args: argparse.Namespace) -> None:
     fig.subplots_adjust(wspace=0, hspace=0)
     fig.tight_layout(rect=[0, 0.075, 1, 0.98])
     fig.savefig(
-        os.path.join("./docs/visuals/pdfs/",
+        os.path.join("./docs/visuals/pdfs/generated/",
                      "neurons_" + timestamp() + ".pdf"))
     plt.close("all")
 
@@ -135,7 +135,7 @@ def visualize_regex_neurons(args: argparse.Namespace) -> None:
     ]
 
     # declare save directory
-    save_directory = os.path.join("./docs/visuals/pdfs/",
+    save_directory = os.path.join("./docs/visuals/pdfs/generated/",
                                   "neurons_regex_" + timestamp())
 
     # start for-loop over all WFSAs
