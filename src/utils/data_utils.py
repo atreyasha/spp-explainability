@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from typing import (Any, Iterable, Callable, Generator, List, Union, Tuple,
-                    Sequence, overload)
+                    Sequence, Optional, overload)
 from itertools import chain, islice
 import numpy as np
 import string
@@ -110,8 +110,8 @@ def read_docs(
 
 def read_embeddings(
     filename: str,
-    fixed_vocab: Union['Vocab', None] = None,
-    max_vocab_size: Union[int, None] = None
+    fixed_vocab: Optional['Vocab'] = None,
+    max_vocab_size: Optional[int] = None
 ) -> Tuple['Vocab', List[np.ndarray], int]:
     dim, has_header = check_dim_and_header(filename)
     # assign pad, start, end and unknown vectors

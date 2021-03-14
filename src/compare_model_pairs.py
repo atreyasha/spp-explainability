@@ -3,7 +3,7 @@
 
 from glob import glob
 from tqdm import tqdm
-from typing import cast, List, Tuple, Union
+from typing import cast, List, Tuple, Optional
 from torch.nn import Embedding, Module, Linear
 from .utils.model_utils import chunked, to_cuda, Batch
 from .utils.parser_utils import ArgparseFormatter
@@ -30,8 +30,8 @@ def compare_inner(eval_data: List[Tuple[List[int], int]],
                   batch_size: int,
                   atol: float,
                   output_prefix: str,
-                  gpu_device: Union[torch.device, None] = None,
-                  max_doc_len: Union[int, None] = None,
+                  gpu_device: Optional[torch.device] = None,
+                  max_doc_len: Optional[int] = None,
                   disable_tqdm: bool = False) -> None:
     # load neural model checkpoint
     neural_model_checkpoint_loaded = torch.load(

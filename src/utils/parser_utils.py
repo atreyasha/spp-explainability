@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from glob import glob
-from typing import Iterable, Union
+from typing import Iterable, Optional
 from operator import attrgetter
 import argparse
 import re
@@ -38,7 +38,7 @@ class Sorting_Help_Formatter(argparse.HelpFormatter):
 
     def _format_usage(self, usage: str, actions: Iterable[argparse.Action],
                       groups: Iterable[argparse._ArgumentGroup],
-                      prefix: Union[str, None]) -> str:
+                      prefix: Optional[str]) -> str:
         if prefix is None:
             prefix = ('usage: ')
 

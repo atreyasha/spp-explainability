@@ -4,7 +4,7 @@
 from glob import glob
 from tqdm import tqdm
 from collections import OrderedDict
-from typing import List, Tuple, Union, Dict, cast
+from typing import List, Tuple, Optional, Dict, cast
 from torch.nn import Embedding, Module
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
@@ -38,8 +38,8 @@ def simplify_inner(explain_data: List[Tuple[List[int], int]],
                    model_log_directory: str,
                    batch_size: int,
                    atol: float,
-                   gpu_device: Union[torch.device, None],
-                   max_doc_len: Union[int, None] = None,
+                   gpu_device: Optional[torch.device],
+                   max_doc_len: Optional[int] = None,
                    disable_tqdm: bool = False) -> None:
     # load model checkpoint
     neural_model_checkpoint_loaded = torch.load(

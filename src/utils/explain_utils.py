@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Callable, List, Union, Any
+from typing import Callable, List, Union, Any, Optional
 from functools import total_ordering
 import re
 
@@ -28,8 +28,8 @@ def pad_back_pointers(
 @total_ordering
 class BackPointer:
     def __init__(self, raw_score: float, binarized_score: float,
-                 pattern_index: int, previous: Union['BackPointer', None],
-                 transition: Union[str, None], start_token_index: int,
+                 pattern_index: int, previous: Optional['BackPointer'],
+                 transition: Optional[str], start_token_index: int,
                  current_token_index: int, end_token_index: int) -> None:
         self.raw_score = raw_score
         self.binarized_score = binarized_score

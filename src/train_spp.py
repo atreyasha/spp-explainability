@@ -13,7 +13,7 @@ from torch.nn.functional import log_softmax
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import ParameterGrid
-from typing import List, Union, Tuple, cast, Any, Callable
+from typing import List, Union, Tuple, cast, Any, Callable, Optional
 from .utils.parser_utils import ArgparseFormatter
 from .utils.data_utils import (vocab_from_text, read_labels, read_docs,
                                read_embeddings, Vocab, PAD_TOKEN_INDEX)
@@ -89,7 +89,7 @@ def parse_configs_to_args(args: argparse.Namespace,
     return args
 
 
-def set_hardware(args: argparse.Namespace) -> Union[torch.device, None]:
+def set_hardware(args: argparse.Namespace) -> Optional[torch.device]:
     # set torch number of threads
     if args.torch_num_threads is None:
         LOGGER.info("Using default number of CPU threads: %s" %
@@ -101,7 +101,7 @@ def set_hardware(args: argparse.Namespace) -> Union[torch.device, None]:
 
     # specify gpu device if relevant
     if args.gpu:
-        gpu_device: Union[torch.device, None]
+        gpu_device: Optional[torch.device]
         gpu_device = torch.device(args.gpu_device)
         LOGGER.info("Using GPU device: %s" % args.gpu_device)
     else:
@@ -276,7 +276,7 @@ def dump_configs(args: argparse.Namespace,
 
 def save_checkpoint(epoch: int, update: int, samples_seen: int,
                     model: torch.nn.Module, optimizer: torch.optim.Optimizer,
-                    scheduler: Union[ReduceLROnPlateau, None],
+                    scheduler: Optional[ReduceLROnPlateau],
                     numpy_epoch_random_state: Tuple, train_loss: float,
                     best_valid_loss: float, best_valid_loss_index: int,
                     best_valid_acc: float, filename: str) -> None:
@@ -317,7 +317,7 @@ def train_batch(model: Module,
                 gold: List[int],
                 optimizer: torch.optim.Optimizer,
                 loss_function: torch.nn.modules.loss._Loss,
-                gpu_device: Union[torch.device, None] = None) -> torch.Tensor:
+                gpu_device: Optional[torch.device] = None) -> torch.Tensor:
     # set optimizer gradients to zero
     optimizer.zero_grad()
 
@@ -337,7 +337,7 @@ def train_batch(model: Module,
 
 def compute_loss(model: Module, batch: Batch, num_classes: int,
                  gold: List[int], loss_function: torch.nn.modules.loss._Loss,
-                 gpu_device: Union[torch.device, None]) -> torch.Tensor:
+                 gpu_device: Optional[torch.device]) -> torch.Tensor:
     # compute model outputs given batch
     output = model.forward(batch)
 
@@ -350,9 +350,9 @@ def compute_loss(model: Module, batch: Batch, num_classes: int,
 def evaluate_metric(model: Module,
                     data: List[Tuple[List[int], int]],
                     batch_size: int,
-                    gpu_device: Union[torch.device, None],
+                    gpu_device: Optional[torch.device],
                     metric: Callable[[List[int], List[int]], Any],
-                    max_doc_len: Union[int, None] = None) -> Any:
+                    max_doc_len: Optional[int] = None) -> Any:
     # instantiate local storage variable
     predicted = []
     aggregate_gold = []
@@ -391,9 +391,9 @@ def train_inner(train_data: List[Tuple[List[int], int]],
                 disable_scheduler: bool = False,
                 scheduler_patience: int = 10,
                 scheduler_factor: float = 0.1,
-                gpu_device: Union[torch.device, None] = None,
-                clip_threshold: Union[float, None] = None,
-                max_doc_len: Union[int, None] = None,
+                gpu_device: Optional[torch.device] = None,
+                clip_threshold: Optional[float] = None,
+                max_doc_len: Optional[int] = None,
                 word_dropout: float = 0,
                 patience: int = 30,
                 resume_training: bool = False,
@@ -487,7 +487,7 @@ def train_inner(train_data: List[Tuple[List[int], int]],
         LOGGER.info(("Initializing learning rate scheduler with "
                      "factor=%s and patience=%s") %
                     (scheduler_factor, scheduler_patience))
-        scheduler: Union[ReduceLROnPlateau, None]
+        scheduler: Optional[ReduceLROnPlateau]
         scheduler = ReduceLROnPlateau(optimizer,
                                       mode='min',
                                       factor=scheduler_factor,

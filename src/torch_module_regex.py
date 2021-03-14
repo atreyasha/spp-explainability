@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import List, Dict, Tuple, Union
+from typing import List, Dict, Tuple, Optional
 from collections import OrderedDict
 from torch.nn import Module
 import torch
@@ -44,9 +44,9 @@ class RegexSoftPatternClassifier(Module):
         return self.linear(scores)
 
     def regex_lookup_with_trace(
-            self, doc: str) -> Tuple[List[Union[re.Match, None]], List[int]]:
+            self, doc: str) -> Tuple[List[Optional[re.Match]], List[int]]:
         scores_doc: List[int] = []
-        lookup_doc: List[Union[re.Match, None]] = []
+        lookup_doc: List[Optional[re.Match]] = []
         for key in sorted(self.activating_regex.keys()):
             for index, regex in enumerate(self.activating_regex[key]):
                 regex_lookup = regex.search(doc)
@@ -62,7 +62,7 @@ class RegexSoftPatternClassifier(Module):
 
     def forward_with_trace(
         self, batch: List[str]
-    ) -> Tuple[List[List[Union[re.Match, None]]], torch.Tensor]:
+    ) -> Tuple[List[List[Optional[re.Match]]], torch.Tensor]:
         # start loop over regular expressions
         all_data = [self.regex_lookup_with_trace(doc) for doc in batch]
         lookup = [data[0] for data in all_data]

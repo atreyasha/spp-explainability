@@ -4,7 +4,7 @@
 from glob import glob
 from functools import partial
 from sklearn.metrics import classification_report
-from typing import cast, List, Tuple, Union
+from typing import cast, List, Tuple, Optional
 from torch.nn import Embedding, Module
 from .utils.parser_utils import ArgparseFormatter
 from .utils.logging_utils import stdout_root_logger
@@ -26,8 +26,8 @@ def evaluate_inner(eval_data: List[Tuple[List[int], int]],
                    model_log_directory: str,
                    batch_size: int,
                    output_prefix: str,
-                   gpu_device: Union[torch.device, None] = None,
-                   max_doc_len: Union[int, None] = None) -> dict:
+                   gpu_device: Optional[torch.device] = None,
+                   max_doc_len: Optional[int] = None) -> dict:
     # load model checkpoint
     model_checkpoint_loaded = torch.load(model_checkpoint,
                                          map_location=torch.device("cpu"))

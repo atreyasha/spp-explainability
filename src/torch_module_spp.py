@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import cast, Union, Any, List, Tuple
+from typing import cast, Union, Any, List, Tuple, Optional
 from collections import OrderedDict
 from torch.nn import Module, Parameter, Linear, Dropout, init
 from .utils.explain_utils import (pad_back_pointers, lambda_back_pointers,
@@ -51,7 +51,7 @@ class MaskedLayerNorm(Module):
 
     def forward(self,
                 input: torch.Tensor,
-                input_mask: Union[torch.Tensor, None] = None) -> torch.Tensor:
+                input_mask: Optional[torch.Tensor] = None) -> torch.Tensor:
         if input_mask is None:
             return F.layer_norm(
                 input,
@@ -93,7 +93,7 @@ class SoftPatternClassifier(Module):
                  tau_threshold: float,
                  no_wildcards: bool = False,
                  bias_scale: float = 1.,
-                 wildcard_scale: Union[float, None] = None,
+                 wildcard_scale: Optional[float] = None,
                  dropout: float = 0.) -> None:
         # initialize all class properties from torch.nn.Module
         super(SoftPatternClassifier, self).__init__()
@@ -178,7 +178,7 @@ class SoftPatternClassifier(Module):
                 axis=1),
             persistent=False)
 
-    def get_wildcard_matrix(self) -> Union[torch.Tensor, None]:
+    def get_wildcard_matrix(self) -> Optional[torch.Tensor]:
         return None if self.no_wildcards else self.semiring.multiplication(
             self.wildcard_scale.clone(),  # type: ignore
             self.semiring.from_outer_to_semiring(self.wildcards))
@@ -213,7 +213,7 @@ class SoftPatternClassifier(Module):
 
     def transition_once(self, hiddens: torch.Tensor,
                         transition_matrix: torch.Tensor,
-                        wildcard_matrix: Union[torch.Tensor, None],
+                        wildcard_matrix: Optional[torch.Tensor],
                         restart_padding: torch.Tensor) -> torch.Tensor:
         # adding the start state and main transition
         main_transitions = torch.cat(
@@ -328,7 +328,7 @@ class SoftPatternClassifier(Module):
             self,
             hiddens: List[List[BackPointer]],
             transition_matrix: List[List[float]],
-            wildcard_matrix: Union[List[List[float]], None],  # yapf: disable
+            wildcard_matrix: Optional[List[List[float]]],  # yapf: disable
             end_states: List[int],
             token_index: int) -> List[List[BackPointer]]:
         # add main transition; consume a token and state

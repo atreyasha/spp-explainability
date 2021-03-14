@@ -4,7 +4,7 @@
 from glob import glob
 from tqdm import tqdm
 from torch.nn import Linear
-from typing import cast, List, Union
+from typing import cast, List, Optional
 from sklearn.metrics import classification_report
 from .utils.model_utils import chunked
 from .utils.parser_utils import ArgparseFormatter
@@ -26,7 +26,7 @@ def evaluate_inner(eval_text: List[str],
                    model_log_directory: str,
                    batch_size: int,
                    output_prefix: str,
-                   gpu_device: Union[torch.device, None] = None,
+                   gpu_device: Optional[torch.device] = None,
                    disable_tqdm: bool = False) -> None:
     # load model checkpoint
     model_checkpoint_loaded = torch.load(model_checkpoint,

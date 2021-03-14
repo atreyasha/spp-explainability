@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Callable, List, Union, Any, Tuple
+from typing import Callable, List, Any, Tuple, Optional
 from .data_utils import (PAD_TOKEN_INDEX, START_TOKEN_INDEX, END_TOKEN_INDEX,
                          UNK_TOKEN_INDEX, Vocab, identity)
 import numpy as np
@@ -46,7 +46,7 @@ def right_pad(inputs: List[Any], min_len: int, pad_element: Any) -> List[Any]:
     return inputs + [pad_element] * (min_len - len(inputs))
 
 
-def to_cuda(gpu_device: Union[torch.device, None]) -> Callable:
+def to_cuda(gpu_device: Optional[torch.device]) -> Callable:
     return (lambda v: v.to(gpu_device)) if gpu_device is not None else identity
 
 
@@ -55,7 +55,7 @@ def neg_infinity(*sizes: int) -> torch.Tensor:
 
 
 def enable_gradient_clipping(model: torch.nn.Module,
-                             clip_threshold: Union[float, None]) -> None:
+                             clip_threshold: Optional[float]) -> None:
     if clip_threshold is not None and clip_threshold > 0:
         for parameter in model.parameters():
             if parameter.requires_grad:
@@ -75,7 +75,7 @@ class Batch:
                  embeddings: torch.nn.Module,
                  to_cuda: Callable,
                  word_dropout: float = 0.,
-                 max_doc_len: Union[int, None] = None) -> None:
+                 max_doc_len: Optional[int] = None) -> None:
         mini_vocab = Vocab.from_docs(docs,
                                      pad=PAD_TOKEN_INDEX,
                                      start=START_TOKEN_INDEX,
