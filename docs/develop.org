@@ -4,17 +4,17 @@
 
 ** Tasks
 *** Manuscript
-**** TODO Clean up all notes and add new deadlines to segments
 **** Methodologies
+     DEADLINE: <2021-03-21 Sun>
 ***** FMTOD data set
-****** provide summary statistics and explanation about the data set
 ****** provide a visualization on the data set and its splits
-****** mention that data set was altered to keep it in good quality by removing duplicates, perhaps this can be re-tested without such processing or used as a limitation/further-work -> although results appear to show that performance metric improve when using original data set because of duplicates and overlaps between train and test sets
-****** talk about lowercasing, upsampling and other important information
+****** talk about lowercasing and making individual and cross-partitions unique
+****** provide summary statistics and explanation about the data set -> such as numbers of each class and examples of each class
+****** mention performances from other studies which can be compared against -> put citations and GitHub links
 ***** Model
 ****** update the WFSA definitions to signify wildcard transitions and mention why this is found here and not in the background concepts since we could not find literature which defined it in a similar way
 ****** add pseudocode for various segments -> would help to cement certain concepts
-****** look out for misconception between tau and transition matrix symbol 
+****** look out for misconception between tau and transition matrix symbol -> perhaps change transition matrix symbol to something for distinct 
 ****** try to find literature-based justification for wildcard transition -> if not use omega symbol to differentiate from the Kleene star symbol -> use UTF-8 symbol for graphviz plots
 ****** add detailed information on how hard SoPa++ model differs from SoPa related to transitions and other simplifications -> motivate them using idea of explainable simplification
 ****** comb through terms and iron out usage of patterns vs. substrings vs. WFSAs -> make these consistent and have them only refer to one consistent entity, also do not mix colloquial and technical terms
@@ -22,7 +22,10 @@
 ****** neural SoPa++ is a black-box (non-transparent) model, regex proxy is a transparent model -> need justifications from background concepts, might need significant text on this portion
 ****** SoPa++ uses explanation by simplification (globally) -> need justification from background concepts -> not much use of global in paper, but we can make our own arguments
 ****** try to link as much as possible with the background concepts for models/explainability concepts
-****** add github link to repo as a footnote
+****** add Github link to repo as a footnote
+***** Quantization/Binarization
+****** explain how and why we modified STE to TauSTE
+****** how does binarizing help with explainability, justify requirement for it in both training and testing
 ***** Explainability
 ****** explain how we make explanations by simplification work altogether
 ****** utilize antecendent/proxy model terminologies
@@ -33,19 +36,18 @@
 ****** use the three good explainability criteria to show that our technique might be better theoretically, but the real test would have to be done with a target audience's survey
 ****** mention that the target audience of this explainability method is domain experts, since it is still very complicated
 ****** link back to background concepts when we discuss bringing neural and regex model as close to each other as possible
-***** Quantization/Binarization
-****** explain how and why we modified STE to TauSTE
-****** how does binarizing help with explainability, justify requirement for it in both training and testing
 ***** Training/Evaluation/Explainability-evaluation
+****** talk about upsampling data set during training
 ****** provide extensive details of training setup
 ****** provide extensive details of evaluating neural/regex models
 ****** provide extensive details of evaluating explanations by simplification "metric" of neural-regex models -> which should make results clearer
 ****** *important:* everything shown in the "Results" section should be motivated or introduced here
 ***** Visualizations
 ****** add visualization of TauSTE function
-****** produce manual computational graph using tikz, building from what was made earlier
+****** *new:* produce manual computational graph using tikz, building from what was made earlier
 
 **** Results
+     DEADLINE: <2021-03-28 Sun>
 ***** Report F_1 scores and performances of neural models
 ****** modify visualize scripts to aggregate and print summary stats in script to re-use later in paper with means and standard deviations across random seeds
 ****** report parameter counts in scores as well
@@ -59,22 +61,20 @@
 ****** show visualization of training performance timelines, think about how to keep most important information
 ****** show visualization of tau threshold vs. performance vs. softmax/binary distances with error bars for random seed iterations
 ****** show confusion matrix between regex and neural models to show alignment/misalignment, if this is necessary -> but it will show interesting class differences
-
 **** Discussion
 ***** Expound on trade-off between performance and transparency by looking at differently sized models
 ***** Discuss relationship between tau threshold and the softmax/binary distances
 ***** Think about why larger regex models tend to show more misalignment from neural counterparts compared to smaller models
-***** If possible, add some minor human evaluation of explainability otherwise leave it to future work
+***** If possible, add a basic human evaluation of explainability otherwise leave it to future work
 ***** Explain discussion figures very clearly and show the relevance to the third research question, can talk about neurons responsible for certain decisions, as well as distributed representations in neurons where there is really no clear neuron responsible for one-thing -> which is an impediment to explainability
 ***** Visualizations
 ****** show visualizations of important patterns in a regex model -> something which is small and fits well into a page
 ******* figures must be manually put together later directly in latex
+******* consider removing double-circle for start state, since this usually denotes the accepting state
 ****** show TikZ visualization of each binary neuron's relative importance for classes -> would be interesting to see how saturated these are 
-
 **** Conclusions
 ***** Summarize everything in manuscript
 ***** Address research questions
-
 **** Further work
 ***** Quality of explainability
 ****** this is subjective and a survey from the target audience would be good to have
@@ -96,6 +96,7 @@
 ****** visualize examples/classes where regex and neural model align and misalign, eg. with a confusion matrix
 
 **** Post-paper iteration/formatting
+     DEADLINE: <2021-03-31 Wed>
 ***** Paper length
 ****** 20-90 pages thesis length -> try to keep ideas well-motivated yet succinct
 ***** Points to address towards end
@@ -106,8 +107,10 @@
 ******* add C-like reference to explain what SoPa++ means like in i++
 ******* add links to chapters in thesis structure, improve formatting
 ****** Background concepts
+******* add more background information on linear-chain WFSAs, FSAs, regular expressions and conversion processes
 ******* explain vanilla SoPa more clearly to motivate everything else -> perhaps need more information on FSAs with starting and accepting states
 ******* EITHER quote + indent sentences directly taken from other studies (cite pages and paragraphs) OR paraphrase them and leave them in a definition environment
+******* consider citing pages and sections for Arrieta article in all cases since there is a lot of information -> might make citations of same article less redundant since there is accompanying information to diversify things
 ******* be very clear on what is directly taken from another study versus what is paraphrased
 ******* definition/remark structure might need to be revised to something more narrative-suited
 ******* think about providing an additional definition for "understandability" 
@@ -125,46 +128,33 @@
 ******* remove red link color in table of contents
 ******* fine-tune citation color to be consistent with other colors
 ****** Manuscript admin
-******* read manuscript and ensure there is an easily followable narrative for someone who is a non-expert
-******* improve file structure of visuals with explicit folders for directly copied figures
+******* read manuscript and ensure there is an easily followable narrative for someone who is a non-expert -> can be done by adding more text before or around definition environments in order to lead the reader into each concept smoothly -> this can be done post-paper since it requires all the information to be present in the paper first
 ******* add titles to all figures in the manuscript
-******* consider replacing legacy-sopa figures with pdf extracts instead of screenshots
-******* talk to supervisors about many definitions and if these are alright
 ******* always mention "figure taken from study (year)" when using external figures
 ******* fine tune WFSA to mean either automata or automaton, make plural abbreviation clear as well
-******* remove sub-enumeration for single remarks under a definition 
 ******* add links to different sections later on once structure and content is clear
 ******* sort out all abbreviations and standardize formatting in terms of where they are first declared
 ******* change to two sided format before printing, as this works well for binding/printing
 ******* add Uni-Potsdam originality declaration, or modify current one to fit
 ******* add remaining features by referring to master template such as abstract (short summarized introduction), list of tables/figures/abbreviations, appendices, and all others
 ******* perform spell-check of everything at the end
-       
+ 
 *** Programming
 **** Dependencies, typing and testing
 ***** if using R, document R dependencies with ~sessionInfo()~
-***** add mypy as an explicit part of testing the source code
-***** replace Union + None types with Optional type for conciseness
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List with overloads)
-***** include basic test code by instantiating class and/or other simple methods
 **** Documentation and clean-code
-***** Terminology-based modifications post-paper 
-****** if necessary, apply further script renaming using antecedent and proxy terminologies -> update readme and usages
-****** consider removing ~utils~ extension from all utils scripts since these might be unnecessary
-****** test out all shell-scripts and python code to make sure everything works the same after major renamings
-***** Others
-****** find a better way of naming visualization pdfs to attribute to specific model
-****** fix terminology of STE/output neurons consistently after paper
-****** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility
-****** reduce source code lines, chunking and comments -> pretty sort python code and function/class orders perhaps by length
-****** add a comment above each code chunk which explains inner mechanisms better
-****** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
-****** add information on best model downloads and preparation -> add these to Google Drive later on
-****** add pydocstrings to all functions and improve argparse documentation
-****** provide description of data structures (eg. data, labels) required for training processes and lowercasing
-****** update/remove git hooks depending on which features are finally used, eg. remove pre-push hook
-****** test download and all other scripts to ensure they work
-****** perform spell-check on readme 
+***** if necessary, apply further script renaming using antecedent and proxy terminologies -> update readme and usages
+***** fix terminology of STE/output neurons consistently after paper
+***** find a better way of naming visualization pdfs to attribute to specific model and make this unique -> perhaps via timestamp
+***** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility
+***** add a comment above each code chunk which explains inner mechanisms better
+***** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
+***** add pydocstrings to all functions and improve argparse documentation
+***** add information on best model downloads and preparation -> add these to Google Drive later on
+***** test out all shell-scripts and python code to make sure everything works the same after major renamings
+***** test download and all other scripts to ensure they work
+***** perform spell-check on readme 
        
 ** Notes
 *** Admin

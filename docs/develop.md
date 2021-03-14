@@ -18,27 +18,23 @@
 
 ### Manuscript
 
-1.  **TODO** Clean up all notes and add new deadlines to
-    segments
+1.  Methodologies
 
-2.  Methodologies
+    **DEADLINE:** *\<2021-03-21 Sun\>*
 
     1.  FMTOD data set
 
-        1.  provide summary statistics and explanation about the data
-            set
+        1.  provide a visualization on the data set and its splits
 
-        2.  provide a visualization on the data set and its splits
+        2.  talk about lowercasing and making individual and
+            cross-partitions unique
 
-        3.  mention that data set was altered to keep it in good quality
-            by removing duplicates, perhaps this can be re-tested
-            without such processing or used as a limitation/further-work
-            -\> although results appear to show that performance metric
-            improve when using original data set because of duplicates
-            and overlaps between train and test sets
+        3.  provide summary statistics and explanation about the data
+            set -\> such as numbers of each class and examples of each
+            class
 
-        4.  talk about lowercasing, upsampling and other important
-            information
+        4.  mention performances from other studies which can be
+            compared against -\> put citations and GitHub links
 
     2.  Model
 
@@ -51,7 +47,8 @@
             certain concepts
 
         3.  look out for misconception between tau and transition matrix
-            symbol
+            symbol -\> perhaps change transition matrix symbol to
+            something for distinct
 
         4.  try to find literature-based justification for wildcard
             transition -\> if not use omega symbol to differentiate from
@@ -82,9 +79,16 @@
         10. try to link as much as possible with the background concepts
             for models/explainability concepts
 
-        11. add github link to repo as a footnote
+        11. add Github link to repo as a footnote
 
-    3.  Explainability
+    3.  Quantization/Binarization
+
+        1.  explain how and why we modified STE to TauSTE
+
+        2.  how does binarizing help with explainability, justify
+            requirement for it in both training and testing
+
+    4.  Explainability
 
         1.  explain how we make explanations by simplification work
             altogether
@@ -118,34 +122,31 @@
         9.  link back to background concepts when we discuss bringing
             neural and regex model as close to each other as possible
 
-    4.  Quantization/Binarization
-
-        1.  explain how and why we modified STE to TauSTE
-
-        2.  how does binarizing help with explainability, justify
-            requirement for it in both training and testing
-
     5.  Training/Evaluation/Explainability-evaluation
 
-        1.  provide extensive details of training setup
+        1.  talk about upsampling data set during training
 
-        2.  provide extensive details of evaluating neural/regex models
+        2.  provide extensive details of training setup
 
-        3.  provide extensive details of evaluating explanations by
+        3.  provide extensive details of evaluating neural/regex models
+
+        4.  provide extensive details of evaluating explanations by
             simplification \"metric\" of neural-regex models -\> which
             should make results clearer
 
-        4.  **important:** everything shown in the \"Results\" section
+        5.  **important:** everything shown in the \"Results\" section
             should be motivated or introduced here
 
     6.  Visualizations
 
         1.  add visualization of TauSTE function
 
-        2.  produce manual computational graph using tikz, building from
-            what was made earlier
+        2.  **new:** produce manual computational graph using tikz,
+            building from what was made earlier
 
-3.  Results
+2.  Results
+
+    **DEADLINE:** *\<2021-03-28 Sun\>*
 
     1.  Report F_1 scores and performances of neural models
 
@@ -188,7 +189,7 @@
             show alignment/misalignment, if this is necessary -\> but it
             will show interesting class differences
 
-4.  Discussion
+3.  Discussion
 
     1.  Expound on trade-off between performance and transparency by
         looking at differently sized models
@@ -199,7 +200,7 @@
     3.  Think about why larger regex models tend to show more
         misalignment from neural counterparts compared to smaller models
 
-    4.  If possible, add some minor human evaluation of explainability
+    4.  If possible, add a basic human evaluation of explainability
         otherwise leave it to future work
 
     5.  Explain discussion figures very clearly and show the relevance
@@ -217,17 +218,20 @@
             1.  figures must be manually put together later directly in
                 latex
 
+            2.  consider removing double-circle for start state, since
+                this usually denotes the accepting state
+
         2.  show TikZ visualization of each binary neuron\'s relative
             importance for classes -\> would be interesting to see how
             saturated these are
 
-5.  Conclusions
+4.  Conclusions
 
     1.  Summarize everything in manuscript
 
     2.  Address research questions
 
-6.  Further work
+5.  Further work
 
     1.  Quality of explainability
 
@@ -277,7 +281,9 @@
         4.  visualize examples/classes where regex and neural model
             align and misalign, eg. with a confusion matrix
 
-7.  Post-paper iteration/formatting
+6.  Post-paper iteration/formatting
+
+    **DEADLINE:** *\<2021-03-31 Wed\>*
 
     1.  Paper length
 
@@ -305,42 +311,51 @@
 
         2.  Background concepts
 
-            1.  explain vanilla SoPa more clearly to motivate everything
+            1.  add more background information on linear-chain WFSAs,
+                FSAs, regular expressions and conversion processes
+
+            2.  explain vanilla SoPa more clearly to motivate everything
                 else -\> perhaps need more information on FSAs with
                 starting and accepting states
 
-            2.  EITHER quote + indent sentences directly taken from
+            3.  EITHER quote + indent sentences directly taken from
                 other studies (cite pages and paragraphs) OR paraphrase
                 them and leave them in a definition environment
 
-            3.  be very clear on what is directly taken from another
+            4.  consider citing pages and sections for Arrieta article
+                in all cases since there is a lot of information -\>
+                might make citations of same article less redundant
+                since there is accompanying information to diversify
+                things
+
+            5.  be very clear on what is directly taken from another
                 study versus what is paraphrased
 
-            4.  definition/remark structure might need to be revised to
+            6.  definition/remark structure might need to be revised to
                 something more narrative-suited
 
-            5.  think about providing an additional definition for
+            7.  think about providing an additional definition for
                 \"understandability\"
 
-            6.  consider quoting all definitions to further imply that
+            8.  consider quoting all definitions to further imply that
                 they are exactly taken from other studies
 
-            7.  add a Kleene-star operator mention to remark 9.4
+            9.  add a Kleene-star operator mention to remark 9.4
 
-            8.  include a section on risks on large NLP models and why
+            10. include a section on risks on large NLP models and why
                 explainability is necessary with different study
 
-            9.  if possible, try to reduce references to Arrieta et al.
+            11. if possible, try to reduce references to Arrieta et al.
                 2020 to reduce perceived over-dependence
 
-            10. revisit sopa explainability evaluation with three
+            12. revisit sopa explainability evaluation with three
                 guidelines to check if it makes sense after having
                 evaluated sopa++ with the same guidelines
 
-            11. look into antecedent/proxy names and if these can be
+            13. look into antecedent/proxy names and if these can be
                 improved
 
-            12. return to this chapter to add/remove content based on
+            14. return to this chapter to add/remove content based on
                 requirements of later chapters
 
         3.  Bibliography
@@ -361,46 +376,39 @@
         4.  Manuscript admin
 
             1.  read manuscript and ensure there is an easily followable
-                narrative for someone who is a non-expert
+                narrative for someone who is a non-expert -\> can be
+                done by adding more text before or around definition
+                environments in order to lead the reader into each
+                concept smoothly -\> this can be done post-paper since
+                it requires all the information to be present in the
+                paper first
 
-            2.  improve file structure of visuals with explicit folders
-                for directly copied figures
+            2.  add titles to all figures in the manuscript
 
-            3.  add titles to all figures in the manuscript
-
-            4.  consider replacing legacy-sopa figures with pdf extracts
-                instead of screenshots
-
-            5.  talk to supervisors about many definitions and if these
-                are alright
-
-            6.  always mention \"figure taken from study (year)\" when
+            3.  always mention \"figure taken from study (year)\" when
                 using external figures
 
-            7.  fine tune WFSA to mean either automata or automaton,
+            4.  fine tune WFSA to mean either automata or automaton,
                 make plural abbreviation clear as well
 
-            8.  remove sub-enumeration for single remarks under a
-                definition
-
-            9.  add links to different sections later on once structure
+            5.  add links to different sections later on once structure
                 and content is clear
 
-            10. sort out all abbreviations and standardize formatting in
+            6.  sort out all abbreviations and standardize formatting in
                 terms of where they are first declared
 
-            11. change to two sided format before printing, as this
+            7.  change to two sided format before printing, as this
                 works well for binding/printing
 
-            12. add Uni-Potsdam originality declaration, or modify
+            8.  add Uni-Potsdam originality declaration, or modify
                 current one to fit
 
-            13. add remaining features by referring to master template
+            9.  add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, and all
                 others
 
-            14. perform spell-check of everything at the end
+            10. perform spell-check of everything at the end
 
 ### Programming
 
@@ -408,67 +416,43 @@
 
     1.  if using R, document R dependencies with `sessionInfo()`
 
-    2.  add mypy as an explicit part of testing the source code
-
-    3.  replace Union + None types with Optional type for conciseness
-
-    4.  look into cases where List was replaced by Sequential and how
+    2.  look into cases where List was replaced by Sequential and how
         this can be changed or understood to keep consistency (ie. keep
         everything to List with overloads)
 
-    5.  include basic test code by instantiating class and/or other
-        simple methods
-
 2.  Documentation and clean-code
 
-    1.  Terminology-based modifications post-paper
+    1.  if necessary, apply further script renaming using antecedent and
+        proxy terminologies -\> update readme and usages
 
-        1.  if necessary, apply further script renaming using antecedent
-            and proxy terminologies -\> update readme and usages
+    2.  fix terminology of STE/output neurons consistently after paper
 
-        2.  consider removing `utils` extension from all utils scripts
-            since these might be unnecessary
+    3.  find a better way of naming visualization pdfs to attribute to
+        specific model and make this unique -\> perhaps via timestamp
 
-        3.  test out all shell-scripts and python code to make sure
-            everything works the same after major renamings
+    4.  GPU/CPU runs not always reproducible depending on
+        multi-threading, see:
+        <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
-    2.  Others
+    5.  add a comment above each code chunk which explains inner
+        mechanisms better
 
-        1.  find a better way of naming visualization pdfs to attribute
-            to specific model
+    6.  update metadata eg. with comprehensive python/shell help
+        scripts, comments describing functionality and readme
+        descriptions for git hooks
 
-        2.  fix terminology of STE/output neurons consistently after
-            paper
+    7.  add pydocstrings to all functions and improve argparse
+        documentation
 
-        3.  GPU/CPU runs not always reproducible depending on
-            multi-threading, see:
-            <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
+    8.  add information on best model downloads and preparation -\> add
+        these to Google Drive later on
 
-        4.  reduce source code lines, chunking and comments -\> pretty
-            sort python code and function/class orders perhaps by length
+    9.  test out all shell-scripts and python code to make sure
+        everything works the same after major renamings
 
-        5.  add a comment above each code chunk which explains inner
-            mechanisms better
+    10. test download and all other scripts to ensure they work
 
-        6.  update metadata eg. with comprehensive python/shell help
-            scripts, comments describing functionality and readme
-            descriptions for git hooks
-
-        7.  add information on best model downloads and preparation -\>
-            add these to Google Drive later on
-
-        8.  add pydocstrings to all functions and improve argparse
-            documentation
-
-        9.  provide description of data structures (eg. data, labels)
-            required for training processes and lowercasing
-
-        10. update/remove git hooks depending on which features are
-            finally used, eg. remove pre-push hook
-
-        11. test download and all other scripts to ensure they work
-
-        12. perform spell-check on readme
+    11. perform spell-check on readme
 
 ## Notes
 
