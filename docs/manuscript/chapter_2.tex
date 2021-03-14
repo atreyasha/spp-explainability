@@ -8,46 +8,43 @@
 
 In this section, we lay out background concepts for Explainable Artificial Intelligence (XAI) which have been largely adopted from \citet{arrieta2020explainable}. The study is particularly helpful for us since it summarizes the findings of approximately 400 XAI contributions and presents these findings in the form of well-defined concepts and taxonomies. In addition, the study discusses future directions of XAI research. We start off by providing definitions from the study, along with accompanying remarks.
 
-\subsection{Interpretability and transparency}
-
-\begin{definition}[Interpretability; \citealt{arrieta2020explainable}]
-  Interpretability is defined as the ability to explain or to provide the meaning in understandable terms to a human. 
-\end{definition}
+\subsection{Transparency}
 
 \begin{definition}[Transparency; \citealt{arrieta2020explainable}]
-  A model is considered to be transparent if by itself it is understandable. Since a model can feature different degrees of understandability, transparent models are divided into three categories: simulatable models, decomposable models and algorithmically transparent models. 
+  A model is considered to be transparent if it is understandable on its own without any external techniques to assist its understandability. Since a model can provide different degrees of understandability, transparent models are split into three possibly mutually-inclusive categories; specifically simulatable models, decomposable models and algorithmically transparent models. 
 \end{definition}
 
 \begin{remark}
-  \textit{Simulatability} denotes the ability of a model of being simulated or thought about strictly by a human, hence complexity takes a dominant place in this class.
+  \textit{Simulatability} refers to the ability of a model's inner-mechanisms being simulated strictly by a human. Therefore, model simplicity plays a major role in this class.
 \end{remark}
 
 \begin{remark}
-  \textit{Decomposability} stands for the ability to explain each of the parts of a model (input, parameter and calculation).
+  \textit{Decomposability} refers to the ability to clearly understand the individual parts of a model; such as its inputs, parameters and basic computational mechanisms.
 \end{remark}
 
 \begin{remark}
-  \textit{Algorithmic transparency} deals with the ability of the user to understand the process followed by the model to produce any given output from its input data.
+  \textit{Algorithmic transparency} refers to the ability of a human to understand the algorithmic processes used in the model to produce any given output from any given input.
 \end{remark}
 
 \begin{remark}
-  A model is considered transparent if it falls into one or more of the aforementioned transparency categories.
+  A model is considered transparent if it falls into one or more of the aforementioned transparency categories. If a model cannot satisfy any of the requirements of being transparent, then it is classified as a \textit{black-box} model. 
 \end{remark}
 
 \begin{remark}
-  If a model cannot satisfy the requirements of being transparent, then it is classified as a \textit{black-box} model. 
+  \label{rmk:equivalence}
+  As recommended by \citet[Section 2.1, Page 3]{arrieta2020explainable}, we use the terms transparency and interpretability to refer to the same feature. Therefore, we use these terms equivalently and interchangeably.
 \end{remark}
 
-Examples of well-known transparent Machine Learning (ML) models are linear/logistic regressors, decision trees and rules-based learners. Similarly, common examples of non-transparent or black-box ML models are tree ensembles and deep neural networks. \citet{arrieta2020explainable} provide extensive justifications using the aforementioned three criteria in conducting model classifications into the transparent and black-box categories. We would direct the reader to their study for a full analysis and justification of these classifications.
+Examples of well-known transparent Machine Learning (ML) models are linear/logistic regressors, decision trees and rules-based learners. Similarly, common examples of black-box ML models are tree ensembles and deep neural networks. \citet{arrieta2020explainable} provide extensive justifications using the aforementioned three criteria in conducting model classifications into the transparent and black-box categories. We would direct the reader to their study for a full analysis and justification of these classifications.
 
 \subsection{Explainability and XAI}
 
 \begin{definition}[Explainability; \citealt{arrieta2020explainable}]
-  Explainability is associated with the notion of explanation as an interface between humans and a decision maker that is, at the same time, both an accurate proxy of the decision maker and comprehensible to humans. 
+  Explainability refers to the interface between humans and a model, such that this interface is both an accurate proxy of the model and comprehensible to humans. 
 \end{definition}
 
 \begin{definition}[Explainable Artificial Intelligence; \citealt{arrieta2020explainable}]
-  Given an audience, an \textbf{explainable} Artificial Intelligence is one that produces details or reasons to make its functioning clear or easy to understand.
+  An explainable artificial intelligence is one that produces details to make its functioning understandable to a given target audience. 
 \end{definition}
 
 \citet{arrieta2020explainable} observe that black-box ML models are increasingly being employed to make important predictions in critical contexts, citing high-risk areas such as precision medicine and autonomous vehicles. Of particular relevance to the field of Natural Language Processing (NLP), the study notes a myriad of issues related to inductive biases within training data sets and the ethical issues involved in using black-box models trained on such data sets. As a result, they describe an increased demand for transparency in black-box ML models from the various stakeholders in Artificial Intelligence (AI). In addition, \citet{arrieta2020explainable} emphasize the presence of a target audience for XAI; implying that different XAI techniques should be employed for different target audiences. In their study, they provide examples of target audiences such as domain experts, end-users and managers (Figure \ref{fig:xai-target-audience}).
@@ -59,13 +56,13 @@ Examples of well-known transparent Machine Learning (ML) models are linear/logis
   \label{fig:xai-target-audience}
 \end{figure}
 
-\subsection{Terminology clarifications}
+\subsection{Terminology clarification}
 
 \label{section:xai-terminology}
 
-Based on an extensive literature review, \citet{arrieta2020explainable} observe that many studies tend to misuse the terms interpretability and explainability by using them interchangeably. To address this, they provide clear conceptual differences between the terms. For example, \citet{arrieta2020explainable} state that \textit{``interpretability refers to a passive characteristic of a model referring to the level at which a given model makes sense for a human observer.''} They state that this same feature can also be expressed as transparency. In contrast, they state that \textit{``explainability can be viewed as an active characteristic of a model, denoting any action or procedure taken by a model with the intent of clarifying or detailing its internal functions.''}
+Based on an extensive literature review, \citet{arrieta2020explainable} observe that many studies tend to misuse the terms interpretability and explainability by using them interchangeably. To address this, they provide clear conceptual differences between the terms. For example, \citet[Section 2.1, Page 3]{arrieta2020explainable} state that \textit{``interpretability refers to a passive characteristic of a model referring to the level at which a given model makes sense for a human observer.''} In contrast, \citet[Section 2.1, Page 3]{arrieta2020explainable} state that \textit{``explainability can be viewed as an active characteristic of a model, denoting any action or procedure taken by a model with the intent of clarifying or detailing its internal functions.''}
 
-In summary, we gather that both interpretability and transparency refer to the same inherent or passive feature; and therefore we use these terms interchangeably. On the other hand, explainability refers to an active characteristic undertaken by the model and its developers to explain the model's inner mechanisms. In addition, explainability entails the presence of a target audience; which may not necessarily be the case for interpretability or transparency.
+In summary, we gather that interpretability (or transparency as per Remark \ref{rmk:equivalence}) refers to an inherent or passive feature of a model. On the other hand, explainability refers to an active characteristic undertaken by the model and its developers to explain the model's inner mechanisms. In addition, explainability entails the presence of a target audience; which may not necessarily be the case for interpretability or transparency.
 
 \subsection{Explainability techniques}
 
@@ -73,14 +70,14 @@ In summary, we gather that both interpretability and transparency refer to the s
 
 Based on the aforementioned classification of ML models into transparent and black-box models, \citet{arrieta2020explainable} expound on explainability techniques for each of these model types. Due to their transparent nature, the study states that transparent ML models are usually explainable in themselves to most target audiences and therefore usually do not require any external technique to extract explanations. The study does however highlight some target audiences, such as non-expert users, who may require external explainability techniques such as model output visualizations in order to explain the inner workings of transparent ML models.
 
-For the case of non-transparent or black-box models, \citet{arrieta2020explainable} argue that separate or external techniques must be utilized in order to reasonably explain these models. Such explainability techniques are referred to in the study as post-hoc explainability techniques; which is derived from the idea that explanations for such models are usually extracted post-modeling. Notable examples of post-hoc explainability techniques include local explanations, feature relevance and explanations by simplification. Below we provide definitions for these methods.
+For the case of black-box models, \citet{arrieta2020explainable} argue that separate or external techniques must be utilized in order to reasonably explain these models. Such explainability techniques are referred to in the study as post-hoc explainability techniques; which is derived from the idea that explanations for such models are usually extracted post-modeling. Notable examples of post-hoc explainability techniques include local explanations, feature relevance and explanations by simplification.
 
 \begin{definition}[Local explanations; \citealt{arrieta2020explainable}]
-  Local explanations tackle explainability by segmenting the solution space and giving explanations to less complex solution subspaces that are relevant for the whole model.
+  Local explanations operate by segmenting a model's solution space into subspaces and provide explanations for the less complex model subspaces.
 \end{definition}
 
 \begin{remark}
-Explanations can be formed by means of techniques with the differentiating property that these only explain part of the whole system’s functioning. 
+  Local explanations are commonly used in XAI research and function by using differentiating properties on model solution space subsets.
 \end{remark}
 
 \begin{remark}
@@ -88,23 +85,23 @@ Explanations can be formed by means of techniques with the differentiating prope
 \end{remark}
 
 \begin{definition}[Feature relevance; \citealt{arrieta2020explainable}]
-  Feature relevance explanation methods clarify the inner functioning of a model by computing a relevance score for its managed variables. These scores quantify the affection (sensitivity) a feature has upon the output of the model.
+  Feature relevance explanation methods operate by computing an importance score for the model's input variables over the model's output variables. These scores typically quantify how sensitive the model's output is to perturbations in the model's inputs.
 \end{definition}
 
 \begin{remark}
-  Feature relevance methods can be thought to be an indirect method to explain a model. 
+  Feature relevance methods can be considered as indirect methods of explaining a model. 
 \end{remark}
 
 \begin{remark}
-  A well-known feature relevance explainability technique is known as the Shapley Additive Explanations (SHAP; \citealt{lundberg2017unified}). Another similar feature relevance explainability technique is known as the occlusion sensitivity method \citep{zeiler2014visualizing}.
+  Well-known feature relevance explainability techniques include the Shapley Additive Explanations (SHAP; \citealt{lundberg2017unified}) and the occlusion sensitivity method \citep{zeiler2014visualizing}.
 \end{remark}
 
 \begin{definition}[Explanations by simplification; \citealt{arrieta2020explainable}]
-  Explanations by simplification collectively denote those techniques in which a whole new system is rebuilt based on the trained model to be explained. This new, simplified model usually attempts at optimizing its resemblance to its antecedent functioning, while reducing its complexity, and keeping a similar performance score.
+  Explanations by simplification refer to techniques where a simplified proxy model is built to approximate and explain a more complex model. The simplified proxy model usually has to fulfil the the joint criteria of reducing its complexity compared to its antecedent model while maximizing its resemblance to its antecedent and keeping a similar performance score.
 \end{definition}
 
 \begin{remark}
-  We refer to the original black-box model as an \textit{antecedent} model and the simplified version as the \textit{proxy} model. Furthermore, we qualify that all proxy models must be designed to globally approximate their respective antecedent models. This is in contrast to local explanations which require that simplified models approximate only subsets of the original black-box model.
+  In this thesis, we refer to the original black-box model as an \textit{antecedent} model and the simplified model as the \textit{proxy} model. Furthermore, we qualify that all proxy models must be designed to globally approximate their respective antecedent models.
 \end{remark}
 
 \begin{remark}
@@ -122,7 +119,7 @@ Through a survey of recent literature on explanations by simplification applied 
 
 \subsection{Performance-interpretability tradeoff}
 
-An interesting and insightful contribution of \citet{arrieta2020explainable} is their introduction of the performance-interpretability tradeoff. According to the study, \textit{``the matter of interpretability versus performance is one that repeats itself through time, but as any other big statement, has its surroundings filled with myths and misconceptions.''} To address some of the aforementioned myths and misconceptions, \citet{arrieta2020explainable} first disprove the generic statement that more complex models are always more accurate by pointing to certain case studies to support this argument. In particular, they show that complex models are not necessarily more accurate in cases where the function to be modeled is not complex, data is well-structured and input features are available with high quality.
+An interesting and insightful contribution of \citet[Section 5.1, Page 18]{arrieta2020explainable} is the description of the performance-interpretability tradeoff; which they cautiously introduce as \textit{``the matter of interpretability versus performance is one that repeats itself through time, but as any other big statement, has its surroundings filled with myths and misconceptions.''} To address some of the aforementioned myths and misconceptions, \citet{arrieta2020explainable} first disprove the generic statement that more complex models are always more accurate by pointing to certain case studies to support this argument. In particular, they show that complex models are not necessarily more accurate in cases where the function to be modeled is not complex, data is well-structured and input features are available with high quality.
 
 Next, \citet{arrieta2020explainable} provide the case where the aforementioned statement, that complex models perform better, tends to be true. According to the study, this is usually true when the function to be modeled is sufficiently complex and where the input data has high diversity or variance; and possibly contains significant noise. In such cases, \citet{arrieta2020explainable} argue that the performance-interpretability tradeoff can be observed; as exemplified in Figure \ref{fig:performance_interpretability_tradeoff}.
  
@@ -271,7 +268,7 @@ In their study, \citet{schwartz2018sopa} test the SoPa architecture on three sep
 
 \begin{figure}[t]
   \centering
-  \includegraphics[trim={0.5cm 0.5cm 0.5cm 0.5cm},clip,width=13cm]{images/sample_fsa_sopa.png}
+  \includegraphics[trim={0.5cm 0.5cm 0.5cm 0.5cm},clip,width=12cm]{images/sample_fsa_sopa.png}
   \caption{Schematic visualizing a linear-chain (weighted) finite-state automaton with one start and end state, $\epsilon$-transitions, self-loops and a wildcard transition shown as \textbf{X}; note that wildcard transitions are not allowed in the SoPa model; figure taken from \citet{schwartz2018sopa}}
   \label{fig:fsa}
 \end{figure}
