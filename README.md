@@ -111,9 +111,9 @@ usage: train_spp.py [-h] --embeddings <file_path> --train-data <file_path>
                     [--gpu-device <str>] [--grid-config <file_path>]
                     [--grid-training] [--learning-rate <float>]
                     [--logging-level {debug,info,warning,error,critical}]
-                    [--max-doc-len <int>] [--models-directory <dir_path>]
-                    [--no-wildcards] [--num-random-iterations <int>]
-                    [--num-train-instances <int>] [--only-epoch-eval]
+                    [--max-doc-len <int>] [--max-train-instances <int>]
+                    [--models-directory <dir_path>] [--no-wildcards]
+                    [--num-random-iterations <int>] [--only-epoch-eval]
                     [--patience <int>] [--patterns <str>]
                     [--scheduler-factor <float>] [--scheduler-patience <int>]
                     [--seed <int>]
@@ -158,12 +158,12 @@ optional training arguments:
                            Learning rate for Adam optimizer (default: 0.001)
   --max-doc-len            <int>
                            Maximum document length allowed (default: None)
+  --max-train-instances    <int>
+                           Maximum number of training instances (default:
+                           None)
   --models-directory       <dir_path>
                            Base directory where all models will be saved
                            (default: ./models)
-  --num-train-instances    <int>
-                           Maximum number of training instances (default:
-                           None)
   --only-epoch-eval        Only evaluate model at the end of epoch, instead of
                            evaluation by updates (default: False)
   --patience               <int>
@@ -446,7 +446,7 @@ usage: explain_simplify_spp.py [-h] --neural-model-checkpoint <glob_path>
                                [--gpu-device <str>]
                                [--logging-level {debug,info,warning,error,critical}]
                                [--max-doc-len <int>]
-                               [--num-train-instances <int>]
+                               [--max-train-instances <int>]
                                [--torch-num-threads <int>]
                                [--tqdm-update-period <int>]
 
@@ -474,7 +474,7 @@ optional explainability arguments:
                              Batch size for explainability (default: 256)
   --max-doc-len              <int>
                              Maximum document length allowed (default: None)
-  --num-train-instances      <int>
+  --max-train-instances      <int>
                              Maximum number of training instances (default:
                              None)
 
@@ -800,9 +800,9 @@ usage: visualize_regex.py [-h] --class-mapping-config <file_path>
                           --regex-model-checkpoint <glob_path>
                           [--disable-tqdm]
                           [--logging-level {debug,info,warning,error,critical}]
-                          [--max-transition-tokens <int>] [--num-regex <int>]
-                          [--only-neurons] [--seed <int>]
-                          [--tqdm-update-period <int>]
+                          [--max-num-regex <int>]
+                          [--max-transition-tokens <int>] [--only-neurons]
+                          [--seed <int>] [--tqdm-update-period <int>]
 
 optional arguments:
   -h, --help                show this help message and exit
@@ -816,11 +816,11 @@ required visualization arguments:
                             extension (default: None)
 
 optional visualization arguments:
+  --max-num-regex           <int>
+                            Maximum number of regex's for each STE neuron
+                            (default: 5)
   --max-transition-tokens   <int>
                             Maximum number of tokens to display per transition
-                            (default: 5)
-  --num-regex               <int>
-                            Number of regex's to produce for each STE neuron
                             (default: 5)
   --only-neurons            Only produces plots of neurons without regex's
                             (default: False)
