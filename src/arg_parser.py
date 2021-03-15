@@ -124,7 +124,7 @@ def train_arg_parser() -> argparse.ArgumentParser:
     train.add_argument("--max-doc-len",
                        help="Maximum document length allowed",
                        type=int)
-    train.add_argument("--num-train-instances",
+    train.add_argument("--max-train-instances",
                        help="Maximum number of training instances",
                        type=int)
     # boolean flags
@@ -277,7 +277,7 @@ def explain_simplify_arg_parser() -> argparse.ArgumentParser:
                          help="Batch size for explainability",
                          default=256,
                          type=int)
-    explain.add_argument("--num-train-instances",
+    explain.add_argument("--max-train-instances",
                          help="Maximum number of training instances",
                          type=int)
     explain.add_argument("--max-doc-len",
