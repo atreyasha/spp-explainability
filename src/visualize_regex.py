@@ -144,7 +144,7 @@ def visualize_regex_neurons(args: argparse.Namespace) -> None:
         regexes = model_dict["activating_regex"][i]
         try:
             indices = np.random.choice(len(regexes),
-                                       args.num_regex,
+                                       args.max_num_regex,
                                        replace=False)
             regexes = [regexes[index] for index in indices]
         except ValueError:

@@ -330,8 +330,8 @@ def visualize_regex_arg_parser() -> argparse.ArgumentParser:
                           type=file_path)
     # add group for optional arguments
     vis = parser.add_argument_group('optional visualization arguments')
-    vis.add_argument("--num-regex",
-                     help="Number of regex's to produce for each STE neuron",
+    vis.add_argument("--max-num-regex",
+                     help="Maximum number of regex's for each STE neuron",
                      default=5,
                      type=int)
     vis.add_argument("--max-transition-tokens",
