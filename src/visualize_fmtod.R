@@ -26,7 +26,7 @@ visualize_fmtod <- function(train_labels, valid_labels, test_labels) {
   valid_labels <- as.data.frame(table(read.table(valid_labels)))
   test_labels <- as.data.frame(table(read.table(test_labels)))
   train_labels$Partition <- "Train"
-  valid_labels$Partition <- "Valid"
+  valid_labels$Partition <- "Validation"
   test_labels$Partition <- "Test"
 
   # clean data for plotting
@@ -34,7 +34,7 @@ visualize_fmtod <- function(train_labels, valid_labels, test_labels) {
   names(collections)[c(1, 2)] <- c("Class", "Frequency")
   collections[["Class"]] <- as.factor(collections[["Class"]])
   collections[["Partition"]] <- factor(collections[["Partition"]],
-    levels = c("Train", "Valid", "Test")
+    levels = c("Train", "Validation", "Test")
   )
 
   # create ggplot object
@@ -46,7 +46,9 @@ visualize_fmtod <- function(train_labels, valid_labels, test_labels) {
     theme_bw() +
     theme(
       plot.title = element_text(hjust = 0.5),
-      text = element_text(size = 15),
+      legend.position = c(0.1, 0.85),
+      legend.background = element_blank(),
+      text = element_text(size = 22),
       strip.background = element_blank(),
       strip.text = element_text(face = "bold"),
       panel.grid = element_line(size = 1),
@@ -60,7 +62,7 @@ visualize_fmtod <- function(train_labels, valid_labels, test_labels) {
       )
     ) +
     scale_fill_manual(values = c("cornflowerblue", "darkgreen", "orangered")) +
-    ggtitle("FMTOD summary statistics w.r.t. data partitions")
+    ggtitle("Preprocessed FMTOD data distribution by class and partition")
 
   # plot object and convert to pdf via tikz
   tex_file <- paste0("fmtod_summary_statistics.tex")
