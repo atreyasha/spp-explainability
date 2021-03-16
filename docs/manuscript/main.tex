@@ -47,6 +47,8 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{chngcntr}
+\usepackage{threeparttable}
+\usepackage{ragged2e}
 
 \counterwithout{equation}{chapter}
 \counterwithout{figure}{chapter}
@@ -57,6 +59,8 @@ headsepline, % Uncomment to get a line under the header
 \newtheorem{remark}{Remark}[definition]
 \addbibresource{../bibtex.bib} % The filename of the bibliography
 \graphicspath{{../visuals/}}
+\newcolumntype{L}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+\newcolumntype{R}[1]{>{\RaggedLeft\hspace{0pt}}p{#1}}
 
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
