@@ -22,21 +22,7 @@
 
     **DEADLINE:** *\<2021-03-21 Sun\>*
 
-    1.  FMTOD data set
-
-        1.  provide a visualization on the data set and its splits
-
-        2.  talk about lowercasing and making individual and
-            cross-partitions unique
-
-        3.  provide summary statistics and explanation about the data
-            set -\> such as numbers of each class and examples of each
-            class
-
-        4.  mention performances from other studies which can be
-            compared against -\> put citations and GitHub links
-
-    2.  Model
+    1.  Model
 
         1.  update the WFSA definitions to signify wildcard transitions
             and mention why this is found here and not in the background
@@ -81,14 +67,19 @@
 
         11. add Github link to repo as a footnote
 
-    3.  Quantization/Binarization
+        12. **new:** produce manual neural computational graph using
+            tikz, building from what was made earlier
+
+    2.  Quantization/Binarization
 
         1.  explain how and why we modified STE to TauSTE
 
         2.  how does binarizing help with explainability, justify
             requirement for it in both training and testing
 
-    4.  Explainability
+        3.  add visualization of TauSTE function
+
+    3.  Explainability
 
         1.  explain how we make explanations by simplification work
             altogether
@@ -122,7 +113,10 @@
         9.  link back to background concepts when we discuss bringing
             neural and regex model as close to each other as possible
 
-    5.  Training/Evaluation/Explainability-evaluation
+        10. **new:** produce manual regex computational graph using
+            tikz, building from what was made earlier
+
+    4.  Training/Evaluation/Explainability-evaluation
 
         1.  talk about upsampling data set during training
 
@@ -135,14 +129,9 @@
             should make results clearer
 
         5.  **important:** everything shown in the \"Results\" section
-            should be motivated or introduced here
-
-    6.  Visualizations
-
-        1.  add visualization of TauSTE function
-
-        2.  **new:** produce manual computational graph using tikz,
-            building from what was made earlier
+            should be motivated or introduced here, focus harder on
+            methodologies so that everything else is very easy to
+            explain
 
 2.  Results
 
@@ -176,7 +165,10 @@
             in terms of reducing the memory and number of regex\'s -\>
             can tabulate all of these
 
-    3.  Visualizations
+    3.  Explain discussion figures very clearly and show the relevance
+        to the third research question
+
+    4.  Visualizations
 
         1.  show visualization of training performance timelines, think
             about how to keep most important information
@@ -185,9 +177,18 @@
             softmax/binary distances with error bars for random seed
             iterations
 
-        3.  show confusion matrix between regex and neural models to
-            show alignment/misalignment, if this is necessary -\> but it
-            will show interesting class differences
+        3.  show visualizations of important patterns in a regex model
+            -\> something which is small and fits well into a page
+
+            1.  figures must be manually put together later directly in
+                latex
+
+            2.  consider removing double-circle for start state, since
+                this usually denotes the accepting state
+
+        4.  show TikZ visualization of each binary neuron\'s relative
+            importance for classes -\> would be interesting to see how
+            saturated these are
 
 3.  Discussion
 
@@ -200,30 +201,13 @@
     3.  Think about why larger regex models tend to show more
         misalignment from neural counterparts compared to smaller models
 
-    4.  If possible, add a basic human evaluation of explainability
+    4.  Can talk about neurons responsible for certain decisions, as
+        well as distributed representations in neurons where there is
+        really no clear neuron responsible for one-thing -\> which is an
+        impediment to explainability
+
+    5.  If possible, add a basic human evaluation of explainability
         otherwise leave it to future work
-
-    5.  Explain discussion figures very clearly and show the relevance
-        to the third research question, can talk about neurons
-        responsible for certain decisions, as well as distributed
-        representations in neurons where there is really no clear neuron
-        responsible for one-thing -\> which is an impediment to
-        explainability
-
-    6.  Visualizations
-
-        1.  show visualizations of important patterns in a regex model
-            -\> something which is small and fits well into a page
-
-            1.  figures must be manually put together later directly in
-                latex
-
-            2.  consider removing double-circle for start state, since
-                this usually denotes the accepting state
-
-        2.  show TikZ visualization of each binary neuron\'s relative
-            importance for classes -\> would be interesting to see how
-            saturated these are
 
 4.  Conclusions
 
@@ -331,49 +315,76 @@
             5.  be very clear on what is directly taken from another
                 study versus what is paraphrased
 
-            6.  definition/remark structure might need to be revised to
-                something more narrative-suited
-
-            7.  think about providing an additional definition for
+            6.  think about providing an additional definition for
                 \"understandability\"
 
-            8.  consider quoting all definitions to further imply that
+            7.  consider quoting all definitions to further imply that
                 they are exactly taken from other studies
 
-            9.  add a Kleene-star operator mention to remark 9.4
+            8.  add a Kleene-star operator mention to remark 9.4
 
-            10. include a section on risks on large NLP models and why
+            9.  include a section on risks on large NLP models and why
                 explainability is necessary with different study
 
-            11. if possible, try to reduce references to Arrieta et al.
+            10. if possible, try to reduce references to Arrieta et al.
                 2020 to reduce perceived over-dependence
 
-            12. revisit sopa explainability evaluation with three
+            11. revisit sopa explainability evaluation with three
                 guidelines to check if it makes sense after having
                 evaluated sopa++ with the same guidelines
 
-            13. look into antecedent/proxy names and if these can be
+            12. look into antecedent/proxy names and if these can be
                 improved
 
-            14. return to this chapter to add/remove content based on
+            13. return to this chapter to add/remove content based on
                 requirements of later chapters
 
         3.  Bibliography
 
-            1.  change FMTOD citation to NAACL, look for
-                journal/conference alternative citations for current
-                papers
+            1.  look for journal/conference alternative citations for
+                current papers
 
             2.  improve capitalization with braces in bibtex file
 
             3.  if possible, try to find non-arxiv citations for papers
+                -\> look for alternative citations in ACL or other
+                conferences instead of arxiv papers
 
             4.  remove red link color in table of contents
 
             5.  fine-tune citation color to be consistent with other
                 colors
 
-        4.  Manuscript admin
+        4.  Methodologies
+
+            1.  think about adding new table with percentage of each
+                data class in FMTOD -\> would highlight the imbalance a
+                bit better
+
+            2.  consider respelling \"preprocessing\" as
+                \"pre-processing\" if necessary
+
+            3.  consider redoing FMTOD table with relative frequencies
+
+            4.  consider reporting token length statistics in a table or
+                with a figure
+
+            5.  use same terminology between intent detection and intent
+                classification
+
+            6.  think of how to better present accuracies from other
+                studies for FMTOD, perhaps with a table in the results
+                section
+
+        5.  Appendix
+
+            1.  consider adding separate table in appendix for examples
+                of FMTOD data instances by class
+
+            2.  add more information to appendices and link them in the
+                appropriate text portions
+
+        6.  Manuscript admin
 
             1.  read manuscript and ensure there is an easily followable
                 narrative for someone who is a non-expert -\> can be
@@ -383,32 +394,57 @@
                 it requires all the information to be present in the
                 paper first
 
-            2.  add titles to all figures in the manuscript
+            2.  definition/remark structure might need to be revised to
+                something more narrative-suited, or simply add
+                sufficient lines before and after to keep the narrative
+                flowing
 
-            3.  always mention \"figure taken from study (year)\" when
+            3.  ensure that areas between chapters-sections or
+                sections-subsections are filled with some explanatory
+                text to give the sense of a flowing narrative -\> use
+                links to individual sections in each chapter to describe
+                what these describe -\> this will help string everything
+                together including for linking background concepts to
+                methodologies
+
+            4.  add titles to all figures in the manuscript
+
+            5.  always mention \"figure taken from study (year)\" when
                 using external figures
 
-            4.  fine tune WFSA to mean either automata or automaton,
+            6.  fine tune WFSA to mean either automata or automaton,
                 make plural abbreviation clear as well
 
-            5.  add links to different sections later on once structure
-                and content is clear
+            7.  add links to different sections later on once structure
+                and content is clear -\> need to read through to catch
+                all parts which need links
 
-            6.  sort out all abbreviations and standardize formatting in
+            8.  sort out all abbreviations and standardize formatting in
                 terms of where they are first declared
 
-            7.  change to two sided format before printing, as this
+            9.  change to two sided format before printing, as this
                 works well for binding/printing
 
-            8.  add Uni-Potsdam originality declaration, or modify
+            10. add Uni-Potsdam originality declaration, or modify
                 current one to fit
 
-            9.  add remaining features by referring to master template
+            11. add student registration details to paper such as
+                matriculation number and other details
+
+            12. add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, and all
                 others
 
-            10. perform spell-check of everything at the end
+            13. date on bottom of manuscript should be date of
+                submission before mailing to Potsdam
+
+            14. take note of all other submission criteria such as
+                statement of originality, printing, German abstract,
+                digital copy and others, see:
+                <https://www.uni-potsdam.de/en/studium/studying/organizing-your-exams/final-thesis>
+
+            15. perform spell-check of everything at the end
 
 ### Programming
 

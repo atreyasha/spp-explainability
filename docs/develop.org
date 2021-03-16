@@ -1,16 +1,11 @@
 #+STARTUP: overview
 #+OPTIONS: ^:nil
 #+OPTIONS: p:t
-
+ 
 ** Tasks
 *** Manuscript
 **** Methodologies
      DEADLINE: <2021-03-21 Sun>
-***** FMTOD data set
-****** provide a visualization on the data set and its splits
-****** talk about lowercasing and making individual and cross-partitions unique
-****** provide summary statistics and explanation about the data set -> such as numbers of each class and examples of each class
-****** mention performances from other studies which can be compared against -> put citations and GitHub links
 ***** Model
 ****** update the WFSA definitions to signify wildcard transitions and mention why this is found here and not in the background concepts since we could not find literature which defined it in a similar way
 ****** add pseudocode for various segments -> would help to cement certain concepts
@@ -23,9 +18,11 @@
 ****** SoPa++ uses explanation by simplification (globally) -> need justification from background concepts -> not much use of global in paper, but we can make our own arguments
 ****** try to link as much as possible with the background concepts for models/explainability concepts
 ****** add Github link to repo as a footnote
+****** *new:* produce manual neural computational graph using tikz, building from what was made earlier
 ***** Quantization/Binarization
 ****** explain how and why we modified STE to TauSTE
 ****** how does binarizing help with explainability, justify requirement for it in both training and testing
+****** add visualization of TauSTE function
 ***** Explainability
 ****** explain how we make explanations by simplification work altogether
 ****** utilize antecendent/proxy model terminologies
@@ -36,15 +33,13 @@
 ****** use the three good explainability criteria to show that our technique might be better theoretically, but the real test would have to be done with a target audience's survey
 ****** mention that the target audience of this explainability method is domain experts, since it is still very complicated
 ****** link back to background concepts when we discuss bringing neural and regex model as close to each other as possible
+****** *new:* produce manual regex computational graph using tikz, building from what was made earlier
 ***** Training/Evaluation/Explainability-evaluation
 ****** talk about upsampling data set during training
 ****** provide extensive details of training setup
 ****** provide extensive details of evaluating neural/regex models
 ****** provide extensive details of evaluating explanations by simplification "metric" of neural-regex models -> which should make results clearer
-****** *important:* everything shown in the "Results" section should be motivated or introduced here
-***** Visualizations
-****** add visualization of TauSTE function
-****** *new:* produce manual computational graph using tikz, building from what was made earlier
+****** *important:* everything shown in the "Results" section should be motivated or introduced here, focus harder on methodologies so that everything else is very easy to explain
 
 **** Results
      DEADLINE: <2021-03-28 Sun>
@@ -57,21 +52,20 @@
 ***** Relationship between tau threshold vs. performance vs. softmax/binary distances 
 ****** compute statistics with random-seed deviations over inter-model comparisons such as average distance, misalignment, activation frequency and other useful metrics that can elucidate on-the-ground processes
 ****** go into details on how effective compression algorithm was in terms of reducing the memory and number of regex's -> can tabulate all of these
+***** Explain discussion figures very clearly and show the relevance to the third research question
 ***** Visualizations
 ****** show visualization of training performance timelines, think about how to keep most important information
 ****** show visualization of tau threshold vs. performance vs. softmax/binary distances with error bars for random seed iterations
-****** show confusion matrix between regex and neural models to show alignment/misalignment, if this is necessary -> but it will show interesting class differences
-**** Discussion
-***** Expound on trade-off between performance and transparency by looking at differently sized models
-***** Discuss relationship between tau threshold and the softmax/binary distances
-***** Think about why larger regex models tend to show more misalignment from neural counterparts compared to smaller models
-***** If possible, add a basic human evaluation of explainability otherwise leave it to future work
-***** Explain discussion figures very clearly and show the relevance to the third research question, can talk about neurons responsible for certain decisions, as well as distributed representations in neurons where there is really no clear neuron responsible for one-thing -> which is an impediment to explainability
-***** Visualizations
 ****** show visualizations of important patterns in a regex model -> something which is small and fits well into a page
 ******* figures must be manually put together later directly in latex
 ******* consider removing double-circle for start state, since this usually denotes the accepting state
 ****** show TikZ visualization of each binary neuron's relative importance for classes -> would be interesting to see how saturated these are 
+**** Discussion
+***** Expound on trade-off between performance and transparency by looking at differently sized models
+***** Discuss relationship between tau threshold and the softmax/binary distances
+***** Think about why larger regex models tend to show more misalignment from neural counterparts compared to smaller models
+***** Can talk about neurons responsible for certain decisions, as well as distributed representations in neurons where there is really no clear neuron responsible for one-thing -> which is an impediment to explainability
+***** If possible, add a basic human evaluation of explainability otherwise leave it to future work
 **** Conclusions
 ***** Summarize everything in manuscript
 ***** Address research questions
@@ -112,7 +106,6 @@
 ******* EITHER quote + indent sentences directly taken from other studies (cite pages and paragraphs) OR paraphrase them and leave them in a definition environment
 ******* consider citing pages and sections for Arrieta article in all cases since there is a lot of information -> might make citations of same article less redundant since there is accompanying information to diversify things
 ******* be very clear on what is directly taken from another study versus what is paraphrased
-******* definition/remark structure might need to be revised to something more narrative-suited
 ******* think about providing an additional definition for "understandability" 
 ******* consider quoting all definitions to further imply that they are exactly taken from other studies
 ******* add a Kleene-star operator mention to remark 9.4
@@ -122,23 +115,38 @@
 ******* look into antecedent/proxy names and if these can be improved
 ******* return to this chapter to add/remove content based on requirements of later chapters
 ****** Bibliography
-******* change FMTOD citation to NAACL, look for journal/conference alternative citations for current papers
+******* look for journal/conference alternative citations for current papers
 ******* improve capitalization with braces in bibtex file
-******* if possible, try to find non-arxiv citations for papers
+******* if possible, try to find non-arxiv citations for papers -> look for alternative citations in ACL or other conferences instead of arxiv papers
 ******* remove red link color in table of contents
 ******* fine-tune citation color to be consistent with other colors
+****** Methodologies
+******* think about adding new table with percentage of each data class in FMTOD -> would highlight the imbalance a bit better
+******* consider respelling "preprocessing" as "pre-processing" if necessary
+******* consider redoing FMTOD table with relative frequencies
+******* consider reporting token length statistics in a table or with a figure
+******* use same terminology between intent detection and intent classification
+******* think of how to better present accuracies from other studies for FMTOD, perhaps with a table in the results section
+****** Appendix 
+******* consider adding separate table in appendix for examples of FMTOD data instances by class
+******* add more information to appendices and link them in the appropriate text portions
 ****** Manuscript admin
 ******* read manuscript and ensure there is an easily followable narrative for someone who is a non-expert -> can be done by adding more text before or around definition environments in order to lead the reader into each concept smoothly -> this can be done post-paper since it requires all the information to be present in the paper first
+******* definition/remark structure might need to be revised to something more narrative-suited, or simply add sufficient lines before and after to keep the narrative flowing
+******* ensure that areas between chapters-sections or sections-subsections are filled with some explanatory text to give the sense of a flowing narrative -> use links to individual sections in each chapter to describe what these describe -> this will help string everything together including for linking background concepts to methodologies
 ******* add titles to all figures in the manuscript
 ******* always mention "figure taken from study (year)" when using external figures
 ******* fine tune WFSA to mean either automata or automaton, make plural abbreviation clear as well
-******* add links to different sections later on once structure and content is clear
+******* add links to different sections later on once structure and content is clear -> need to read through to catch all parts which need links
 ******* sort out all abbreviations and standardize formatting in terms of where they are first declared
 ******* change to two sided format before printing, as this works well for binding/printing
 ******* add Uni-Potsdam originality declaration, or modify current one to fit
+******* add student registration details to paper such as matriculation number and other details
 ******* add remaining features by referring to master template such as abstract (short summarized introduction), list of tables/figures/abbreviations, appendices, and all others
+******* date on bottom of manuscript should be date of submission before mailing to Potsdam
+******* take note of all other submission criteria such as statement of originality, printing, German abstract, digital copy and others, see: https://www.uni-potsdam.de/en/studium/studying/organizing-your-exams/final-thesis
 ******* perform spell-check of everything at the end
- 
+
 *** Programming
 **** Dependencies, typing and testing
 ***** if using R, document R dependencies with ~sessionInfo()~
