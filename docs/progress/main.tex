@@ -70,7 +70,7 @@
     \setbeamertemplate{enumerate items}[square]
     \setlength\itemsep{0.8em}
     \item Source code refactored to work with latest \texttt{PyTorch} and \texttt{CUDA} versions
-    \item Facebook NLU multi-class intent detection data set from \citet{schuster2018cross}
+    \item Facebook NLU multi-class intent detection data set from \citet{schuster-etal-2019-cross-lingual}
     \item Performance is important for explainability, because it does not make sense to explain a poorly performing model
     \item Focus would be to develop SoPa++ as a neural model which can be easily decomposed into a \textit{globally} explainable model
   \end{enumerate}
@@ -192,7 +192,7 @@
     \caption{Performance summary of various SoPa++ models; evaluation metrics are based on weighted averages}
   \end{table}
   \begin{itemize} 
-    \item Performance is competitive with that from literature and online benchmarks, which show F$_1$ scores ranging from 96-99$\%$ \citep{schuster2018cross}
+    \item Performance is competitive with that from literature and online benchmarks, which show F$_1$ scores ranging from 96-99$\%$ \citep{schuster-etal-2019-cross-lingual}
     \item In both the above cases, the max-sum semiring outperforms the max-product semiring
     \item Even though the SoPa++ model variant with higher number of patterns performs better, a \textbf{smaller model} might be more beneficial for explainability
   \end{itemize} 
