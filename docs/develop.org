@@ -1,9 +1,10 @@
 #+STARTUP: overview
 #+OPTIONS: ^:nil
 #+OPTIONS: p:t
- 
+
 ** Tasks
 *** Manuscript
+**** TODO Clean up all notes here, segment timeline properly and check days to do things
 **** Methodologies
      DEADLINE: <2021-03-21 Sun>
 ***** Model
@@ -44,6 +45,7 @@
 **** Results
      DEADLINE: <2021-03-28 Sun>
 ***** Report F_1 scores and performances of neural models
+****** present results with accuracies instead of F1 to compare with other studies 
 ****** modify visualize scripts to aggregate and print summary stats in script to re-use later in paper with means and standard deviations across random seeds
 ****** report parameter counts in scores as well
 ****** compare performance to that of other paper(s)
@@ -60,6 +62,8 @@
 ******* figures must be manually put together later directly in latex
 ******* consider removing double-circle for start state, since this usually denotes the accepting state
 ****** show TikZ visualization of each binary neuron's relative importance for classes -> would be interesting to see how saturated these are 
+****** tweak relative importances between neurons as well, if this is of use otherwise drop it -> need to add color to legend or otherwise fixed size with color gradient
+****** include a table with binary neuron activation rates -> discuss these later to talk about some regularzing effect even when the activation rates differed that the softmax difference norm decreased or stayed low
 **** Discussion
 ***** Expound on trade-off between performance and transparency by looking at differently sized models
 ***** Discuss relationship between tau threshold and the softmax/binary distances
@@ -101,7 +105,7 @@
 ******* add C-like reference to explain what SoPa++ means like in i++
 ******* add links to chapters in thesis structure, improve formatting
 ****** Background concepts
-******* add more background information on linear-chain WFSAs, FSAs, regular expressions and conversion processes
+******* add more background information on linear-chain WFSAs, FSAs, regular expressions and conversion processes -> if not perhaps in methodologies -> can borrow content from cold start 2020 paper
 ******* explain vanilla SoPa more clearly to motivate everything else -> perhaps need more information on FSAs with starting and accepting states
 ******* EITHER quote + indent sentences directly taken from other studies (cite pages and paragraphs) OR paraphrase them and leave them in a definition environment
 ******* consider citing pages and sections for Arrieta article in all cases since there is a lot of information -> might make citations of same article less redundant since there is accompanying information to diversify things
@@ -127,6 +131,8 @@
 ******* consider reporting token length statistics in a table or with a figure
 ******* use same terminology between intent detection and intent classification
 ******* think of how to better present accuracies from other studies for FMTOD, perhaps with a table in the results section
+******* streamline terminology between data set and partition
+******* mention the purpose of the intent detection task briefly
 ****** Appendix 
 ******* consider adding separate table in appendix for examples of FMTOD data instances by class
 ******* add more information to appendices and link them in the appropriate text portions

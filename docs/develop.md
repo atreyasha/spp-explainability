@@ -18,7 +18,10 @@
 
 ### Manuscript
 
-1.  Methodologies
+1.  **TODO** Clean up all notes here, segment timeline
+    properly and check days to do things
+
+2.  Methodologies
 
     **DEADLINE:** *\<2021-03-21 Sun\>*
 
@@ -133,24 +136,27 @@
             methodologies so that everything else is very easy to
             explain
 
-2.  Results
+3.  Results
 
     **DEADLINE:** *\<2021-03-28 Sun\>*
 
     1.  Report F_1 scores and performances of neural models
 
-        1.  modify visualize scripts to aggregate and print summary
+        1.  present results with accuracies instead of F1 to compare
+            with other studies
+
+        2.  modify visualize scripts to aggregate and print summary
             stats in script to re-use later in paper with means and
             standard deviations across random seeds
 
-        2.  report parameter counts in scores as well
+        3.  report parameter counts in scores as well
 
-        3.  compare performance to that of other paper(s)
+        4.  compare performance to that of other paper(s)
 
-        4.  mention again about test partition difference due to making
+        5.  mention again about test partition difference due to making
             it unique
 
-        5.  consider making test-partition not unique so this could be
+        6.  consider making test-partition not unique so this could be
             used to compare with other studies
 
     2.  Relationship between tau threshold vs. performance vs.
@@ -190,7 +196,16 @@
             importance for classes -\> would be interesting to see how
             saturated these are
 
-3.  Discussion
+        5.  tweak relative importances between neurons as well, if this
+            is of use otherwise drop it -\> need to add color to legend
+            or otherwise fixed size with color gradient
+
+        6.  include a table with binary neuron activation rates -\>
+            discuss these later to talk about some regularzing effect
+            even when the activation rates differed that the softmax
+            difference norm decreased or stayed low
+
+4.  Discussion
 
     1.  Expound on trade-off between performance and transparency by
         looking at differently sized models
@@ -209,13 +224,13 @@
     5.  If possible, add a basic human evaluation of explainability
         otherwise leave it to future work
 
-4.  Conclusions
+5.  Conclusions
 
     1.  Summarize everything in manuscript
 
     2.  Address research questions
 
-5.  Further work
+6.  Further work
 
     1.  Quality of explainability
 
@@ -265,7 +280,7 @@
         4.  visualize examples/classes where regex and neural model
             align and misalign, eg. with a confusion matrix
 
-6.  Post-paper iteration/formatting
+7.  Post-paper iteration/formatting
 
     **DEADLINE:** *\<2021-03-31 Wed\>*
 
@@ -296,7 +311,9 @@
         2.  Background concepts
 
             1.  add more background information on linear-chain WFSAs,
-                FSAs, regular expressions and conversion processes
+                FSAs, regular expressions and conversion processes -\>
+                if not perhaps in methodologies -\> can borrow content
+                from cold start 2020 paper
 
             2.  explain vanilla SoPa more clearly to motivate everything
                 else -\> perhaps need more information on FSAs with
@@ -375,6 +392,10 @@
             6.  think of how to better present accuracies from other
                 studies for FMTOD, perhaps with a table in the results
                 section
+
+            7.  streamline terminology between data set and partition
+
+            8.  mention the purpose of the intent detection task briefly
 
         5.  Appendix
 
