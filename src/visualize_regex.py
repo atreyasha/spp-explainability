@@ -68,8 +68,12 @@ def get_model_linear_weights(regex_model_checkpoint: str,
 
 def visualize_only_neurons(args: argparse.Namespace) -> None:
     # load pre-requisite data
-    _, weights = get_model_linear_weights(args.regex_model_checkpoint)
+    model_dict, weights = get_model_linear_weights(args.regex_model_checkpoint)
     rev_class_mapping = get_rev_class_mapping(args.class_mapping_config)
+    relative_sizes = torch.softmax(
+        torch.norm(model_dict["linear_state_dict"]["weight"].t(), dim=1),
+        0).numpy()
+    relative_sizes = (relative_sizes/np.max(relative_sizes))*0.4
 
     # get pre-defined neuron colors
     colors = get_neuron_colors()
@@ -92,6 +96,7 @@ def visualize_only_neurons(args: argparse.Namespace) -> None:
                colors=colors,
                wedgeprops=dict(width=0.5, edgecolor='w'),
                normalize=True)
+        ax.pie([1], colors="b", radius=relative_sizes[i])
         ax.set_title("N$_{%s}$" % i, size=15)
 
     # add legend and title to figure
@@ -166,7 +171,7 @@ def visualize_regex_neurons(args: argparse.Namespace) -> None:
                 with d.subgraph() as s:
                     s.attr("node",
                            rank="same",
-                           shape="doublecircle",
+                           shape="circle",
                            width="1")
                     for regex_index in range(len(regexes)):
                         s.node('S_%s_%s' % (regex_index, pattern_index),
