@@ -106,55 +106,68 @@
 }
 
 @inproceedings{schwartz2018sopa,
-    title = "Bridging {CNN}s, {RNN}s, and Weighted Finite-State Machines",
-    author = "Schwartz, Roy  and
-      Thomson, Sam  and
-      Smith, Noah A.",
-    booktitle = "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
-    month = jul,
-    year = "2018",
-    address = "Melbourne, Australia",
-    publisher = "Association for Computational Linguistics",
-    url = "https://www.aclweb.org/anthology/P18-1028",
-    doi = "10.18653/v1/P18-1028",
-    pages = "295--305",
-    abstract = "Recurrent and convolutional neural networks comprise two distinct families of models that have proven to be useful for encoding natural language utterances. In this paper we present SoPa, a new model that aims to bridge these two approaches. SoPa combines neural representation learning with weighted finite-state automata (WFSAs) to learn a soft version of traditional surface patterns. We show that SoPa is an extension of a one-layer CNN, and that such CNNs are equivalent to a restricted version of SoPa, and accordingly, to a restricted form of WFSA. Empirically, on three text classification tasks, SoPa is comparable or better than both a BiLSTM (RNN) baseline and a CNN baseline, and is particularly useful in small data settings.",
+  title = "Bridging {CNN}s, {RNN}s, and Weighted Finite-State Machines",
+  author = "Schwartz, Roy  and
+    Thomson, Sam  and
+    Smith, Noah A.",
+  booktitle = "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+  month = jul,
+  year = "2018",
+  address = "Melbourne, Australia",
+  publisher = "Association for Computational Linguistics",
+  url = "https://www.aclweb.org/anthology/P18-1028",
+  doi = "10.18653/v1/P18-1028",
+  pages = "295--305",
+  abstract = "Recurrent and convolutional neural networks comprise two distinct families of models that have proven to be useful for encoding natural language utterances. In this paper we present SoPa, a new model that aims to bridge these two approaches. SoPa combines neural representation learning with weighted finite-state automata (WFSAs) to learn a soft version of traditional surface patterns. We show that SoPa is an extension of a one-layer CNN, and that such CNNs are equivalent to a restricted version of SoPa, and accordingly, to a restricted form of WFSA. Empirically, on three text classification tasks, SoPa is comparable or better than both a BiLSTM (RNN) baseline and a CNN baseline, and is particularly useful in small data settings.",
 }
 
-@InProceedings{wang2019state, title = {State-Regularized Recurrent Neural Networks}, author = {Wang, Cheng and Niepert, Mathias}, pages = {6596--6606}, year = {2019}, editor = {Kamalika Chaudhuri and Ruslan Salakhutdinov}, volume = {97}, series = {Proceedings of Machine Learning Research}, address = {Long Beach, California, USA}, month = {09--15 Jun}, publisher = {PMLR}, pdf = {http://proceedings.mlr.press/v97/wang19j/wang19j.pdf}, url = {http://proceedings.mlr.press/v97/wang19j.html}, abstract = {Recurrent neural networks are a widely used class of neural architectures with two shortcomings. First, it is difficult to understand what exactly they learn. Second, they tend to work poorly on sequences requiring long-term memorization, despite having this capacity in principle. We aim to address both shortcomings with a class of recurrent networks that use a stochastic state transition mechanism between cell applications. This mechanism, which we term state-regularization, makes RNNs transition between a finite set of learnable states. We evaluate state-regularized RNNs on (1) regular languages for the purpose of automata extraction; (2) nonregular languages such as balanced parentheses, palindromes, and the copy task where external memory is required; and (3) real-word sequence learning tasks for sentiment analysis, visual object recognition, and language modeling. We show that state-regularization simplifies the extraction of finite state automata from the RNN’s state transition dynamics; forces RNNs to operate more like automata with external memory and less like finite state machines; and makes RNNs more interpretable.} }
+@InProceedings{wang2019state,
+  title = {State-Regularized Recurrent Neural Networks},
+  author = {Wang, Cheng and Niepert, Mathias},
+  pages = {6596--6606},
+  year = {2019},
+  editor = {Kamalika Chaudhuri and Ruslan Salakhutdinov},
+  volume = {97},
+  series = {Proceedings of Machine Learning Research},
+  address = {Long Beach, California, USA},
+  month = {09--15 Jun},
+  publisher = {PMLR},
+  pdf = {http://proceedings.mlr.press/v97/wang19j/wang19j.pdf},
+  url = {http://proceedings.mlr.press/v97/wang19j.html},
+  abstract = {Recurrent neural networks are a widely used class of neural architectures with two shortcomings. First, it is difficult to understand what exactly they learn. Second, they tend to work poorly on sequences requiring long-term memorization, despite having this capacity in principle. We aim to address both shortcomings with a class of recurrent networks that use a stochastic state transition mechanism between cell applications. This mechanism, which we term state-regularization, makes RNNs transition between a finite set of learnable states. We evaluate state-regularized RNNs on (1) regular languages for the purpose of automata extraction; (2) nonregular languages such as balanced parentheses, palindromes, and the copy task where external memory is required; and (3) real-word sequence learning tasks for sentiment analysis, visual object recognition, and language modeling. We show that state-regularization simplifies the extraction of finite state automata from the RNN’s state transition dynamics; forces RNNs to operate more like automata with external memory and less like finite state machines; and makes RNNs more interpretable.} }
 
 @inproceedings{peng2018rational,
-    title = "Rational Recurrences",
-    author = "Peng, Hao  and
-      Schwartz, Roy  and
-      Thomson, Sam  and
-      Smith, Noah A.",
-    booktitle = "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing",
-    month = oct # "-" # nov,
-    year = "2018",
-    address = "Brussels, Belgium",
-    publisher = "Association for Computational Linguistics",
-    url = "https://www.aclweb.org/anthology/D18-1152",
-    doi = "10.18653/v1/D18-1152",
-    pages = "1203--1214",
-    abstract = "Despite the tremendous empirical success of neural models in natural language processing, many of them lack the strong intuitions that accompany classical machine learning approaches. Recently, connections have been shown between convolutional neural networks (CNNs) and weighted finite state automata (WFSAs), leading to new interpretations and insights. In this work, we show that some recurrent neural networks also share this connection to WFSAs. We characterize this connection formally, defining rational recurrences to be recurrent hidden state update functions that can be written as the Forward calculation of a finite set of WFSAs. We show that several recent neural models use rational recurrences. Our analysis provides a fresh view of these models and facilitates devising new neural architectures that draw inspiration from WFSAs. We present one such model, which performs better than two recent baselines on language modeling and text classification. Our results demonstrate that transferring intuitions from classical models like WFSAs can be an effective approach to designing and understanding neural models.",
+  title = "Rational Recurrences",
+  author = "Peng, Hao  and
+    Schwartz, Roy  and
+    Thomson, Sam  and
+    Smith, Noah A.",
+  booktitle = "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing",
+  month = oct # "-" # nov,
+  year = "2018",
+  address = "Brussels, Belgium",
+  publisher = "Association for Computational Linguistics",
+  url = "https://www.aclweb.org/anthology/D18-1152",
+  doi = "10.18653/v1/D18-1152",
+  pages = "1203--1214",
+  abstract = "Despite the tremendous empirical success of neural models in natural language processing, many of them lack the strong intuitions that accompany classical machine learning approaches. Recently, connections have been shown between convolutional neural networks (CNNs) and weighted finite state automata (WFSAs), leading to new interpretations and insights. In this work, we show that some recurrent neural networks also share this connection to WFSAs. We characterize this connection formally, defining rational recurrences to be recurrent hidden state update functions that can be written as the Forward calculation of a finite set of WFSAs. We show that several recent neural models use rational recurrences. Our analysis provides a fresh view of these models and facilitates devising new neural architectures that draw inspiration from WFSAs. We present one such model, which performs better than two recent baselines on language modeling and text classification. Our results demonstrate that transferring intuitions from classical models like WFSAs can be an effective approach to designing and understanding neural models.",
 }
 
-@article{DBLP:journals/corr/abs-1905-08701,
-  author    = {Ananda Theertha Suresh and
-               Brian Roark and
-               Michael Riley and
-               Vlad Schogol},
-  title     = {Approximating probabilistic models as weighted finite automata},
-  journal   = {CoRR},
-  volume    = {abs/1905.08701},
-  year      = {2019},
-  url       = {http://arxiv.org/abs/1905.08701},
-  archivePrefix = {arXiv},
-  eprint    = {1905.08701},
-  timestamp = {Wed, 29 May 2019 11:27:50 +0200},
-  biburl    = {https://dblp.org/rec/journals/corr/abs-1905-08701.bib},
-  bibsource = {dblp computer science bibliography, https://dblp.org}
+@inproceedings{suresh-etal-2019-distilling,
+  title = "Distilling weighted finite automata from arbitrary probabilistic models",
+  author = "Suresh, Ananda Theertha  and
+    Roark, Brian  and
+    Riley, Michael  and
+    Schogol, Vlad",
+  booktitle = "Proceedings of the 14th International Conference on Finite-State Methods and Natural Language Processing",
+  month = sep,
+  year = "2019",
+  address = "Dresden, Germany",
+  publisher = "Association for Computational Linguistics",
+  url = "https://www.aclweb.org/anthology/W19-3112",
+  doi = "10.18653/v1/W19-3112",
+  pages = "87--97",
+  abstract = "Weighted finite automata (WFA) are often used to represent probabilistic models, such as n-gram language models, since they are efficient for recognition tasks in time and space. The probabilistic source to be represented as a WFA, however, may come in many forms. Given a generic probabilistic model over sequences, we propose an algorithm to approximate it as a weighted finite automaton such that the Kullback-Leibler divergence between the source model and the WFA target model is minimized. The proposed algorithm involves a counting step and a difference of convex optimization, both of which can be performed efficiently. We demonstrate the usefulness of our approach on some tasks including distilling n-gram models from neural models.",
 }
 
 @article{hornik1989multilayer,
@@ -179,10 +192,20 @@
 }
 
 @article{bocklisch2017rasa,
-  title={Rasa: Open source language understanding and dialogue management},
-  author={Bocklisch, Tom and Faulkner, Joey and Pawlowski, Nick and Nichol, Alan},
-  journal={arXiv preprint arXiv:1712.05181},
-  year={2017}
+  author    = {Tom Bocklisch and
+               Joey Faulkner and
+               Nick Pawlowski and
+               Alan Nichol},
+  title     = {Rasa: Open Source Language Understanding and Dialogue Management},
+  journal   = {CoRR},
+  volume    = {abs/1712.05181},
+  year      = {2017},
+  url       = {http://arxiv.org/abs/1712.05181},
+  archivePrefix = {arXiv},
+  eprint    = {1712.05181},
+  timestamp = {Mon, 13 Aug 2018 16:49:13 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1712-05181.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @incollection{kuich1986linear,
@@ -195,20 +218,20 @@
 }
 
 @inproceedings{schuster-etal-2019-cross-lingual,
-    title = "Cross-lingual Transfer Learning for Multilingual Task Oriented Dialog",
-    author = "Schuster, Sebastian  and
-      Gupta, Sonal  and
-      Shah, Rushin  and
-      Lewis, Mike",
-    booktitle = "Proceedings of the 2019 Conference of the North {A}merican Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)",
-    month = jun,
-    year = "2019",
-    address = "Minneapolis, Minnesota",
-    publisher = "Association for Computational Linguistics",
-    url = "https://www.aclweb.org/anthology/N19-1380",
-    doi = "10.18653/v1/N19-1380",
-    pages = "3795--3805",
-    abstract = "One of the first steps in the utterance interpretation pipeline of many task-oriented conversational AI systems is to identify user intents and the corresponding slots. Since data collection for machine learning models for this task is time-consuming, it is desirable to make use of existing data in a high-resource language to train models in low-resource languages. However, development of such models has largely been hindered by the lack of multilingual training data. In this paper, we present a new data set of 57k annotated utterances in English (43k), Spanish (8.6k) and Thai (5k) across the domains weather, alarm, and reminder. We use this data set to evaluate three different cross-lingual transfer methods: (1) translating the training data, (2) using cross-lingual pre-trained embeddings, and (3) a novel method of using a multilingual machine translation encoder as contextual word representations. We find that given several hundred training examples in the the target language, the latter two methods outperform translating the training data. Further, in very low-resource settings, multilingual contextual word representations give better results than using cross-lingual static embeddings. We also compare the cross-lingual methods to using monolingual resources in the form of contextual ELMo representations and find that given just small amounts of target language data, this method outperforms all cross-lingual methods, which highlights the need for more sophisticated cross-lingual methods.",
+  title = "Cross-lingual Transfer Learning for Multilingual Task Oriented Dialog",
+  author = "Schuster, Sebastian  and
+    Gupta, Sonal  and
+    Shah, Rushin  and
+    Lewis, Mike",
+  booktitle = "Proceedings of the 2019 Conference of the North {A}merican Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)",
+  month = jun,
+  year = "2019",
+  address = "Minneapolis, Minnesota",
+  publisher = "Association for Computational Linguistics",
+  url = "https://www.aclweb.org/anthology/N19-1380",
+  doi = "10.18653/v1/N19-1380",
+  pages = "3795--3805",
+  abstract = "One of the first steps in the utterance interpretation pipeline of many task-oriented conversational AI systems is to identify user intents and the corresponding slots. Since data collection for machine learning models for this task is time-consuming, it is desirable to make use of existing data in a high-resource language to train models in low-resource languages. However, development of such models has largely been hindered by the lack of multilingual training data. In this paper, we present a new data set of 57k annotated utterances in English (43k), Spanish (8.6k) and Thai (5k) across the domains weather, alarm, and reminder. We use this data set to evaluate three different cross-lingual transfer methods: (1) translating the training data, (2) using cross-lingual pre-trained embeddings, and (3) a novel method of using a multilingual machine translation encoder as contextual word representations. We find that given several hundred training examples in the the target language, the latter two methods outperform translating the training data. Further, in very low-resource settings, multilingual contextual word representations give better results than using cross-lingual static embeddings. We also compare the cross-lingual methods to using monolingual resources in the form of contextual ELMo representations and find that given just small amounts of target language data, this method outperforms all cross-lingual methods, which highlights the need for more sophisticated cross-lingual methods.",
 }
 
 @article{viterbi1967error,
@@ -222,11 +245,12 @@
   publisher={IEEE}
 }
 
-@article{yin2019understanding,
-  title={Understanding straight-through estimator in training activation quantized neural nets},
-  author={Yin, Penghang and Lyu, Jiancheng and Zhang, Shuai and Osher, Stanley and Qi, Yingyong and Xin, Jack},
-  journal={arXiv preprint arXiv:1903.05662},
-  year={2019}
+@inproceedings{yin2019understanding,
+  title={Understanding Straight-Through Estimator in Training Activation Quantized Neural Nets},
+  author={Penghang Yin and Jiancheng Lyu and Shuai Zhang and Stanley J. Osher and Yingyong Qi and Jack Xin},
+  booktitle={International Conference on Learning Representations},
+  year={2019},
+  url={https://openreview.net/forum?id=Skh4jRcKQ},
 }
 
 @article{townsend2019extracting,
@@ -240,11 +264,22 @@
   publisher={IEEE}
 }
 
-@article{danilevsky2020survey,
-  title={A survey of the state of explainable AI for natural language processing},
-  author={Danilevsky, Marina and Qian, Kun and Aharonov, Ranit and Katsis, Yannis and Kawas, Ban and Sen, Prithviraj},
-  journal={arXiv preprint arXiv:2010.00711},
-  year={2020}
+@inproceedings{danilevsky2020survey,
+  title = "A Survey of the State of Explainable {AI} for Natural Language Processing",
+  author = "Danilevsky, Marina  and
+    Qian, Kun  and
+    Aharonov, Ranit  and
+    Katsis, Yannis  and
+    Kawas, Ban  and
+    Sen, Prithviraj",
+  booktitle = "Proceedings of the 1st Conference of the Asia-Pacific Chapter of the Association for Computational Linguistics and the 10th International Joint Conference on Natural Language Processing",
+  month = dec,
+  year = "2020",
+  address = "Suzhou, China",
+  publisher = "Association for Computational Linguistics",
+  url = "https://www.aclweb.org/anthology/2020.aacl-main.46",
+  pages = "447--459",
+  abstract = "Recent years have seen important advances in the quality of state-of-the-art models, but this has come at the expense of models becoming less interpretable. This survey presents an overview of the current state of Explainable AI (XAI), considered within the domain of Natural Language Processing (NLP). We discuss the main categorization of explanations, as well as the various ways explanations can be arrived at and visualized. We detail the operations and explainability techniques currently available for generating explanations for NLP model predictions, to serve as a resource for model developers in the community. Finally, we point out the current gaps and encourage directions for future work in this important research area.",
 }
 
 @inproceedings{jiang2020cold,
@@ -263,10 +298,20 @@
 }
 
 @article{bengio2013estimating,
-  title={Estimating or propagating gradients through stochastic neurons for conditional computation},
-  author={Bengio, Yoshua and L{\'e}onard, Nicholas and Courville, Aaron},
-  journal={arXiv preprint arXiv:1308.3432},
-  year={2013}
+  author    = {Yoshua Bengio and
+               Nicholas L{\'{e}}onard and
+               Aaron C. Courville},
+  title     = {Estimating or Propagating Gradients Through Stochastic Neurons for
+               Conditional Computation},
+  journal   = {CoRR},
+  volume    = {abs/1308.3432},
+  year      = {2013},
+  url       = {http://arxiv.org/abs/1308.3432},
+  archivePrefix = {arXiv},
+  eprint    = {1308.3432},
+  timestamp = {Mon, 13 Aug 2018 16:47:35 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/BengioLC13.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @article{baum1966statistical,
@@ -297,11 +342,19 @@
   organization={IEEE}
 }
 
-@article{lundberg2017unified,
-  title={A unified approach to interpreting model predictions},
-  author={Lundberg, Scott and Lee, Su-In},
-  journal={arXiv preprint arXiv:1705.07874},
-  year={2017}
+@inproceedings{lundberg2017unified,
+  author = {Lundberg, Scott M. and Lee, Su-In},
+  title = {A Unified Approach to Interpreting Model Predictions},
+  year = {2017},
+  isbn = {9781510860964},
+  publisher = {Curran Associates Inc.},
+  address = {Red Hook, NY, USA},
+  abstract = {Understanding why a model makes a certain prediction can be as crucial as the prediction's accuracy in many applications. However, the highest accuracy for large modern datasets is often achieved by complex models that even experts struggle to interpret, such as ensemble or deep learning models, creating a tension between accuracy and interpretability. In response, various methods have recently been proposed to help users interpret the predictions of complex models, but it is often unclear how these methods are related and when one method is preferable over another. To address this problem, we present a unified framework for interpreting predictions, SHAP (SHapley Additive exPlanations). SHAP assigns each feature an importance value for a particular prediction. Its novel components include: (1) the identification of a new class of additive feature importance measures, and (2) theoretical results showing there is a unique solution in this class with a set of desirable properties. The new class unifies six existing methods, notable because several recent methods in the class lack the proposed desirable properties. Based on insights from this unification, we present new methods that show improved computational performance and/or better consistency with human intuition than previous approaches.},
+  booktitle = {Proceedings of the 31st International Conference on Neural Information Processing Systems},
+  pages = {4768–4777},
+  numpages = {10},
+  location = {Long Beach, California, USA},
+  series = {NIPS'17}
 }
 
 @inproceedings{zeiler2014visualizing,
@@ -322,31 +375,49 @@
 }
 
 @article{bastani2017interpretability,
-  title={Interpretability via model extraction},
-  author={Bastani, Osbert and Kim, Carolyn and Bastani, Hamsa},
-  journal={arXiv preprint arXiv:1706.09773},
-  year={2017}
+  author    = {Osbert Bastani and
+               Carolyn Kim and
+               Hamsa Bastani},
+  title     = {Interpretability via Model Extraction},
+  journal   = {CoRR},
+  volume    = {abs/1706.09773},
+  year      = {2017},
+  url       = {http://arxiv.org/abs/1706.09773},
+  archivePrefix = {arXiv},
+  eprint    = {1706.09773},
+  timestamp = {Mon, 13 Aug 2018 16:46:38 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/BastaniKB17a.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @article{MILLER20191,
-title = {Explanation in artificial intelligence: Insights from the social sciences},
-journal = {Artificial Intelligence},
-volume = {267},
-pages = {1-38},
-year = {2019},
-issn = {0004-3702},
-doi = {https://doi.org/10.1016/j.artint.2018.07.007},
-url = {https://www.sciencedirect.com/science/article/pii/S0004370218305988},
-author = {Tim Miller},
-keywords = {Explanation, Explainability, Interpretability, Explainable AI, Transparency},
-abstract = {There has been a recent resurgence in the area of explainable artificial intelligence as researchers and practitioners seek to provide more transparency to their algorithms. Much of this research is focused on explicitly explaining decisions or actions to a human observer, and it should not be controversial to say that looking at how humans explain to each other can serve as a useful starting point for explanation in artificial intelligence. However, it is fair to say that most work in explainable artificial intelligence uses only the researchers' intuition of what constitutes a ‘good’ explanation. There exist vast and valuable bodies of research in philosophy, psychology, and cognitive science of how people define, generate, select, evaluate, and present explanations, which argues that people employ certain cognitive biases and social expectations to the explanation process. This paper argues that the field of explainable artificial intelligence can build on this existing research, and reviews relevant papers from philosophy, cognitive psychology/science, and social psychology, which study these topics. It draws out some important findings, and discusses ways that these can be infused with work on explainable artificial intelligence.}
+  title = {Explanation in artificial intelligence: Insights from the social sciences},
+  journal = {Artificial Intelligence},
+  volume = {267},
+  pages = {1-38},
+  year = {2019},
+  issn = {0004-3702},
+  doi = {https://doi.org/10.1016/j.artint.2018.07.007},
+  url = {https://www.sciencedirect.com/science/article/pii/S0004370218305988},
+  author = {Tim Miller},
+  keywords = {Explanation, Explainability, Interpretability, Explainable AI, Transparency},
+  abstract = {There has been a recent resurgence in the area of explainable artificial intelligence as researchers and practitioners seek to provide more transparency to their algorithms. Much of this research is focused on explicitly explaining decisions or actions to a human observer, and it should not be controversial to say that looking at how humans explain to each other can serve as a useful starting point for explanation in artificial intelligence. However, it is fair to say that most work in explainable artificial intelligence uses only the researchers' intuition of what constitutes a ‘good’ explanation. There exist vast and valuable bodies of research in philosophy, psychology, and cognitive science of how people define, generate, select, evaluate, and present explanations, which argues that people employ certain cognitive biases and social expectations to the explanation process. This paper argues that the field of explainable artificial intelligence can build on this existing research, and reviews relevant papers from philosophy, cognitive psychology/science, and social psychology, which study these topics. It draws out some important findings, and discusses ways that these can be infused with work on explainable artificial intelligence.}
 }
 
 @article{courbariaux2016binarized,
-  title={Binarized neural networks: Training deep neural networks with weights and activations constrained to+ 1 or-1},
-  author={Courbariaux, Matthieu and Hubara, Itay and Soudry, Daniel and El-Yaniv, Ran and Bengio, Yoshua},
-  journal={arXiv preprint arXiv:1602.02830},
-  year={2016}
+  author    = {Matthieu Courbariaux and
+               Yoshua Bengio},
+  title     = {BinaryNet: Training Deep Neural Networks with Weights and Activations
+               Constrained to +1 or -1},
+  journal   = {CoRR},
+  volume    = {abs/1602.02830},
+  year      = {2016},
+  url       = {http://arxiv.org/abs/1602.02830},
+  archivePrefix = {arXiv},
+  eprint    = {1602.02830},
+  timestamp = {Mon, 13 Aug 2018 16:46:57 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/CourbariauxB16.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @article{thompson1968programming,
@@ -361,18 +432,18 @@ abstract = {There has been a recent resurgence in the area of explainable artifi
 }
 
 @inproceedings{zhang-etal-2020-intent,
-    title = "Intent Detection with {W}iki{H}ow",
-    author = "Zhang, Li  and
-      Lyu, Qing  and
-      Callison-Burch, Chris",
-    booktitle = "Proceedings of the 1st Conference of the Asia-Pacific Chapter of the Association for Computational Linguistics and the 10th International Joint Conference on Natural Language Processing",
-    month = dec,
-    year = "2020",
-    address = "Suzhou, China",
-    publisher = "Association for Computational Linguistics",
-    url = "https://www.aclweb.org/anthology/2020.aacl-main.35",
-    pages = "328--333",
-    abstract = "Modern task-oriented dialog systems need to reliably understand users{'} intents. Intent detection is even more challenging when moving to new domains or new languages, since there is little annotated data. To address this challenge, we present a suite of pretrained intent detection models which can predict a broad range of intended goals from many actions because they are trained on wikiHow, a comprehensive instructional website. Our models achieve state-of-the-art results on the Snips dataset, the Schema-Guided Dialogue dataset, and all 3 languages of the Facebook multilingual dialog datasets. Our models also demonstrate strong zero- and few-shot performance, reaching over 75{\%} accuracy using only 100 training examples in all datasets.",
+  title = "Intent Detection with {W}iki{H}ow",
+  author = "Zhang, Li  and
+    Lyu, Qing  and
+    Callison-Burch, Chris",
+  booktitle = "Proceedings of the 1st Conference of the Asia-Pacific Chapter of the Association for Computational Linguistics and the 10th International Joint Conference on Natural Language Processing",
+  month = dec,
+  year = "2020",
+  address = "Suzhou, China",
+  publisher = "Association for Computational Linguistics",
+  url = "https://www.aclweb.org/anthology/2020.aacl-main.35",
+  pages = "328--333",
+  abstract = "Modern task-oriented dialog systems need to reliably understand users{'} intents. Intent detection is even more challenging when moving to new domains or new languages, since there is little annotated data. To address this challenge, we present a suite of pretrained intent detection models which can predict a broad range of intended goals from many actions because they are trained on wikiHow, a comprehensive instructional website. Our models achieve state-of-the-art results on the Snips dataset, the Schema-Guided Dialogue dataset, and all 3 languages of the Facebook multilingual dialog datasets. Our models also demonstrate strong zero- and few-shot performance, reaching over 75{\%} accuracy using only 100 training examples in all datasets.",
 }
 
 @article{zhang2019joint,
@@ -386,14 +457,14 @@ abstract = {There has been a recent resurgence in the area of explainable artifi
 }
 
 @inproceedings{bird-loper-2004-nltk,
-    title = "{NLTK}: The Natural Language Toolkit",
-    author = "Bird, Steven  and
-      Loper, Edward",
-    booktitle = "Proceedings of the {ACL} Interactive Poster and Demonstration Sessions",
-    month = jul,
-    year = "2004",
-    address = "Barcelona, Spain",
-    publisher = "Association for Computational Linguistics",
-    url = "https://www.aclweb.org/anthology/P04-3031",
-    pages = "214--217",
+  title = "{NLTK}: The Natural Language Toolkit",
+  author = "Bird, Steven  and
+    Loper, Edward",
+  booktitle = "Proceedings of the {ACL} Interactive Poster and Demonstration Sessions",
+  month = jul,
+  year = "2004",
+  address = "Barcelona, Spain",
+  publisher = "Association for Computational Linguistics",
+  url = "https://www.aclweb.org/anthology/P04-3031",
+  pages = "214--217",
 }
