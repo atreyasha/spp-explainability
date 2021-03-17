@@ -4,163 +4,165 @@
 
 ** Tasks
 *** Manuscript
-**** TODO Clean up all notes here, segment timeline properly and check days to do things
 **** Methodologies
      DEADLINE: <2021-03-21 Sun>
-***** Model
-****** update the WFSA definitions to signify wildcard transitions and mention why this is found here and not in the background concepts since we could not find literature which defined it in a similar way
-****** add pseudocode for various segments -> would help to cement certain concepts
-****** look out for misconception between tau and transition matrix symbol -> perhaps change transition matrix symbol to something for distinct 
-****** try to find literature-based justification for wildcard transition -> if not use omega symbol to differentiate from the Kleene star symbol -> use UTF-8 symbol for graphviz plots
-****** add detailed information on how hard SoPa++ model differs from SoPa related to transitions and other simplifications -> motivate them using idea of explainable simplification
-****** comb through terms and iron out usage of patterns vs. substrings vs. WFSAs -> make these consistent and have them only refer to one consistent entity, also do not mix colloquial and technical terms
+***** SoPa++
+****** Lower model
+******* describe the lower model with GloVe 6B word vectors
+******* update the WFSA definitions to signify wildcard transitions which were not present in SoPa
+******** use omega symbol for wildcards to differentiate from the Kleene star symbol -> think of how to technically motivate this by perhaps allowing omega to be part of the input alphabet
+******** use UTF-8 symbol for graphviz plots
+******** mention the removal of epsilon and self-loops because of issues leading to variable string lengths
+******** perhaps can provide a small visualization for clarity
+****** Upper model  
+******* describe the LayerNorm layer and why it is needed in connection with the STE layer
+******* explain how and why we modified STE to TauSTE
+******* add visualization of TauSTE function
+******* explain purpose of STE layer which comes into importance later -> link to relevant section
+******* describe why we use a single linear layer instead of the MLP
+****** Add pseudocode for SoPa++ forward pass
+******* describe the backward pass very simply with gradient descent
+******* mention time complexity of new neural model
+******* add TikZ visualization of computational graph for SoPa++ model
+****** Add table with key differences from SoPa model
+******* recycle this table later and add it to the SoPa model section
+******* talk about SoPa++ still being a black-box model
+***** Regex proxy
+****** Describe removal of lower model and upper model 
+******* link this to explanations by simplification and regular expressions
+******* describe importance of TauSTE layer for explainability and how discrete layers help
+******* link back to background concepts when we discuss bringing neural and regex model as close to each other as possible
+****** Add pseudocode for regex proxy model construction and compression
+****** Add pseudocode for regex proxy model forward pass
+******* report time complexities of the simplification process as well as compression where possible
+******* add TikZ visualization of new computational graph
+******* talk about regex proxy possibly being a transparent model and motivate arguments for/against this, say this is only theoretical but we come back to this in the discussion segment
+***** SoPa++ training setup
 ****** talk about GloVe embeddings, lowercasing and other important things
-****** neural SoPa++ is a black-box (non-transparent) model, regex proxy is a transparent model -> need justifications from background concepts, might need significant text on this portion
-****** SoPa++ uses explanation by simplification (globally) -> need justification from background concepts -> not much use of global in paper, but we can make our own arguments
-****** try to link as much as possible with the background concepts for models/explainability concepts
-****** add Github link to repo as a footnote
-****** *new:* produce manual neural computational graph using tikz, building from what was made earlier
-***** Quantization/Binarization
-****** explain how and why we modified STE to TauSTE
-****** how does binarizing help with explainability, justify requirement for it in both training and testing
-****** add visualization of TauSTE function
-***** Explainability
-****** explain how we make explanations by simplification work altogether
-****** utilize antecendent/proxy model terminologies
-****** mention tangible metric for simplification -> how close is proxy to antecedent
-****** untangible metric is how satisfying the proxy model is to a target audience -> future work
-****** hard to find hierarchies of good vs. not-good explainability, but we can argue that we tried a different explainability method, i.e. explanation by simplification with a global simplified model vs. local-explanations/feature-relevance -> also we can use the constrictive argument from the paper and others
-****** make claim that SoPa++ explainability has a different explainability taxonomy from that of vanilla SoPa, but don't claim it is decisively better
-****** use the three good explainability criteria to show that our technique might be better theoretically, but the real test would have to be done with a target audience's survey
-****** mention that the target audience of this explainability method is domain experts, since it is still very complicated
-****** link back to background concepts when we discuss bringing neural and regex model as close to each other as possible
-****** *new:* produce manual regex computational graph using tikz, building from what was made earlier
-***** Training/Evaluation/Explainability-evaluation
 ****** talk about upsampling data set during training
-****** provide extensive details of training setup
-****** provide extensive details of evaluating neural/regex models
-****** provide extensive details of evaluating explanations by simplification "metric" of neural-regex models -> which should make results clearer
-****** *important:* everything shown in the "Results" section should be motivated or introduced here, focus harder on methodologies so that everything else is very easy to explain
+****** add sufficient information on grid training and hyperparameter setup
+***** Performance evaluation
+****** explain usage of test set
+****** explain how we evaluate performance using accuracy on both SoPa++ and its regex proxy
+****** mention checking if the performance falls in the competitie range
+***** Explanations by simplification evaluation
+****** mention we are trying to evaluate how close the models are, and we delegate the quality of explainability based on a target audience to future work since this would be out-of-scope for us 
+****** mention in general that the target audience for this method is still experts
+****** explain usage of test set in this case
+****** motivate all the different metrics such as softmax difference norm, binary misalignment rate and also performance scores
+****** mention variation of the tau threshold since this would limit how often activation occurs, which we hypothesize could have an effect in bringing both models closer together
+***** Insightful explanations insight
+****** mention how we analyze the output neurons with legitimacy given that it is now a linear layer to find how STE neurons distribute importances 
+****** in connection with this, we can analyze which textual regular expressions are responsible for each STE neuron activation -> which gives us an insight into which regular expressions are important for classifications
+****** we can analyze these to see how generalized these are or whether there could be strong inductive bias
 
 **** Results
      DEADLINE: <2021-03-28 Sun>
-***** Report F_1 scores and performances of neural models
-****** present results with accuracies instead of F1 to compare with other studies 
-****** modify visualize scripts to aggregate and print summary stats in script to re-use later in paper with means and standard deviations across random seeds
-****** report parameter counts in scores as well
-****** compare performance to that of other paper(s)
-****** mention again about test partition difference due to making it unique
-****** consider making test-partition not unique so this could be used to compare with other studies
-***** Relationship between tau threshold vs. performance vs. softmax/binary distances 
-****** compute statistics with random-seed deviations over inter-model comparisons such as average distance, misalignment, activation frequency and other useful metrics that can elucidate on-the-ground processes
-****** go into details on how effective compression algorithm was in terms of reducing the memory and number of regex's -> can tabulate all of these
-***** Explain discussion figures very clearly and show the relevance to the third research question
-***** Visualizations
-****** show visualization of training performance timelines, think about how to keep most important information
-****** show visualization of tau threshold vs. performance vs. softmax/binary distances with error bars for random seed iterations
-****** show visualizations of important patterns in a regex model -> something which is small and fits well into a page
+***** *Important:* everything shown in the "Results" section should have been well-motivated and should answer all three research questions
+***** 1. Evaluation of test accuracy scores of SoPa++ and regex proxy models
+****** show visualization of training process for posterity
+****** provide a table of summarized results w.r.t. random seed deviations
+******* modify visualize scripts to aggregate and print summary stats in script to re-use later in paper with means and standard deviations across random seeds
+******* report parameter counts in scores as well
+****** use the plus-minus sign to give the score ranges for all model types
+****** make statement on the competitiveness of these results
+***** 2. Evaluation of explanations by simplification 
+****** add table with information on performances and distance metrics averaged over random seeds with plus-minus deviation format
+****** show plot of how these trends work and that increasing the tau threshold brings models closer together
+****** make statement that explanations by simplifications appears to effective on the unseen evaluation set with similar scores; also a relationship can be observed with respect to the tau threshold
+***** 3. Interesting and insightful explanations on FMTOD
+****** show plot of neuron importance distributions -> consider removing inter-neuron importance with alpha levels since this might be irrelevant
+****** show relevant plots of regular expressions with neurons to see what kinds of textual patterns are imporant for the SoPa++ model and its regex proxy
 ******* figures must be manually put together later directly in latex
-******* consider removing double-circle for start state, since this usually denotes the accepting state
-****** show TikZ visualization of each binary neuron's relative importance for classes -> would be interesting to see how saturated these are 
-****** tweak relative importances between neurons as well, if this is of use otherwise drop it -> need to add color to legend or otherwise fixed size with color gradient
-****** include a table with binary neuron activation rates -> discuss these later to talk about some regularzing effect even when the activation rates differed that the softmax difference norm decreased or stayed low
+******* tweak relative importances between neurons as well, if this is of use otherwise drop it -> need to add color to legend or otherwise fixed size with color gradient
 **** Discussion
-***** Expound on trade-off between performance and transparency by looking at differently sized models
-***** Discuss relationship between tau threshold and the softmax/binary distances
-***** Think about why larger regex models tend to show more misalignment from neural counterparts compared to smaller models
-***** Can talk about neurons responsible for certain decisions, as well as distributed representations in neurons where there is really no clear neuron responsible for one-thing -> which is an impediment to explainability
-***** If possible, add a basic human evaluation of explainability otherwise leave it to future work
+***** Performance
+****** mention issue of being unsure whether other studies removed duplicates -> but in our case using the same test set seems to improve evaluation performance
+***** Explainability
+****** discuss how transparent the regex proxy really is given how many regular expressions are picked up -> link to how rules-based models in Arrieta et al 2020 paper can also become black-boxes -> provide numbers of regular expressions that get captured and stored
+****** add segment on how useful this might be to a target audience based on the three criteria, but acknowledge that this would need to be consulted with a target audience
+******* describe how a basic human evaluation of explainability could be done
+******* mention visualization resources needed for this and it would have to be done with a much simpler and smaller model
+***** Interesting and insightful observations
+****** inductive biases might be possible to find by looking into regular expressions
+****** mention distributed representations in neurons where there is really no clear neuron responsible for one-thing -> which is an impediment to explainability since attribution and causal links are difficult to identify
+***** Other discussion points
+****** Discuss relationship between tau threshold and the softmax/binary distances
+****** Expound on trade-off between performance and transparency by looking at differently sized models -> and then also looking at other studies which used BERTesque models
 **** Conclusions
 ***** Summarize everything in manuscript
 ***** Address research questions
 **** Further work
-***** Quality of explainability
-****** this is subjective and a survey from the target audience would be good to have
 ***** Modeling
-****** use packed sequences for fast processing
-****** use multiple-threads for extracting regular expressions, or store them in a database
-****** more thorough regex lookup since now only the first one causes a loop breakage
-****** add predict function for people to test with arbitrary sequences
-****** consider using nearest-neighbours to expand adjacent tokens on already found regex's
-****** consider internal regex UNK token handling cases other than wildcard presence
-****** consider semantic clustering of digits or other objects to help achieve generality
+****** use multiple-threads for extracting regular expressions, or store them in a database with indexing for faster regex lookups
 ****** extend to a finite-state transducer for seq2seq tasks
+***** Explainability generalization/evaluation
 ****** can map linear to decision tree to get clearer picture of possibilities
+****** use nearest-neighbours to expand adjacent tokens
+****** semantic clustering of common patterns for increased generalization
+****** this is subjective and a survey from the target audience would be good to have -> would require an interactive interface where we visualize explanations
+****** UNK token handling workflow for regex model where UNK has to representation other than indirect wildcards
 ****** human intervention inside regex model to monitor/improve performance
 ***** Analysis
 ****** extension to more NLU data sets such as SNIPS, ATIS
-****** analyzing whether patterns can help discover possible adversarial patterns
+****** analyzing whether patterns can help discover possible adversarial patterns or inductive biases
 ****** for the target audience of end-users -> how can a user make use of the regex model
 ****** visualize examples/classes where regex and neural model align and misalign, eg. with a confusion matrix
 
 **** Post-paper iteration/formatting
      DEADLINE: <2021-03-31 Wed>
-***** Paper length
-****** 20-90 pages thesis length -> try to keep ideas well-motivated yet succinct
-***** Points to address towards end
-****** Introduction
-******* abstract and introduction should already mention results, and should not leave this to conclusions
-******* fine-tune introduction with new details from other chapters
-******* update motivations from Arrieta et al. 2020 "What for" section
-******* add C-like reference to explain what SoPa++ means like in i++
-******* add links to chapters in thesis structure, improve formatting
-****** Background concepts
-******* add more background information on linear-chain WFSAs, FSAs, regular expressions and conversion processes -> if not perhaps in methodologies -> can borrow content from cold start 2020 paper
-******* explain vanilla SoPa more clearly to motivate everything else -> perhaps need more information on FSAs with starting and accepting states
-******* EITHER quote + indent sentences directly taken from other studies (cite pages and paragraphs) OR paraphrase them and leave them in a definition environment
-******* consider citing pages and sections for Arrieta article in all cases since there is a lot of information -> might make citations of same article less redundant since there is accompanying information to diversify things
-******* be very clear on what is directly taken from another study versus what is paraphrased
-******* think about providing an additional definition for "understandability" 
-******* consider quoting all definitions to further imply that they are exactly taken from other studies
-******* add a Kleene-star operator mention to remark 9.4
-******* include a section on risks on large NLP models and why explainability is necessary with different study
-******* if possible, try to reduce references to Arrieta et al. 2020 to reduce perceived over-dependence
-******* revisit sopa explainability evaluation with three guidelines to check if it makes sense after having evaluated sopa++ with the same guidelines
-******* look into antecedent/proxy names and if these can be improved
-******* return to this chapter to add/remove content based on requirements of later chapters
-****** Bibliography
-******* look for journal/conference alternative citations for current papers
-******* improve capitalization with braces in bibtex file
-******* if possible, try to find non-arxiv citations for papers -> look for alternative citations in ACL or other conferences instead of arxiv papers
-******* remove red link color in table of contents
-******* fine-tune citation color to be consistent with other colors
-****** Methodologies
-******* think about adding new table with percentage of each data class in FMTOD -> would highlight the imbalance a bit better
-******* consider respelling "preprocessing" as "pre-processing" if necessary
-******* consider redoing FMTOD table with relative frequencies
-******* consider reporting token length statistics in a table or with a figure
-******* use same terminology between intent detection and intent classification
-******* think of how to better present accuracies from other studies for FMTOD, perhaps with a table in the results section
-******* streamline terminology between data set and partition
-******* mention the purpose of the intent detection task briefly
-****** Appendix 
-******* consider adding separate table in appendix for examples of FMTOD data instances by class
-******* add more information to appendices and link them in the appropriate text portions
-****** Manuscript admin
-******* read manuscript and ensure there is an easily followable narrative for someone who is a non-expert -> can be done by adding more text before or around definition environments in order to lead the reader into each concept smoothly -> this can be done post-paper since it requires all the information to be present in the paper first
-******* definition/remark structure might need to be revised to something more narrative-suited, or simply add sufficient lines before and after to keep the narrative flowing
-******* ensure that areas between chapters-sections or sections-subsections are filled with some explanatory text to give the sense of a flowing narrative -> use links to individual sections in each chapter to describe what these describe -> this will help string everything together including for linking background concepts to methodologies
-******* add titles to all figures in the manuscript
-******* always mention "figure taken from study (year)" when using external figures
-******* fine tune WFSA to mean either automata or automaton, make plural abbreviation clear as well
-******* add links to different sections later on once structure and content is clear -> need to read through to catch all parts which need links
-******* sort out all abbreviations and standardize formatting in terms of where they are first declared
+***** Introduction
+****** abstract and introduction should already mention key findings
+****** update motivations from Arrieta et al. 2020 "What for" section
+****** add links to chapters in thesis structure
+***** Background concepts
+****** pad definition environments with more explanatory text for flow
+****** add background information on linear-chain WFSAs, FSAs, regular expressions and accepting states -> can borrow content from cold start paper
+****** add more information on page numbers and sections in all Arrieta et al. citations so these seem more differentiated
+****** explain vanilla SoPa in a more prose format using a table to explain important features -> this table can then be compared directly with new SoPa++ features
+****** add a Kleene-star operator mention to remark 9.4
+***** Methodologies
+****** add Github link to repo as a footnote when introducing this chapter
+****** consider adding background section on NLU overall and tasks available
+****** mention the purpose of the intent detection task briefly on a grander-scheme-of-things
+****** mention briefly the purpose of the slot filling task 
+***** Terminologies and abbreviations
+****** sort out all abbreviations and standardize formatting in terms of where they are first declared
+****** consider respelling "preprocessing" as "pre-processing" if necessary, fine-tune their usage
+****** fine-tune antecedent/proxy terminology and synchronize everywhere
+****** fine-tune usage of patterns vs. substrings vs. WFSAs
+****** fine-tune WFSA to mean either automata or automaton, make plural abbreviation WFSAs clear
+****** fine-tune the slot-filling terminology 
+****** fine-tune terminology between intent detection and intent classification
+****** fine-tune terminology between data set and partition
+****** fine-tune token length, sentence length and utterance length
+***** Bibliography
+****** improve capitalization with braces in bibtex file
+****** find alternative journal/conference citations for current arxiv papers
+***** Manuscript admin
+****** Text-related
+******* ensure that areas between chapters-sections or sections-subsections are filled with explanatory text to provide a narrative -> use links to/from individual sections/chapters to string everything together
+******* add remaining features by referring to master template such as abstract (short summarized introduction), list of tables/figures/abbreviations, appendices, etc; see master document for examples
 ******* change to two sided format before printing, as this works well for binding/printing
-******* add Uni-Potsdam originality declaration, or modify current one to fit
-******* add student registration details to paper such as matriculation number and other details
-******* add remaining features by referring to master template such as abstract (short summarized introduction), list of tables/figures/abbreviations, appendices, and all others
+******* EITHER quote + indent sentences directly taken from other studies with page and section OR paraphrase them and leave them in a definition environment
+******* check that all borrowed figures have an explicit attribution such as "taken from paper et al (year)"
+******* perform spell-check of all text
+******* remove red link color in table of contents
+******* always mention "figure taken from study (year)" when using external figures
+****** UP-related
+******* 20-90 pages thesis length -> well-motivated yet succinct
 ******* date on bottom of manuscript should be date of submission before mailing to Potsdam
-******* take note of all other submission criteria such as statement of originality, printing, German abstract, digital copy and others, see: https://www.uni-potsdam.de/en/studium/studying/organizing-your-exams/final-thesis
-******* perform spell-check of everything at the end
+******* add student registration details to paper such as matriculation number and other details
+******* take note of all other submission criteria such as statement of originality, German abstract, digital copy and others, see: https://www.uni-potsdam.de/en/studium/studying/organizing-your-exams/final-thesis
 
 *** Programming
 **** Dependencies, typing and testing
 ***** if using R, document R dependencies with ~sessionInfo()~
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List with overloads)
 **** Documentation and clean-code
-***** if necessary, apply further script renaming using antecedent and proxy terminologies -> update readme and usages
-***** fix terminology of STE/output neurons consistently after paper
-***** find a better way of naming visualization pdfs to attribute to specific model and make this unique -> perhaps via timestamp
+***** update readme and usages with finalized antecedent and proxy terminologies 
+***** upadte readme and usages with finalized STE/output neurons terminologies
+***** find attributable naming standards for PDFs produced with timestamp, perhaps dump a json file
 ***** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility
 ***** add a comment above each code chunk which explains inner mechanisms better
 ***** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
