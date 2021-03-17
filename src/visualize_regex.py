@@ -68,8 +68,12 @@ def get_model_linear_weights(regex_model_checkpoint: str,
 
 def visualize_only_neurons(args: argparse.Namespace) -> None:
     # load pre-requisite data
-    _, weights = get_model_linear_weights(args.regex_model_checkpoint)
+    model_dict, weights = get_model_linear_weights(args.regex_model_checkpoint)
     rev_class_mapping = get_rev_class_mapping(args.class_mapping_config)
+    relative_sizes = torch.softmax(
+        torch.norm(model_dict["linear_state_dict"]["weight"].t(), dim=1),
+        0).numpy()
+    relative_sizes = (relative_sizes/np.max(relative_sizes))*1.0
 
     # get pre-defined neuron colors
     colors = get_neuron_colors()
@@ -88,9 +92,12 @@ def visualize_only_neurons(args: argparse.Namespace) -> None:
 
     # start adding pie charts to figure
     for i, ax in enumerate(axs.flatten()):
+        current_colors = np.copy(colors)
+        current_colors[:, -1] *= relative_sizes[i]
         ax.pie(weights[i],
-               colors=colors,
+               colors=current_colors,
                wedgeprops=dict(width=0.5, edgecolor='w'),
+               startangle=90,
                normalize=True)
         ax.set_title("N$_{%s}$" % i, size=15)
 
