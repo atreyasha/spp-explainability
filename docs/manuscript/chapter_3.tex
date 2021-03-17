@@ -4,7 +4,7 @@
 
 \section{Facebook Multilingual Task Oriented Dialog}
 
-\citet{schuster-etal-2019-cross-lingual} originally released the Facebook Multilingual Task Oriented Dialog (FMTOD) data set to encourage research in cross-lingual transfer learning for Natural Language Understanding (NLU) tasks; specifically from from high-resource to low-resource languages. The authors released the FMTOD data set with English as the high-resource language providing $\sim$43k annotated sentences, and Spanish and Thai as low-resource languages providing a total of $\sim$14k sentences. Furthermore, they streamlined the data set on two key tasks; namely intent detection and textual slot filling. In this thesis, we focus solely on the English language intent detection task in the FMTOD data set. This intent detection task entails a multi-label sequence classification task with a total of 12 classes from alarm, reminder and weather-related domains.
+\citet{schuster-etal-2019-cross-lingual} originally released the Facebook Multilingual Task Oriented Dialog (FMTOD) data set to encourage research in cross-lingual transfer learning for Natural Language Understanding (NLU) tasks; specifically from from high-resource to low-resource languages. The authors released the FMTOD data set with English as the high-resource language providing $\sim$43k annotated utterances, and Spanish and Thai as low-resource languages providing a total of $\sim$14k utterances. Furthermore, they streamlined the data set on two key tasks; namely intent detection and textual slot filling. In this thesis, we focus solely on the English language intent detection task in the FMTOD data set. This intent detection task entails a multi-label sequence classification task with a total of 12 classes from alarm, reminder and weather-related domains.
 
 \subsection{Motivation}
 
@@ -33,7 +33,7 @@ Many of the duplicates observed were already present in the original FMTOD data 
   \centering
   \begin{tabular}{lllll}
     \toprule
-    Class and description & Train & Validation & Test & Combined \\
+    Class and description & Train & Validation & Test & $\Sigma$ \\
     \midrule
     0: \texttt{alarm/cancel\_alarm} & 1157 & 190 & 444 & 1791 \\
     1: \texttt{alarm/modify\_alarm} & 393 & 51 & 122 & 566 \\
@@ -51,20 +51,20 @@ Many of the duplicates observed were already present in the original FMTOD data 
     $\Sigma$ & 20672 & 3262 & 7420 & 31354 \\
     \bottomrule
   \end{tabular}
-  \caption{Frequency of the preprocessed FMTOD data set classes grouped by partitions; $\Sigma$ signifies the cumulative frequency in each data partition}
+  \caption{Frequency of the preprocessed FMTOD data set classes grouped by partitions; $\Sigma$ signifies the cumulative frequency statistic}
   \label{tab:fmtod}
 \end{table}
 
 \subsection{Summary statistics}
 
-Figure \ref{fig:fmtod} shows the summary statistics of the preprocessed FMTOD data set grouped by classes and data set partitions. Similarly, Table \ref{tab:fmtod} shows the same summary statistics in a tabular form with explicit frequencies. Based on the summary statistics, we can observe that the preprocessed FMTOD data set is significantly imbalanced with $\sim$45$\%$ of samples falling into Class 11 alone. We take this observation into consideration in later sections and apply fixes to mitigate this data imbalance. In addition, we observe from Table \ref{tab:fmtod-examples} that input sentences in the preprocessed FMTOD data set are generally short; with a mean input token count of 7.7 and a standard deviation of 2.5 tokens. Token summary statistics were computed with the assistance of NLTK's default word tokenizer \citep{bird-loper-2004-nltk}.
+Figure \ref{fig:fmtod} shows the summary statistics of the preprocessed FMTOD data set grouped by classes and data set partitions. Similarly, Table \ref{tab:fmtod} shows the same summary statistics in a tabular form with explicit frequencies. Based on the summary statistics, we can observe that the preprocessed FMTOD data set is significantly imbalanced with $\sim$45$\%$ of samples falling into Class 11 alone. We take this observation into consideration in later sections and apply fixes to mitigate this data imbalance. In addition, we observe from Table \ref{tab:fmtod-examples} that input utterances in the preprocessed FMTOD data set are generally short; with a mean input utterance length of 7.7 and a standard deviation of 2.5 tokens. Utterance length summary statistics were computed with the assistance of NLTK's default \texttt{Treebank} word tokenizer \citep{bird-loper-2004-nltk}.
 
 \begin{table}[t!]
   \centering
   \begin{threeparttable}
   \begin{tabular}{lll}
     \toprule
-    Class and description & Token count$^{\dagger}$ & Example$^{\ddagger}$ \\
+    Class and description & Utterance length$^{\dagger}$ & Example$^{\ddagger}$ \\
     \midrule
     0: \texttt{alarm/cancel\_alarm} & 5.6 $\pm$ 1.9 & cancel weekly alarm \\
     1: \texttt{alarm/modify\_alarm} & 7.1 $\pm$ 2.5 & change alarm time \\
@@ -88,7 +88,7 @@ Figure \ref{fig:fmtod} shows the summary statistics of the preprocessed FMTOD da
     \item $^{\ddagger}$Short and simple examples were chosen for brevity and formatting purposes
   \end{tablenotes}
   \end{threeparttable}
-  \caption{Tabular summary of token count statistics and examples for FMTOD data classes; $\mu$ signifies the cumulative summary statistics}
+  \caption{Tabular summary of utterance length statistics and examples for FMTOD data classes; $\mu$ signifies the cumulative summary statistics}
   \label{tab:fmtod-examples}
 \end{table}
 
@@ -110,7 +110,7 @@ Figure \ref{fig:fmtod} shows the summary statistics of the preprocessed FMTOD da
 
 \subsection{Performance range}
 
-Several studies have optimized deep learning models on the FMTOD English language intent classification task using a variety of models from BiLSTMs to XLM-RoBERTa \citep{schuster-etal-2019-cross-lingual,zhang2019joint,zhang-etal-2020-intent}. Table \ref{tab:fmtod-results} summarizes these studies along with their reported accuracy scores on the FMTOD English language intent classification task. Based on the presented results from these recent studies, we can infer that the general competitive accuracy range for the FMTOD English language intent classification task is from 96.6$\%$ to 99.5$\%$. 
+Several studies have optimized deep learning models on the FMTOD English language intent classification task using a variety of models from BiLSTMs to XLM-RoBERTa \citep{schuster-etal-2019-cross-lingual,zhang2019joint,zhang-etal-2020-intent}. Table \ref{tab:fmtod-results} summarizes these studies along with their reported accuracy scores on the FMTOD English language intent classification task. Based on the presented results from these recent studies, we can infer that the general competitive accuracy range for the FMTOD English language intent classification task is from 96.6$\%$ to 99.5$\%$.
 
 %%% Local Variables: 
 %%% mode: latex

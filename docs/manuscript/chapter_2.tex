@@ -112,7 +112,7 @@ For the case of black-box models, \citet{arrieta2020explainable} argue that sepa
   \citet{bastani2017interpretability} and \citet{tan2018distill} are examples of studies that extract and distill simpler proxy models from complex antecedent models.
 \end{remark}
 
-Through a survey of recent literature on explanations by simplification applied in the Natural Language Processing (NLP) field, we came across several prominent studies employing explanations by simplification to simplify antecedent black-box neural networks into proxy Finite-State Automata (FSAs) and/or Weighted Finite-State Automata (WFSAs) \citep{schwartz2018sopa,peng2018rational,DBLP:journals/corr/abs-1905-08701,wang2019state,jiang2020cold}. We expound more on WFSAs and \citet{schwartz2018sopa} in Sections \ref{section:wfsa} and \ref{section:soft-patterns} respectively.
+Through a survey of recent literature on explanations by simplification applied in the Natural Language Processing (NLP) field, we came across several prominent studies employing explanations by simplification to simplify antecedent black-box neural networks into proxy Finite-State Automata (FSAs) and/or Weighted Finite-State Automata (WFSAs) \citep{schwartz2018sopa,peng2018rational,suresh-etal-2019-distilling,wang2019state,jiang2020cold}. We expound more on WFSAs and \citet{schwartz2018sopa} in Sections \ref{section:wfsa} and \ref{section:soft-patterns} respectively.
 
 \begin{figure}[t]
   \centering
@@ -137,9 +137,7 @@ To reduce some of the aforementioned subjectivity involved, \citet{MILLER20191} 
 
 \section{Straight-through estimator}
 
-Activation quantized neural networks refer to neural networks that contain layers which transmit piece-wise discrete signals. One of the main challenges in training such activation quantized neural networks is that their gradients tend to vanish almost everywhere because their derivatives typically default to zero. \citep{bengio2013estimating,courbariaux2016binarized,yin2019understanding}.
-
-One significant workaround for this issue was proposed by \citet{bengio2013estimating} through the introduction of the Straight-Through Estimator (STE). In the vanilla version of the STE, the STE neuron emits a signal of 1 when its input is strictly positive, and emits a zero signal in all other cases (Equation \ref{eq:ste-forward}). The STE then uses a simple identity function to estimate the gradient during the backward pass (Equation \ref{eq:ste-backward}). The vanilla STE is visualized through a schematic in Figure \ref{fig:straight-through-estimator}.
+Activation quantized neural networks refer to neural networks that contain layers which transmit piece-wise discrete signals. Since they come into importance in later aspects of this thesis, we use this section to provide a short background of them. One of the main challenges in training such activation quantized neural networks is that their gradients tend to vanish almost everywhere because their derivatives typically default to zero. \citep{bengio2013estimating,courbariaux2016binarized,yin2019understanding}. One significant workaround for this issue was proposed by \citet{bengio2013estimating} through the introduction of the Straight-Through Estimator (STE). In the vanilla version of the STE, the STE neuron emits a signal of 1 when its input is strictly positive, and emits a zero signal in all other cases (Equation \ref{eq:ste-forward}). The STE then uses a simple identity function to estimate the gradient during the backward pass (Equation \ref{eq:ste-backward}). The vanilla STE is visualized through a schematic in Figure \ref{fig:straight-through-estimator}.
 
 \begin{equation}
   \label{eq:ste-forward}
@@ -168,6 +166,8 @@ Aside from the vanilla STE, several other flavors of STEs have been proposed by 
 
 \label{section:wfsa}
 
+As mentioned in Section \ref{section:xai-techniques}, we found multiple studies in NLP that conducted explanations by simplification on black-box neural networks by simplifying them into WFSAs. As this will eventually be a focus of this thesis, we define key concepts related to WFSAs in this section.
+
 \begin{definition}[Semiring; \citealt{kuich1986linear}]
   A semiring is a set $\mathbb{K}$ along with two binary associative operations $\oplus$ (addition) and $\otimes$ (multiplication) and two identity elements: $\bar{0}$ for addition and $\bar{1}$ for multiplication. Semirings require that addition is commutative, multiplication distributes over addition, and that multiplication by $\bar{0}$ annihilates, i.e., $\bar{0} \otimes a = a \otimes \bar{0} = \bar{0}$.
 
@@ -191,19 +191,19 @@ Aside from the vanilla STE, several other flavors of STEs have been proposed by 
 
 \begin{definition}[Weighted finite-state automaton; \citealt{peng2018rational}]
   \label{def:wfsa}
-  A weighted finite-state automaton over a semiring $\mathbb{K}$ is a 5-tuple $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \mathcal{T}, \lambda, \rho \rangle$, with:
+  A weighted finite-state automaton over a semiring $\mathbb{K}$ is a 5-tuple $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \Gamma, \lambda, \rho \rangle$, with:
 
   \begin{itemize}
     \itemsep0em 
     \item[--] a finite input alphabet $\Sigma$;
     \item[--] a finite state set $\mathcal{Q}$;
-    \item[--] transition weights $\mathcal{T}: \mathcal{Q} \times \mathcal{Q} \times (\Sigma \cup \{\epsilon\}) \rightarrow \mathbb{K}$;
+    \item[--] transition weights $\Gamma: \mathcal{Q} \times \mathcal{Q} \times (\Sigma \cup \{\epsilon\}) \rightarrow \mathbb{K}$;
     \item[--] initial weights $\lambda: \mathcal{Q} \rightarrow \mathbb{K}$; 
     \item[--] and final weights $\rho: \mathcal{Q} \rightarrow \mathbb{K}$.
   \end{itemize}
 
   \begin{remark}
-    Several studies refer to the transition weights $\mathcal{T}$ as the transition matrix, and the initial $\lambda$ and final $\rho$ weights as the initial and final weight vectors respectively \citep{schwartz2018sopa,jiang2020cold}. As a result, we may use these terms interchangeably when referring to different studies.
+    Several studies refer to the transition weights $\Gamma$ as the transition matrix, and the initial $\lambda$ and final $\rho$ weights as the initial and final weight vectors respectively \citep{schwartz2018sopa,jiang2020cold}. As a result, we may use these terms interchangeably when referring to different studies.
   \end{remark}
   
   \begin{remark}
@@ -227,7 +227,7 @@ Aside from the vanilla STE, several other flavors of STEs have been proposed by 
 \end{definition}
 
 \begin{equation}
-  \mathcal{A}[\pmb{\pi}] = \lambda(q_1) \otimes \Bigg( \bigotimes_{i=1}^n \mathcal{T}(\pi_i) \Bigg) \otimes \rho(q_{n+1})
+  \mathcal{A}[\pmb{\pi}] = \lambda(q_1) \otimes \Bigg( \bigotimes_{i=1}^n \Gamma(\pi_i) \Bigg) \otimes \rho(q_{n+1})
 \end{equation}
 
 \begin{definition}[String score; \citealt{peng2018rational}]
@@ -246,7 +246,7 @@ Let $\Pi(\pmb{x})$ denote the set of all paths in $\mathcal{A}$ that derive $\pm
 \begin{subequations}
   \begin{align}
     \Omega_0(q) &= \lambda(q) \\
-    \Omega_{i+1}(q) &= \bigoplus_{q' \in \mathcal{Q}} \Omega_i(q') \otimes \mathcal{T}(q',q,x_i)  \\
+    \Omega_{i+1}(q) &= \bigoplus_{q' \in \mathcal{Q}} \Omega_i(q') \otimes \Gamma(q',q,x_i)  \\
     \mathcal{A}[\![\pmb{x}]\!] &= \bigoplus_{q \in \mathcal{Q}} \Omega_n(q) \otimes \rho(q)
   \end{align}
 \end{subequations}
@@ -279,7 +279,7 @@ In their study, \citet{schwartz2018sopa} test the SoPa architecture on three sep
 
 \subsection{Model specifications}
 
-\paragraph{WFSAs:} In regards to the WFSAs used in SoPa, \citet{schwartz2018sopa} only utilize the max-sum and max-product semirings; as well as $\epsilon$-transitions and self-loops. Next, they employ constraints on the model's WFSAs in order to reduce the runtime of SoPa further. Of these, they firstly only allow one start and end state; which results in the initial $\lambda$ and final $\rho$ weights being reduced to static unitary values instead of state-dependent weights found in Definition \ref{def:wfsa}. Next, they constrain $\epsilon$-transitions to only occur at most once in each transition. Finally, they enforce a linear-chain WFSA structure which only allows consecutive-state transitions and therefore disallows transitions to previous states (Figure \ref{fig:fsa}). This results in the transition matrix $\mathcal{T}$ being reduced to a sparse diagonal matrix. These constraints result in the runtime of the linear-chain WFSAs being reduced to $O(|Q||\pmb{x}|)$ compared to the original runtime in Remark \ref{rmk:old-runtime}. The relationship between regular expressions and (weighted) finite-state automata has been well-established in the theory of finite-state automata; with several algorithms detailing a deterministic conversion process between these entities \citep{thompson1968programming,jiang2020cold}. Since the relationship between regular expressions and textual patterns is clear, \citet{schwartz2018sopa} refer to the linear-chain WFSAs in SoPa simply as \textit{``patterns''}. For brevity, we adopt the same terminology.
+\paragraph{WFSAs:} In regards to the WFSAs used in SoPa, \citet{schwartz2018sopa} only utilize the max-sum and max-product semirings; as well as $\epsilon$-transitions and self-loops. Next, they employ constraints on the model's WFSAs in order to reduce the runtime of SoPa further. Of these, they firstly only allow one start and end state; which results in the initial $\lambda$ and final $\rho$ weights being reduced to static unitary values instead of state-dependent weights found in Definition \ref{def:wfsa}. Next, they constrain $\epsilon$-transitions to only occur at most once in each transition. Finally, they enforce a linear-chain WFSA structure which only allows consecutive-state transitions and therefore disallows transitions to previous states (Figure \ref{fig:fsa}). This results in the transition matrix $\Gamma$ being reduced to a sparse diagonal matrix. These constraints result in the runtime of the linear-chain WFSAs being reduced to $O(|Q||\pmb{x}|)$ compared to the original runtime in Remark \ref{rmk:old-runtime}. The relationship between regular expressions and (weighted) finite-state automata has been well-established in the theory of finite-state automata; with several algorithms detailing a deterministic conversion process between these entities \citep{thompson1968programming,jiang2020cold}. Since the relationship between regular expressions and textual patterns is clear, \citet[Page 3, Section 3.1]{schwartz2018sopa} refer to the linear-chain WFSAs in SoPa simply as \textit{``patterns''}. For brevity, we adopt the same terminology.
 
 \paragraph{String vs. document score:} Definition \ref{def:string-score} describes how a WFSA can be used to compute a string score. Since SoPa was intended to compute scores for entire documents and not just short strings, \citet{schwartz2018sopa} propose computing the string score over all consecutive substrings in the document. The document score for a WFSA would represent an aggregated score over all consecutive substrings and would therefore also depend on the semiring used in the WFSAs. In the case of max-based semirings using the Viterbi algorithm, the document score would reflect the highest scoring substring for a WFSA.
 
@@ -294,7 +294,7 @@ In their study, \citet{schwartz2018sopa} test the SoPa architecture on three sep
 
 \paragraph{Hyperparameters:} Training the SoPa model requires both commonly used and special hyperparameters. Commonly used hyperparameters include the learning rate, neuron dropout and word dropout. A special hyperparameter in the SoPa model is the pattern hyperparameter and it contains information on the number of patterns or WFSAs allowed, as well as the lengths of the patterns or the number of states in the WFSAs. This hyperparameter is encoded as a string with the following syntax: \texttt{Length$_{1}$-Count$_{1}$\_$\dots$\_Length$_{n}$-Count$_{n}$}. An example of this hyperparameter could be \texttt{3-5\_4-10\_5-15}, which would signify 5 patterns of length 3, 10 patterns of length 4 and 15 patterns of length 5.
 
-\paragraph{Explainability:} In their study, \citet{schwartz2018sopa} describe simple methods of \textit{``interpreting''} the SoPa model. One method involves the usage of back-pointers during the Viterbi computation to determine the patterns and substrings in a document which contributed the highest pattern scores. Another method involves zeroing out the corresponding patterns or WFSAs via the occlusion sensitivity method to determine which pattern had the greatest impact on each classification decision. It is worth noting that the usage of \textit{interpretation} in \citet{schwartz2018sopa} is likely inconsistent with our definitions presented in Section \ref{section:xai}. Given the common terminology misuse described in Section \ref{section:xai-terminology}, it is more accurate to present the aforementioned \textit{``interpretability''} method as an explainability method. We analyze the explainability-related features of SoPa in greater detail in Sections \ref{section:sopa-transparency} and \ref{section:sopa-explainability}. 
+\paragraph{Explainability:} In their study, \citet[Page 7, Section 7]{schwartz2018sopa} describe simple methods of \textit{``interpreting''} the SoPa model. One method involves the usage of back-pointers during the Viterbi computation to determine the patterns and substrings in a document which contributed the highest pattern scores. Another method involves zeroing out the corresponding patterns or WFSAs via the occlusion sensitivity method to determine which pattern had the greatest impact on each classification decision. It is worth noting that the usage of \textit{interpretation} in \citet{schwartz2018sopa} is likely inconsistent with our definitions presented in Section \ref{section:xai}. Given the common terminology misuse described in Section \ref{section:xai-terminology}, it is more accurate to present the aforementioned \textit{``interpretability''} method as an explainability method. We analyze the explainability-related features of SoPa in greater detail in Sections \ref{section:sopa-transparency} and \ref{section:sopa-explainability}. 
 
 \subsection{Transparency of SoPa}
 
