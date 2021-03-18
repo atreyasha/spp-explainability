@@ -22,7 +22,10 @@
 
     **DEADLINE:** *\<2021-03-21 Sun\>*
 
-    1.  SoPa++
+    1.  **TODO** Complete computational graph for the regex
+        proxy model -\> think of how to relate to SoPa++ if possible
+
+    2.  SoPa++
 
         1.  Lower model
 
@@ -66,8 +69,8 @@
 
             2.  mention time complexity of new neural model
 
-            3.  add TikZ visualization of computational graph for SoPa++
-                model
+            3.  show TikZ visualization of computational graph for
+                SoPa++ model
 
         4.  Add table with key differences from SoPa model
 
@@ -76,7 +79,7 @@
 
             2.  talk about SoPa++ still being a black-box model
 
-    2.  Regex proxy
+    3.  Regex proxy
 
         1.  Describe removal of lower model and upper model
 
@@ -98,14 +101,16 @@
             1.  report time complexities of the simplification process
                 as well as compression where possible
 
-            2.  add TikZ visualization of new computational graph
+            2.  show TikZ visualization of regex computational graph and
+                try to add labels to segments if this makes explanations
+                easier
 
             3.  talk about regex proxy possibly being a transparent
                 model and motivate arguments for/against this, say this
                 is only theoretical but we come back to this in the
                 discussion segment
 
-    3.  SoPa++ training setup
+    4.  SoPa++ training setup
 
         1.  talk about GloVe embeddings, lowercasing and other important
             things
@@ -115,7 +120,7 @@
         3.  add sufficient information on grid training and
             hyperparameter setup
 
-    4.  Performance evaluation
+    5.  Performance evaluation
 
         1.  explain usage of test set
 
@@ -125,7 +130,7 @@
         3.  mention checking if the performance falls in the competitie
             range
 
-    5.  Explanations by simplification evaluation
+    6.  Explanations by simplification evaluation
 
         1.  mention we are trying to evaluate how close the models are,
             and we delegate the quality of explainability based on a
@@ -145,7 +150,7 @@
             limit how often activation occurs, which we hypothesize
             could have an effect in bringing both models closer together
 
-    6.  Insightful explanations insight
+    7.  Insightful explanations insight
 
         1.  mention how we analyze the output neurons with legitimacy
             given that it is now a linear layer to find how STE neurons
@@ -213,7 +218,10 @@
             1.  figures must be manually put together later directly in
                 latex
 
-            2.  tweak relative importances between neurons as well, if
+            2.  legend in neurons can be shifted below, perhaps to have
+                just one copy for all neurons shown
+
+            3.  tweak relative importances between neurons as well, if
                 this is of use otherwise drop it -\> need to add color
                 to legend or otherwise fixed size with color gradient
 

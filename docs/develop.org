@@ -6,6 +6,7 @@
 *** Manuscript
 **** Methodologies
      DEADLINE: <2021-03-21 Sun>
+***** TODO Complete computational graph for the regex proxy model -> think of how to relate to SoPa++ if possible 
 ***** SoPa++
 ****** Lower model
 ******* describe the lower model with GloVe 6B word vectors
@@ -23,7 +24,7 @@
 ****** Add pseudocode for SoPa++ forward pass
 ******* describe the backward pass very simply with gradient descent
 ******* mention time complexity of new neural model
-******* add TikZ visualization of computational graph for SoPa++ model
+******* show TikZ visualization of computational graph for SoPa++ model
 ****** Add table with key differences from SoPa model
 ******* recycle this table later and add it to the SoPa model section
 ******* talk about SoPa++ still being a black-box model
@@ -35,7 +36,7 @@
 ****** Add pseudocode for regex proxy model construction and compression
 ****** Add pseudocode for regex proxy model forward pass
 ******* report time complexities of the simplification process as well as compression where possible
-******* add TikZ visualization of new computational graph
+******* show TikZ visualization of regex computational graph and try to add labels to segments if this makes explanations easier
 ******* talk about regex proxy possibly being a transparent model and motivate arguments for/against this, say this is only theoretical but we come back to this in the discussion segment
 ***** SoPa++ training setup
 ****** talk about GloVe embeddings, lowercasing and other important things
@@ -74,6 +75,7 @@
 ****** show plot of neuron importance distributions -> consider removing inter-neuron importance with alpha levels since this might be irrelevant
 ****** show relevant plots of regular expressions with neurons to see what kinds of textual patterns are imporant for the SoPa++ model and its regex proxy
 ******* figures must be manually put together later directly in latex
+******* legend in neurons can be shifted below, perhaps to have just one copy for all neurons shown
 ******* tweak relative importances between neurons as well, if this is of use otherwise drop it -> need to add color to legend or otherwise fixed size with color gradient
 **** Discussion
 ***** Performance
