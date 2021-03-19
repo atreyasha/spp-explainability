@@ -3,6 +3,7 @@
 \usepackage{tikz}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{bbm}
 \usetikzlibrary{positioning, fit, arrows, arrows.meta, calc, backgrounds,
   decorations.pathreplacing, calligraphy}
 
@@ -14,26 +15,28 @@
     circle,
     draw
   },
-  neuron v-missing/.style={
-    draw=none, 
-    fill=none,
-    execute at begin node=$\boldsymbol{\vdots}$
-  },
   neuron h-missing/.style={
     draw=none, 
     fill=none,
     scale=1.2,
     execute at begin node=$\boldsymbol{\ldots}$
   },
-  arrow/.style={line width=0.3mm,shorten >=0.1cm,
-    arrows={-Stealth[angle=60:3mm]}},
+  neuron v-missing/.style={
+    draw=none, 
+    fill=none,
+    execute at begin node=$\boldsymbol{\vdots}$
+  },
   neuron v-missing-upper/.style={
     draw=none, 
     fill=none,
     yshift=0.2cm,
     execute at begin node=$\boldsymbol{\vdots}$
+  },
+  arrow/.style={line width=0.3mm,shorten >=0.1cm,
+    arrows={-Stealth[angle=60:3mm]}
   }
 }
+
 
 \begin{tikzpicture}[x=8cm, y=5cm, thick]
 
@@ -78,7 +81,7 @@
   % add small and large WFSA with start states  
   \edef\points{}
   \foreach \e/\c [count=\y] in {1/90,2/0,3/0}{
-    \node [every neuron, minimum size=0.01cm, fill=blue!\c] (wfsa-small-\y)
+    \node [every neuron, minimum size=0.01cm, fill=teal!\c] (wfsa-small-\y)
     at (\startX, \startS+\y/\gran) {};
     \xdef\points{(wfsa-small-\y) \points}
   } 
@@ -120,7 +123,7 @@
       \pgfmathparse{\colorM[(\X-1)*3+\x-1]}
       \let\alpha\pgfmathresult
       \ifnum \x=1 
-      \node [every neuron/.try, minimum size=0.01cm, fill=blue!\alpha,
+      \node [every neuron/.try, minimum size=0.01cm, fill=teal!\alpha,
       neuron \m/.try] (max-\X-\x) at (\X/\compress+\x/\gran-\hembedcorrection,
       \startM) {};
       \else
@@ -138,7 +141,7 @@
     \foreach \e [count=\y] in {1,2,3}{
       \pgfmathparse{\colorS[(\X-1)*3+\y-1]}
       \let\alpha\pgfmathresult
-      \node [every neuron, minimum size=0.01cm, fill=blue!\alpha]
+      \node [every neuron, minimum size=0.01cm, fill=teal!\alpha]
       (wfsa-small-\X-\y) at (\X/\compress, \startS+\y/\gran) {}; 
       \xdef\points{(wfsa-small-\X-\y) \points}
     } 
@@ -187,24 +190,9 @@
     }
 
     % setup STE nodes
-    \foreach \m [count=\y] in {1,2,3,4,v-missing-upper,5}{
-      \ifnum \y=1
-      \node [every neuron/.try, fill=red!100!white, neuron \m/.try,
+    \foreach \m/\c [count=\y] in {1/100,2/0,3/100,4/0,v-missing-upper/0,5/100}{
+      \node [every neuron/.try, fill=red!\c, neuron \m/.try,
       scale=\upperscale] (ste-\m) at (3/\compress,\uppery-\y/\granupper) {};
-      \else
-      \ifnum \y=3
-      \node [every neuron/.try, fill=red!100!white, neuron \m/.try,
-      scale=\upperscale] (ste-\m) at (3/\compress,\uppery-\y/\granupper) {};
-      \else
-      \ifnum \y=6
-      \node [every neuron/.try, fill=red!100!white, neuron \m/.try,
-      scale=\upperscale] (ste-\m) at (3/\compress,\uppery-\y/\granupper) {};
-      \else
-      \node [every neuron/.try, neuron \m/.try, scale=\upperscale] (ste-\m)
-      at (3/\compress,\uppery-\y/\granupper) {};
-      \fi
-      \fi
-      \fi
     } 
     
     % setup output nodes
@@ -233,7 +221,7 @@
     }
     \foreach \i in {1,...,5}{
       \draw [->, >=stealth', black] (layernorm-\i) --
-      (ste-\i) node [above, midway, black] {};
+      (ste-\i) node [above, midway, black] {\Large $\mathbbm{1}_{>\tau}$};
     }
     \foreach \i in {1,...,5}
     \foreach \j in {1,...,4}
@@ -251,7 +239,7 @@
     \node [align=center, above, font=\Large, yshift=-0.15cm] at
     (3/\compress,\uppery) {TauSTE \\ Layer \\[5pt] $\mathbb{Z}_2^m$};
     \node [align=center, above, font=\Large] at (4/\compress,\uppery)
-    {Regression \\ Layer \\[5pt] $\mathbb{R}^n$};
+    {Linear-- \\ Layer \\[5pt] $\mathbb{R}^n$};
     \node [align=center, right of=embed-6, xshift=2.4cm, font=\Large]
     {Token \\ Embeddings};
     \draw [decorate, thick, decoration = {calligraphic brace,
