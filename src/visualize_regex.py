@@ -200,7 +200,7 @@ def visualize_regex_neurons(args: argparse.Namespace) -> None:
                 transitions = regexes[regex_index][pattern_index].replace(
                     "(", "").replace(")", "").split("|")
                 if len(transitions) == 1 and transitions[0] == "[^\\s]+":
-                    transitions[0] = "*"
+                    transitions[0] = "ω"
                 elif len(transitions) > args.max_transition_tokens:
                     transitions = transitions[:(args.max_transition_tokens +
                                                 1)]
