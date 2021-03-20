@@ -6,11 +6,10 @@
 *** Manuscript
 **** Methodologies
      DEADLINE: <2021-03-21 Sun>
-***** TODO Complete computational graph for the regex proxy model -> think of how to relate to SoPa++ if possible 
 ***** SoPa++
 ****** Lower model
 ******* describe the lower model with GloVe 6B word vectors
-******* update the WFSA definitions to signify wildcard transitions which were not present in SoPa
+******* update the WFA definitions to signify wildcard transitions which were not present in SoPa
 ******** use omega symbol for wildcards to differentiate from the Kleene star symbol -> think of how to technically motivate this by perhaps allowing omega to be part of the input alphabet
 ******** use UTF-8 symbol for graphviz plots
 ******** mention the removal of epsilon and self-loops because of issues leading to variable string lengths
@@ -30,13 +29,15 @@
 ******* talk about SoPa++ still being a black-box model
 ***** Regex proxy
 ****** Describe removal of lower model and upper model 
-******* link this to explanations by simplification and regular expressions
+******* link this to explanations by simplification and regular expressions, as well as conversion from WFAs to FAs/REs -> should be introduced in the background concepts
 ******* describe importance of TauSTE layer for explainability and how discrete layers help
 ******* link back to background concepts when we discuss bringing neural and regex model as close to each other as possible
 ****** Add pseudocode for regex proxy model construction and compression
 ****** Add pseudocode for regex proxy model forward pass
 ******* report time complexities of the simplification process as well as compression where possible
-******* show TikZ visualization of regex computational graph and try to add labels to segments if this makes explanations easier
+******* make sure to state that the regex's represent substring matches to the borders are generic -> or otherwise explicitly add these to the visualizations -> make this clear both here and for the results to questions three
+******* alternatively consider different notation to imply this is a regex match with arbitrary borders
+******* show TikZ visualization of regex computational graph and tweak colors/labels to make explanations easier if need be
 ******* talk about regex proxy possibly being a transparent model and motivate arguments for/against this, say this is only theoretical but we come back to this in the discussion segment
 ***** SoPa++ training setup
 ****** talk about GloVe embeddings, lowercasing and other important things
@@ -75,8 +76,10 @@
 ****** show plot of neuron importance distributions -> consider removing inter-neuron importance with alpha levels since this might be irrelevant
 ****** show relevant plots of regular expressions with neurons to see what kinds of textual patterns are imporant for the SoPa++ model and its regex proxy
 ******* figures must be manually put together later directly in latex
+******* label the states consistently with "q" instead of only numbers
 ******* legend in neurons can be shifted below, perhaps to have just one copy for all neurons shown
 ******* tweak relative importances between neurons as well, if this is of use otherwise drop it -> need to add color to legend or otherwise fixed size with color gradient
+******* consider adding subscripts to states
 **** Discussion
 ***** Performance
 ****** mention issue of being unsure whether other studies removed duplicates -> but in our case using the same test set seems to improve evaluation performance
@@ -119,10 +122,9 @@
 ****** add links to chapters in thesis structure
 ***** Background concepts
 ****** pad definition environments with more explanatory text for flow
-****** add background information on linear-chain WFSAs, FSAs, regular expressions and accepting states -> can borrow content from cold start paper
 ****** add more information on page numbers and sections in all Arrieta et al. citations so these seem more differentiated
 ****** explain vanilla SoPa in a more prose format using a table to explain important features -> this table can then be compared directly with new SoPa++ features
-****** add a Kleene-star operator mention to remark 9.4
+****** mention early on that quantized NNs are useful for low-precision computing, but we use it for other reasons later on
 ***** Methodologies
 ****** add Github link to repo as a footnote when introducing this chapter
 ****** consider adding background section on NLU overall and tasks available
@@ -132,8 +134,8 @@
 ****** sort out all abbreviations and standardize formatting in terms of where they are first declared
 ****** consider respelling "preprocessing" as "pre-processing" if necessary, fine-tune their usage
 ****** fine-tune antecedent/proxy terminology and synchronize everywhere
-****** fine-tune usage of patterns vs. substrings vs. WFSAs
-****** fine-tune WFSA to mean either automata or automaton, make plural abbreviation WFSAs clear
+****** fine-tune usage of patterns vs. substrings vs. WFAs
+****** fine-tune WFA to mean either automata or automaton, make plural abbreviation WFAs clear
 ****** fine-tune the slot-filling terminology 
 ****** fine-tune terminology between intent detection and intent classification
 ****** fine-tune terminology between data set and partition
@@ -143,7 +145,7 @@
 ****** find alternative journal/conference citations for current arxiv papers
 ***** Manuscript admin
 ****** Text-related
-******* ensure that areas between chapters-sections or sections-subsections are filled with explanatory text to provide a narrative -> use links to/from individual sections/chapters to string everything together
+******* ensure that areas between chapters-sections and/or sections-subsections are filled with explanatory text to provide a narrative -> use links to/from individual sections/chapters to string everything together -> no area between title and next sub-title or environment should be empty -> an example is adding text before WFA definitions
 ******* add remaining features by referring to master template such as abstract (short summarized introduction), list of tables/figures/abbreviations, appendices, etc; see master document for examples
 ******* change to two sided format before printing, as this works well for binding/printing
 ******* EITHER quote + indent sentences directly taken from other studies with page and section OR paraphrase them and leave them in a definition environment
@@ -204,7 +206,7 @@
 
 *** Interpretable surrogate extraction
 ***** overall more costly and less chance of high performance       
-***** FSA/WFSA extraction
+***** FA/WFA extraction
 ****** spectral learning, clustering
 ****** less direct interpretability
 ****** more proof of performance needed -> need to show it is better than simple data learning

@@ -22,16 +22,13 @@
 
     **DEADLINE:** *\<2021-03-21 Sun\>*
 
-    1.  **TODO** Complete computational graph for the regex
-        proxy model -\> think of how to relate to SoPa++ if possible
-
-    2.  SoPa++
+    1.  SoPa++
 
         1.  Lower model
 
             1.  describe the lower model with GloVe 6B word vectors
 
-            2.  update the WFSA definitions to signify wildcard
+            2.  update the WFA definitions to signify wildcard
                 transitions which were not present in SoPa
 
                 1.  use omega symbol for wildcards to differentiate from
@@ -79,12 +76,13 @@
 
             2.  talk about SoPa++ still being a black-box model
 
-    3.  Regex proxy
+    2.  Regex proxy
 
         1.  Describe removal of lower model and upper model
 
             1.  link this to explanations by simplification and regular
-                expressions
+                expressions, as well as conversion from WFAs to FAs/REs
+                -\> should be introduced in the background concepts
 
             2.  describe importance of TauSTE layer for explainability
                 and how discrete layers help
@@ -101,16 +99,24 @@
             1.  report time complexities of the simplification process
                 as well as compression where possible
 
-            2.  show TikZ visualization of regex computational graph and
-                try to add labels to segments if this makes explanations
-                easier
+            2.  make sure to state that the regex\'s represent substring
+                matches to the borders are generic -\> or otherwise
+                explicitly add these to the visualizations -\> make this
+                clear both here and for the results to questions three
 
-            3.  talk about regex proxy possibly being a transparent
+            3.  alternatively consider different notation to imply this
+                is a regex match with arbitrary borders
+
+            4.  show TikZ visualization of regex computational graph and
+                tweak colors/labels to make explanations easier if need
+                be
+
+            5.  talk about regex proxy possibly being a transparent
                 model and motivate arguments for/against this, say this
                 is only theoretical but we come back to this in the
                 discussion segment
 
-    4.  SoPa++ training setup
+    3.  SoPa++ training setup
 
         1.  talk about GloVe embeddings, lowercasing and other important
             things
@@ -120,7 +126,7 @@
         3.  add sufficient information on grid training and
             hyperparameter setup
 
-    5.  Performance evaluation
+    4.  Performance evaluation
 
         1.  explain usage of test set
 
@@ -130,7 +136,7 @@
         3.  mention checking if the performance falls in the competitie
             range
 
-    6.  Explanations by simplification evaluation
+    5.  Explanations by simplification evaluation
 
         1.  mention we are trying to evaluate how close the models are,
             and we delegate the quality of explainability based on a
@@ -150,7 +156,7 @@
             limit how often activation occurs, which we hypothesize
             could have an effect in bringing both models closer together
 
-    7.  Insightful explanations insight
+    6.  Insightful explanations insight
 
         1.  mention how we analyze the output neurons with legitimacy
             given that it is now a linear layer to find how STE neurons
@@ -218,12 +224,17 @@
             1.  figures must be manually put together later directly in
                 latex
 
-            2.  legend in neurons can be shifted below, perhaps to have
+            2.  label the states consistently with \"q\" instead of only
+                numbers
+
+            3.  legend in neurons can be shifted below, perhaps to have
                 just one copy for all neurons shown
 
-            3.  tweak relative importances between neurons as well, if
+            4.  tweak relative importances between neurons as well, if
                 this is of use otherwise drop it -\> need to add color
                 to legend or otherwise fixed size with color gradient
+
+            5.  consider adding subscripts to states
 
 3.  Discussion
 
@@ -339,18 +350,16 @@
         1.  pad definition environments with more explanatory text for
             flow
 
-        2.  add background information on linear-chain WFSAs, FSAs,
-            regular expressions and accepting states -\> can borrow
-            content from cold start paper
-
-        3.  add more information on page numbers and sections in all
+        2.  add more information on page numbers and sections in all
             Arrieta et al. citations so these seem more differentiated
 
-        4.  explain vanilla SoPa in a more prose format using a table to
+        3.  explain vanilla SoPa in a more prose format using a table to
             explain important features -\> this table can then be
             compared directly with new SoPa++ features
 
-        5.  add a Kleene-star operator mention to remark 9.4
+        4.  mention early on that quantized NNs are useful for
+            low-precision computing, but we use it for other reasons
+            later on
 
     3.  Methodologies
 
@@ -376,10 +385,10 @@
         3.  fine-tune antecedent/proxy terminology and synchronize
             everywhere
 
-        4.  fine-tune usage of patterns vs. substrings vs. WFSAs
+        4.  fine-tune usage of patterns vs. substrings vs. WFAs
 
-        5.  fine-tune WFSA to mean either automata or automaton, make
-            plural abbreviation WFSAs clear
+        5.  fine-tune WFA to mean either automata or automaton, make
+            plural abbreviation WFAs clear
 
         6.  fine-tune the slot-filling terminology
 
@@ -401,10 +410,13 @@
 
         1.  Text-related
 
-            1.  ensure that areas between chapters-sections or
+            1.  ensure that areas between chapters-sections and/or
                 sections-subsections are filled with explanatory text to
                 provide a narrative -\> use links to/from individual
-                sections/chapters to string everything together
+                sections/chapters to string everything together -\> no
+                area between title and next sub-title or environment
+                should be empty -\> an example is adding text before WFA
+                definitions
 
             2.  add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
@@ -566,7 +578,7 @@
 
 1.  overall more costly and less chance of high performance
 
-2.  FSA/WFSA extraction
+2.  FA/WFA extraction
 
     1.  spectral learning, clustering
 
