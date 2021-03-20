@@ -12,7 +12,7 @@ With the recent trend of increasingly large deep learning models achieving State
 
 In addition, \citet{arrieta2020explainable} explore and classify a variety of machine-learning models into transparent and black-box categories depending on their degrees of transparency. Furthermore, they explore taxonomies of post-hoc explainability methods aimed at effectively explaining black-box models. Of high relevance to this study are the local explanations, feature relevance and explanations by simplification post-hoc explainability techniques. 
 
-Through a survey of recent literature on explanations by simplification applied in the Natural Language Processing (NLP) field, we came across several prominent studies employing techniques to simplify black-box neural networks into constituent Finite-State Automata (FSAs) and/or Weighted Finite-State Automata (WFSAs) \citep{schwartz2018sopa,peng2018rational,suresh-etal-2019-distilling,wang2019state,jiang2020cold}.
+Through a survey of recent literature on explanations by simplification applied in the Natural Language Processing (NLP) field, we came across several prominent studies employing techniques to simplify black-box neural networks into constituent Finite-State Automata (FAs) and/or Weighted Finite-State Automata (WFAs) \citep{schwartz2018sopa,peng2018rational,suresh-etal-2019-distilling,wang2019state,jiang2020cold}.
 
 In this thesis, we build upon the work of \citet{schwartz2018sopa} by further developing their \textbf{So}ft \textbf{Pa}tterns (SoPa) model; which represents a hybridized RNN, CNN and Weighted Finite-State Automaton neural network architecture. We modify the SoPa model by changing key aspects of its architecture which ultimately allows us to conduct effective explanations by simplification; which was not possible with the previous SoPa architecture. We abbreviate this modified model as \textbf{SoPa++}, which signifies an improvement or major modification to the SoPa model. Finally, we evaluate both the performance and explainability of the SoPa++ model on the Facebook Multilingual Task Oriented Dialog data set (FMTOD; \citealt{schuster-etal-2019-cross-lingual}); focusing on the English-language intent classification task.
 
@@ -52,5 +52,5 @@ With the aforementioned research questions, we summarize the structure and conte
 %%% TeX-master: "main"
 %%% End: 
 
-% LocalWords:  SOTA XAI explainability NLP Automata FSAs WFSAs FMTOD th nlp pre
+% LocalWords:  SOTA XAI explainability NLP Automata FAs WFAs FMTOD th nlp pre
 % LocalWords:  sota tterns
