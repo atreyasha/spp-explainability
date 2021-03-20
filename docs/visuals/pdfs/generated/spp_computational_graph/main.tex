@@ -78,96 +78,98 @@
       92,0,95,
       92,0,95}}
 
-  % add small and large WFSA with start states  
-  \edef\points{}
-  \foreach \e/\c [count=\y] in {1/90,2/0,3/0}{
-    \node [every neuron, minimum size=0.01cm, fill=teal!\c] (wfsa-small-\y)
-    at (\startX, \startS+\y/\gran) {};
-    \xdef\points{(wfsa-small-\y) \points}
-  } 
-  \node [fit=\points, draw, rounded corners=5pt, inner xsep=2mm, inner ysep=2mm,
-  minimum height=0.1cm] (wfsa-small-0) {};
-  \edef\points{}
-  \foreach \e/\c [count=\y] in {1/90,2/0,3/0,4/0,5/0,6/0}{
-    \node [every neuron, minimum size=0.01cm, fill=red!\c] (wfsa-large-\y) at
-    (\startX, \startL+\y/\gran) {}; 
-    \xdef\points{(wfsa-large-\y) \points}
-  }
-  \node [fit=\points, draw, rounded corners=5pt, inner xsep=2mm, inner ysep=2mm,
-  minimum height=0.1cm] (wfsa-large-0) {};
-  \node[neuron v-missing, scale=\dotscale, yshift=\vdotscorrection cm] at
-  ($(wfsa-small-0.north)!0.5!(wfsa-large-0.south)$) {};
-  
-  % start loop with text
-  \foreach \t [count=\X] in {[START], 10, day, weather, forecast, [END]}{
-
-    % add text nodes
-    \node (text-\X) at (\X/\compress, \startY) {\textbf{\Large\t}};
-
-    % distribute embedding circles nodes above text
+  {
+    % add small and large WFSA with start states  
     \edef\points{}
-    \foreach \e [count=\x] in {1,h-missing,2}{
-      \pgfmathparse{100*rnd}
-      \edef\alpha{\pgfmathresult}
-      \node [every neuron/.try, fill=violet!\alpha, minimum size=0.01cm,
-      neuron \e/.try] (embed-\X-\x) at (\X/\compress+\x/\gran-\hembedcorrection,
-      \startE) {};
-      \xdef\points{(embed-\X-\x) \points}
-    }
-    \node [fit=\points, draw, rounded corners=5pt, inner xsep=3mm,
-    inner ysep=0.1mm, minimum height=0.1cm] (embed-\X) {};
-    
-    % add max-pooled states
-    \edef\points{}
-    \foreach \m [count=\x] in {1,h-missing,2}{
-      \pgfmathparse{\colorM[(\X-1)*3+\x-1]}
-      \let\alpha\pgfmathresult
-      \ifnum \x=1 
-      \node [every neuron/.try, minimum size=0.01cm, fill=teal!\alpha,
-      neuron \m/.try] (max-\X-\x) at (\X/\compress+\x/\gran-\hembedcorrection,
-      \startM) {};
-      \else
-      \node [every neuron/.try, minimum size=0.01cm, fill=red!\alpha,
-      neuron \m/.try] (max-\X-\x) at (\X/\compress+\x/\gran-\hembedcorrection,
-      \startM) {};
-      \fi
-      \xdef\points{(max-\X-\x) \points}
-    }
-    \node [fit=\points, draw, rounded corners=5pt, inner xsep=3mm,
-    inner ysep=0.1mm, minimum height=0.1cm] (max-\X) {};
-
-    % add traversing WFSAs
-    \edef\points{}
-    \foreach \e [count=\y] in {1,2,3}{
-      \pgfmathparse{\colorS[(\X-1)*3+\y-1]}
-      \let\alpha\pgfmathresult
-      \node [every neuron, minimum size=0.01cm, fill=teal!\alpha]
-      (wfsa-small-\X-\y) at (\X/\compress, \startS+\y/\gran) {}; 
-      \xdef\points{(wfsa-small-\X-\y) \points}
+    \foreach \e/\c [count=\y] in {1/90,2/0,3/0}{
+      \node [every neuron, minimum size=0.01cm, fill=teal!\c] (wfsa-small-\y)
+      at (\startX, \startS+\y/\gran) {};
+      \xdef\points{(wfsa-small-\y) \points}
     } 
-    \node [fit=\points, draw, rounded corners=5pt, inner xsep=2mm,
-    inner ysep=2mm, minimum height=0.1cm] (wfsa-small-\X) {};
+    \node [fit=\points, draw, rounded corners=5pt, inner xsep=2mm, inner ysep=2mm,
+    minimum height=0.1cm] (wfsa-small-0) {};
     \edef\points{}
-    \foreach \e [count=\y] in {1,2,3,4,5,6}{
-      \pgfmathparse{\colorL[(\X-1)*6+\y-1]}
-      \let\alpha\pgfmathresult
-      \node [every neuron, minimum size=0.01cm, fill=red!\alpha]
-      (wfsa-large-\X-\y) at (\X/\compress, \startL+\y/\gran) {}; 
-      \xdef\points{(wfsa-large-\X-\y) \points}
+    \foreach \e/\c [count=\y] in {1/90,2/0,3/0,4/0,5/0,6/0}{
+      \node [every neuron, minimum size=0.01cm, fill=red!\c] (wfsa-large-\y) at
+      (\startX, \startL+\y/\gran) {}; 
+      \xdef\points{(wfsa-large-\y) \points}
     }
-    \node [fit=\points, draw, rounded corners=5pt, inner xsep=2mm,
-    inner ysep=2mm, minimum height=0.1cm] (wfsa-large-\X) {};
-    \node[neuron v-missing, scale=\dotscale, yshift=\vdotscorrection cm]
-    (vdots-\X) at ($(wfsa-small-\X.north)!0.5!(wfsa-large-\X.south)$) {};
+    \node [fit=\points, draw, rounded corners=5pt, inner xsep=2mm, inner ysep=2mm,
+    minimum height=0.1cm] (wfsa-large-0) {};
+    \node[neuron v-missing, scale=\dotscale, yshift=\vdotscorrection cm] at
+    ($(wfsa-small-0.north)!0.5!(wfsa-large-0.south)$) {};
+    
+    % start loop with text
+    \foreach \t [count=\X] in {[START], 10, day, weather, forecast, [END]}{
 
-    % draw out all edges
-    \pgfmathsetmacro\result{\X - 1}
-    \draw [arrow, thin, dashed] (wfsa-small-\result) -- (wfsa-small-\X);
-    \draw [arrow, thin, dashed] (wfsa-large-\result) -- (wfsa-large-\X);
-    \draw [arrow] (embed-\X) -- (wfsa-small-\X);
-    \draw [arrow] (embed-\X.45) to [bend right] (wfsa-large-\X.290);
-    \draw [arrow] (wfsa-small-\X-3.west) to [bend left] (max-\X-1);
-    \draw [arrow] (wfsa-large-\X-6.east) to [bend right] (max-\X-3);
+      % add text nodes
+      \node (text-\X) at (\X/\compress, \startY) {\textbf{\Large\t}};
+
+      % distribute embedding circles nodes above text
+      \edef\points{}
+      \foreach \e [count=\x] in {1,h-missing,2}{
+        \pgfmathparse{100*rnd}
+        \edef\alpha{\pgfmathresult}
+        \node [every neuron/.try, fill=violet!\alpha, minimum size=0.01cm,
+        neuron \e/.try] (embed-\X-\x) at (\X/\compress+\x/\gran-\hembedcorrection,
+        \startE) {};
+        \xdef\points{(embed-\X-\x) \points}
+      }
+      \node [fit=\points, draw, rounded corners=5pt, inner xsep=3mm,
+      inner ysep=0.1mm, minimum height=0.1cm] (embed-\X) {};
+      
+      % add max-pooled states
+      \edef\points{}
+      \foreach \m [count=\x] in {1,h-missing,2}{
+        \pgfmathparse{\colorM[(\X-1)*3+\x-1]}
+        \let\alpha\pgfmathresult
+        \ifnum \x=1 
+        \node [every neuron/.try, minimum size=0.01cm, fill=teal!\alpha,
+        neuron \m/.try] (max-\X-\x) at (\X/\compress+\x/\gran-\hembedcorrection,
+        \startM) {};
+        \else
+        \node [every neuron/.try, minimum size=0.01cm, fill=red!\alpha,
+        neuron \m/.try] (max-\X-\x) at (\X/\compress+\x/\gran-\hembedcorrection,
+        \startM) {};
+        \fi
+        \xdef\points{(max-\X-\x) \points}
+      }
+      \node [fit=\points, draw, rounded corners=5pt, inner xsep=3mm,
+      inner ysep=0.1mm, minimum height=0.1cm] (max-\X) {};
+
+      % add traversing WFSAs
+      \edef\points{}
+      \foreach \e [count=\y] in {1,2,3}{
+        \pgfmathparse{\colorS[(\X-1)*3+\y-1]}
+        \let\alpha\pgfmathresult
+        \node [every neuron, minimum size=0.01cm, fill=teal!\alpha]
+        (wfsa-small-\X-\y) at (\X/\compress, \startS+\y/\gran) {}; 
+        \xdef\points{(wfsa-small-\X-\y) \points}
+      } 
+      \node [fit=\points, draw, rounded corners=5pt, inner xsep=2mm,
+      inner ysep=2mm, minimum height=0.1cm] (wfsa-small-\X) {};
+      \edef\points{}
+      \foreach \e [count=\y] in {1,2,3,4,5,6}{
+        \pgfmathparse{\colorL[(\X-1)*6+\y-1]}
+        \let\alpha\pgfmathresult
+        \node [every neuron, minimum size=0.01cm, fill=red!\alpha]
+        (wfsa-large-\X-\y) at (\X/\compress, \startL+\y/\gran) {}; 
+        \xdef\points{(wfsa-large-\X-\y) \points}
+      }
+      \node [fit=\points, draw, rounded corners=5pt, inner xsep=2mm,
+      inner ysep=2mm, minimum height=0.1cm] (wfsa-large-\X) {};
+      \node[neuron v-missing, scale=\dotscale, yshift=\vdotscorrection cm]
+      (vdots-\X) at ($(wfsa-small-\X.north)!0.5!(wfsa-large-\X.south)$) {};
+
+      % draw out all edges
+      \pgfmathsetmacro\result{\X - 1}
+      \draw [arrow, thin, dashed] (wfsa-small-\result) -- (wfsa-small-\X);
+      \draw [arrow, thin, dashed] (wfsa-large-\result) -- (wfsa-large-\X);
+      \draw [arrow] (embed-\X) -- (wfsa-small-\X);
+      \draw [arrow] (embed-\X.45) to [bend right] (wfsa-large-\X.290);
+      \draw [arrow] (wfsa-small-\X-3.west) to [bend left] (max-\X-1);
+      \draw [arrow] (wfsa-large-\X-6.east) to [bend right] (max-\X-3);
+    }
   }
 
   {

@@ -49,86 +49,88 @@
   \def\upperscale{2}
   \def\compress{2.9}
 
-  % start loop with text
-  \foreach \t [count=\X] in {[START], 10, day, weather, forecast, [END]}{
-    % add text nodes
-    \node (text-\X) at (\X/\compress, \startY) {\textbf{\Large\t}};
+  {
+    % start loop with text
+    \foreach \t [count=\X] in {[START], 10, day, weather, forecast, [END]}{
+      % add text nodes
+      \node (text-\X) at (\X/\compress, \startY) {\textbf{\Large\t}};
+    }
+
+    % lay out all small FSAs
+    \node[state, initial, above of=text-2, yshift=2cm, xshift=-1.9cm]
+    (qS_0_0) {$q_0$};
+    \node[left of=qS_0_0, xshift=-1.9cm] (RE1) {\textbf{RE$_1$}};
+    \node[state] (qS_0_1) [right=of qS_0_0] {$q_1$}; 
+    \node[state, accepting] (qS_0_2) [right=of qS_0_1] {$q_2$}; 
+    \path[->] (qS_0_0) edge node[above] {$\omega$} (qS_0_1) {};
+    \path[->] (qS_0_1) edge node[above] {10} (qS_0_2)
+    edge [bend right=50]   node [below] {weather} (qS_0_2)
+    edge [bend left=50]   node [above] {day} (qS_0_2) {};
+    \node[neuron h-missing, right of=qS_0_2, xshift=0.5cm, scale=1.5] (dots_S) {};
+    \node[state, initial, right of=dots_S, xshift=2cm] (qS_1_0) {$q_0$};
+    \node[state] (qS_1_1) [right=of qS_1_0] {$q_1$}; 
+    \node[state, accepting] (qS_1_2) [right=of qS_1_1] {$q_2$}; 
+    \path[->] (qS_1_0) edge [bend left=50] node[above] {weather} (qS_1_1)
+    edge [bend right=50] node [below] {forecast} (qS_1_1) {};
+    \path[->] (qS_1_1) edge node[above] {$\omega$} (qS_1_2) {};
+    
+    % lay out all large FSAs
+    \node[state, initial, above of=qS_0_0, yshift=4cm] (qL_0_0) {$q_0$};
+    \node[left of=qL_0_0, xshift=-1.9cm] (REM) {\textbf{RE$_m$}};
+    \node[state] (qL_0_1) [right=of qL_0_0] {$q_1$}; 
+    \node[state] (qL_0_2) [right=of qL_0_1] {$q_2$};
+    \node[state] (qL_0_3) [right=of qL_0_2] {$q_3$}; 
+    \node[state] (qL_0_4) [right=of qL_0_3] {$q_4$}; 
+    \node[state, accepting] (qL_0_5) [right=of qL_0_4] {$q_5$}; 
+    \path[->] (qL_0_0) edge node[above] {$\omega$} (qL_0_1) {};
+    \path[->] (qL_0_1) edge node[above] {please} (qL_0_2) {};
+    \path[->] (qL_0_2) edge node[above] {$\omega$} (qL_0_3) {};
+    \path[->] (qL_0_3) edge node[above] {10} (qL_0_4)
+    edge [bend right=50] node [below] {weather} (qL_0_4)
+    edge [bend left=50] node [above] {day} (qL_0_4) {};
+    \path[->] (qL_0_4) edge node[above] {$\omega$} (qL_0_5) {};
+    \node[neuron h-missing, right of=qL_0_5, xshift=0.5cm, scale=1.5] (dots_L) {};
+
+    % lay out dots in between
+    \node[neuron v-missing, above of=dots_S, yshift=1.8cm, scale=2.75]
+    (mid_dots) {};
+    \node[neuron v-missing, left of=mid_dots, xshift=-3.3cm, scale=2.75] {};
+    \path let \p1 = (mid_dots), \p2 = (dots_L) in node[neuron v-missing,
+    scale=2.75] at (\x2,\y1) {};
+    \path let \p1 = (mid_dots), \p2 = (dots_L) in node[neuron v-missing,
+    scale=2.75] at (\x2,\y1) {};
+    \path let \p1 = ($(RE1)!0.5!(REM)$), \p2 = (mid_dots) in
+    node[neuron v-missing, scale=2.75] at (\x1,\y2) {};
+    
+    % fit box around everything
+    \begin{scope}[on background layer]
+      \node [fit=(qS_0_0) (qS_1_0) (qL_0_0) (qL_0_5), draw, fill=red!10,
+      rounded corners=5pt, inner xsep=3.6cm, inner ysep=1.5cm,
+      minimum height=0.1cm] (regex) {};
+      \draw[thin] let \p1 = (regex.south), \p2 = ([xshift=0.75cm]REM),
+      \p3 = (regex.north) in (\x2, \y1) -- (\x2,\y3) {};
+    \end{scope}
+
+    % draw out matching layer
+    \edef\points{}
+    \foreach \e/\c [count=\q] in {1/100,2/0,3/100,4/0,h-missing/0,5/100}{
+      \path let \p1 = (regex.north) in node[every neuron/.try,
+      minimum size=0.01cm, fill=red!\c, neuron \e/.try, scale=1.1]
+      (regex-match-\q) at (\q/3.75+0.23,\y1+1.3cm) {};
+      \xdef\points{(regex-match-\q)\points}
+    } 
+    \node [fit=\points, draw, rounded corners=5pt, inner xsep=2mm,
+    inner ysep=0.5mm, minimum height=0.1cm] (match) {};
+    
+    % lay out local arrows
+    \foreach \t [count=\X] in {[START], 10, day, weather, forecast, [END]}{
+      \draw[arrow, shorten <=0.1cm] let \p1 = (regex.south),
+      \p2 = (text-\X) in (text-\X) -- (\x2, \y1) {};
+    }
+    \draw[arrow] let \p1 = (regex.north), \p2 = (match.south)
+    in (\x2,\y1) -- (\x2,\y2) {};
   }
 
-  % lay out all small FSAs
-  \node[state, initial, above of=text-2, yshift=2cm, xshift=-1.9cm]
-  (qS_0_0) {$q_0$};
-  \node[left of=qS_0_0, xshift=-1.9cm] (RE1) {\textbf{RE$_1$}};
-  \node[state] (qS_0_1) [right=of qS_0_0] {$q_1$}; 
-  \node[state, accepting] (qS_0_2) [right=of qS_0_1] {$q_2$}; 
-  \path[->] (qS_0_0) edge node[above] {$\omega$} (qS_0_1) {};
-  \path[->] (qS_0_1) edge node[above] {10} (qS_0_2)
-  edge [bend right=50]   node [below] {weather} (qS_0_2)
-  edge [bend left=50]   node [above] {day} (qS_0_2) {};
-  \node[neuron h-missing, right of=qS_0_2, xshift=0.5cm, scale=1.5] (dots_S) {};
-  \node[state, initial, right of=dots_S, xshift=2cm] (qS_1_0) {$q_0$};
-  \node[state] (qS_1_1) [right=of qS_1_0] {$q_1$}; 
-  \node[state, accepting] (qS_1_2) [right=of qS_1_1] {$q_2$}; 
-  \path[->] (qS_1_0) edge [bend left=50] node[above] {weather} (qS_1_1)
-  edge [bend right=50] node [below] {forecast} (qS_1_1) {};
-  \path[->] (qS_1_1) edge node[above] {$\omega$} (qS_1_2) {};
- 
-  % lay out all large FSAs
-  \node[state, initial, above of=qS_0_0, yshift=4cm] (qL_0_0) {$q_0$};
-  \node[left of=qL_0_0, xshift=-1.9cm] (REM) {\textbf{RE$_m$}};
-  \node[state] (qL_0_1) [right=of qL_0_0] {$q_1$}; 
-  \node[state] (qL_0_2) [right=of qL_0_1] {$q_2$};
-  \node[state] (qL_0_3) [right=of qL_0_2] {$q_3$}; 
-  \node[state] (qL_0_4) [right=of qL_0_3] {$q_4$}; 
-  \node[state, accepting] (qL_0_5) [right=of qL_0_4] {$q_5$}; 
-  \path[->] (qL_0_0) edge node[above] {$\omega$} (qL_0_1) {};
-  \path[->] (qL_0_1) edge node[above] {please} (qL_0_2) {};
-  \path[->] (qL_0_2) edge node[above] {$\omega$} (qL_0_3) {};
-  \path[->] (qL_0_3) edge node[above] {10} (qL_0_4)
-  edge [bend right=50] node [below] {weather} (qL_0_4)
-  edge [bend left=50] node [above] {day} (qL_0_4) {};
-  \path[->] (qL_0_4) edge node[above] {$\omega$} (qL_0_5) {};
-  \node[neuron h-missing, right of=qL_0_5, xshift=0.5cm, scale=1.5] (dots_L) {};
-
-  % lay out dots in between
-  \node[neuron v-missing, above of=dots_S, yshift=1.8cm, scale=2.75]
-  (mid_dots) {};
-  \node[neuron v-missing, left of=mid_dots, xshift=-3.3cm, scale=2.75] {};
-  \path let \p1 = (mid_dots), \p2 = (dots_L) in node[neuron v-missing,
-  scale=2.75] at (\x2,\y1) {};
-  \path let \p1 = (mid_dots), \p2 = (dots_L) in node[neuron v-missing,
-  scale=2.75] at (\x2,\y1) {};
-  \path let \p1 = ($(RE1)!0.5!(REM)$), \p2 = (mid_dots) in
-  node[neuron v-missing, scale=2.75] at (\x1,\y2) {};
-  
-  % fit box around everything
-  \begin{scope}[on background layer]
-    \node [fit=(qS_0_0) (qS_1_0) (qL_0_0) (qL_0_5), draw, fill=red!10,
-    rounded corners=5pt, inner xsep=3.6cm, inner ysep=1.5cm,
-    minimum height=0.1cm] (regex) {};
-    \draw[thin] let \p1 = (regex.south), \p2 = ([xshift=0.75cm]REM),
-    \p3 = (regex.north) in (\x2, \y1) -- (\x2,\y3) {};
-  \end{scope}
-
-  % draw out matching layer
-  \edef\points{}
-  \foreach \e/\c [count=\q] in {1/100,2/0,3/100,4/0,h-missing/0,5/100}{
-    \path let \p1 = (regex.north) in node[every neuron/.try,
-    minimum size=0.01cm, fill=red!\c, neuron \e/.try, scale=1.1]
-    (regex-match-\q) at (\q/3.75+0.23,\y1+1.3cm) {};
-    \xdef\points{(regex-match-\q)\points}
-  } 
-  \node [fit=\points, draw, rounded corners=5pt, inner xsep=2mm,
-  inner ysep=0.5mm, minimum height=0.1cm] (match) {};
-  
-  % lay out local arrows
-  \foreach \t [count=\X] in {[START], 10, day, weather, forecast, [END]}{
-    \draw[arrow, shorten <=0.1cm] let \p1 = (regex.south),
-    \p2 = (text-\X) in (text-\X) -- (\x2, \y1) {};
-  }
-  \draw[arrow] let \p1 = (regex.north), \p2 = (match.south)
-  in (\x2,\y1) -- (\x2,\y2) {};
-   
   {
     % setup STE nodes
     \foreach \m/\c [count=\y] in {1/100,2/0,3/100,4/0,v-missing-upper/0,5/100}{
