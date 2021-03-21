@@ -5,15 +5,13 @@
 ** Tasks
 *** Manuscript
 **** Methodologies
-     DEADLINE: <2021-03-21 Sun>
+     DEADLINE: <2021-03-24 Wed>
 ***** SoPa++
 ****** Lower model
-******* describe the lower model with GloVe 6B word vectors
 ******* update the WFA definitions to signify wildcard transitions which were not present in SoPa
-******** use omega symbol for wildcards to differentiate from the Kleene star symbol -> think of how to technically motivate this by perhaps allowing omega to be part of the input alphabet
-******** use UTF-8 symbol for graphviz plots
 ******** mention the removal of epsilon and self-loops because of issues leading to variable string lengths
 ******** perhaps can provide a small visualization for clarity
+******** use omega symbol for wildcards to differentiate from the Kleene star symbol -> think of how to technically motivate this by perhaps allowing omega to be part of the input alphabet -> mention that this is an improvised own definition
 ****** Upper model  
 ******* describe the LayerNorm layer and why it is needed in connection with the STE layer
 ******* explain how and why we modified STE to TauSTE
@@ -24,9 +22,11 @@
 ******* describe the backward pass very simply with gradient descent
 ******* mention time complexity of new neural model
 ******* show TikZ visualization of computational graph for SoPa++ model
+******* update WFA notations where possible
 ****** Add table with key differences from SoPa model
 ******* recycle this table later and add it to the SoPa model section
 ******* talk about SoPa++ still being a black-box model
+
 ***** Regex proxy
 ****** Describe removal of lower model and upper model 
 ******* link this to explanations by simplification and regular expressions, as well as conversion from WFAs to FAs/REs -> should be introduced in the background concepts
@@ -38,7 +38,9 @@
 ******* make sure to state that the regex's represent substring matches to the borders are generic -> or otherwise explicitly add these to the visualizations -> make this clear both here and for the results to questions three
 ******* alternatively consider different notation to imply this is a regex match with arbitrary borders
 ******* show TikZ visualization of regex computational graph and tweak colors/labels to make explanations easier if need be
+******* replace FAs in visualization with regular expression matrix where possible
 ******* talk about regex proxy possibly being a transparent model and motivate arguments for/against this, say this is only theoretical but we come back to this in the discussion segment
+
 ***** SoPa++ training setup
 ****** talk about GloVe embeddings, lowercasing and other important things
 ****** talk about upsampling data set during training
@@ -121,6 +123,7 @@
 ****** update motivations from Arrieta et al. 2020 "What for" section
 ****** add links to chapters in thesis structure
 ***** Background concepts
+****** think more about how to improve (W)FA definitions
 ****** pad definition environments with more explanatory text for flow
 ****** add more information on page numbers and sections in all Arrieta et al. citations so these seem more differentiated
 ****** explain vanilla SoPa in a more prose format using a table to explain important features -> this table can then be compared directly with new SoPa++ features
@@ -131,7 +134,8 @@
 ****** mention the purpose of the intent detection task briefly on a grander-scheme-of-things
 ****** mention briefly the purpose of the slot filling task 
 ***** Terminologies and abbreviations
-****** sort out all abbreviations and standardize formatting in terms of where they are first declared
+****** sort out all abbreviations and standardize formatting in terms of where they are first declared -> perhaps add a page number on list of abbreviations to indicate first declaration
+****** consider adding abbreviations directly into definitions
 ****** consider respelling "preprocessing" as "pre-processing" if necessary, fine-tune their usage
 ****** fine-tune antecedent/proxy terminology and synchronize everywhere
 ****** fine-tune usage of patterns vs. substrings vs. WFAs
@@ -146,6 +150,7 @@
 ***** Manuscript admin
 ****** Text-related
 ******* ensure that areas between chapters-sections and/or sections-subsections are filled with explanatory text to provide a narrative -> use links to/from individual sections/chapters to string everything together -> no area between title and next sub-title or environment should be empty -> an example is adding text before WFA definitions
+******* replace all epsilon words by the symbol where possible 
 ******* add remaining features by referring to master template such as abstract (short summarized introduction), list of tables/figures/abbreviations, appendices, etc; see master document for examples
 ******* change to two sided format before printing, as this works well for binding/printing
 ******* EITHER quote + indent sentences directly taken from other studies with page and section OR paraphrase them and leave them in a definition environment
@@ -175,7 +180,8 @@
 ***** test out all shell-scripts and python code to make sure everything works the same after major renamings
 ***** test download and all other scripts to ensure they work
 ***** perform spell-check on readme 
-       
+***** perform formatting on latex code
+
 ** Notes
 *** Admin
 **** Timeline

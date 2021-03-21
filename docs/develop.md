@@ -20,29 +20,26 @@
 
 1.  Methodologies
 
-    **DEADLINE:** *\<2021-03-21 Sun\>*
+    **DEADLINE:** *\<2021-03-24 Wed\>*
 
     1.  SoPa++
 
         1.  Lower model
 
-            1.  describe the lower model with GloVe 6B word vectors
-
-            2.  update the WFA definitions to signify wildcard
+            1.  update the WFA definitions to signify wildcard
                 transitions which were not present in SoPa
 
-                1.  use omega symbol for wildcards to differentiate from
-                    the Kleene star symbol -\> think of how to
-                    technically motivate this by perhaps allowing omega
-                    to be part of the input alphabet
-
-                2.  use UTF-8 symbol for graphviz plots
-
-                3.  mention the removal of epsilon and self-loops
+                1.  mention the removal of epsilon and self-loops
                     because of issues leading to variable string lengths
 
-                4.  perhaps can provide a small visualization for
+                2.  perhaps can provide a small visualization for
                     clarity
+
+                3.  use omega symbol for wildcards to differentiate from
+                    the Kleene star symbol -\> think of how to
+                    technically motivate this by perhaps allowing omega
+                    to be part of the input alphabet -\> mention that
+                    this is an improvised own definition
 
         2.  Upper model
 
@@ -68,6 +65,8 @@
 
             3.  show TikZ visualization of computational graph for
                 SoPa++ model
+
+            4.  update WFA notations where possible
 
         4.  Add table with key differences from SoPa model
 
@@ -111,7 +110,10 @@
                 tweak colors/labels to make explanations easier if need
                 be
 
-            5.  talk about regex proxy possibly being a transparent
+            5.  replace FAs in visualization with regular expression
+                matrix where possible
+
+            6.  talk about regex proxy possibly being a transparent
                 model and motivate arguments for/against this, say this
                 is only theoretical but we come back to this in the
                 discussion segment
@@ -347,17 +349,19 @@
 
     2.  Background concepts
 
-        1.  pad definition environments with more explanatory text for
+        1.  think more about how to improve (W)FA definitions
+
+        2.  pad definition environments with more explanatory text for
             flow
 
-        2.  add more information on page numbers and sections in all
+        3.  add more information on page numbers and sections in all
             Arrieta et al. citations so these seem more differentiated
 
-        3.  explain vanilla SoPa in a more prose format using a table to
+        4.  explain vanilla SoPa in a more prose format using a table to
             explain important features -\> this table can then be
             compared directly with new SoPa++ features
 
-        4.  mention early on that quantized NNs are useful for
+        5.  mention early on that quantized NNs are useful for
             low-precision computing, but we use it for other reasons
             later on
 
@@ -377,27 +381,31 @@
     4.  Terminologies and abbreviations
 
         1.  sort out all abbreviations and standardize formatting in
-            terms of where they are first declared
+            terms of where they are first declared -\> perhaps add a
+            page number on list of abbreviations to indicate first
+            declaration
 
-        2.  consider respelling \"preprocessing\" as \"pre-processing\"
+        2.  consider adding abbreviations directly into definitions
+
+        3.  consider respelling \"preprocessing\" as \"pre-processing\"
             if necessary, fine-tune their usage
 
-        3.  fine-tune antecedent/proxy terminology and synchronize
+        4.  fine-tune antecedent/proxy terminology and synchronize
             everywhere
 
-        4.  fine-tune usage of patterns vs. substrings vs. WFAs
+        5.  fine-tune usage of patterns vs. substrings vs. WFAs
 
-        5.  fine-tune WFA to mean either automata or automaton, make
+        6.  fine-tune WFA to mean either automata or automaton, make
             plural abbreviation WFAs clear
 
-        6.  fine-tune the slot-filling terminology
+        7.  fine-tune the slot-filling terminology
 
-        7.  fine-tune terminology between intent detection and intent
+        8.  fine-tune terminology between intent detection and intent
             classification
 
-        8.  fine-tune terminology between data set and partition
+        9.  fine-tune terminology between data set and partition
 
-        9.  fine-tune token length, sentence length and utterance length
+        10. fine-tune token length, sentence length and utterance length
 
     5.  Bibliography
 
@@ -418,26 +426,28 @@
                 should be empty -\> an example is adding text before WFA
                 definitions
 
-            2.  add remaining features by referring to master template
+            2.  replace all epsilon words by the symbol where possible
+
+            3.  add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, etc; see
                 master document for examples
 
-            3.  change to two sided format before printing, as this
+            4.  change to two sided format before printing, as this
                 works well for binding/printing
 
-            4.  EITHER quote + indent sentences directly taken from
+            5.  EITHER quote + indent sentences directly taken from
                 other studies with page and section OR paraphrase them
                 and leave them in a definition environment
 
-            5.  check that all borrowed figures have an explicit
+            6.  check that all borrowed figures have an explicit
                 attribution such as \"taken from paper et al (year)\"
 
-            6.  perform spell-check of all text
+            7.  perform spell-check of all text
 
-            7.  remove red link color in table of contents
+            8.  remove red link color in table of contents
 
-            8.  always mention \"figure taken from study (year)\" when
+            9.  always mention \"figure taken from study (year)\" when
                 using external figures
 
         2.  UP-related
@@ -500,6 +510,8 @@
     10. test download and all other scripts to ensure they work
 
     11. perform spell-check on readme
+
+    12. perform formatting on latex code
 
 ## Notes
 
