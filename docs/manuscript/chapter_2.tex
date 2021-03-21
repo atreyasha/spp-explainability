@@ -176,7 +176,7 @@ Finite-state automata is a collective term for two sub-categories of models; nam
 
 \begin{definition}[Deterministic finite-state automaton; \citealt{sipser1996introduction}]
   \label{def:fsa}
-  A finite-state automaton is a 5-tuple $\mathcal{M} = \langle \Sigma, \mathcal{Q}, \delta, q_0, F \rangle$, with:
+  A deterministic finite-state automaton is a 5-tuple $\mathcal{M} = \langle \Sigma, \mathcal{Q}, \delta, q_0, F \rangle$, with:
   \begin{itemize}
     \itemsep0em 
     \item[--] a finite input alphabet $\Sigma$;
@@ -200,32 +200,39 @@ Finite-state automata is a collective term for two sub-categories of models; nam
   \end{itemize}
 
   \begin{remark}
-    $\epsilon \notin \Sigma$ refers to an empty string or epsilon-transition. This transition results in a change of state without consuming any input symbol.
+    $\epsilon \notin \Sigma$ refers to an empty-string or epsilon-transition. This transition results in a change of state without consuming any input symbol.
   \end{remark}
 
+  \begin{remark}
+    Self-loop transitions refer to special transitions which consume an input while staying at the same state. These are allowed in both deterministic and nondeterministic finite-state automata.
+  \end{remark}
+  
   \begin{remark}
     $\mathcal{P}(\mathcal{Q})$ refers to the power set of $\mathcal{Q}$, or otherwise the collection of all subsets of $\mathcal{Q}$.
   \end{remark}
 \end{definition}
 
 \begin{definition}[Linear-chain finite-state automaton; \citealt{schwartz2018sopa}]
-  Any finite-state automaton is considered linear-chain if there exists only one unique set of transition states that lead from the start to the accepting or final state. Linear-chain finite-state automata do not allow for any state branching during the transition process, possess only one start and end state and only allow transitions to the same state or the next state which is strictly closer to the accepting state.
+  \label{def:lfa}
+  Any finite-state automaton is considered linear-chain if there exists only one set of consecutive transition states leading from the start to the accepting state. Linear-chain finite-state automata furthermore possess only one start and end state and only allow transitions to the same or next state which is strictly closer to the accepting state.
 \end{definition}
 
-A string $\pmb{x}$ is said to be \textit{accepted} by any FA $\mathcal{M}$ if the current state after consuming $\pmb{x}$ is the accepting or final state. Similarly, a string $\pmb{x}$ is said to be \textit{rejected} by any FA $\mathcal{M}$ if the string $\pmb{x}$ cannot be consumed or the current state after consuming $\pmb{x}$ is a non-accepting or non-final state. The key difference between DFAs and NFAs is present in their transition functions; specifically that the former guarantees that each state allows for a unique transition to another state given a non-empty input string. Contrastingly, NFAs allow for arbitrary transitions without necessarily consuming an input symbol. For most of this thesis, we will be utilizing concepts related to FAs with more emphasis placed on NFAs.
+A string $\pmb{x}$ is said to be \textit{accepted} by any FA $\mathcal{M}$ if the current state after consuming $\pmb{x}$ is the accepting state. Similarly, a string $\pmb{x}$ is said to be \textit{rejected} by any FA $\mathcal{M}$ if the string $\pmb{x}$ cannot be consumed or the current state after consuming $\pmb{x}$ is a non-accepting state. The key difference between DFAs and NFAs is present in their transition functions; specifically that the former guarantees that each state allows for a unique transition to another state given a non-empty input string. Contrastingly, NFAs allow for arbitrary transitions without necessarily consuming an input symbol.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=14cm]{pdfs/generated/re_nfa_linear_chain/main.pdf}
-  \caption{Regular expression \textit{``how are (you|they) doing ?''} converted into a linear-chain NFA; double circles on $q_5$ indicate that this is an accepting or final state}
+  \caption{Regular expression \textit{``how are (you|they) doing ?''} converted into a linear-chain NFA; double circles on state 5 indicate that this is an accepting state}
   \label{fig:regex-fsa}
 \end{figure}
 
 \subsection{Regular expressions}
 
-Regular expressions and FAs have been shown to be equivalent in their expressive power in that they both recognize regular languages \citep{sipser1996introduction}. The Thompson's construction algorithm \citep{thompson1968programming} is an example of an algorithm that converts regular expressions into equivalent NFAs. Figure \ref{fig:regex-fsa} shows an example of the regular expression \textit{``how are (you|they) doing ?''} converted into a linear-chain NFA.
+Regular expressions (REs) and FAs have been shown to be equivalent in their expressive power in that they both recognize regular languages \citep{sipser1996introduction}. Several algorithms have been historically studied and optimized for converting REs to FAs and vice-versa \citep{mcnaughton1960regular}. Figure \ref{fig:regex-fsa} shows a simple example of the regular expression \textit{``how are (you|they) doing ?''} converted into a linear-chain NFA.
 
 \subsection{Weighted finite-state automaton}
+
+Weighted finite-state automata (WFAs) are \textit{soft} extensions of finite-state automata which allow for the assignment of numerical weights to transitions; given an algebraic semiring to govern this numerical projection. Compared to the aforementioned FAs that only accept or reject strings, WFAs numerically score strings which has made them useful for several applications in NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}. 
 
 \begin{definition}[Semiring; \citealt{kuich1986linear}]
   A semiring is a set $\mathbb{K}$ along with two binary associative operations $\oplus$ (addition) and $\otimes$ (multiplication) and two identity elements: $\bar{0}$ for addition and $\bar{1}$ for multiplication. Semirings require that addition is commutative, multiplication distributes over addition, and that multiplication by $\bar{0}$ annihilates, i.e., $\bar{0} \otimes a = a \otimes \bar{0} = \bar{0}$.
@@ -264,11 +271,7 @@ Regular expressions and FAs have been shown to be equivalent in their expressive
   \begin{remark}
     Several studies refer to the transition weights $\Gamma$ as the transition matrix, and the initial $\lambda$ and final $\rho$ weights as the initial and final weight vectors respectively \citep{schwartz2018sopa,jiang2020cold}. As a result, we may use these terms interchangeably when referring to different studies.
   \end{remark}
-  
-  \begin{remark}
-    Self-loop transitions in $\mathcal{A}$ refer to special transitions which consume an input while staying at the same state.
-  \end{remark}
-  
+    
   \begin{remark}
     $\Sigma^{*}$ refers to the (possibly infinite) set of all strings over the alphabet $\Sigma$, where * represents the Kleene star operator.
   \end{remark}
@@ -327,9 +330,16 @@ In their study, \citet{schwartz2018sopa} test the SoPa architecture on three sep
 
 \subsection{Model specifications}
 
-\paragraph{WFAs:} In regards to the WFAs used in SoPa, \citet{schwartz2018sopa} only utilize the max-sum and max-product semirings; as well as $\epsilon$-transitions and self-loops. Next, they employ constraints on the model's WFAs in order to reduce the runtime of SoPa further. Of these, they firstly only allow one start and end state; which results in the initial $\lambda$ and final $\rho$ weights being reduced to static unitary values instead of state-dependent weights found in Definition \ref{def:wfsa}. Next, they constrain $\epsilon$-transitions to only occur at most once in each transition. Finally, they enforce a linear-chain WFA structure which only allows consecutive-state transitions and therefore disallows transitions to previous states (Figure \ref{fig:regex-fsa}). This results in the transition matrix $\Gamma$ being reduced to a sparse diagonal matrix. These constraints result in the runtime of the linear-chain WFAs being reduced to $O(|Q||\pmb{x}|)$ compared to the original runtime in Remark \ref{rmk:old-runtime}. The relationship between regular expressions and (weighted) finite-state automata has been well-established in the theory of finite-state automata; with several algorithms detailing a deterministic conversion process between these entities \citep{thompson1968programming,jiang2020cold}. Since the relationship between regular expressions and textual patterns is clear, \citet[Page 3, Section 3.1]{schwartz2018sopa} refer to the linear-chain WFAs in SoPa simply as \textit{``patterns''}. For brevity, we adopt the same terminology.
+\paragraph{WFAs:} In regards to the WFAs used in SoPa, \citet{schwartz2018sopa} only utilize the max-sum and max-product semirings; as well as $\epsilon$-transitions and self-loops. Next, they employ constraints on the model's WFAs in order to reduce the runtime of SoPa further. Of these, they firstly enforce a linear-chain (Definition \ref{def:lfa}) WFA structure, with Figure \ref{fig:fsa} showing a representative FA without weights extracted from the linear-chain WFA. Secondly, they constrain $\epsilon$-transitions to only occur at most once in each transition. These constraints result in the transition matrix $\Gamma$ being reduced to a sparse diagonal matrix and the runtime of the linear-chain WFAs being reduced to $O(|Q||\pmb{x}|)$, compared to the original runtime in Remark \ref{rmk:old-runtime}. Finally, \citet[Page 3, Section 3.1]{schwartz2018sopa} refer to the linear-chain WFAs simply as \textit{``patterns''}. For brevity, we adopt the same terminology.
 
 \paragraph{String vs. document score:} Definition \ref{def:string-score} describes how a WFA can be used to compute a string score. Since SoPa was intended to compute scores for entire documents and not just short strings, \citet{schwartz2018sopa} propose computing the string score over all consecutive substrings in the document. The document score for a WFA would represent an aggregated score over all consecutive substrings and would therefore also depend on the semiring used in the WFAs. In the case of max-based semirings using the Viterbi algorithm, the document score would reflect the highest scoring substring for a WFA.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=12cm]{pdfs/borrowed/linear_fsa_special_transitions.pdf}
+  \caption{Schematic visualizing a linear-chain finite-state automaton with $\epsilon$-transitions, self-loops and a wildcard transition shown as \textbf{X}; note that wildcard transitions are not allowed in the SoPa model; figure taken from \citet{schwartz2018sopa}}
+  \label{fig:fsa}
+\end{figure}
 
 \paragraph{Computational graph:} Figure \ref{fig:sopa} shows a sample computational graph for the SoPa model with two WFAs highlighted in blue and red. The WFAs compute consecutive string scores as they traverse the document. Given max-based semirings, the max-pooled scores accumulate in an output layer as shown on the top of Figure \ref{fig:sopa}. After traversing the full document, the max-pooled scores are passed through a Multi-Layer Perceptron (MLP) which conducts the final classification to an output label. It is worth noting that without $\epsilon$-transitions and self-loops, a linear-chain WFA with $|\mathcal{Q}|$ states should always consume $\mathcal{|Q|}-1$ tokens. However, by allowing the aforementioned special transitions; it is possible for strings of variable lengths to be consumed since an $\epsilon$-transition can transition to the next state without consuming tokens while a self-loop can consume tokens without transitioning to the next state. This is indeed the case for Pattern 2 in Figure \ref{fig:sopa}, when a self-loop is encountered in the transition from the token \textit{``and''} to the token \textit{``most''}.
 
