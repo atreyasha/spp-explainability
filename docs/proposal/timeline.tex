@@ -1,27 +1,17 @@
 \section{Timeline}
 
 \begin{ganttchart}
-  [hgrid,
-  x unit=0.82mm,
-  inline,
-  time slot format = little-endian, 
-  link mid = 0.5,
-  link bulge = 3.5,
-  vrule label node/.append style = {yshift=-0.2cm},
+  [hgrid, x unit=0.82mm, inline, time slot format = little-endian, link mid =
+  0.5, link bulge = 3.5, vrule label node/.append style = {yshift=-0.2cm},
   progress = today,
   % today=7.11.2020,
-  today label font = \footnotesize\bfseries,
-  today rule/.append style={
-    draw=black!70,
-    line width=0.7pt
-  },
-  today label node/.append style = {xshift=-0.9cm,yshift=0.8cm},
-  bar progress label node/.append style = {right=10pt},
-  group progress label font = \footnotesize,
-  group progress label node/.append style = {text width = 1.5cm, text centered},
-  progress label text = {\pgfmathprintnumber[precision=0,verbatim]{#1}\% complete},
-  ]{15.9.2020}{18.3.2021}
-  \gantttitlecalendar*{15.9.2020}{18.3.2021}{
+  today label font = \footnotesize\bfseries, today rule/.append style={
+    draw=black!70, line width=0.7pt }, today label node/.append style =
+  {xshift=-0.9cm,yshift=0.8cm}, bar progress label node/.append style =
+  {right=10pt}, group progress label font = \footnotesize, group progress label
+  node/.append style = {text width = 1.5cm, text centered}, progress label text
+  = {\pgfmathprintnumber[precision=0,verbatim]{#1}\% complete},
+  ]{15.9.2020}{18.3.2021} \gantttitlecalendar*{15.9.2020}{18.3.2021}{
     year, month=shortname, week} \\
   \ganttgroup{Literature review}{15.9.2020}{15.11.2020} \\
   \ganttbar[bar height=0.6,progress label text =""]{Reading}{15.9.2020}{15.10.2020} \\
@@ -30,14 +20,16 @@
   \ganttbar[bar height=1.1,bar inline label node/.append style = {text width = 3cm, text centered,yshift=0.05cm},progress label text =""]{Major code refactoring}{16.11.2020}{16.12.2020} \\
   \ganttlinkedbar[bar height=1.1,bar inline label node/.append style = {text width = 3cm, text centered,yshift=0.05cm},progress label text ="",bar top shift =0.025cm]{Runs and evaluation}{17.12.2020}{1.2.2021} \\
   \ganttgroup[group inline label node/.append style = {text width = 3cm, text centered,yshift=0.1cm}, group top shift = 1]{Manuscript\\writing}{2.2.2021}{18.3.2021} \\
-  \ganttvrule[
-  vrule label node/.append style = {text width = 1.5cm, text centered, xshift = 0.75cm},vrule/.style = {line width = 0pt}]{\textbf{15.09.20}\\Internship start}{14.9.2020}
-  \ganttvrule[
-  vrule label node/.append style = {text width = 3cm, text centered}]{\textbf{15.11.20} \\ Internal topic agreement}{15.11.20}
-  \ganttvrule[
-  vrule label node/.append style = {text width = 3cm, text centered}]{\textbf{01.02.21} \\ Official topic registration}{01.02.2021}
-  \ganttvrule[
-  vrule label node/.append style = {text width = 2.4cm, text centered, xshift=-0.85cm},vrule/.style = {line width = 0pt}]{\textbf{18.03.21} \\ Manuscript submission \ETX}{18.3.2021}
+  \ganttvrule[ vrule label node/.append style = {text width = 1.5cm, text
+    centered, xshift = 0.75cm},vrule/.style = {line width =
+    0pt}]{\textbf{15.09.20}\\Internship start}{14.9.2020} \ganttvrule[ vrule
+  label node/.append style = {text width = 3cm, text
+    centered}]{\textbf{15.11.20} \\ Internal topic agreement}{15.11.20}
+  \ganttvrule[ vrule label node/.append style = {text width = 3cm, text
+    centered}]{\textbf{01.02.21} \\ Official topic registration}{01.02.2021}
+  \ganttvrule[ vrule label node/.append style = {text width = 2.4cm, text
+    centered, xshift=-0.85cm},vrule/.style = {line width =
+    0pt}]{\textbf{18.03.21} \\ Manuscript submission \ETX}{18.3.2021}
 \end{ganttchart}
 
 %%% Local Variables:
