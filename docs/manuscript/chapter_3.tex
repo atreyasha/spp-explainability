@@ -181,8 +181,8 @@ similarities and differences compared to the SoPa model in
 
 \subsection{Tokenization and word embeddings}
 
-Similar to \citet{schwartz2018sopa}, we utilize NLTK's default \texttt{Treebank} word
-tokenizer \citep{bird-loper-2004-nltk} to conduct tokenization of input
+Similar to \citet{schwartz2018sopa}, we utilize NLTK's default \texttt{Treebank}
+word tokenizer \citep{bird-loper-2004-nltk} to conduct tokenization of input
 utterances into word-level tokens. While \citet{schwartz2018sopa} utilize GloVe
 840B 300-dimensional true-cased embeddings, we utilize GloVe 6B 300-dimensional
 uncased word-level embeddings \citep{pennington2014glove} to project the input
@@ -201,26 +201,26 @@ constructs in abstracting WFAs and allowing them to match variable length
 strings. However based on our experimentation during our development phase, we
 observed a key concern that the highest scoring paths in the WFAs in SoPa tended
 to have a large variation of string lengths due to the effect of both
-epsilon-transitions and self-loops. We believe that this reduced the impact
-of SoPa's explainability methods and as a result, the first change we
-decided for was to remove both epsilon and self-loop transitions. With this
-change, we could at least ensure that each WFA would match strings of a fixed length.
+epsilon-transitions and self-loops. We believe that this reduced the impact of
+SoPa's explainability methods and as a result, the first change we decided for
+was to remove both epsilon and self-loop transitions. With this change, we could
+at least ensure that each WFA would match strings of a fixed length.
 
-However, matching strings of fixed lengths could also be seen as a form of overfitting in
-the model; since a model could simply memorize short strings or phrases and
-would not necessarily "learn" to generalize. To address this concern, we
-decicded to include a new type of transition within the now strict linear-chain
-WFAs; namely the wildcard transition which we define here as a
+However, matching strings of fixed lengths could also be seen as a form of
+overfitting in the model; since a model could simply memorize short strings or
+phrases and would not necessarily "learn" to generalize. To address this
+concern, we decicded to include a new type of transition within the now strict
+linear-chain WFAs; namely the wildcard transition which we define here as a
 $\omega$-transition. Allowing for such a transition was only natural since
 wildcards are already crucial parts of regular expressions; which as we
 mentioned are equivalent to FAs. With this, we provide the following amended
-definition for a $\omega$-WFA: 
+definition for a $\omega$-WFA:
 
 \begin{definition}[$\omega$-Weighted finite-state automaton]
   \label{def:w-wsa}
-  A $\omega$-weighted finite-state automaton over a semiring $\mathbb{K}$ is a 5-tuple
-  $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \Gamma, \lambda, \rho \rangle$,
-  with:
+  A $\omega$-weighted finite-state automaton over a semiring $\mathbb{K}$ is a
+  5-tuple $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \Gamma, \lambda, \rho
+  \rangle$, with:
 
   \begin{itemize}
     \itemsep0em
@@ -241,7 +241,7 @@ definition for a $\omega$-WFA:
     Besides the inclusion of the $\omega$-transition and removal of the
     $\epsilon$-transition, an $\omega$-WFA has all of the same characteristics
     as the WFA defined in Definition \ref{def:wfa}.
-  \end{remark}  
+  \end{remark}
 \end{definition}
 
 With the removal of the epsilon and self-loop transitions, we were able to allow
