@@ -32,10 +32,8 @@
     \addplot[thick, domain=1:2,red] {1}; 
     \addplot[thick, domain=-1:1,red,name path=A] {x};
     \addplot[thick, dashed] coordinates {(0,-3)(0,3)};
-    \path[name path=axis] (axis cs:0,-1) -- (axis cs:0,0);
-    \path[name path=axis-next] (axis cs:0,1) -- (axis cs:0,0);
-    \addplot[pattern=north west lines, pattern color=gray!50!white] fill between[of=A and axis];
-    \addplot[pattern=north west lines, pattern color=gray!50!white] fill between[of=A and axis-next];
+    \addplot[solid-dot] coordinates{(1,1)}; 
+    \addplot[solid-dot] coordinates{(-1,-1)}; 
   \end{groupplot}
 \end{tikzpicture}
 
