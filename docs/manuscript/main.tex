@@ -49,6 +49,8 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{chngcntr}
 \usepackage{threeparttable}
 \usepackage{ragged2e}
+\usepackage{algorithm} 
+\usepackage{algpseudocode}
 
 \counterwithout{equation}{chapter}
 \counterwithout{figure}{chapter}
@@ -61,6 +63,11 @@ headsepline, % Uncomment to get a line under the header
 \graphicspath{{../visuals/}}
 \newcolumntype{L}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
 \newcolumntype{R}[1]{>{\RaggedLeft\hspace{0pt}}p{#1}}
+\renewcommand{\algorithmicrequire}{\textbf{Input(s):}}
+\renewcommand{\algorithmicensure}{\textbf{Output(s):}}
+\algdef{SE}{Begin}{End}{\textbf{begin}}{\textbf{end}}
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
 
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
@@ -99,7 +106,6 @@ headsepline, % Uncomment to get a line under the header
 \hypersetup{pdfauthor=\authorname} % Set the PDF's author to your name
 \hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
 }
-
 
 \begin{document}
 

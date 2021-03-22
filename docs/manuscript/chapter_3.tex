@@ -191,7 +191,7 @@ subset of word-level embeddings since it allowed us to work with lower-cased
 words, as well as experiment with a variety of embedding dimensions during our
 development phase.
 
-\subsection{$\omega$-Weighted finite state automaton}
+\subsection{Weighted finite state automaton-$\omega$}
 
 As mentioned in Section \ref{section:soft-patterns}, \citet{schwartz2018sopa}
 constructed the SoPa model with an ensemble of linear-chain WFAs which permitted
@@ -204,30 +204,36 @@ to have a large variation of string lengths due to the effect of both
 epsilon-transitions and self-loops. We believe that this reduced the impact of
 SoPa's explainability methods and as a result, the first change we decided for
 was to remove both epsilon and self-loop transitions. With this change, we could
-at least ensure that each WFA would match strings of a fixed length.
+at least ensure that each WFA would match strings of fixed lengths.
 
 However, matching strings of fixed lengths could also be seen as a form of
 overfitting in the model; since a model could simply memorize short strings or
 phrases and would not necessarily "learn" to generalize. To address this
-concern, we decicded to include a new type of transition within the now strict
-linear-chain WFAs; namely the wildcard transition which we define here as a
+concern, we include a wildcard transition which we define here as a
 $\omega$-transition. Allowing for such a transition was only natural since
 wildcards are already crucial parts of regular expressions; which as we
-mentioned are equivalent to FAs. With this, we provide the following amended
-definition for a $\omega$-WFA:
+mentioned are equivalent to FAs. To support this, we provide the following
+definition for a WFA-$\omega$:
 
-\begin{definition}[$\omega$-Weighted finite-state automaton]
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=14cm]{pdfs/generated/w_nfa_linear_chain/main.pdf}
+  \caption{Schematic visualizing a strict linear-chain finite-state automaton with
+    a $\omega$-transition extracted from a WFA-$\omega$}
+  \label{fig:fsa-w}
+\end{figure}
+
+\begin{definition}[Weighted finite-state automaton-$\omega$]
   \label{def:w-wsa}
-  A $\omega$-weighted finite-state automaton over a semiring $\mathbb{K}$ is a
+  A weighted finite-state automaton-$\omega$ over a semiring $\mathbb{K}$ is a
   5-tuple $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \Gamma, \lambda, \rho
   \rangle$, with:
 
   \begin{itemize}
-    \itemsep0em
+  \itemsep0em
     \item[--] a finite input alphabet $\Sigma$;
     \item[--] a finite state set $\mathcal{Q}$;
-    \item[--] transition weights $\Gamma: \mathcal{Q} \times \mathcal{Q} \times
-    (\Sigma \cup \{\omega\}) \rightarrow \mathbb{K}$;
+    \item[--] transition weights $\Gamma: \mathcal{Q} \times \mathcal{Q} \times (\Sigma \cup \{\omega\}) \rightarrow \mathbb{K}$;
     \item[--] initial weights $\lambda: \mathcal{Q} \rightarrow \mathbb{K}$;
     \item[--] and final weights $\rho: \mathcal{Q} \rightarrow \mathbb{K}$.
   \end{itemize}
@@ -244,13 +250,181 @@ definition for a $\omega$-WFA:
   \end{remark}
 \end{definition}
 
-With the removal of the epsilon and self-loop transitions, we were able to allow
-for fixed string length matches to our WFAs. In addition, with the introduction
-of the $\omega$-WFA, we are able to add a layer of generalization such that any
-token input could possibly be accepted. Finally, similar to
-\citet{schwartz2018sopa} we enforce that our $\omega$-WFAs all have a strict
-linear-chain structure. They are now considered strict since we removed the
-option of self-loop transitions.
+With the removal of epsilon and self-loop transitions and the introduction of
+the WFA-$\omega$, our SoPa++ model now uses strict linear-chain WFA-$\omega$'s
+instead of the linear-chain WFAs in SoPa. These changes allow us to attain fixed
+string length matches with an added layer of generalization because of the
+introduction of wildcards. An example of a strict-linear chain FA extracted from
+a WFA-$\omega$ is shown in Figure \ref{fig:fsa-w}. Interestingly, we can observe
+that this FA corresponds to the Perl-compatible regular expression \texttt{``what a
+  (great|entertaining) [\^{}\textbackslash\textbackslash s]+ !''}, where
+\texttt{[\^{}\textbackslash\textbackslash s]+} refers to any set of consecutive
+characters which are not separated by a space character; which we interpret as
+a wildcard or $\omega$-transition.
+
+\subsection{Tau straight-through estimator}
+
+In Section \ref{section:ste} we described the concept of a STE in activation
+quantized neural networks and explained how STEs function in both their forward
+and backward passes. Furthermore, we provided a motivation as to why STEs and
+other quantized activation functions are of interest; for example in relation to
+computational savings linked to low-precision computing. In our implementation
+of the SoPa++ model, we make use of a variant of the STE activation function;
+which we define here as the Tau straight-through estimator (TauSTE).
+
+\begin{equation}
+  \label{eq:tau-ste-forward}
+  \text{TauSTE}(x)=
+  \begin{cases}
+    1 & x \in (\tau, +\infty) \\
+    0 & x \in (-\infty, \tau]
+  \end{cases}
+\end{equation}
+
+\begin{equation}
+  \label{eq:tau-ste-backward}
+  \text{TauSTE}'(x)=
+  \begin{cases}
+    1 & x \in  (1, +\infty) \\
+    x & x \in [-1, 1] \\
+    -1 & x \in (-\infty, -1) \\
+  \end{cases}
+\end{equation}
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=14cm]{pdfs/generated/tau_ste_applied/main.pdf}
+  \caption{Schematic visualizing the TauSTE's forward and backward passes}
+  \label{fig:tau-ste}
+\end{figure}
+
+Figure \ref{fig:tau-ste} shows a schematic of the TauSTE's forward and backward
+passes. As we can see, there are two key changes from the vanilla STE to the
+TauSTE. Firstly, the threshold for activation in the forward function is now
+governed by some variable $\tau \in \mathbb{R}$. This was done to allow for some degree of freedom
+in deciding the activation threshold. Secondly, the backward pass returns the
+identity function on a limited range on inputs; specifically on $x \in [-1,1]$.
+This restriction on the backward pass was placed to ensure that gradients do not
+blow up in size.
+
+As we describe in detail in the next sections, we chose to use this special
+variant of the STE because we believe that the TauSTE could prove to be useful
+for the explainability purposes of our SoPa++ model. This is mainly because the
+TauSTE (or even the STE) activation function simplifies continuous inputs into
+discrete outputs; thereby reducing the information content of the signal it
+receives as inputs. In later sections, we show how we utilize and capitalize
+this reduction in signal information in our SoPa++ model.
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=15cm]{pdfs/generated/spp_computational_graph/main.pdf}
+  \caption{Schematic visualizing the computational graph of the SoPa++ model}
+  \label{fig:cg-spp}
+\end{figure}
+
+\subsection{Forward pass}
+
+In this subsection, we describe the forward pass of the SoPa++ model by
+specifically referring to its several neural components. This description is
+linked to the visualization of the computational graph of SoPa++ in Figure
+\ref{fig:cg-spp} and SoPa++ forward pass algorithm in \ref{algo:spp-forward}.
+Similar to \citet{schwartz2018sopa}, we firstly process input utterances by
+padding their start and end indices with special \texttt{[START]} and
+\texttt{[END]} tokens respectively. Next, we project input tokens to numerical
+spaces using the aforementioned GloVe word embeddings followed by an affine
+transformation to achieve the appropriate dimensionality for the following
+steps. Following this, we use our emsemble of $m \in \mathbb{N}$ pre-defined
+WFA-$\omega$'s to traverse the input text by scoring consecutive substrings
+present in the input text. When processing each input token, we monitor the end
+states of each of the $m \in \mathbb{N}$ WFA-$\omega$ and max-pool the score
+present in this state; which is analogous to the Viterbi algorithm
+\citep{viterbi1967error}. In the edge case that an input string was too short
+for the end state of WFA-$\omega$ to register a score, we simply discard this
+score in further analysis. This description so far corresponds to the lower half
+of Figure \ref{fig:cg-spp}.
+
+After max-pooling scores from all the $m \in \mathbb{N}$ WFA-$\omega$'s, we
+then pass this collection of scores for further processing using SoPa++'s other
+neural components. This can be seen in the upper portion of Figure
+\ref{fig:cg-spp}. Firstly, we apply layer normalization \citep{ba2016layer} to
+all pattern or WFA-$\omega$ scores without applying any additional affine
+transformations. We omit the affine transformation to not alter any of the
+pattern score information content and use layer normalization as an expedient
+means of projecting the values of pattern scores to a standard normal
+distribution. This furthermore guarantees that pattern scores would be
+smaller in size and would have a roughly even distribution of small positive and
+negative values around 0.
+
+This projection to a standard normal distribution becomes very useful as we next
+encounter the TauSTE layer. Here, this layer maps all inputs which are strictly
+larger than the $\tau \in \mathbb{R}$ threshsold to 1 and all others inputs to
+zero. The TauSTE layer naturally is only useful when it is able to discriminate
+the inputs by mapping some of them to 1 and some to 0, instead of always mapping
+all inputs to either 1 or 0. Without layer normalization, the TauSTE layer would
+not be able to perform its function since pattern scores tend to be mostly
+positive with differing ranges. Layer normalization therefore helps to project
+these variations of scores to a uniform range; which ultimately allows the
+TauSTE layer to be useful.
+
+A natural criticism of the TauSTE layer could be that it strongly limits the
+flow of information in the SoPa++ model. While the binarization present in this
+layer does indeed limit the rich flow of continuous numerical information, it is
+still worth noting that this layer can preserve sufficient information given a
+sufficiently large number of WFA-$\omega$ and therefore TauSTE neurons. For
+example, if we allow for $m=40$ and therefore 40 WFA-$\omega$ and TauSTE
+neurons, we can technically have a total to 2$^{40}\approx1.1\times10^{12}$
+binary state possibilities; which is roughly equal to the estimated number of stars
+present in the Andromeda Galaxy \citep{10.1093/mnras/stu879}. This would imply
+that despite the reduction in information content on the TauSTE layer, there are
+still sufficient mappable states available to learn various representations.
+
+\begin{algorithm}[t!]
+  \small
+  \caption{SoPa++ forward pass}
+  \label{algo:spp-forward}
+  \begin{algorithmic}[1]
+    \Require{Word-tokenized input utterance and initialized SoPa++ model}
+    \Ensure{SoPa++ classification label}
+    \Statex
+    \Begin
+    \State $utterance \gets pad(utterance)$ \Comment{Pad with [START] and [END] tokens}
+    \State $utterance \gets glove(utterance)$ \Comment{Projection to GloVe word
+      embeddings}
+    \ForEach{WFA-$\omega_i \in$ [WFA-$\omega_1,\ldots,$WFA-$\omega_m$]} 
+    \Comment{Loop over all $m$ WFA-$\omega$}
+    \State $\text{WFA-}\omega_i \gets viterbi(utterance, \text{WFA-}\omega_i)$
+    \Comment{Traverse utterance using Viterbi}
+    \State $s_i \gets final\_state(\text{WFA-}\omega_i)$ \Comment{Extract final
+      state score of WFA-$\omega_i$}
+    \EndFor
+    \State $S \gets [s_i,\ldots,s_m]$ \Comment{Gather all pattern scores and
+      assemble as vector}
+    \State $S \gets layer\_norm(S)$ \Comment{Layer normalization of all
+      pattern scores}
+    \State $S \gets tau\_ste(S)$ \Comment{Apply TauSTE on all normalized values} 
+    \State $S \gets linear(S)$ \Comment{Linear transformation to class
+    dimensionality}
+    \State $S \gets softmax(S)$ \Comment{Softmax to project to probability space}
+    \State $L \gets argmax(S)$ \Comment{Argmax to retrieve the highest scoring class}
+    \State \Return $L$
+    \End
+  \end{algorithmic}
+\end{algorithm}
+
+After binarizing the input values in the TauSTE layer, we apply a simple linear
+or affine transformation to the inputs to modify their dimensionality from $m
+\in \mathbb{N}$ to $n \in \mathbb{N}$, where the $n$ represents the number of
+output classes. We specifically chose a linear regression layer over a MLP
+because linear regressors are known to be transparent models
+\citep{arrieta2020explainable} and this is a feature which ultimately assists us
+in the explainability portion of the SoPa++ model, which we describe in greater
+detail in the next sections.
+
+Finally, after applying the linear transformation; we simply apply a softmax
+function over the linear outputs and extract the highest scoring index to
+represent the predicted class. In the case of Figure \ref{fig:cg-spp}, the
+output class for the input pre-processed sentence \texttt{``[START] 10 day
+  forecast [END]''} is the \texttt{weather/find} label which corresponds to class 11.
 
 %%% Local Variables: 
 %%% mode: latex

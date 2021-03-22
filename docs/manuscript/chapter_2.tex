@@ -285,6 +285,8 @@ causal links as these might be irrelevant or confusing to the target audience.
 
 \section{Straight-through estimator}
 
+\label{section:ste}
+
 Activation quantized neural networks refer to neural networks that contain
 layers which transmit piece-wise discrete signals. Since they come into
 importance in later aspects of this thesis, we use this section to provide a
@@ -307,8 +309,8 @@ Figure \ref{fig:straight-through-estimator}.
   \label{eq:ste-forward}
   \text{STE}(x)=
   \begin{cases}
-    1 & x > 0 \\
-    0 & x \leq 0
+    1 & x \in (0, +\infty) \\
+    0 & x \in [-\infty, 0]
   \end{cases}
 \end{equation}
 
@@ -409,7 +411,7 @@ definitions and descriptions for these mutually exclusive model categories.
   \begin{remark}
     A linear-chain finite-state automaton can be considered as \textit{strict}
     if it does not permit self-loop transitions and therefore only permits
-    transitions to neighbouring states which are strictly closer to the
+    transitions to adjacent states which are strictly closer to the
     accepting state. An example of a strict linear-chain NFA can be seen in
     Figure \ref{fig:regex-fsa}.
   \end{remark}
@@ -436,7 +438,7 @@ without necessarily consuming an input symbol.
 \begin{figure}[t]
   \centering
   \includegraphics[width=14cm]{pdfs/generated/re_nfa_linear_chain/main.pdf}
-  \caption{Regular expression \textit{``how are (you|they) doing ?''} converted
+  \caption{Regular expression \texttt{``how are (you|they) doing ?''} converted
     into a linear-chain NFA; double circles on state 5 indicate that this is an
     accepting state}
   \label{fig:regex-fsa}
@@ -450,8 +452,9 @@ expressive power in that they both recognize regular languages
 studied and optimized for converting FAs to REs and vice-versa
 \citep{mcnaughton1960regular,thompson1968programming}. Figure
 \ref{fig:regex-fsa} shows a simple example of the regular expression
-\textit{``how are (you|they) doing ?''} converted into a strict linear-chain
-NFA.
+\texttt{``how are (you|they) doing ?''} converted into a strict linear-chain
+NFA. The aforementioned regular expression is written using the Perl-compatible
+regular expression syntax with the \texttt{``|''} character indicating alternative possibilities.
 
 \subsection{Weighted finite-state automaton}
 
@@ -516,7 +519,7 @@ NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}.
     \citep{schwartz2018sopa,jiang2020cold}. As a result, we may use these terms
     interchangeably when referring to different studies.
   \end{remark}
-    
+ 
   \begin{remark}
     $\Sigma^{*}$ refers to the (possibly infinite) set of all strings over the
     alphabet $\Sigma$, where * represents the Kleene star operator.
@@ -590,7 +593,7 @@ NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}.
   $\pmb{\pi}$ that derives the input string $\pmb{x}$.
 \end{remark}
 
-\section{Soft patterns}
+\section{SoPa}
 
 \label{section:soft-patterns}
 
@@ -641,11 +644,9 @@ substring for a WFA.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=12cm]{pdfs/borrowed/linear_fsa_special_transitions.pdf}
+  \includegraphics[width=14cm]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
   \caption{Schematic visualizing a linear-chain finite-state automaton with
-    $\epsilon$-transitions, self-loops and a wildcard transition shown as
-    \textbf{X}; note that wildcard transitions are not allowed in the SoPa
-    model; figure taken from \citet{schwartz2018sopa}}
+    a $\epsilon$-transition and self-loop; figure adapted from \citet{schwartz2018sopa}}
   \label{fig:fsa}
 \end{figure}
 
@@ -700,7 +701,7 @@ aforementioned \textit{``interpretability''} method as an explainability method.
 We analyze the explainability-related features of SoPa in greater detail in
 Sections \ref{section:sopa-transparency} and \ref{section:sopa-explainability}.
 
-\subsection{Transparency of SoPa}
+\subsection{Transparency}
 
 \label{section:sopa-transparency}
 
