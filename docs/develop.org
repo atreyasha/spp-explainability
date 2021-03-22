@@ -6,44 +6,31 @@
 *** Manuscript
 **** Methodologies
      DEADLINE: <2021-03-24 Wed>
-***** SoPa++
-****** Lower model
-******* update the WFA definitions to signify wildcard transitions which were not present in SoPa
-******** mention the removal of epsilon and self-loops because of issues leading to variable string lengths
-******** perhaps can provide a small visualization for clarity
-******** use omega symbol for wildcards to differentiate from the Kleene star symbol -> think of how to technically motivate this by perhaps allowing omega to be part of the input alphabet -> mention that this is an improvised own definition
-****** Upper model  
-******* describe the LayerNorm layer and why it is needed in connection with the STE layer
-******* explain how and why we modified STE to TauSTE
-******* add visualization of TauSTE function
-******* explain purpose of STE layer which comes into importance later -> link to relevant section
-******* describe why we use a single linear layer instead of the MLP
-****** Add pseudocode for SoPa++ forward pass
-******* describe the backward pass very simply with gradient descent
-******* mention time complexity of new neural model
-******* show TikZ visualization of computational graph for SoPa++ model
-******* update WFA notations where possible
-****** Add table with key differences from SoPa model
-******* recycle this table later and add it to the SoPa model section
-******* talk about SoPa++ still being a black-box model
-
 ***** Regex proxy
 ****** Describe removal of lower model and upper model 
 ******* link this to explanations by simplification and regular expressions, as well as conversion from WFAs to FAs/REs -> should be introduced in the background concepts
 ******* describe importance of TauSTE layer for explainability and how discrete layers help
 ******* link back to background concepts when we discuss bringing neural and regex model as close to each other as possible
 ****** Add pseudocode for regex proxy model construction and compression
-****** Add pseudocode for regex proxy model forward pass
+****** Add pseudocode for regex proxy modl forward pass
+******* think about whether SoPa++ forward pseudocode must be modified with text-level instructions, this might be too complicated with too many details for now -> or maybe change pseudocode to traversal code
+******* mention that pseudocode everywhere has been simplified and they should refer to source code for full implementation details
+******* consider changing figure softmax to soft+argmax
 ******* report time complexities of the simplification process as well as compression where possible
 ******* make sure to state that the regex's represent substring matches to the borders are generic -> or otherwise explicitly add these to the visualizations -> make this clear both here and for the results to questions three
 ******* alternatively consider different notation to imply this is a regex match with arbitrary borders
 ******* show TikZ visualization of regex computational graph and tweak colors/labels to make explanations easier if need be
 ******* replace FAs in visualization with regular expression matrix where possible
 ******* talk about regex proxy possibly being a transparent model and motivate arguments for/against this, say this is only theoretical but we come back to this in the discussion segment
+****** Add table with key differences from SoPa model
+******* recycle this table later and add it to the SoPa model section
+******* talk about SoPa++ still being a black-box model, compare all features
 
 ***** SoPa++ training setup
 ****** talk about GloVe embeddings, lowercasing and other important things
 ****** talk about upsampling data set during training
+****** mention about PyTorch for parallel computation and autograd for backward pass computation
+****** mention about NLL loss and log softmax for numerical stability
 ****** add sufficient information on grid training and hyperparameter setup
 ***** Performance evaluation
 ****** explain usage of test set
@@ -124,6 +111,7 @@
 ****** add links to chapters in thesis structure
 ***** Background concepts
 ****** think more about how to improve (W)FA definitions
+****** consider adding definitions for main transitions if they are useful
 ****** pad definition environments with more explanatory text for flow
 ****** add more information on page numbers and sections in all Arrieta et al. citations so these seem more differentiated
 ****** explain vanilla SoPa in a more prose format using a table to explain important features -> this table can then be compared directly with new SoPa++ features
@@ -179,8 +167,9 @@
 ***** add information on best model downloads and preparation -> add these to Google Drive later on
 ***** test out all shell-scripts and python code to make sure everything works the same after major renamings
 ***** test download and all other scripts to ensure they work
-***** perform spell-check on readme 
 ***** perform formatting on latex code
+***** ensure all label names and figure names are consitent
+***** perform spell-check on readme 
 
 ** Notes
 *** Admin

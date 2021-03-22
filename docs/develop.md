@@ -22,60 +22,7 @@
 
     **DEADLINE:** *\<2021-03-24 Wed\>*
 
-    1.  SoPa++
-
-        1.  Lower model
-
-            1.  update the WFA definitions to signify wildcard
-                transitions which were not present in SoPa
-
-                1.  mention the removal of epsilon and self-loops
-                    because of issues leading to variable string lengths
-
-                2.  perhaps can provide a small visualization for
-                    clarity
-
-                3.  use omega symbol for wildcards to differentiate from
-                    the Kleene star symbol -\> think of how to
-                    technically motivate this by perhaps allowing omega
-                    to be part of the input alphabet -\> mention that
-                    this is an improvised own definition
-
-        2.  Upper model
-
-            1.  describe the LayerNorm layer and why it is needed in
-                connection with the STE layer
-
-            2.  explain how and why we modified STE to TauSTE
-
-            3.  add visualization of TauSTE function
-
-            4.  explain purpose of STE layer which comes into importance
-                later -\> link to relevant section
-
-            5.  describe why we use a single linear layer instead of the
-                MLP
-
-        3.  Add pseudocode for SoPa++ forward pass
-
-            1.  describe the backward pass very simply with gradient
-                descent
-
-            2.  mention time complexity of new neural model
-
-            3.  show TikZ visualization of computational graph for
-                SoPa++ model
-
-            4.  update WFA notations where possible
-
-        4.  Add table with key differences from SoPa model
-
-            1.  recycle this table later and add it to the SoPa model
-                section
-
-            2.  talk about SoPa++ still being a black-box model
-
-    2.  Regex proxy
+    1.  Regex proxy
 
         1.  Describe removal of lower model and upper model
 
@@ -93,42 +40,67 @@
         2.  Add pseudocode for regex proxy model construction and
             compression
 
-        3.  Add pseudocode for regex proxy model forward pass
+        3.  Add pseudocode for regex proxy modl forward pass
 
-            1.  report time complexities of the simplification process
+            1.  think about whether SoPa++ forward pseudocode must be
+                modified with text-level instructions, this might be too
+                complicated with too many details for now -\> or maybe
+                change pseudocode to traversal code
+
+            2.  mention that pseudocode everywhere has been simplified
+                and they should refer to source code for full
+                implementation details
+
+            3.  consider changing figure softmax to soft+argmax
+
+            4.  report time complexities of the simplification process
                 as well as compression where possible
 
-            2.  make sure to state that the regex\'s represent substring
+            5.  make sure to state that the regex\'s represent substring
                 matches to the borders are generic -\> or otherwise
                 explicitly add these to the visualizations -\> make this
                 clear both here and for the results to questions three
 
-            3.  alternatively consider different notation to imply this
+            6.  alternatively consider different notation to imply this
                 is a regex match with arbitrary borders
 
-            4.  show TikZ visualization of regex computational graph and
+            7.  show TikZ visualization of regex computational graph and
                 tweak colors/labels to make explanations easier if need
                 be
 
-            5.  replace FAs in visualization with regular expression
+            8.  replace FAs in visualization with regular expression
                 matrix where possible
 
-            6.  talk about regex proxy possibly being a transparent
+            9.  talk about regex proxy possibly being a transparent
                 model and motivate arguments for/against this, say this
                 is only theoretical but we come back to this in the
                 discussion segment
 
-    3.  SoPa++ training setup
+        4.  Add table with key differences from SoPa model
+
+            1.  recycle this table later and add it to the SoPa model
+                section
+
+            2.  talk about SoPa++ still being a black-box model, compare
+                all features
+
+    2.  SoPa++ training setup
 
         1.  talk about GloVe embeddings, lowercasing and other important
             things
 
         2.  talk about upsampling data set during training
 
-        3.  add sufficient information on grid training and
+        3.  mention about PyTorch for parallel computation and autograd
+            for backward pass computation
+
+        4.  mention about NLL loss and log softmax for numerical
+            stability
+
+        5.  add sufficient information on grid training and
             hyperparameter setup
 
-    4.  Performance evaluation
+    3.  Performance evaluation
 
         1.  explain usage of test set
 
@@ -138,7 +110,7 @@
         3.  mention checking if the performance falls in the competitie
             range
 
-    5.  Explanations by simplification evaluation
+    4.  Explanations by simplification evaluation
 
         1.  mention we are trying to evaluate how close the models are,
             and we delegate the quality of explainability based on a
@@ -158,7 +130,7 @@
             limit how often activation occurs, which we hypothesize
             could have an effect in bringing both models closer together
 
-    6.  Insightful explanations insight
+    5.  Insightful explanations insight
 
         1.  mention how we analyze the output neurons with legitimacy
             given that it is now a linear layer to find how STE neurons
@@ -351,17 +323,20 @@
 
         1.  think more about how to improve (W)FA definitions
 
-        2.  pad definition environments with more explanatory text for
+        2.  consider adding definitions for main transitions if they are
+            useful
+
+        3.  pad definition environments with more explanatory text for
             flow
 
-        3.  add more information on page numbers and sections in all
+        4.  add more information on page numbers and sections in all
             Arrieta et al. citations so these seem more differentiated
 
-        4.  explain vanilla SoPa in a more prose format using a table to
+        5.  explain vanilla SoPa in a more prose format using a table to
             explain important features -\> this table can then be
             compared directly with new SoPa++ features
 
-        5.  mention early on that quantized NNs are useful for
+        6.  mention early on that quantized NNs are useful for
             low-precision computing, but we use it for other reasons
             later on
 
@@ -509,9 +484,11 @@
 
     10. test download and all other scripts to ensure they work
 
-    11. perform spell-check on readme
+    11. perform formatting on latex code
 
-    12. perform formatting on latex code
+    12. ensure all label names and figure names are consitent
+
+    13. perform spell-check on readme
 
 ## Notes
 
