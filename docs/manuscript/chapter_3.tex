@@ -126,7 +126,7 @@ statistics of the preprocessed FMTOD data set.
   \end{threeparttable}
   \caption{Tabular summary of utterance length statistics and examples for FMTOD
     data classes; $\mu$ signifies the cumulative summary statistics}
-  \label{tab:fmtod-examples}
+  \label{tab:fmtod_examples}
 \end{table}
 
 \begin{table}[t!]
@@ -143,7 +143,7 @@ statistics of the preprocessed FMTOD data set.
   \caption{Tabular summary of studies that addressed the FMTOD intent detection
     English language task, along with their relevant summaries and accuracy
     range(s)}
-  \label{tab:fmtod-results}
+  \label{tab:fmtod_results}
 \end{table}
 
 \subsection{Summary statistics}
@@ -155,7 +155,7 @@ explicit frequencies. Based on the summary statistics, we can observe that the
 preprocessed FMTOD data set is significantly imbalanced with $\sim$45$\%$ of
 samples falling into Class 11 alone. We take this observation into consideration
 in later sections and apply fixes to mitigate this data imbalance. In addition,
-we observe from Table \ref{tab:fmtod-examples} that input utterances in the
+we observe from Table \ref{tab:fmtod_examples} that input utterances in the
 preprocessed FMTOD data set are generally short; with a mean input utterance
 length of 7.7 and a standard deviation of 2.5 tokens. Utterance length summary
 statistics were computed with the assistance of NLTK's default \texttt{Treebank}
@@ -167,7 +167,7 @@ Several studies have optimized deep learning models on the FMTOD English
 language intent classification task using a variety of models from BiLSTMs to
 XLM-RoBERTa
 \citep{schuster-etal-2019-cross-lingual,zhang2019joint,zhang-etal-2020-intent}.
-Table \ref{tab:fmtod-results} summarizes these studies along with their reported
+Table \ref{tab:fmtod_results} summarizes these studies along with their reported
 accuracy scores on the FMTOD English language intent classification task. Based
 on the presented results from these recent studies, we can infer that the
 general competitive accuracy range for the FMTOD English language intent
@@ -193,10 +193,10 @@ development phase.
 
 \subsection{Weighted finite state automaton-$\omega$}
 
-As mentioned in Section \ref{section:soft-patterns}, \citet{schwartz2018sopa}
+As mentioned in Section \ref{section:sopa}, \citet{schwartz2018sopa}
 constructed the SoPa model with an ensemble of linear-chain WFAs which permitted
 both epsilon and self-loop transitions. As noted in Section
-\ref{section:sopa-model-specs}, epsilon and self-loop transitions are useful
+\ref{section:sopa_cg}, epsilon and self-loop transitions are useful
 constructs in abstracting WFAs and allowing them to match variable length
 strings. However based on our experimentation during our development phase, we
 observed a key concern that the highest scoring paths in the WFAs in SoPa tended
@@ -220,11 +220,11 @@ definition for a WFA-$\omega$:
   \includegraphics[width=14cm]{pdfs/generated/w_nfa_linear_chain/main.pdf}
   \caption{Schematic visualizing a strict linear-chain finite-state automaton with
     a $\omega$-transition extracted from a WFA-$\omega$}
-  \label{fig:fsa-w}
+  \label{fig:omega_fa}
 \end{figure}
 
 \begin{definition}[Weighted finite-state automaton-$\omega$]
-  \label{def:w-wsa}
+  \label{def:wfa_w}
   A weighted finite-state automaton-$\omega$ over a semiring $\mathbb{K}$ is a
   5-tuple $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \Gamma, \lambda, \rho
   \rangle$, with:
@@ -233,9 +233,9 @@ definition for a WFA-$\omega$:
   \itemsep0em
     \item[--] a finite input alphabet $\Sigma$;
     \item[--] a finite state set $\mathcal{Q}$;
-    \item[--] transition weights $\Gamma: \mathcal{Q} \times \mathcal{Q} \times (\Sigma \cup \{\omega\}) \rightarrow \mathbb{K}$;
-    \item[--] initial weights $\lambda: \mathcal{Q} \rightarrow \mathbb{K}$;
-    \item[--] and final weights $\rho: \mathcal{Q} \rightarrow \mathbb{K}$.
+    \item[--] transition matrix $\Gamma: \mathcal{Q} \times \mathcal{Q} \times (\Sigma \cup \{\omega\}) \rightarrow \mathbb{K}$;
+    \item[--] initial vector $\lambda: \mathcal{Q} \rightarrow \mathbb{K}$;
+    \item[--] and final vector $\rho: \mathcal{Q} \rightarrow \mathbb{K}$.
   \end{itemize}
 
   \begin{remark}
@@ -255,7 +255,7 @@ the WFA-$\omega$, our SoPa++ model now uses strict linear-chain WFA-$\omega$'s
 instead of the linear-chain WFAs in SoPa. These changes allow us to attain fixed
 string length matches with an added layer of generalization because of the
 introduction of wildcards. An example of a strict-linear chain FA extracted from
-a WFA-$\omega$ is shown in Figure \ref{fig:fsa-w}. Interestingly, we can observe
+a WFA-$\omega$ is shown in Figure \ref{fig:omega_fa}. Interestingly, we can observe
 that this FA corresponds to the Perl-compatible regular expression \texttt{``what a
   (great|entertaining) [\^{}\textbackslash\textbackslash s]+ !''}, where
 \texttt{[\^{}\textbackslash\textbackslash s]+} refers to any set of consecutive
@@ -273,7 +273,7 @@ of the SoPa++ model, we make use of a variant of the STE activation function;
 which we define here as the Tau straight-through estimator (TauSTE).
 
 \begin{equation}
-  \label{eq:tau-ste-forward}
+  \label{eq:tau_ste_forward}
   \text{TauSTE}(x)=
   \begin{cases}
     1 & x \in (\tau, +\infty) \\
@@ -282,7 +282,7 @@ which we define here as the Tau straight-through estimator (TauSTE).
 \end{equation}
 
 \begin{equation}
-  \label{eq:tau-ste-backward}
+  \label{eq:tau_ste_backward}
   \text{TauSTE}'(x)=
   \begin{cases}
     1 & x \in  (1, +\infty) \\
@@ -295,10 +295,10 @@ which we define here as the Tau straight-through estimator (TauSTE).
   \centering
   \includegraphics[width=14cm]{pdfs/generated/tau_ste_applied/main.pdf}
   \caption{Schematic visualizing the TauSTE's forward and backward passes}
-  \label{fig:tau-ste}
+  \label{fig:tau_ste}
 \end{figure}
 
-Figure \ref{fig:tau-ste} shows a schematic of the TauSTE's forward and backward
+Figure \ref{fig:tau_ste} shows a schematic of the TauSTE's forward and backward
 passes. As we can see, there are two key changes from the vanilla STE to the
 TauSTE. Firstly, the threshold for activation in the forward function is now
 governed by some variable $\tau \in \mathbb{R}$. This was done to allow for some degree of freedom
@@ -319,7 +319,7 @@ this reduction in signal information in our SoPa++ model.
   \centering
   \includegraphics[width=15cm]{pdfs/generated/spp_computational_graph/main.pdf}
   \caption{Schematic visualizing the computational graph of the SoPa++ model}
-  \label{fig:cg-spp}
+  \label{fig:spp_cg}
 \end{figure}
 
 \subsection{Forward pass}
@@ -327,7 +327,7 @@ this reduction in signal information in our SoPa++ model.
 In this subsection, we describe the forward pass of the SoPa++ model by
 specifically referring to its several neural components. This description is
 linked to the visualization of the computational graph of SoPa++ in Figure
-\ref{fig:cg-spp} and SoPa++ forward pass algorithm in \ref{algo:spp-forward}.
+\ref{fig:spp_cg} and SoPa++ forward pass algorithm in \ref{algo:spp_forward}.
 Similar to \citet{schwartz2018sopa}, we firstly process input utterances by
 padding their start and end indices with special \texttt{[START]} and
 \texttt{[END]} tokens respectively. Next, we project input tokens to numerical
@@ -341,12 +341,12 @@ present in this state; which is analogous to the Viterbi algorithm
 \citep{viterbi1967error}. In the edge case that an input string was too short
 for the end state of WFA-$\omega$ to register a score, we simply discard this
 score in further analysis. This description so far corresponds to the lower half
-of Figure \ref{fig:cg-spp}.
+of Figure \ref{fig:spp_cg}.
 
 After max-pooling scores from all the $m \in \mathbb{N}$ WFA-$\omega$'s, we
 then pass this collection of scores for further processing using SoPa++'s other
 neural components. This can be seen in the upper portion of Figure
-\ref{fig:cg-spp}. Firstly, we apply layer normalization \citep{ba2016layer} to
+\ref{fig:spp_cg}. Firstly, we apply layer normalization \citep{ba2016layer} to
 all pattern or WFA-$\omega$ scores without applying any additional affine
 transformations. We omit the affine transformation to not alter any of the
 pattern score information content and use layer normalization as an expedient
@@ -373,15 +373,16 @@ still worth noting that this layer can preserve sufficient information given a
 sufficiently large number of WFA-$\omega$ and therefore TauSTE neurons. For
 example, if we allow for $m=40$ and therefore 40 WFA-$\omega$ and TauSTE
 neurons, we can technically have a total to 2$^{40}\approx1.1\times10^{12}$
-binary state possibilities; which is roughly equal to the estimated number of stars
-present in the Andromeda Galaxy \citep{10.1093/mnras/stu879}. This would imply
-that despite the reduction in information content on the TauSTE layer, there are
-still sufficient mappable states available to learn various representations.
+binary state possibilities; which is approximately equal to one trillion state
+possibilities or otherwise the estimated number of stars present in the
+Andromeda Galaxy \citep{10.1093/mnras/stu879}. This would imply that despite the
+reduction in information content on the TauSTE layer, there are still sufficient
+mappable states available to learn various representations.
 
 \begin{algorithm}[t!]
   \small
   \caption{SoPa++ forward pass}
-  \label{algo:spp-forward}
+  \label{algo:spp_forward}
   \begin{algorithmic}[1]
     \Require{Word-tokenized input utterance and initialized SoPa++ model}
     \Ensure{SoPa++ classification label}
@@ -422,7 +423,7 @@ detail in the next sections.
 
 Finally, after applying the linear transformation; we simply apply a softmax
 function over the linear outputs and extract the highest scoring index to
-represent the predicted class. In the case of Figure \ref{fig:cg-spp}, the
+represent the predicted class. In the case of Figure \ref{fig:spp_cg}, the
 output class for the input pre-processed sentence \texttt{``[START] 10 day
   forecast [END]''} is the \texttt{weather/find} label which corresponds to class 11.
 

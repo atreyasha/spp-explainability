@@ -101,19 +101,19 @@ black-box ML models from the various stakeholders in Artificial Intelligence
 target audience for XAI; implying that different XAI techniques should be
 employed for different target audiences. In their study, they provide examples
 of target audiences such as domain experts, end-users and managers (Figure
-\ref{fig:xai-target-audience}).
+\ref{fig:xai_target_audience}).
 
 \begin{figure}[t]
   \centering \includegraphics[trim={0.1cm 0.1cm 0.1cm
     0.1cm},clip,width=14cm]{pdfs/borrowed/xai_target_audience.pdf}
   \caption{Examples of various target audiences in XAI; figure taken from
     \citet{arrieta2020explainable}}
-  \label{fig:xai-target-audience}
+  \label{fig:xai_target_audience}
 \end{figure}
 
 \subsection{Terminology clarification}
 
-\label{section:xai-terminology}
+\label{section:xai_terminology}
 
 Based on a review of roughly 400 XAI studies, \citet{arrieta2020explainable}
 observe that many studies tend to misuse the terms interpretability and
@@ -136,7 +136,7 @@ not necessarily be the case for interpretability or transparency.
 
 \subsection{Explainability techniques}
 
-\label{section:xai-techniques}
+\label{section:xai_techniques}
 
 Based on the aforementioned classification of ML models into transparent and
 black-box models, \citet{arrieta2020explainable} expound on explainability
@@ -219,7 +219,7 @@ black-box neural networks into proxy Finite-State Automata (FAs) and/or Weighted
 Finite-State Automata (WFAs)
 \citep{schwartz2018sopa,peng2018rational,suresh-etal-2019-distilling,wang2019state,jiang2020cold}.
 We expound more on WFAs and \citet{schwartz2018sopa} in Sections
-\ref{section:fsa} and \ref{section:soft-patterns} respectively.
+\ref{section:fa} and \ref{section:sopa} respectively.
 
 \begin{figure}[t]
   \centering
@@ -254,7 +254,7 @@ in Figure \ref{fig:performance_interpretability_tradeoff}.
  
 \subsection{Explainability metrics}
 
-\label{section:xai-metrics}
+\label{section:xai_metrics}
 
 Towards the end of their study, \citet{arrieta2020explainable} note two major
 limitations of the current state of XAI research. Firstly, they observe the lack
@@ -300,13 +300,13 @@ significant workaround for this issue was proposed by
 \citet{bengio2013estimating} through the introduction of the Straight-Through
 Estimator (STE). In the vanilla version of the STE, the STE neuron emits a
 signal of 1 when its input is strictly positive, and emits a zero signal in all
-other cases (Equation \ref{eq:ste-forward}). The STE then uses a simple identity
+other cases (Equation \ref{eq:ste_forward}). The STE then uses a simple identity
 function to estimate the gradient during the backward pass (Equation
-\ref{eq:ste-backward}). The vanilla STE is visualized through a schematic in
-Figure \ref{fig:straight-through-estimator}.
+\ref{eq:ste_backward}). The vanilla STE is visualized through a schematic in
+Figure \ref{fig:ste}.
 
 \begin{equation}
-  \label{eq:ste-forward}
+  \label{eq:ste_forward}
   \text{STE}(x)=
   \begin{cases}
     1 & x \in (0, +\infty) \\
@@ -315,7 +315,7 @@ Figure \ref{fig:straight-through-estimator}.
 \end{equation}
 
 \begin{equation}
-  \label{eq:ste-backward}
+  \label{eq:ste_backward}
   \text{STE}'(x)= x
 \end{equation}
 
@@ -323,7 +323,7 @@ Figure \ref{fig:straight-through-estimator}.
   \centering
   \includegraphics[width=14cm]{pdfs/generated/ste_theoretical/main.pdf}
   \caption{Schematic visualizing the vanilla STE's forward and backward passes}
-  \label{fig:straight-through-estimator}
+  \label{fig:ste}
 \end{figure}
 
 Aside from the vanilla STE, several other flavors of STEs have been proposed by
@@ -336,9 +336,9 @@ driven neural activation functions.
 
 \section{Finite-state automata}
 
-\label{section:fsa}
+\label{section:fa}
 
-As mentioned in Section \ref{section:xai-techniques}, we found multiple studies
+As mentioned in Section \ref{section:xai_techniques}, we found multiple studies
 in NLP that conducted explanations by simplification on black-box neural
 networks by simplifying them into FAs and WFAs. As this will eventually be a
 focus of this thesis, we define key concepts related to the FAs and WFAs in this
@@ -352,7 +352,7 @@ definitions and descriptions for these mutually exclusive model categories.
 
 \begin{definition}[Deterministic finite-state automaton;
   \citealt{sipser1996introduction}]
-  \label{def:fsa}
+  \label{def:fa}
   A deterministic finite-state automaton is a 5-tuple $\mathcal{M} = \langle
   \Sigma, \mathcal{Q}, \delta, q_0, F \rangle$, with:
   \begin{itemize}
@@ -368,7 +368,7 @@ definitions and descriptions for these mutually exclusive model categories.
 
 \begin{definition}[Nondeterministic finite-state automaton;
   \citealt{sipser1996introduction}]
-  \label{def:nd-fsa}
+  \label{def:nfa}
   A nondeterministic finite-state automaton is a 5-tuple $\mathcal{M} = \langle
   \Sigma, \mathcal{Q}, \delta, q_0, F \rangle$, with:
   \begin{itemize}
@@ -413,7 +413,7 @@ definitions and descriptions for these mutually exclusive model categories.
     if it does not permit self-loop transitions and therefore only permits
     transitions to adjacent states which are strictly closer to the
     accepting state. An example of a strict linear-chain NFA can be seen in
-    Figure \ref{fig:regex-fsa}.
+    Figure \ref{fig:regex_fa}.
   \end{remark}
 
   \begin{remark}
@@ -441,7 +441,7 @@ without necessarily consuming an input symbol.
   \caption{Regular expression \texttt{``how are (you|they) doing ?''} converted
     into a linear-chain NFA; double circles on state 5 indicate that this is an
     accepting state}
-  \label{fig:regex-fsa}
+  \label{fig:regex_fa}
 \end{figure}
 
 \subsection{Regular expressions}
@@ -451,7 +451,7 @@ expressive power in that they both recognize regular languages
 \citep{sipser1996introduction}. Several algorithms have been historically
 studied and optimized for converting FAs to REs and vice-versa
 \citep{mcnaughton1960regular,thompson1968programming}. Figure
-\ref{fig:regex-fsa} shows a simple example of the regular expression
+\ref{fig:regex_fa} shows a simple example of the regular expression
 \texttt{``how are (you|they) doing ?''} converted into a strict linear-chain
 NFA. The aforementioned regular expression is written using the Perl-compatible
 regular expression syntax with the \texttt{``|''} character indicating alternative possibilities.
@@ -466,6 +466,7 @@ numerically score strings which has made them useful for several applications in
 NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}.
 
 \begin{definition}[Semiring; \citealt{kuich1986linear}]
+  \label{def:semiring}
   A semiring is a set $\mathbb{K}$ along with two binary associative operations
   $\oplus$ (addition) and $\otimes$ (multiplication) and two identity elements:
   $\bar{0}$ for addition and $\bar{1}$ for multiplication. Semirings require
@@ -506,20 +507,12 @@ NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}.
     \itemsep0em
     \item[--] a finite input alphabet $\Sigma$;
     \item[--] a finite state set $\mathcal{Q}$;
-    \item[--] transition weights $\Gamma: \mathcal{Q} \times \mathcal{Q} \times
+    \item[--] transition matrix $\Gamma: \mathcal{Q} \times \mathcal{Q} \times
     (\Sigma \cup \{\epsilon\}) \rightarrow \mathbb{K}$;
-    \item[--] initial weights $\lambda: \mathcal{Q} \rightarrow \mathbb{K}$;
-    \item[--] and final weights $\rho: \mathcal{Q} \rightarrow \mathbb{K}$.
+    \item[--] initial vector $\lambda: \mathcal{Q} \rightarrow \mathbb{K}$;
+    \item[--] and final vector $\rho: \mathcal{Q} \rightarrow \mathbb{K}$.
   \end{itemize}
 
-  \begin{remark}
-    Several studies refer to the transition weights $\Gamma$ as the transition
-    matrix, and the initial $\lambda$ and final $\rho$ weights as the initial
-    and final weight vectors respectively
-    \citep{schwartz2018sopa,jiang2020cold}. As a result, we may use these terms
-    interchangeably when referring to different studies.
-  \end{remark}
- 
   \begin{remark}
     $\Sigma^{*}$ refers to the (possibly infinite) set of all strings over the
     alphabet $\Sigma$, where * represents the Kleene star operator.
@@ -550,7 +543,7 @@ NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}.
 \end{equation}
 
 \begin{definition}[String score; \citealt{peng2018rational}]
-  \label{def:string-score}
+  \label{def:string_score}
   Let $\Pi(\pmb{x})$ denote the set of all paths in $\mathcal{A}$ that derive
   $\pmb{x}$. Then the string score assigned by $\mathcal{A}$ to string $\pmb{x}$
   is given by:
@@ -579,7 +572,7 @@ NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}.
 \end{remark}
 
 \begin{remark}
-  \label{rmk:old-runtime}
+  \label{rmk:old_runtime}
   The Forward algorithm can be generalized to any semiring
   \citep{eisner2002parameter} and has a runtime of $O(|Q|^3 + |Q|^2|\pmb{x}|)$
   \citep{schwartz2018sopa}; notably with a linear runtime with respect to the
@@ -595,7 +588,7 @@ NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}.
 
 \section{SoPa}
 
-\label{section:soft-patterns}
+\label{section:sopa}
 
 \citet{schwartz2018sopa} present a novel hybridized RNN, CNN and WFA-based
 neural architecture called \textbf{So}ft \textbf{Pa}tterns (SoPa). This
@@ -614,25 +607,81 @@ Additionally, they show that SoPa outperformed all baselines significantly in
 low-data settings. Finally, the authors present a simple method to explain the
 SoPa model using both local explanations and feature relevance.
 
-\subsection{Model specifications}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=14cm]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
+  \caption{Schematic visualizing a linear-chain finite-state automaton with
+    a $\epsilon$-transition and self-loop; figure adapted from \citet{schwartz2018sopa}}
+  \label{fig:fa}
+\end{figure}
 
-\label{section:sopa-model-specs}
+\subsection{Linear-chain WFAs}
 
-\paragraph{WFAs:} In regards to the WFAs used in SoPa, \citet{schwartz2018sopa}
-only utilize the max-sum and max-product semirings; as well as
-$\epsilon$-transitions and self-loops. Next, they employ constraints on the
+\label{section:sopa_lc_wfa}
+
+In regards to the WFAs used in SoPa, \citet{schwartz2018sopa}
+only utilize the max-sum and max-product semirings. Next, they employ constraints on the
 model's WFAs in order to reduce the runtime of SoPa further. Of these, they
 firstly enforce a linear-chain (Definition \ref{def:lfa}) WFA structure, with
-Figure \ref{fig:fsa} showing a representative FA without weights extracted from
+Figure \ref{fig:fa} showing a representative FA without weights extracted from
 the linear-chain WFA. Secondly, they constrain $\epsilon$-transitions to only
 occur at most once in each transition. These constraints result in the
 transition matrix $\Gamma$ being reduced to a sparse diagonal matrix and the
 runtime of the linear-chain WFAs being reduced to $O(|Q||\pmb{x}|)$, compared to
-the original runtime in Remark \ref{rmk:old-runtime}. Finally, \citet[Page 3,
+the original runtime in Remark \ref{rmk:old_runtime}. Finally, \citet[Page 3,
 Section 3.1]{schwartz2018sopa} refer to the linear-chain WFAs simply as
 \textit{``patterns''}. For brevity, we adopt the same terminology.
 
-\paragraph{String vs. document score:} Definition \ref{def:string-score}
+Given the linear-chain WFA structure, each WFA in \citet{schwartz2018sopa} has a
+sequence of $|\mathcal{Q}|$ states with each state $i$ having three possible
+outgoing transitions; namely a self-loop transition which consumes a token but stays in the
+same state $i$, a $\epsilon$-transition which does not consume a token but
+transitions to state $i+1$ and a main transition which consumes a token and
+transitions to state $i+1$.
+
+To more concretely express these transitions, \citet{schwartz2018sopa} provide
+the following formulation of the transition matrix $\Gamma$ under the
+linear-chain structure; where $\Gamma(x)$ represents a $|Q|\times|Q|$ matrix
+which represented the transition scores for an input token $x$.
+$[\Gamma(x)]_{i,j}$ represents the cell value in $\Gamma(x)$ for row $i$ and
+column $j$:
+
+\begin{equation}
+  \label{eq:sopa_transition_matrix_main}
+  [\Gamma(x)]_{i,j} =
+  \begin{cases}
+    \pmb{u}_i \cdot \pmb{v}_x + a_i  & \text{if } j = i \text{ (self-loop),} \\
+    \pmb{w}_i \cdot \pmb{v}_x + b_i  & \text{if } j = i + 1 \text{ (main-transition),} \\
+    \bar{0} & \text{otherwise.}
+  \end{cases}
+\end{equation}
+
+Here, $\pmb{u}_i$ and $\pmb{w}_i$ are vectors and $a_i$ and $b_i$ are scalar
+biases parameterizing transitions out of state $i$. $\pmb{v}_x$ represents the
+word embedding for token $x$ and $\bar{0}$ represents the zero value in the
+semiring used as per Definition \ref{def:semiring}. Equation \ref{eq:sopa_transition_matrix_main}
+represents transitions which consume a token. Similarly, $\epsilon$-transitions
+are parameterized with the following equation:
+
+\begin{equation}
+  \label{eq:sopa_transition_matrix_main}
+  [\Gamma(\epsilon)]_{i,j} =
+  \begin{cases}
+    c_i  & \text{if } j = i + 1 \\
+    \bar{0} & \text{otherwise.}
+  \end{cases}
+\end{equation}
+
+Correspondingly, $c_i$ represents a scalar bias provided for
+$\epsilon$-transitions which are only dependent on the current state. Finally,
+\citet{schwartz2018sopa} fix the initial vector $\lambda = [\bar{1}, \bar{0}, \ldots, \bar{0}]$
+and the final vector $\rho = [\bar{0}, \bar{0}, \ldots, \bar{1}]$. This is a
+formal notation to imply that there only exists one start and one final state
+and these are present at both extremes of the linear-chain WFA. Here,
+$\bar{0}$ and $\bar{1}$ represent the zero and one values from the relevant
+semiring used as per Definition \ref{def:semiring}. 
+
+Definition \ref{def:string_score}
 describes how a WFA can be used to compute a string score. Since SoPa was
 intended to compute scores for entire documents and not just short strings,
 \citet{schwartz2018sopa} propose computing the string score over all consecutive
@@ -642,15 +691,11 @@ on the semiring used in the WFAs. In the case of max-based semirings using the
 Viterbi algorithm, the document score would reflect the highest scoring
 substring for a WFA.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=14cm]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
-  \caption{Schematic visualizing a linear-chain finite-state automaton with
-    a $\epsilon$-transition and self-loop; figure adapted from \citet{schwartz2018sopa}}
-  \label{fig:fsa}
-\end{figure}
+\subsection{Computational graph}
 
-\paragraph{Computational graph:} Figure \ref{fig:sopa} shows a sample
+\label{section:sopa_cg}
+
+Figure \ref{fig:sopa} shows a sample
 computational graph for the SoPa model with two WFAs highlighted in blue and
 red. The WFAs compute consecutive string scores as they traverse the document.
 Given max-based semirings, the max-pooled scores accumulate in an output layer
@@ -675,35 +720,19 @@ transition from the token \textit{``and''} to the token \textit{``most''}.
   \label{fig:sopa}
 \end{figure}
 
-\paragraph{Hyperparameters:} Training the SoPa model requires both commonly used
-and special hyperparameters. Commonly used hyperparameters include the learning
-rate, neuron dropout and word dropout. A special hyperparameter in the SoPa
-model is the pattern hyperparameter and it contains information on the number of
-patterns or WFAs allowed, as well as the lengths of the patterns or the number
-of states in the WFAs. This hyperparameter is encoded as a string with the
-following syntax:
+Training the SoPa model requires both commonly used and special hyperparameters.
+Commonly used hyperparameters include the learning rate, neuron dropout and word
+dropout. A special hyperparameter in the SoPa model is the pattern
+hyperparameter which contains information on the number of WFAs and their
+respective number of states allowed. This hyperparameter is encoded as a string
+with the following syntax:
 \texttt{Length$_{1}$-Count$_{1}$\_$\dots$\_Length$_{n}$-Count$_{n}$}. An example
 of this hyperparameter could be \texttt{3-5\_4-10\_5-15}, which would signify 5
 patterns of length 3, 10 patterns of length 4 and 15 patterns of length 5.
 
-\paragraph{Explainability:} In their study, \citet[Page 7, Section
-7]{schwartz2018sopa} describe simple methods of \textit{``interpreting''} the
-SoPa model. One method involves the usage of back-pointers during the Viterbi
-computation to determine the patterns and substrings in a document which
-contributed the highest pattern scores. Another method involves zeroing out the
-corresponding patterns or WFAs via the occlusion sensitivity method to determine
-which pattern had the greatest impact on each classification decision. It is
-worth noting that the usage of \textit{interpretation} in
-\citet{schwartz2018sopa} is likely inconsistent with our definitions presented
-in Section \ref{section:xai}. Given the common terminology misuse described in
-Section \ref{section:xai-terminology}, it is more accurate to present the
-aforementioned \textit{``interpretability''} method as an explainability method.
-We analyze the explainability-related features of SoPa in greater detail in
-Sections \ref{section:sopa-transparency} and \ref{section:sopa-explainability}.
-
 \subsection{Transparency}
 
-\label{section:sopa-transparency}
+\label{section:sopa_transparency}
 
 Since we expounded on XAI in Section \ref{section:xai} and made a case for
 viewing ML models from the lens of XAI, it would only make sense to extend the
@@ -716,10 +745,23 @@ explain the SoPa model.
 
 \subsection{Post-hoc explainability methods}
 
-\label{section:sopa-explainability}
+\label{section:sopa_explainability}
+
+In their study, \citet[Page 7, Section
+7]{schwartz2018sopa} describe simple methods of \textit{``interpreting''} the
+SoPa model. One method involves the usage of back-pointers during the Viterbi
+computation to determine the patterns and substrings in a document which
+contributed the highest pattern scores. Another method involves zeroing out the
+corresponding patterns or WFAs via the occlusion sensitivity method to determine
+which pattern had the greatest impact on each classification decision. It is
+worth noting that the usage of \textit{interpretation} in
+\citet{schwartz2018sopa} is likely inconsistent with our definitions presented
+in Section \ref{section:xai}. Given the common terminology misuse described in
+Section \ref{section:xai_terminology}, it is more accurate to present the
+aforementioned \textit{``interpretability''} method as an explainability method.
 
 Using the post-hoc explainability taxonomies described in Section
-\ref{section:xai-techniques}, we can correspondingly classify the explainability
+\ref{section:xai_techniques}, we can correspondingly classify the explainability
 methods presented in \citet{schwartz2018sopa} using terminology consistent with
 XAI research. The first explainability method uses individual text samples to
 determine the highest scoring substrings in documents; as well as the patterns
@@ -732,7 +774,7 @@ Since this involves systematic perturbation to determine the importance of
 pattern features, we would classify this method as a feature relevance
 explainability method.
 
-Section \ref{section:xai-metrics} describes basic guidelines that could help
+Section \ref{section:xai_metrics} describes basic guidelines that could help
 elucidate what constitutes a good explanation; namely that a good explanation
 should be constrictive, provide causal links and be selective. We attempt to
 apply these guidelines with the aforementioned explainability techniques
