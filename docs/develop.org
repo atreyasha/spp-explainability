@@ -5,7 +5,10 @@
 ** Tasks
 *** Manuscript
 **** Methodologies
-     DEADLINE: <2021-03-24 Wed>
+***** SoPa++
+****** add transition matrices, start and end vectors to spp -> use correct semiring notations
+****** re-write algorithm as WFA-omega traversal algorithm -> adapt from sopa paper
+****** change figure softmax to soft+argmax
 ***** Regex proxy
 ****** Describe removal of lower model and upper model 
 ******* link this to explanations by simplification and regular expressions, as well as conversion from WFAs to FAs/REs -> should be introduced in the background concepts
@@ -13,9 +16,7 @@
 ******* link back to background concepts when we discuss bringing neural and regex model as close to each other as possible
 ****** Add pseudocode for regex proxy model construction and compression
 ****** Add pseudocode for regex proxy modl forward pass
-******* think about whether SoPa++ forward pseudocode must be modified with text-level instructions, this might be too complicated with too many details for now -> or maybe change pseudocode to traversal code
 ******* mention that pseudocode everywhere has been simplified and they should refer to source code for full implementation details
-******* consider changing figure softmax to soft+argmax
 ******* report time complexities of the simplification process as well as compression where possible
 ******* make sure to state that the regex's represent substring matches to the borders are generic -> or otherwise explicitly add these to the visualizations -> make this clear both here and for the results to questions three
 ******* alternatively consider different notation to imply this is a regex match with arbitrary borders
@@ -48,7 +49,6 @@
 ****** we can analyze these to see how generalized these are or whether there could be strong inductive bias
 
 **** Results
-     DEADLINE: <2021-03-28 Sun>
 ***** *Important:* everything shown in the "Results" section should have been well-motivated and should answer all three research questions
 ***** 1. Evaluation of test accuracy scores of SoPa++ and regex proxy models
 ****** show visualization of training process for posterity
@@ -104,7 +104,6 @@
 ****** visualize examples/classes where regex and neural model align and misalign, eg. with a confusion matrix
 
 **** Post-paper iteration/formatting
-     DEADLINE: <2021-03-31 Wed>
 ***** Introduction
 ****** abstract and introduction should already mention key findings
 ****** update motivations from Arrieta et al. 2020 "What for" section
@@ -144,7 +143,7 @@
 ******* EITHER quote + indent sentences directly taken from other studies with page and section OR paraphrase them and leave them in a definition environment
 ******* check that all borrowed figures have an explicit attribution such as "taken from paper et al (year)"
 ******* perform spell-check of all text
-******* remove red link color in table of contents
+******* change red link color in table of contents and modify color of URLs
 ******* always mention "figure taken from study (year)" when using external figures
 ****** UP-related
 ******* 20-90 pages thesis length -> well-motivated yet succinct
@@ -178,8 +177,7 @@
 ***** +Topic proposal draft: *06.11.2020*+
 ***** +Topic proposal final: *15.11.2020*+
 ***** +Topic registration: *01.02.2021*+
-***** Manuscript draft submission: *31.03.2021* 
-***** Offical manuscript submission: *11.04.2021*
+***** Offical manuscript submission: *12.04.2021*
 
 ** Legacy
 *** Interpretable RNN architectures

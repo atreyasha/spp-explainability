@@ -20,9 +20,17 @@
 
 1.  Methodologies
 
-    **DEADLINE:** *\<2021-03-24 Wed\>*
+    1.  SoPa++
 
-    1.  Regex proxy
+        1.  add transition matrices, start and end vectors to spp -\>
+            use correct semiring notations
+
+        2.  re-write algorithm as WFA-omega traversal algorithm -\>
+            adapt from sopa paper
+
+        3.  change figure softmax to soft+argmax
+
+    2.  Regex proxy
 
         1.  Describe removal of lower model and upper model
 
@@ -42,36 +50,29 @@
 
         3.  Add pseudocode for regex proxy modl forward pass
 
-            1.  think about whether SoPa++ forward pseudocode must be
-                modified with text-level instructions, this might be too
-                complicated with too many details for now -\> or maybe
-                change pseudocode to traversal code
-
-            2.  mention that pseudocode everywhere has been simplified
+            1.  mention that pseudocode everywhere has been simplified
                 and they should refer to source code for full
                 implementation details
 
-            3.  consider changing figure softmax to soft+argmax
-
-            4.  report time complexities of the simplification process
+            2.  report time complexities of the simplification process
                 as well as compression where possible
 
-            5.  make sure to state that the regex\'s represent substring
+            3.  make sure to state that the regex\'s represent substring
                 matches to the borders are generic -\> or otherwise
                 explicitly add these to the visualizations -\> make this
                 clear both here and for the results to questions three
 
-            6.  alternatively consider different notation to imply this
+            4.  alternatively consider different notation to imply this
                 is a regex match with arbitrary borders
 
-            7.  show TikZ visualization of regex computational graph and
+            5.  show TikZ visualization of regex computational graph and
                 tweak colors/labels to make explanations easier if need
                 be
 
-            8.  replace FAs in visualization with regular expression
+            6.  replace FAs in visualization with regular expression
                 matrix where possible
 
-            9.  talk about regex proxy possibly being a transparent
+            7.  talk about regex proxy possibly being a transparent
                 model and motivate arguments for/against this, say this
                 is only theoretical but we come back to this in the
                 discussion segment
@@ -84,7 +85,7 @@
             2.  talk about SoPa++ still being a black-box model, compare
                 all features
 
-    2.  SoPa++ training setup
+    3.  SoPa++ training setup
 
         1.  talk about GloVe embeddings, lowercasing and other important
             things
@@ -100,7 +101,7 @@
         5.  add sufficient information on grid training and
             hyperparameter setup
 
-    3.  Performance evaluation
+    4.  Performance evaluation
 
         1.  explain usage of test set
 
@@ -110,7 +111,7 @@
         3.  mention checking if the performance falls in the competitie
             range
 
-    4.  Explanations by simplification evaluation
+    5.  Explanations by simplification evaluation
 
         1.  mention we are trying to evaluate how close the models are,
             and we delegate the quality of explainability based on a
@@ -130,7 +131,7 @@
             limit how often activation occurs, which we hypothesize
             could have an effect in bringing both models closer together
 
-    5.  Insightful explanations insight
+    6.  Insightful explanations insight
 
         1.  mention how we analyze the output neurons with legitimacy
             given that it is now a linear layer to find how STE neurons
@@ -145,8 +146,6 @@
             whether there could be strong inductive bias
 
 2.  Results
-
-    **DEADLINE:** *\<2021-03-28 Sun\>*
 
     1.  **Important:** everything shown in the \"Results\" section
         should have been well-motivated and should answer all three
@@ -307,8 +306,6 @@
 
 6.  Post-paper iteration/formatting
 
-    **DEADLINE:** *\<2021-03-31 Wed\>*
-
     1.  Introduction
 
         1.  abstract and introduction should already mention key
@@ -420,7 +417,8 @@
 
             7.  perform spell-check of all text
 
-            8.  remove red link color in table of contents
+            8.  change red link color in table of contents and modify
+                color of URLs
 
             9.  always mention \"figure taken from study (year)\" when
                 using external figures
@@ -504,9 +502,7 @@
 
     4.  ~~Topic registration: **01.02.2021**~~
 
-    5.  Manuscript draft submission: **31.03.2021**
-
-    6.  Offical manuscript submission: **11.04.2021**
+    5.  Offical manuscript submission: **12.04.2021**
 
 ## Legacy
 
