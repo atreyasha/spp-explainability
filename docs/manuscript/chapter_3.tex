@@ -191,51 +191,51 @@ subset of word-level embeddings since it allowed us to work with lower-cased
 words, as well as experiment with a variety of embedding dimensions during our
 development phase.
 
-\subsection{Weighted finite state automaton-$\omega$}
+\subsection{Linear-chain WFA-$\omega$}
 
 As mentioned in Section \ref{section:sopa}, \citet{schwartz2018sopa}
 constructed the SoPa model with an ensemble of linear-chain WFAs which permitted
-both epsilon and self-loop transitions. As noted in Section
-\ref{section:sopa_cg}, epsilon and self-loop transitions are useful
-constructs in abstracting WFAs and allowing them to match variable length
+both $\epsilon$ and self-loop transitions. As noted in Section
+\ref{section:sopa_cg}, $\epsilon$ and self-loop transitions are useful
+constructs in abstracting WFAs and allowing them to consume or match variable length
 strings. However based on our experimentation during our development phase, we
 observed a key concern that the highest scoring paths in the WFAs in SoPa tended
 to have a large variation of string lengths due to the effect of both
-epsilon-transitions and self-loops. We believe that this reduced the impact of
+$\epsilon$-transitions and self-loops. We believe that this reduced the impact of
 SoPa's explainability methods and as a result, the first change we decided for
-was to remove both epsilon and self-loop transitions. With this change, we could
-at least ensure that each WFA would match strings of fixed lengths.
+was to remove both $\epsilon$ and self-loop transitions. With this change, we could
+at least ensure that each WFA would always consume strings of fixed lengths.
 
-However, matching strings of fixed lengths could also be seen as a form of
+However, consuming strings of fixed lengths could also be seen as a form of
 overfitting in the model; since a model could simply memorize short strings or
 phrases and would not necessarily "learn" to generalize. To address this
 concern, we include a wildcard transition which we define here as a
 $\omega$-transition. Allowing for such a transition was only natural since
 wildcards are already crucial parts of regular expressions; which as we
 mentioned are equivalent to FAs. To support this, we provide the following
-definition for a WFA-$\omega$:
+definition for a modified WFA-$\omega$:
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=14cm]{pdfs/generated/w_nfa_linear_chain/main.pdf}
-  \caption{Schematic visualizing a strict linear-chain finite-state automaton with
-    a $\omega$-transition extracted from a WFA-$\omega$}
+  \caption{Schematic visualizing a strict linear-chain NFA with
+    $\omega$ (blue) and main-path (black)}
   \label{fig:omega_fa}
 \end{figure}
 
 \begin{definition}[Weighted finite-state automaton-$\omega$]
   \label{def:wfa_w}
   A weighted finite-state automaton-$\omega$ over a semiring $\mathbb{K}$ is a
-  5-tuple $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \Gamma, \lambda, \rho
+  5-tuple $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \bm{\Gamma}, \bm{\lambda}, \bm{\rho}
   \rangle$, with:
 
   \begin{itemize}
   \itemsep0em
     \item[--] a finite input alphabet $\Sigma$;
     \item[--] a finite state set $\mathcal{Q}$;
-    \item[--] transition matrix $\Gamma: \mathcal{Q} \times \mathcal{Q} \times (\Sigma \cup \{\omega\}) \rightarrow \mathbb{K}$;
-    \item[--] initial vector $\lambda: \mathcal{Q} \rightarrow \mathbb{K}$;
-    \item[--] and final vector $\rho: \mathcal{Q} \rightarrow \mathbb{K}$.
+    \item[--] transition matrix $\bm{\Gamma}: \mathcal{Q} \times \mathcal{Q} \times (\Sigma \cup \{\omega\}) \rightarrow \mathbb{K}$;
+    \item[--] initial vector $\bm{\lambda}: \mathcal{Q} \rightarrow \mathbb{K}$;
+    \item[--] and final vector $\bm{\rho}: \mathcal{Q} \rightarrow \mathbb{K}$.
   \end{itemize}
 
   \begin{remark}
@@ -250,19 +250,108 @@ definition for a WFA-$\omega$:
   \end{remark}
 \end{definition}
 
-With the removal of epsilon and self-loop transitions and the introduction of
-the WFA-$\omega$, our SoPa++ model now uses strict linear-chain WFA-$\omega$'s
-instead of the linear-chain WFAs in SoPa. These changes allow us to attain fixed
-string length matches with an added layer of generalization because of the
-introduction of wildcards. An example of a strict-linear chain FA extracted from
-a WFA-$\omega$ is shown in Figure \ref{fig:omega_fa}. Interestingly, we can observe
-that this FA corresponds to the Perl-compatible regular expression \texttt{``what a
+Comparing with the linear-chain WFAs used in \citet{schwartz2018sopa} as
+mentioned in Section \ref{section:sopa_lc_wfa}, our linear-chain WFA-$\omega$ is
+similarly alloted a sequence of $|\mathcal{Q}|$ states. However, each state $i$
+in the linear-chain WFA-$\omega$ has only two possible outgoing transitions;
+namely a \textbf{$\omega$-transition} which consumes an arbitrary input token
+and transitions to state $i+1$ and a \textbf{main-path transition} which
+consumes a specific token and transitions to state $i+1$. Similar to
+\citet{schwartz2018sopa}, we utilize only the max-sum and max-product semirings
+in our linear-chain WFA-$\omega$'s. Because of the elimination of self-loop
+transitions, we refer to our linear-chain WFA-$\omega$ as \textit{strict}
+linear-chain WFA-$\omega$ as per Definition \ref{def:lfa}. 
+
+Next, we provide a mathematical formulation of the modified transition matrix
+$\bm{\Gamma}$ in our linear-chain WFA-$\omega$. Here, $\bm{\Gamma}(x)$ represents a
+$|Q|\times|Q|$ matrix containing transition scores when consuming an input token
+$x$. $[\bm{\Gamma}(x)]_{i,j}$ corresponds to the cell value in $\bm{\Gamma}(x)$ for row
+$i$ and column $j$ and represents the transition score when consuming token $x$
+and transitioning from state $i$ to $j$.
+
+\begin{equation}
+  \label{eq:spp_transition_matrix_main}
+  [\bm{\Gamma}(x)]_{i,j} =
+  \begin{cases}
+    \bm{w}_i \cdot \bm{v}_x + b_i  & \text{if } j = i + 1 \text{ (main-path transition),} \\
+    \bar{0} & \text{otherwise.}
+  \end{cases}
+\end{equation}
+
+Here, $\bm{w}_i$ and $b_i$ are learnable vector and scalar parameters
+parameterizing transitions out of state $i$ to state $i+1$. $\bm{v}_x$
+represents the word embedding for token $x$ and $\bar{0}$ represents the zero
+value in the semiring used (Definition \ref{def:semiring}). Similarly,
+$\omega$-transitions are parameterized with the following representation in
+$\bm{\Gamma}$:
+
+\begin{equation}
+  \label{eq:spp_transition_matrix_omega}
+  [\bm{\Gamma}(\omega)]_{i,j} =
+  \begin{cases}
+    c_i  & \text{if } j = i + 1 \text{ ($\omega$-transition)} \\
+    \bar{0} & \text{otherwise.}
+  \end{cases}
+\end{equation}
+
+Here, $c_i$ represents a learnable scalar bias for $\omega$-transitions out of
+state $i$ to state $i+1$. Finally as per \citet{schwartz2018sopa}, we fix the
+initial vector $\bm{\lambda} = [\bar{1}, \bar{0}, \ldots, \bar{0}]$ and the final
+vector $\bm{\rho} = [\bar{0}, \bar{0}, \ldots, \bar{1}]$, where $\bar{1}$ and
+$\bar{0}$ represent the one and zero values specified in the semiring
+(Definition \ref{def:semiring}). The time-complexity of the Viterbi algorithm to
+compute the string score for our linear-chain WFA-$\omega$'s is
+$O(|Q||\bm{x}|)$, where $|\mathcal{Q}|$ refers to the number of states and
+$|\bm{x}|$ refers to the length of the input string.
+
+Ultimately, the aforementioned changes allow us to attain fixed string length
+consumption with an added layer of generalization because of the introduction of
+wildcards. Algorithm \ref{algo:lc_wfa_w_string_score} provides pseudocode for
+scoring a document $\bm{y}$ using a strict-linear chain WFA-$\omega$. An example
+of a strict linear-chain NFA extracted from a strict linear-chain WFA-$\omega$
+is shown in Figure \ref{fig:omega_fa}. Interestingly, we can observe that this
+FA corresponds to the Perl-compatible regular expression \texttt{``what a
   (great|entertaining) [\^{}\textbackslash\textbackslash s]+ !''}, where
 \texttt{[\^{}\textbackslash\textbackslash s]+} refers to any set of consecutive
-characters which are not separated by a space character; which we interpret as
-a wildcard or $\omega$-transition.
+characters which are not separated by a space character.
 
-\subsection{Tau straight-through estimator}
+\begin{algorithm}[t!]
+  \small
+  \caption{Strict linear-chain WFA-$\omega$ document score}
+  \label{algo:lc_wfa_w_string_score}
+  \begin{algorithmic}[1]
+    \Require{Strict linear-chain WFA-$\omega$ (denoted as $\mathcal{A}$) and document $\bm{y}$}
+    \Ensure{Document score}
+    \Statex
+    \Begin
+    \State $\bm{h}_0 \gets \big[\bar{1}, \bar{0}, \ldots, \bar{0}\big]$ \Comment{Create
+      initial hidden state vector $\bm{h}_0: \mathcal{Q} \rightarrow \mathbb{K}$}
+    \For{$i \gets 1,2,\ldots,\bm{|y|}$} \Comment{Sequentially iterate over each
+      token $y_i$ in string $\bm{y}$}
+    \State $\bm{m} \gets \big[[\bm{\Gamma}(y_i)]_{1,2}, [\bm{\Gamma}(y_i)]_{2,3}, \ldots,
+    [\bm{\Gamma}(y_i)]_{|\mathcal{Q}|-1,|\mathcal{Q}|}\big]$ \Comment{Main-path scores for token $y_i$}
+    \State $\bm{\omega} \gets \big[[\bm{\Gamma}(\omega)]_{1,2}, [\bm{\Gamma}(\omega)]_{2,3}, \ldots,
+    [\bm{\Gamma}(\omega)]_{|\mathcal{Q}|-1,|\mathcal{Q}|}\big]$
+    \Comment{State-wise wildcard scores}
+    \State $\bm{m} \gets \bm{m} \otimes \bm{h}_{i-1}[:-1]$ \Comment{Path
+      score with main-path transitions$^{\dagger}$}
+    \State $\bm{\omega} \gets \bm{\omega} \otimes \bm{h}_{i-1}[:-1]$ \Comment{Path
+    score with $\omega$ transitions$^{\dagger}$}
+    \State $\bm{h}_{i-1} \gets [\bar{1}] \mathbin\Vert \oplus(\bm{m}, \bm{w})$
+    \Comment{Concatenate $\bar{1}$ to aggregate vector of $\bm{m}$ and $\bm{\omega}$}
+    \EndFor
+    \State \Return $\bigoplus_{i \in 1,2,...,|\bm{y}|}
+    \big(\bm{h}_{i-1}[-1]\big)$ \Comment{Aggregate all hidden vector final states$^{\ddagger$}}
+    \End
+  \end{algorithmic}
+  \algcomment{$^{\dagger}\bm{h}_{i-1}[:-1]$ follows the Python indexing syntax
+    and implies keeping all elements of $\bm{h}_{i-1}$ except the last \\
+    $^{\ddagger}\bm{h}_{i-1}[-1]$ follows the Python indexing syntax and implies
+    retrieving the last element of the vector $\bm{h}_{i-1}$
+  }
+\end{algorithm}
+
+\subsection{TauSTE}
 
 In Section \ref{section:ste} we described the concept of a STE in activation
 quantized neural networks and explained how STEs function in both their forward
@@ -327,21 +416,20 @@ this reduction in signal information in our SoPa++ model.
 In this subsection, we describe the forward pass of the SoPa++ model by
 specifically referring to its several neural components. This description is
 linked to the visualization of the computational graph of SoPa++ in Figure
-\ref{fig:spp_cg} and SoPa++ forward pass algorithm in \ref{algo:spp_forward}.
-Similar to \citet{schwartz2018sopa}, we firstly process input utterances by
-padding their start and end indices with special \texttt{[START]} and
-\texttt{[END]} tokens respectively. Next, we project input tokens to numerical
-spaces using the aforementioned GloVe word embeddings followed by an affine
-transformation to achieve the appropriate dimensionality for the following
-steps. Following this, we use our emsemble of $m \in \mathbb{N}$ pre-defined
-WFA-$\omega$'s to traverse the input text by scoring consecutive substrings
-present in the input text. When processing each input token, we monitor the end
-states of each of the $m \in \mathbb{N}$ WFA-$\omega$ and max-pool the score
-present in this state; which is analogous to the Viterbi algorithm
-\citep{viterbi1967error}. In the edge case that an input string was too short
-for the end state of WFA-$\omega$ to register a score, we simply discard this
-score in further analysis. This description so far corresponds to the lower half
-of Figure \ref{fig:spp_cg}.
+\ref{fig:spp_cg}. Similar to \citet{schwartz2018sopa}, we firstly process input
+utterances by padding their start and end indices with special \texttt{[START]}
+and \texttt{[END]} tokens respectively. Next, we project input tokens to
+numerical spaces using the aforementioned GloVe word embeddings followed by an
+affine transformation to achieve the appropriate dimensionality for the
+following steps. Following this, we use our emsemble of $m \in \mathbb{N}$
+pre-defined WFA-$\omega$'s to traverse the input text by scoring consecutive
+substrings present in the input text. When processing each input token, we
+monitor the end states of each of the $m \in \mathbb{N}$ WFA-$\omega$ and
+max-pool the score present in this state; which is analogous to the Viterbi
+algorithm \citep{viterbi1967error}. In the edge case that an input string was
+too short for the end state of WFA-$\omega$ to register a score, we simply
+discard this score in further analysis. This description so far corresponds to
+the lower half of Figure \ref{fig:spp_cg}.
 
 After max-pooling scores from all the $m \in \mathbb{N}$ WFA-$\omega$'s, we
 then pass this collection of scores for further processing using SoPa++'s other
@@ -378,39 +466,6 @@ possibilities or otherwise the estimated number of stars present in the
 Andromeda Galaxy \citep{10.1093/mnras/stu879}. This would imply that despite the
 reduction in information content on the TauSTE layer, there are still sufficient
 mappable states available to learn various representations.
-
-\begin{algorithm}[t!]
-  \small
-  \caption{SoPa++ forward pass}
-  \label{algo:spp_forward}
-  \begin{algorithmic}[1]
-    \Require{Word-tokenized input utterance and initialized SoPa++ model}
-    \Ensure{SoPa++ classification label}
-    \Statex
-    \Begin
-    \State $utterance \gets pad(utterance)$ \Comment{Pad with [START] and [END] tokens}
-    \State $utterance \gets glove(utterance)$ \Comment{Projection to GloVe word
-      embeddings}
-    \ForEach{WFA-$\omega_i \in$ [WFA-$\omega_1,\ldots,$WFA-$\omega_m$]} 
-    \Comment{Loop over all $m$ WFA-$\omega$}
-    \State $\text{WFA-}\omega_i \gets viterbi(utterance, \text{WFA-}\omega_i)$
-    \Comment{Traverse utterance using Viterbi}
-    \State $s_i \gets final\_state(\text{WFA-}\omega_i)$ \Comment{Extract final
-      state score of WFA-$\omega_i$}
-    \EndFor
-    \State $S \gets [s_i,\ldots,s_m]$ \Comment{Gather all pattern scores and
-      assemble as vector}
-    \State $S \gets layer\_norm(S)$ \Comment{Layer normalization of all
-      pattern scores}
-    \State $S \gets tau\_ste(S)$ \Comment{Apply TauSTE on all normalized values} 
-    \State $S \gets linear(S)$ \Comment{Linear transformation to class
-    dimensionality}
-    \State $S \gets softmax(S)$ \Comment{Softmax to project to probability space}
-    \State $L \gets argmax(S)$ \Comment{Argmax to retrieve the highest scoring class}
-    \State \Return $L$
-    \End
-  \end{algorithmic}
-\end{algorithm}
 
 After binarizing the input values in the TauSTE layer, we apply a simple linear
 or affine transformation to the inputs to modify their dimensionality from $m

@@ -288,13 +288,11 @@ causal links as these might be irrelevant or confusing to the target audience.
 \label{section:ste}
 
 Activation quantized neural networks refer to neural networks that contain
-layers which transmit piece-wise discrete signals. Since they come into
-importance in later aspects of this thesis, we use this section to provide a
-short background of them.
-
-One of the main challenges in training such activation quantized neural networks
-is that their gradients tend to vanish almost everywhere because their
-derivatives typically default to zero.
+layers which transmit piece-wise discrete signals and have been an object of
+active research in regards to low-precision and low-resource computing. One of
+the main challenges in training such activation quantized neural networks is
+that their gradients tend to vanish almost everywhere because their derivatives
+typically default to zero
 \citep{bengio2013estimating,courbariaux2016binarized,yin2019understanding}. One
 significant workaround for this issue was proposed by
 \citet{bengio2013estimating} through the introduction of the Straight-Through
@@ -382,13 +380,13 @@ definitions and descriptions for these mutually exclusive model categories.
   \end{itemize}
 
   \begin{remark}
-    $\epsilon \notin \Sigma$ refers to an empty-string or epsilon-transition
+    $\epsilon \notin \Sigma$ refers to an empty-string transition
     and results in a change of state without consuming any input
     symbol. These transitions are unique to nondeterministic finite-state automata.
   \end{remark}
 
   \begin{remark}
-    Self-loop transitions refer to special transitions which consume an input
+    Self-loop transitions refer to special transitions which consume an input token
     while staying at the same state. These are allowed in both deterministic and
     nondeterministic finite-state automata.
   \end{remark}
@@ -425,11 +423,11 @@ definitions and descriptions for these mutually exclusive model categories.
   
 \end{definition}
 
-A string $\pmb{x}$ is said to be \textit{accepted} by any FA $\mathcal{M}$ if
-the current state after consuming $\pmb{x}$ is the accepting state. Similarly, a
-string $\pmb{x}$ is said to be \textit{rejected} by any FA $\mathcal{M}$ if the
-string $\pmb{x}$ cannot be consumed or the current state after consuming
-$\pmb{x}$ is a non-accepting state. The key difference between DFAs and NFAs is
+A string $\bm{x}$ is said to be \textit{accepted} by any FA $\mathcal{M}$ if
+the current state after consuming $\bm{x}$ is the accepting state. Similarly, a
+string $\bm{x}$ is said to be \textit{rejected} by any FA $\mathcal{M}$ if the
+string $\bm{x}$ cannot be consumed or the current state after consuming
+$\bm{x}$ is a non-accepting state. The key difference between DFAs and NFAs is
 present in their transition functions; specifically that the former guarantees
 that each state allows for a unique transition to another state given a
 non-empty input string. Contrastingly, NFAs allow for arbitrary transitions
@@ -500,17 +498,17 @@ NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}.
 \begin{definition}[Weighted finite-state automaton; \citealt{peng2018rational}]
   \label{def:wfa}
   A weighted finite-state automaton over a semiring $\mathbb{K}$ is a 5-tuple
-  $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \Gamma, \lambda, \rho \rangle$,
+  $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \bm{\Gamma}, \bm{\lambda}, \bm{\rho} \rangle$,
   with:
 
   \begin{itemize}
     \itemsep0em
     \item[--] a finite input alphabet $\Sigma$;
     \item[--] a finite state set $\mathcal{Q}$;
-    \item[--] transition matrix $\Gamma: \mathcal{Q} \times \mathcal{Q} \times
+    \item[--] transition matrix $\bm{\Gamma}: \mathcal{Q} \times \mathcal{Q} \times
     (\Sigma \cup \{\epsilon\}) \rightarrow \mathbb{K}$;
-    \item[--] initial vector $\lambda: \mathcal{Q} \rightarrow \mathbb{K}$;
-    \item[--] and final vector $\rho: \mathcal{Q} \rightarrow \mathbb{K}$.
+    \item[--] initial vector $\bm{\lambda}: \mathcal{Q} \rightarrow \mathbb{K}$;
+    \item[--] and final vector $\bm{\rho}: \mathcal{Q} \rightarrow \mathbb{K}$.
   \end{itemize}
 
   \begin{remark}
@@ -527,35 +525,35 @@ NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}.
 
 \begin{definition}[Path score; \citealt{peng2018rational}]
 
-  Let $\pmb{\pi} = \langle \pi_1, \pi_2, \dots, \pi_n \rangle$ be a sequence of
+  Let $\bm{\pi} = \langle \pi_1, \pi_2, \dots, \pi_n \rangle$ be a sequence of
   adjacent transitions in $\mathcal{A}$, with each $\pi_i = \langle q_i,
   q_{i+1}, z_i \rangle \in \mathcal{Q} \times \mathcal{Q} \times (\Sigma \cup
-  \{\epsilon\})$. The path $\pmb{\pi}$ derives the $\epsilon$-free string
-  $\pmb{x} = \langle x_1, x_2, \dots, x_m \rangle \in \Sigma^{*}$; which is a
-  substring of the $\epsilon$-containing string $\pmb{z} = \langle z_1, z_2,
-  \dots, z_n \rangle \in (\Sigma \cup \{\epsilon\})^{*}$. $\pmb{\pi}$'s score in
+  \{\epsilon\})$. The path $\bm{\pi}$ derives the $\epsilon$-free string
+  $\bm{x} = \langle x_1, x_2, \dots, x_m \rangle \in \Sigma^{*}$; which is a
+  substring of the $\epsilon$-containing string $\bm{z} = \langle z_1, z_2,
+  \dots, z_n \rangle \in (\Sigma \cup \{\epsilon\})^{*}$. $\bm{\pi}$'s score in
   $\mathcal{A}$ is given by:
   
 \end{definition}
 
 \begin{equation}
-  \mathcal{A}[\pmb{\pi}] = \lambda(q_1) \otimes \Bigg( \bigotimes_{i=1}^n \Gamma(\pi_i) \Bigg) \otimes \rho(q_{n+1})
+  \mathcal{A}[\bm{\pi}] = \bm{\lambda}(q_1) \otimes \Bigg( \bigotimes_{i=1}^n \bm{\Gamma}(\pi_i) \Bigg) \otimes \bm{\rho}(q_{n+1})
 \end{equation}
 
 \begin{definition}[String score; \citealt{peng2018rational}]
   \label{def:string_score}
-  Let $\Pi(\pmb{x})$ denote the set of all paths in $\mathcal{A}$ that derive
-  $\pmb{x}$. Then the string score assigned by $\mathcal{A}$ to string $\pmb{x}$
+  Let $\Pi(\bm{x})$ denote the set of all paths in $\mathcal{A}$ that derive
+  $\bm{x}$. Then the string score assigned by $\mathcal{A}$ to string $\bm{x}$
   is given by:
   
 \end{definition}
 
 \begin{equation}
-  \mathcal{A}[\![\pmb{x}]\!] = \bigoplus_{\pmb{\pi} \in \Pi(\pmb{x})} \mathcal{A}[\pmb{\pi}]
+  \mathcal{A}[\![\bm{x}]\!] = \bigoplus_{\bm{\pi} \in \Pi(\bm{x})} \mathcal{A}[\bm{\pi}]
 \end{equation}
 
 \begin{remark}
-  Since $\mathbb{K}$ is a semiring, $\mathcal{A}[\![\pmb{x}]\!]$ can be
+  Since $\mathbb{K}$ is a semiring, $\mathcal{A}[\![\bm{x}]\!]$ can be
   efficiently computed using the Forward algorithm \citep{baum1966statistical}.
   Its dynamic program is summarized below without $\epsilon$-transitions for
   simplicity. $\Omega_i(q)$ gives the aggregate score of all paths that derive
@@ -563,9 +561,9 @@ NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}.
  
   \begin{subequations}
     \begin{align}
-      \Omega_0(q) &= \lambda(q) \\
-      \Omega_{i+1}(q) &= \bigoplus_{q' \in \mathcal{Q}} \Omega_i(q') \otimes \Gamma(q',q,x_i)  \\
-      \mathcal{A}[\![\pmb{x}]\!] &= \bigoplus_{q \in \mathcal{Q}} \Omega_n(q) \otimes \rho(q)
+      \Omega_0(q) &= \bm{\lambda}(q) \\
+      \Omega_{i+1}(q) &= \bigoplus_{q' \in \mathcal{Q}} \Omega_i(q') \otimes \bm{\Gamma}(q',q,x_i)  \\
+      \mathcal{A}[\![\bm{x}]\!] &= \bigoplus_{q \in \mathcal{Q}} \Omega_n(q) \otimes \bm{\rho}(q)
     \end{align}
   \end{subequations}
 
@@ -574,16 +572,16 @@ NLP such as tokenization and part-of-speech tagging \citep{maletti2017survey}.
 \begin{remark}
   \label{rmk:old_runtime}
   The Forward algorithm can be generalized to any semiring
-  \citep{eisner2002parameter} and has a runtime of $O(|Q|^3 + |Q|^2|\pmb{x}|)$
+  \citep{eisner2002parameter} and has a runtime of $O(|Q|^3 + |Q|^2|\bm{x}|)$
   \citep{schwartz2018sopa}; notably with a linear runtime with respect to the
-  length of the input string $\pmb{x}$.
+  length of the input string $\bm{x}$.
 \end{remark}
 
 \begin{remark}
   A special case of Forward is the Viterbi algorithm, where the addition
   $\oplus$ operator is constrained to the maximum function
   \citep{viterbi1967error}. Viterbi therefore returns the highest scoring path
-  $\pmb{\pi}$ that derives the input string $\pmb{x}$.
+  $\bm{\pi}$ that derives the input string $\bm{x}$.
 \end{remark}
 
 \section{SoPa}
@@ -610,76 +608,80 @@ SoPa model using both local explanations and feature relevance.
 \begin{figure}[t]
   \centering
   \includegraphics[width=14cm]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
-  \caption{Schematic visualizing a linear-chain finite-state automaton with
-    a $\epsilon$-transition and self-loop; figure adapted from \citet{schwartz2018sopa}}
+  \caption{Schematic visualizing a linear-chain NFA with
+    self-loop (blue), $\epsilon$ (red) and main-path (black) transitions; figure
+    adapted from \citet{schwartz2018sopa}}
   \label{fig:fa}
 \end{figure}
 
-\subsection{Linear-chain WFAs}
+\subsection{Linear-chain WFA}
 
 \label{section:sopa_lc_wfa}
 
-In regards to the WFAs used in SoPa, \citet{schwartz2018sopa}
-only utilize the max-sum and max-product semirings. Next, they employ constraints on the
-model's WFAs in order to reduce the runtime of SoPa further. Of these, they
-firstly enforce a linear-chain (Definition \ref{def:lfa}) WFA structure, with
-Figure \ref{fig:fa} showing a representative FA without weights extracted from
-the linear-chain WFA. Secondly, they constrain $\epsilon$-transitions to only
-occur at most once in each transition. These constraints result in the
-transition matrix $\Gamma$ being reduced to a sparse diagonal matrix and the
-runtime of the linear-chain WFAs being reduced to $O(|Q||\pmb{x}|)$, compared to
-the original runtime in Remark \ref{rmk:old_runtime}. Finally, \citet[Page 3,
-Section 3.1]{schwartz2018sopa} refer to the linear-chain WFAs simply as
-\textit{``patterns''}. For brevity, we adopt the same terminology.
-
-Given the linear-chain WFA structure, each WFA in \citet{schwartz2018sopa} has a
-sequence of $|\mathcal{Q}|$ states with each state $i$ having three possible
-outgoing transitions; namely a self-loop transition which consumes a token but stays in the
-same state $i$, a $\epsilon$-transition which does not consume a token but
-transitions to state $i+1$ and a main transition which consumes a token and
-transitions to state $i+1$.
+In regards to the WFAs used in SoPa, \citet{schwartz2018sopa} utilize
+linear-chain WFAs where each linear-chain WFA is alloted a sequence of
+$|\mathcal{Q}|$ states. Each state $i$ in the linear-chain WFA has three
+possible outgoing transitions; namely a \textbf{self-loop transition} which
+consumes a token but stays in the same state $i$, an
+\textbf{$\epsilon$-transition} which does not consume a token but transitions to
+state $i+1$ and a \textbf{main-path transition} which consumes a specific token and
+transitions to state $i+1$. Furthermore, \citet{schwartz2018sopa} utilize
+only the max-sum and max-product semirings in their linear-chain WFAs.
+Figure \ref{fig:fa} shows a sample NFA extracted from the linear-chain WFA with all
+three aforementioned transitions.
 
 To more concretely express these transitions, \citet{schwartz2018sopa} provide
-the following formulation of the transition matrix $\Gamma$ under the
-linear-chain structure; where $\Gamma(x)$ represents a $|Q|\times|Q|$ matrix
-which represented the transition scores for an input token $x$.
-$[\Gamma(x)]_{i,j}$ represents the cell value in $\Gamma(x)$ for row $i$ and
-column $j$:
+the following formulation of the transition matrix $\bm{\Gamma}$ under the
+linear-chain structure. Here, $\bm{\Gamma}(x)$ represents a $|Q|\times|Q|$ matrix
+containing transition scores when consuming an input token $x$. $[\bm{\Gamma}(x)]_{i,j}$
+corresponds to the cell value in $\bm{\Gamma}(x)$ for row $i$ and column
+$j$ and represents the transition score when consuming token $x$ and
+transitioning from state $i$ to $j$.
 
 \begin{equation}
   \label{eq:sopa_transition_matrix_main}
-  [\Gamma(x)]_{i,j} =
+  [\bm{\Gamma}(x)]_{i,j} =
   \begin{cases}
-    \pmb{u}_i \cdot \pmb{v}_x + a_i  & \text{if } j = i \text{ (self-loop),} \\
-    \pmb{w}_i \cdot \pmb{v}_x + b_i  & \text{if } j = i + 1 \text{ (main-transition),} \\
+    \bm{u}_i \cdot \bm{v}_x + a_i  & \text{if } j = i \text{ (self-loop transition),} \\
+    \bm{w}_i \cdot \bm{v}_x + b_i  & \text{if } j = i + 1 \text{ (main-path transition),} \\
     \bar{0} & \text{otherwise.}
   \end{cases}
 \end{equation}
 
-Here, $\pmb{u}_i$ and $\pmb{w}_i$ are vectors and $a_i$ and $b_i$ are scalar
-biases parameterizing transitions out of state $i$. $\pmb{v}_x$ represents the
-word embedding for token $x$ and $\bar{0}$ represents the zero value in the
-semiring used as per Definition \ref{def:semiring}. Equation \ref{eq:sopa_transition_matrix_main}
-represents transitions which consume a token. Similarly, $\epsilon$-transitions
-are parameterized with the following equation:
+Here, $\bm{u}_i$ and $\bm{w}_i$ are learnable vectors and $a_i$ and $b_i$ are
+learnable scalar biases parameterizing transitions out of state $i$. $\bm{v}_x$
+represents the word embedding for token $x$ and $\bar{0}$ represents the zero
+value in the semiring used (Definition \ref{def:semiring}). Similarly,
+$\epsilon$-transitions are parameterized with the following representation in
+$\bm{\Gamma}$:
 
 \begin{equation}
-  \label{eq:sopa_transition_matrix_main}
-  [\Gamma(\epsilon)]_{i,j} =
+  \label{eq:sopa_transition_matrix_epsilon}
+  [\bm{\Gamma}(\epsilon)]_{i,j} =
   \begin{cases}
-    c_i  & \text{if } j = i + 1 \\
+    c_i  & \text{if } j = i + 1 \text{ ($\epsilon$-transition)} \\
     \bar{0} & \text{otherwise.}
   \end{cases}
 \end{equation}
 
-Correspondingly, $c_i$ represents a scalar bias provided for
-$\epsilon$-transitions which are only dependent on the current state. Finally,
-\citet{schwartz2018sopa} fix the initial vector $\lambda = [\bar{1}, \bar{0}, \ldots, \bar{0}]$
-and the final vector $\rho = [\bar{0}, \bar{0}, \ldots, \bar{1}]$. This is a
-formal notation to imply that there only exists one start and one final state
-and these are present at both extremes of the linear-chain WFA. Here,
-$\bar{0}$ and $\bar{1}$ represent the zero and one values from the relevant
-semiring used as per Definition \ref{def:semiring}. 
+Here, $c_i$ represents a learnable scalar bias for $\epsilon$-transitions out of state
+$i$. Next, \citet{schwartz2018sopa} fix the initial vector $\bm{\lambda} = [\bar{1},
+\bar{0}, \ldots, \bar{0}]$ and the final vector $\bm{\rho} = [\bar{0}, \bar{0},
+\ldots, \bar{1}]$, where $\bar{1}$ and $\bar{0}$ represent the one and zero
+values specified in the semiring (Definition \ref{def:semiring}). This is a
+formalism to imply that there only exists one start and one final state
+and these are present at both extremes of the linear-chain WFA; which is ultimately
+consistent with the linear-chain definition (Definition \ref{def:lfa}).
+
+The aforementioned constraints in the linear-chain WFA structure result in the
+transition matrix $\bm{\Gamma}$ being reduced to a sparse diagonal matrix with the
+runtime of the linear-chain WFAs being reduced to $O(|Q||\bm{x}|)$, compared to
+the original runtime in Remark \ref{rmk:old_runtime}. Finally, it is worth
+noting that \citet[Page 3, Section 3.1]{schwartz2018sopa} refer to the
+linear-chain WFAs simply as \textit{``patterns''}. For brevity and consistency,
+we refer to linear-chain WFAs as patterns interchangeably.
+
+\subsection{Document score}
 
 Definition \ref{def:string_score}
 describes how a WFA can be used to compute a string score. Since SoPa was
@@ -730,9 +732,9 @@ with the following syntax:
 of this hyperparameter could be \texttt{3-5\_4-10\_5-15}, which would signify 5
 patterns of length 3, 10 patterns of length 4 and 15 patterns of length 5.
 
-\subsection{Transparency}
+\subsection{Post-hoc explainability methods}
 
-\label{section:sopa_transparency}
+\label{section:sopa_explainability}
 
 Since we expounded on XAI in Section \ref{section:xai} and made a case for
 viewing ML models from the lens of XAI, it would only make sense to extend the
@@ -742,10 +744,6 @@ model since it closely resembles RNNs and CNNs; and a strong case has already
 been made in their study regarding the black-box natures of both RNNs and CNNs.
 Naturally, this would imply that post-hoc explainability methods are required to
 explain the SoPa model.
-
-\subsection{Post-hoc explainability methods}
-
-\label{section:sopa_explainability}
 
 In their study, \citet[Page 7, Section
 7]{schwartz2018sopa} describe simple methods of \textit{``interpreting''} the

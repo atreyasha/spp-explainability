@@ -51,6 +51,8 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{ragged2e}
 \usepackage{algorithm} 
 \usepackage{algpseudocode}
+\usepackage{bm}
+\usepackage{etoolbox}
 
 \counterwithout{equation}{chapter}
 \counterwithout{figure}{chapter}
@@ -68,6 +70,19 @@ headsepline, % Uncomment to get a line under the header
 \algdef{SE}{Begin}{End}{\textbf{begin}}{\textbf{end}}
 \algnewcommand\algorithmicforeach{\textbf{for each}}
 \algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+
+\makeatletter
+\AfterEndEnvironment{algorithm}{\let\@algcomment\relax}
+\AtEndEnvironment{algorithm}{\kern2pt\hrule\relax\vskip3pt\@algcomment}
+\let\@algcomment\relax
+\newcommand\algcomment[1]{\def\@algcomment{\footnotesize#1}}
+
+\renewcommand\fs@ruled{\def\@fs@cfont{\bfseries}\let\@fs@capt\floatc@ruled
+  \def\@fs@pre{\hrule height.8pt depth0pt \kern2pt}%
+  \def\@fs@post{}%
+  \def\@fs@mid{\kern2pt\hrule\kern2pt}%
+  \let\@fs@iftopcapt\iftrue}
+\makeatother
 
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
