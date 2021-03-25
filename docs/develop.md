@@ -22,13 +22,10 @@
 
     1.  SoPa++
 
-        1.  add transition matrices, start and end vectors to spp -\>
-            use correct semiring notations
+        1.  fine-tune forward pass section and consider placing special
+            tokens in first section
 
-        2.  re-write algorithm as WFA-omega traversal algorithm -\>
-            adapt from sopa paper
-
-        3.  change figure softmax to soft+argmax
+        2.  change figure softmax to soft+argmax
 
     2.  Regex proxy
 
@@ -320,8 +317,8 @@
 
         1.  think more about how to improve (W)FA definitions
 
-        2.  consider adding definitions for main transitions if they are
-            useful
+        2.  think more about adding document scoring algorithm in SoPa
+            or whether to just leave it
 
         3.  pad definition environments with more explanatory text for
             flow
@@ -365,19 +362,26 @@
         4.  fine-tune antecedent/proxy terminology and synchronize
             everywhere
 
-        5.  fine-tune usage of patterns vs. substrings vs. WFAs
+        5.  fine-tune usage of consume a token and not consume a symbol
 
-        6.  fine-tune WFA to mean either automata or automaton, make
+        6.  fine-tune usage of patterns vs. substrings vs. WFAs
+
+        7.  fine-tune WFA to mean either automata or automaton, make
             plural abbreviation WFAs clear
 
-        7.  fine-tune the slot-filling terminology
+        8.  fine-tune usage of FA vs. NFA and make these consistent with
+            abbreviations versus full
 
-        8.  fine-tune terminology between intent detection and intent
+        9.  fine-tune string consumption vs. string matching
+
+        10. fine-tune the slot-filling terminology
+
+        11. fine-tune terminology between intent detection and intent
             classification
 
-        9.  fine-tune terminology between data set and partition
+        12. fine-tune terminology between data set and partition
 
-        10. fine-tune token length, sentence length and utterance length
+        13. fine-tune token length, sentence length and utterance length
 
     5.  Bibliography
 

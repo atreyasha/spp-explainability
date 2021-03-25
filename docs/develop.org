@@ -6,8 +6,7 @@
 *** Manuscript
 **** Methodologies
 ***** SoPa++
-****** add transition matrices, start and end vectors to spp -> use correct semiring notations
-****** re-write algorithm as WFA-omega traversal algorithm -> adapt from sopa paper
+****** fine-tune forward pass section and consider placing special tokens in first section
 ****** change figure softmax to soft+argmax
 ***** Regex proxy
 ****** Describe removal of lower model and upper model 
@@ -110,7 +109,7 @@
 ****** add links to chapters in thesis structure
 ***** Background concepts
 ****** think more about how to improve (W)FA definitions
-****** consider adding definitions for main transitions if they are useful
+****** think more about adding document scoring algorithm in SoPa or whether to just leave it
 ****** pad definition environments with more explanatory text for flow
 ****** add more information on page numbers and sections in all Arrieta et al. citations so these seem more differentiated
 ****** explain vanilla SoPa in a more prose format using a table to explain important features -> this table can then be compared directly with new SoPa++ features
@@ -125,8 +124,11 @@
 ****** consider adding abbreviations directly into definitions
 ****** consider respelling "preprocessing" as "pre-processing" if necessary, fine-tune their usage
 ****** fine-tune antecedent/proxy terminology and synchronize everywhere
+****** fine-tune usage of consume a token and not consume a symbol
 ****** fine-tune usage of patterns vs. substrings vs. WFAs
 ****** fine-tune WFA to mean either automata or automaton, make plural abbreviation WFAs clear
+****** fine-tune usage of FA vs. NFA and make these consistent with abbreviations versus full
+****** fine-tune string consumption vs. string matching
 ****** fine-tune the slot-filling terminology 
 ****** fine-tune terminology between intent detection and intent classification
 ****** fine-tune terminology between data set and partition
