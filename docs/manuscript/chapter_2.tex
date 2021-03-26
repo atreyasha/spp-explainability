@@ -683,15 +683,19 @@ we refer to linear-chain WFAs as patterns interchangeably.
 
 \subsection{Document score}
 
-Definition \ref{def:string_score}
-describes how a WFA can be used to compute a string score. Since SoPa was
-intended to compute scores for entire documents and not just short strings,
-\citet{schwartz2018sopa} propose computing the string score over all consecutive
-substrings in the document. The document score for a WFA would represent an
-aggregated score over all consecutive substrings and would therefore also depend
-on the semiring used in the WFAs. In the case of max-based semirings using the
-Viterbi algorithm, the document score would reflect the highest scoring
-substring for a WFA.
+\label{section:sopa_doc_score}
+
+Definition \ref{def:string_score} describes how a WFA can be used to compute a
+string score $\mathcal{A}[\![\bm{x}]\!]$ for an arbitrary string $\bm{x}$. Since
+SoPa was intended to compute scores for entire documents and not just short
+strings, \citet[Page 3, Section 3.2]{schwartz2018sopa} propose computing the
+string score over all consecutive substrings in the document which ultimately
+returns a document score $s_{\text{doc}}(\bm{y})$ for an arbitrary document
+$\bm{y}$. The document score $s_{\text{doc}}(\bm{y})$ for a WFA would represent
+an aggregated score over all consecutive substrings and would therefore also
+depend on the semiring used in the WFAs. In the case of max-based semirings
+using the Viterbi algorithm, the document score would reflect the highest
+scoring path score which corresponds to a substring in document $\bm{y}$.
 
 \subsection{Computational graph}
 
@@ -721,6 +725,8 @@ transition from the token \textit{``and''} to the token \textit{``most''}.
     \citet{schwartz2018sopa}}
   \label{fig:sopa}
 \end{figure}
+
+\subsection{Pattern hyperparameter}
 
 Training the SoPa model requires both commonly used and special hyperparameters.
 Commonly used hyperparameters include the learning rate, neuron dropout and word
