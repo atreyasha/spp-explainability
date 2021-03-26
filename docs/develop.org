@@ -5,9 +5,6 @@
 ** Tasks
 *** Manuscript
 **** Methodologies
-***** SoPa++
-****** fine-tune forward pass section and consider placing special tokens in first section
-****** change figure softmax to soft+argmax
 ***** Regex proxy
 ****** Describe removal of lower model and upper model 
 ******* link this to explanations by simplification and regular expressions, as well as conversion from WFAs to FAs/REs -> should be introduced in the background concepts
@@ -35,7 +32,7 @@
 ***** Performance evaluation
 ****** explain usage of test set
 ****** explain how we evaluate performance using accuracy on both SoPa++ and its regex proxy
-****** mention checking if the performance falls in the competitie range
+****** mention checking if the performance falls in the competitive range
 ***** Explanations by simplification evaluation
 ****** mention we are trying to evaluate how close the models are, and we delegate the quality of explainability based on a target audience to future work since this would be out-of-scope for us 
 ****** mention in general that the target audience for this method is still experts
@@ -123,12 +120,15 @@
 ****** sort out all abbreviations and standardize formatting in terms of where they are first declared -> perhaps add a page number on list of abbreviations to indicate first declaration
 ****** consider adding abbreviations directly into definitions
 ****** consider respelling "preprocessing" as "pre-processing" if necessary, fine-tune their usage
+****** ensure linear-chain and strict linear-chain are added before WFAs
 ****** fine-tune antecedent/proxy terminology and synchronize everywhere
+****** fine-tune usage of string length and document length while consuming
+****** fine-tune usage of document vs. input utterance
 ****** fine-tune usage of consume a token and not consume a symbol
 ****** fine-tune usage of patterns vs. substrings vs. WFAs
+****** fine-tune string consumption vs. string matching
 ****** fine-tune WFA to mean either automata or automaton, make plural abbreviation WFAs clear
 ****** fine-tune usage of FA vs. NFA and make these consistent with abbreviations versus full
-****** fine-tune string consumption vs. string matching
 ****** fine-tune the slot-filling terminology 
 ****** fine-tune terminology between intent detection and intent classification
 ****** fine-tune terminology between data set and partition

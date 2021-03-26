@@ -20,14 +20,7 @@
 
 1.  Methodologies
 
-    1.  SoPa++
-
-        1.  fine-tune forward pass section and consider placing special
-            tokens in first section
-
-        2.  change figure softmax to soft+argmax
-
-    2.  Regex proxy
+    1.  Regex proxy
 
         1.  Describe removal of lower model and upper model
 
@@ -82,7 +75,7 @@
             2.  talk about SoPa++ still being a black-box model, compare
                 all features
 
-    3.  SoPa++ training setup
+    2.  SoPa++ training setup
 
         1.  talk about GloVe embeddings, lowercasing and other important
             things
@@ -98,17 +91,17 @@
         5.  add sufficient information on grid training and
             hyperparameter setup
 
-    4.  Performance evaluation
+    3.  Performance evaluation
 
         1.  explain usage of test set
 
         2.  explain how we evaluate performance using accuracy on both
             SoPa++ and its regex proxy
 
-        3.  mention checking if the performance falls in the competitie
+        3.  mention checking if the performance falls in the competitive
             range
 
-    5.  Explanations by simplification evaluation
+    4.  Explanations by simplification evaluation
 
         1.  mention we are trying to evaluate how close the models are,
             and we delegate the quality of explainability based on a
@@ -128,7 +121,7 @@
             limit how often activation occurs, which we hypothesize
             could have an effect in bringing both models closer together
 
-    6.  Insightful explanations insight
+    5.  Insightful explanations insight
 
         1.  mention how we analyze the output neurons with legitimacy
             given that it is now a linear layer to find how STE neurons
@@ -359,29 +352,37 @@
         3.  consider respelling \"preprocessing\" as \"pre-processing\"
             if necessary, fine-tune their usage
 
-        4.  fine-tune antecedent/proxy terminology and synchronize
+        4.  ensure linear-chain and strict linear-chain are added before
+            WFAs
+
+        5.  fine-tune antecedent/proxy terminology and synchronize
             everywhere
 
-        5.  fine-tune usage of consume a token and not consume a symbol
+        6.  fine-tune usage of string length and document length while
+            consuming
 
-        6.  fine-tune usage of patterns vs. substrings vs. WFAs
+        7.  fine-tune usage of document vs. input utterance
 
-        7.  fine-tune WFA to mean either automata or automaton, make
+        8.  fine-tune usage of consume a token and not consume a symbol
+
+        9.  fine-tune usage of patterns vs. substrings vs. WFAs
+
+        10. fine-tune string consumption vs. string matching
+
+        11. fine-tune WFA to mean either automata or automaton, make
             plural abbreviation WFAs clear
 
-        8.  fine-tune usage of FA vs. NFA and make these consistent with
+        12. fine-tune usage of FA vs. NFA and make these consistent with
             abbreviations versus full
 
-        9.  fine-tune string consumption vs. string matching
+        13. fine-tune the slot-filling terminology
 
-        10. fine-tune the slot-filling terminology
-
-        11. fine-tune terminology between intent detection and intent
+        14. fine-tune terminology between intent detection and intent
             classification
 
-        12. fine-tune terminology between data set and partition
+        15. fine-tune terminology between data set and partition
 
-        13. fine-tune token length, sentence length and utterance length
+        16. fine-tune token length, sentence length and utterance length
 
     5.  Bibliography
 
