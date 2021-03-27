@@ -429,9 +429,9 @@ experiment with a variety of embedding dimensions during our development phase.
   \label{fig:spp_cg}
 \end{figure}
 
-\subsection{Forward pass}
+\subsection{Computational graph}
 
-In this subsection, we describe the forward pass of the SoPa++ model by
+In this subsection, we describe the computational graph of the SoPa++ model by
 specifically referring to its several neural components. This description is
 linked to the visualization of the computational graph of SoPa++ in Figure
 \ref{fig:spp_cg}. Firstly as described in the previous section, we tokenize the
@@ -477,10 +477,10 @@ still worth noting that this layer can preserve sufficient information given a
 sufficiently large $m \in \mathbb{N}$ value and therefore number of WFA-$\omega$
 and TauSTE neurons. For example, if we allow for $m=40$ and therefore provide 40
 WFA-$\omega$ and TauSTE neurons, we can have a total of
-2$^{40}\approx1.1\times10^{12}$ binary state possibilities; which is
-approximately one trillion state possibilities. To provide some context
-to this order of magnitude, the aforementioned number of possibilities is
-roughly equal to estimated number of stars present in the Andromeda Galaxy
+2$^{40}\approx1.1\times10^{12}$ binary state possibilities; which is slightly
+greater than one trillion state possibilities. To provide some context to this
+order of magnitude, the aforementioned number of possibilities is roughly equal
+to estimated number of stars present in the Andromeda Galaxy
 \citep{10.1093/mnras/stu879}. This would imply that despite the reduction in
 information content on the TauSTE layer, there are still sufficient mappable
 states available to learn various representations relevant to output classes.
