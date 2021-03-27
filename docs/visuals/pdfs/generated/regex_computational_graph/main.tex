@@ -113,14 +113,22 @@
 
     % draw out matching layer
     \edef\points{}
-    \foreach \e/\c [count=\q] in {1/100,2/0,3/100,4/0,h-missing/0,5/100}{
+    \foreach \e/\c/\d [count=\q] in {1/100/1,2/0/2,3/100/3,4/0/4,h-missing/0/5,5/100/m}{
+      \ifnum \q=5 
       \path let \p1 = (regex.north) in node[every neuron/.try,
-      minimum size=0.01cm, fill=red!\c, neuron \e/.try, scale=1.1]
-      (regex-match-\q) at (\q/3.75+0.23,\y1+1.3cm) {};
+      minimum size=0.01cm, fill=red!\c, neuron \e/.try, scale=1.1] (regex-match-\q)
+      at (\q/3.75+0.23,\y1+1.3cm) {};
+      \else
+      \path let \p1 = (regex.north) in node[every neuron/.try,
+      minimum size=0.01cm, fill=red!\c, neuron \e/.try, scale=1.1,
+      label={[name=subtext-\q]above:\textbf{\{RE\}}$_\d$}] (regex-match-\q)
+      at (\q/3.75+0.23,\y1+1.3cm) {};
+      \xdef\points{(subtext-\q)\points}
+      \fi
       \xdef\points{(regex-match-\q)\points}
     } 
     \node [fit=\points, draw, rounded corners=5pt, inner xsep=2mm,
-    inner ysep=0.5mm, minimum height=0.1cm] (match) {};
+    inner ysep=1mm, minimum height=0.1cm] (match) {};
     
     % lay out local arrows
     \foreach \t [count=\X] in {[START], 10, day, weather, forecast, [END]}{
@@ -152,7 +160,7 @@
     \node[draw, align=center, fill=red!10, rounded corners,
     minimum height=2cm, inner sep=2mm, font=\Large] (label) at
     (4/\compress,\uppery-0.7) {Output label:\\ \texttt{weather/find}};
-    \node[above of=label, yshift=0.5cm, font=\Large] {Softmax};
+    \node[above of=label, yshift=0.8cm, font=\Large, align=center] {Softmax + \\ Argmax};
   }
 
   {
