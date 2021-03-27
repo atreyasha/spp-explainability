@@ -20,13 +20,19 @@
 
 1.  Methodologies
 
-    1.  Regex proxy
+    1.  SoPa++
 
-        1.  Describe removal of lower model and upper model
+        1.  Add section describing transparency of SoPa++; specifically
+            that is still a black-box using previous arguments -\> make
+            it similar to SoPa section structure and link to following
+            regex proxy section saying this is the post-hoc
+            explainability method
 
-            1.  link this to explanations by simplification and regular
-                expressions, as well as conversion from WFAs to FAs/REs
-                -\> should be introduced in the background concepts
+    2.  Regex proxy
+
+        1.  SoPa++ simplification to regex proxy
+
+            1.  describe process of simplification
 
             2.  describe importance of TauSTE layer for explainability
                 and how discrete layers help
@@ -35,93 +41,106 @@
                 bringing neural and regex model as close to each other
                 as possible
 
-        2.  Add pseudocode for regex proxy model construction and
-            compression
+            4.  link this to explanations by simplification and regular
+                expressions, as well as conversion from WFAs to FAs/REs
+                -\> should be introduced in the background concepts
 
-        3.  Add pseudocode for regex proxy modl forward pass
+        2.  Pseudocode
 
-            1.  mention that pseudocode everywhere has been simplified
-                and they should refer to source code for full
-                implementation details
+            1.  add pseudocode for SoPa++ simplification to get regular
+                expressions
 
-            2.  report time complexities of the simplification process
+            2.  add pseudocode for regex proxy compression
+
+            3.  report time complexities of the simplification process
                 as well as compression where possible
+
+        3.  Explain regex proxy forward-pass
+
+            1.  **TODO** replace FAs in visualization with
+                regular expression matrix where possible -\> perhaps
+                better to add actual regular expressions where possible
+
+            2.  show TikZ visualization of regex computational graph and
+                tweak colors/labels to make explanations easier if need
+                be
 
             3.  make sure to state that the regex\'s represent substring
                 matches to the borders are generic -\> or otherwise
                 explicitly add these to the visualizations -\> make this
                 clear both here and for the results to questions three
+                -\> alternatively consider different notation to imply
+                this is a regex match with arbitrary borders
 
-            4.  alternatively consider different notation to imply this
-                is a regex match with arbitrary borders
+        4.  Explainability
 
-            5.  show TikZ visualization of regex computational graph and
-                tweak colors/labels to make explanations easier if need
-                be
-
-            6.  replace FAs in visualization with regular expression
-                matrix where possible
-
-            7.  talk about regex proxy possibly being a transparent
+            1.  talk about regex proxy possibly being a transparent
                 model and motivate arguments for/against this, say this
                 is only theoretical but we come back to this in the
                 discussion segment
 
-        4.  Add table with key differences from SoPa model
+    3.  SoPa vs. SoPa++
 
-            1.  recycle this table later and add it to the SoPa model
-                section
+        1.  create table to show exhaustive relevant differences between
+            models, perhaps with a tick and cross to indicate
+            similarities and differences
 
-            2.  talk about SoPa++ still being a black-box model, compare
-                all features
+        2.  recycle this table later and add it to the SoPa model
+            section
 
-    2.  SoPa++ training setup
+        3.  list comparisons such as tokenization, input casings, word
+            embeddings, WFAs, output layer, transparencies,
+            explainability techniques and others
 
-        1.  talk about GloVe embeddings, lowercasing and other important
-            things
+    4.  RQ1: Performance evaluation
 
-        2.  talk about upsampling data set during training
+        1.  Training setup
 
-        3.  mention about PyTorch for parallel computation and autograd
-            for backward pass computation
+            1.  talk about GloVe embeddings, lowercasing and other
+                important things
 
-        4.  mention about NLL loss and log softmax for numerical
-            stability
+            2.  talk about upsampling data set during training
 
-        5.  add sufficient information on grid training and
-            hyperparameter setup
+            3.  mention about PyTorch for parallel computation and
+                autograd for backward pass computation
 
-    3.  Performance evaluation
+            4.  mention about NLL loss and log softmax for numerical
+                stability
 
-        1.  explain usage of test set
+            5.  add sufficient information on grid training and
+                hyperparameter setup
 
-        2.  explain how we evaluate performance using accuracy on both
-            SoPa++ and its regex proxy
+        2.  Evaluation
 
-        3.  mention checking if the performance falls in the competitive
-            range
+            1.  explain usage of test set
 
-    4.  Explanations by simplification evaluation
+            2.  explain how we evaluate performance using accuracy on
+                both SoPa++ and its regex proxy
 
-        1.  mention we are trying to evaluate how close the models are,
-            and we delegate the quality of explainability based on a
-            target audience to future work since this would be
-            out-of-scope for us
+            3.  mention checking if the performance falls in the
+                competitive range
 
-        2.  mention in general that the target audience for this method
+    5.  RQ2: Explanations by simplification evaluation
+
+        1.  mention we are trying to evaluate how close the models are
+
+        2.  delegate the quality of explainability based on a target
+            audience to future work
+
+        3.  mention in general that the target audience for this method
             is still experts
 
-        3.  explain usage of test set in this case
+        4.  explain usage of test set in this case
 
-        4.  motivate all the different metrics such as softmax
+        5.  motivate all the different metrics such as softmax
             difference norm, binary misalignment rate and also
             performance scores
 
-        5.  mention variation of the tau threshold since this would
+        6.  mention variation of the tau threshold since this would
             limit how often activation occurs, which we hypothesize
             could have an effect in bringing both models closer together
 
-    5.  Insightful explanations insight
+    6.  RQ3: Insightful explanations insight
 
         1.  mention how we analyze the output neurons with legitimacy
             given that it is now a linear layer to find how STE neurons
@@ -137,12 +156,8 @@
 
 2.  Results
 
-    1.  **Important:** everything shown in the \"Results\" section
-        should have been well-motivated and should answer all three
-        research questions
-
-    2.  1\. Evaluation of test accuracy scores of SoPa++ and regex proxy
-        models
+    1.  RQ1: Evaluation of test accuracy scores of SoPa++ and regex
+        proxy models
 
         1.  show visualization of training process for posterity
 
@@ -160,7 +175,7 @@
 
         4.  make statement on the competitiveness of these results
 
-    3.  2\. Evaluation of explanations by simplification
+    2.  RQ2: Evaluation of explanations by simplification
 
         1.  add table with information on performances and distance
             metrics averaged over random seeds with plus-minus deviation
@@ -174,7 +189,7 @@
             scores; also a relationship can be observed with respect to
             the tau threshold
 
-    4.  3\. Interesting and insightful explanations on FMTOD
+    3.  RQ3: Interesting and insightful explanations on FMTOD
 
         1.  show plot of neuron importance distributions -\> consider
             removing inter-neuron importance with alpha levels since
@@ -198,6 +213,10 @@
                 to legend or otherwise fixed size with color gradient
 
             5.  consider adding subscripts to states
+
+    4.  **Important:** everything shown in the \"Results\" section
+        should have been well-motivated and should answer all three
+        research questions
 
 3.  Discussion
 
