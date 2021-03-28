@@ -1,5 +1,6 @@
 % document-level settings
 \documentclass[border=0.125cm]{standalone}
+\usepackage[T1]{fontenc}
 \usepackage{tikz}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -18,13 +19,18 @@
   neuron h-missing/.style={
     draw=none, 
     fill=none,
-    scale=1.2,
+    scale=1.1,
     execute at begin node=$\boldsymbol{\ldots}$
   },
   neuron v-missing/.style={
     draw=none, 
     fill=none,
     execute at begin node=$\boldsymbol{\vdots}$
+  },
+  neuron v-missing-diagonal/.style={
+    draw=none, 
+    fill=none,
+    execute at begin node=$\boldsymbol{\ddots}$
   },
   neuron v-missing-upper/.style={
     draw=none, 
@@ -37,84 +43,60 @@
   }
 }
 
-\begin{tikzpicture}[x=8cm, y=5cm, thick, every edge/.append style={font=\large},
-  node distance=1.1 cm, every edge/.append style={font=\large}]
+\begin{tikzpicture}[x=8cm, y=5cm, thick, font=\large]
 
   % set certain constants which will be re-used
   \pgfmathsetseed{42}
   \def\gran{10}
   \def\granupper{\gran*2}
   \def\startY{0}
-  \def\uppery{4}
+  \def\uppery{3.5}
   \def\upperscale{2}
-  \def\compress{2.9}
+  \def\compress{2.75}
 
   {
     % start loop with text
     \foreach \t [count=\X] in {[START], 10, day, weather, forecast, [END]}{
       % add text nodes
-      \node (text-\X) at (\X/\compress, \startY) {\textbf{\Large\t}};
+      \node (text-\X) at (\X/\compress, \startY) {\textbf{\LARGE\t}};
     }
 
-    % lay out all small FSAs
-    \node[state, initial, above of=text-2, yshift=2cm, xshift=-1.9cm]
-    (qS_0_0) {$q_0$};
-    \node[left of=qS_0_0, xshift=-1.9cm] (RE1) {\textbf{RE$_1$}};
-    \node[state] (qS_0_1) [right=of qS_0_0] {$q_1$}; 
-    \node[state, accepting] (qS_0_2) [right=of qS_0_1] {$q_2$}; 
-    \path[->] (qS_0_0) edge node[above] {$\omega$} (qS_0_1) {};
-    \path[->] (qS_0_1) edge node[above] {10} (qS_0_2)
-    edge [bend right=50]   node [below] {weather} (qS_0_2)
-    edge [bend left=50]   node [above] {day} (qS_0_2) {};
-    \node[neuron h-missing, right of=qS_0_2, xshift=0.5cm, scale=1.5] (dots_S) {};
-    \node[state, initial, right of=dots_S, xshift=2cm] (qS_1_0) {$q_0$};
-    \node[state] (qS_1_1) [right=of qS_1_0] {$q_1$}; 
-    \node[state, accepting] (qS_1_2) [right=of qS_1_1] {$q_2$}; 
-    \path[->] (qS_1_0) edge [bend left=50] node[above] {weather} (qS_1_1)
-    edge [bend right=50] node [below] {forecast} (qS_1_1) {};
-    \path[->] (qS_1_1) edge node[above] {$\omega$} (qS_1_2) {};
+    % lay out all small regex's
+    \node[above of=text-2, yshift=1.5cm, xshift=0cm]
+    (re_1_1) {\textbf{[\^{}\textbackslash\textbackslash s] (day|10|weather)}};
+    \node[neuron h-missing, right of=re_1_1, xshift=3.5cm, scale=1.5] (dots_S) {};
+    \node[right of=dots_S, xshift=3cm] (re_1_2) {\textbf{(set|alarm) [\^{}\textbackslash\textbackslash s]}};
+    \node[left of=re_1_1, xshift=-4.25cm] (RE1) {\textbf{\{RE\}$_1$}};
     
-    % lay out all large FSAs
-    \node[state, initial, above of=qS_0_0, yshift=4cm] (qL_0_0) {$q_0$};
-    \node[left of=qL_0_0, xshift=-1.9cm] (REM) {\textbf{RE$_m$}};
-    \node[state] (qL_0_1) [right=of qL_0_0] {$q_1$}; 
-    \node[state] (qL_0_2) [right=of qL_0_1] {$q_2$};
-    \node[state] (qL_0_3) [right=of qL_0_2] {$q_3$}; 
-    \node[state] (qL_0_4) [right=of qL_0_3] {$q_4$}; 
-    \node[state, accepting] (qL_0_5) [right=of qL_0_4] {$q_5$}; 
-    \path[->] (qL_0_0) edge node[above] {$\omega$} (qL_0_1) {};
-    \path[->] (qL_0_1) edge node[above] {please} (qL_0_2) {};
-    \path[->] (qL_0_2) edge node[above] {$\omega$} (qL_0_3) {};
-    \path[->] (qL_0_3) edge node[above] {10} (qL_0_4)
-    edge [bend right=50] node [below] {weather} (qL_0_4)
-    edge [bend left=50] node [above] {day} (qL_0_4) {};
-    \path[->] (qL_0_4) edge node[above] {$\omega$} (qL_0_5) {};
-    \node[neuron h-missing, right of=qL_0_5, xshift=0.5cm, scale=1.5] (dots_L) {};
+    % lay out all large regex's
+    \node[above of=re_1_1, yshift=2.5cm] (re_m_1) {\textbf{[\^{}\textbackslash\textbackslash s] [\^{}\textbackslash\textbackslash s] [\^{}\textbackslash\textbackslash s] weather forecast}};
+    \path let \p1 = (dots_S), \p2 = (re_m_1) in node[neuron h-missing, scale=1.5] (dots_L) at (\x1, \y2) {};
+    \node[right of=dots_L, xshift=3.25cm] (re_m_2) {\textbf{please set [\^{}\textbackslash\textbackslash s] alarm today}};
+    \node[left of=re_m_1, xshift=-4.25cm] (REM) {\textbf{\{RE\}$_m$}};
 
     % lay out dots in between
-    \node[neuron v-missing, above of=dots_S, yshift=1.8cm, scale=2.75]
+    \node[neuron v-missing-diagonal, above of=dots_S, yshift=1.2cm, scale=2.5]
     (mid_dots) {};
-    \node[neuron v-missing, left of=mid_dots, xshift=-3.3cm, scale=2.75] {};
-    \path let \p1 = (mid_dots), \p2 = (dots_L) in node[neuron v-missing,
-    scale=2.75] at (\x2,\y1) {};
-    \path let \p1 = (mid_dots), \p2 = (dots_L) in node[neuron v-missing,
-    scale=2.75] at (\x2,\y1) {};
     \path let \p1 = ($(RE1)!0.5!(REM)$), \p2 = (mid_dots) in
-    node[neuron v-missing, scale=2.75] at (\x1,\y2) {};
+    node[neuron v-missing, scale=2.5] at (\x1,\y2) {};
+    \path let \p1 = (re_1_1), \p2 = (mid_dots) in node[neuron v-missing, scale=2.5]
+    at (\x1, \y2) {};
+    \path let \p1 = (re_1_2), \p2 = (mid_dots) in node[neuron v-missing, scale=2.5]
+    at (\x1, \y2) {};
     
     % fit box around everything
     \begin{scope}[on background layer]
-      \node [fit=(qS_0_0) (qS_1_0) (qL_0_0) (qL_0_5), draw, fill=red!10,
-      rounded corners=5pt, inner xsep=3.6cm, inner ysep=1.5cm,
+      \node [fit=(RE1) (re_1_2) (REM) (re_m_2), draw, fill=red!10,
+      rounded corners=5pt, inner xsep=0.35cm, inner ysep=0.75cm,
       minimum height=0.1cm] (regex) {};
-      \draw[thin] let \p1 = (regex.south), \p2 = ([xshift=0.75cm]REM),
+      \draw[thin] let \p1 = (regex.south), \p2 = ([xshift=1cm]REM),
       \p3 = (regex.north) in (\x2, \y1) -- (\x2,\y3) {};
     \end{scope}
 
     % draw out matching layer
     \edef\points{}
     \foreach \e/\c/\d [count=\q] in {1/100/1,2/0/2,3/100/3,4/0/4,h-missing/0/5,5/100/m}{
-      \ifnum \q=5 
+      \ifnum \q=5
       \path let \p1 = (regex.north) in node[every neuron/.try,
       minimum size=0.01cm, fill=red!\c, neuron \e/.try, scale=1.1] (regex-match-\q)
       at (\q/3.75+0.23,\y1+1.3cm) {};
@@ -158,9 +140,9 @@
 
     % setup output label
     \node[draw, align=center, fill=red!10, rounded corners,
-    minimum height=2cm, inner sep=2mm, font=\Large] (label) at
+    minimum height=2cm, inner sep=2mm, font=\LARGE] (label) at
     (4/\compress,\uppery-0.7) {Output label:\\ \texttt{weather/find}};
-    \node[above of=label, yshift=0.8cm, font=\Large, align=center] {Softmax + \\ Argmax};
+    \node[above of=label, yshift=0.9cm, font=\LARGE, align=center] {Softmax + \\ Argmax};
   }
 
   {
@@ -174,20 +156,20 @@
     ([yshift=1cm]match.north) -| (ste-5);
 
     % fill up all labels
-    \node [align=center, above, font=\Large, yshift=-0.15cm] at
+    \node [align=center, above, font=\LARGE, yshift=-0.15cm] at
     (1/\compress,\uppery) {TauSTE \\ Layer \\[5pt] $\mathbb{Z}_2^m$};
-    \node [align=center, above, font=\Large] at (2.5/\compress,\uppery)
+    \node [align=center, above, font=\LARGE] at (2.5/\compress,\uppery)
     {Linear \\ Layer \\[5pt] $\mathbb{R}^n$};
     \draw [decorate, thick, decoration = {calligraphic brace,
       amplitude=6pt}, line width=1.25pt] let \p1 = (regex.north),
     \p2 = (regex.south), \p3 = ([xshift=0.5cm]regex.east)
-    in (\x3,\y1) --  (\x3,\y2) node[xshift=1.3cm, midway, align=center,
-    font=\Large] {Regex \\ Lookup \\ Layer};
+    in (\x3,\y1) --  (\x3,\y2) node[xshift=1.5cm, midway, align=center,
+    font=\LARGE] {Regex \\ Lookup \\ Layer};
     \draw [decorate, thick, decoration = {calligraphic brace,
       amplitude=4pt}, line width=1.25pt] let \p1 = (match.north),
     \p2 = (match.south), \p3 = ([xshift=0.5cm]regex.east)
-    in (\x3,\y1-0.1) --  (\x3,\y2+0.1)  node[xshift=1.3cm, midway, align=center,
-    font=\Large] {Regex \\ Matches};
+    in (\x3,\y1-0.1) --  (\x3,\y2+0.1)  node[xshift=1.5cm, midway, align=center,
+    font=\LARGE] {Regex \\ Matches};
   }
 \end{tikzpicture}
 
