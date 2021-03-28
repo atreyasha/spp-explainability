@@ -57,15 +57,11 @@
 
         3.  Explain regex proxy forward-pass
 
-            1.  **TODO** replace FAs in visualization with
-                regular expression matrix where possible -\> perhaps
-                better to add actual regular expressions where possible
-
-            2.  show TikZ visualization of regex computational graph and
+            1.  show TikZ visualization of regex computational graph and
                 tweak colors/labels to make explanations easier if need
                 be
 
-            3.  make sure to state that the regex\'s represent substring
+            2.  make sure to state that the regex\'s represent substring
                 matches to the borders are generic -\> or otherwise
                 explicitly add these to the visualizations -\> make this
                 clear both here and for the results to questions three

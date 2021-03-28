@@ -1,7 +1,7 @@
 #+STARTUP: overview
 #+OPTIONS: ^:nil
 #+OPTIONS: p:t
-  
+
 ** Tasks
 *** Manuscript
 **** Methodologies
@@ -18,7 +18,6 @@
 ******* add pseudocode for regex proxy compression 
 ******* report time complexities of the simplification process as well as compression where possible
 ****** Explain regex proxy forward-pass
-******* TODO replace FAs in visualization with regular expression matrix where possible -> perhaps better to add actual regular expressions where possible
 ******* show TikZ visualization of regex computational graph and tweak colors/labels to make explanations easier if need be
 ******* make sure to state that the regex's represent substring matches to the borders are generic -> or otherwise explicitly add these to the visualizations -> make this clear both here and for the results to questions three -> alternatively consider different notation to imply this is a regex match with arbitrary borders
 ****** Explainability
