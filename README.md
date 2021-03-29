@@ -57,7 +57,7 @@ This repository documents M.Sc. thesis research titled *"SoPa++: Leveraging expl
 
 ## Usage :snowflake:
 
-### Neural SoPa++
+### SoPa++
 
 <details><summary>i. Preprocessing</summary>
 <p>
