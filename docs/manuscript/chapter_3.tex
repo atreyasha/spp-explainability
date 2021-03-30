@@ -549,8 +549,8 @@ model to effectively simplify it into a Regular Expression (RE) proxy model.
     score with $\omega$ transitions$^{\dagger}$}
     \State $\bm{h}_{i} \gets [\bar{1}] \mathbin\Vert \max(\bm{m'}, \bm{w'})$
     \Comment{Concatenate $\bar{1}$ to maximum of $\bm{m}$ and $\bm{\omega}$}
-    \State $\pi_i \gets \text{trace}(h_i)$
-    \Comment{Back-trace path $\pi_i$ corresponding to $h_i$}
+    \State $\pi_i \gets \text{trace}(h_i[-1])$
+    \Comment{Back-trace path $\pi_i$ corresponding to $h_i[-1]^{\ddagger}$}
     \EndFor
     \State $j \gets \argmax_{i \in 1,2,...,|\bm{y}|}
     \bm{h}_{i}[-1]$
@@ -591,15 +591,36 @@ be transformed into a regular expression. Therefore, it can be inferred that
 Algorithm \ref{algo:lc_wfa_w_document_score_trace} returns the best scoring
 regular expression corresponding to a certain strict linear-chain WFA-$\omega$.
 
-\subsection{}
+\subsection{Simplifying SoPa++ to RE proxy}
 
-% Points:
-% Mention Viterbi and max-semirings allow us to find maximum scoring paths
-% Which correspond to substrings in y as well as strict linear-chain NFAs
-% These can be converted into regular expressions, so each WFA-omega can have
-% regular expressions extracted for each training sample
-% These can be pooled together and filtered via the TauSTE layer to provide only
-% the most important regular expressions
+We now describe the simplification process from a neural SoPa++ model into a RE
+proxy model. First, we assume that already have a fully trained SoPa++ model
+given a certain task. We leave the details of training to the next sections.
+With this trained SoPa++ model, we pass the model its training data again and
+this time use Algorithm \ref{algo:lc_wfa_w_document_score_trace} to retrieve the
+best scoring paths for each of the $m \in \mathbb{N}$ strict linear-chain
+WFA-$\omega$'s in the SoPa++ model. This would imply that for each input
+utterance in the training set, we collect the $m$ best path transitions for the
+$m$ WFA-$\omega$'s, with each best path corresponding to a regular expression.
+Naturally, not all best paths and regular expressions were important for the
+classification decision of the antecedent SoPa++ model. Specifically, only the
+regular expressions corresponding to activated TauSTE neurons were of importance
+to the decision of the antecedent SoPa++ model; while all other regular
+expressions were effectively discarded at the TauSTE layer.
+
+This leads us to several interesting conclusions. Firstly, we observe here that
+the TauSTE layer is not only useful for reducing information complexity; but
+also for attributing causal links to the model's decision-making. This is shown
+by the layer effectively reducing complexity and attributing the decision-making
+process to certain regular expressions. Next, we can also observe an effect of
+the $\tau \in \mathbb{R}$ threshold here. If the $\tau$-threshold is low, we
+effectively allow more TauSTE neurons to be activated and therefore allow more
+regular expressions from the strict linear-chain WFA-$\omega$ to affect the
+SoPa++ model's final decision. Contrastingly, if the $\tau$-threshold is high;
+we allow fewer TauSTE neurons to be activated and therefore allow fewer regular
+expressions to be used for the final decision making process. Therefore, we can
+infer that the TauSTE operates as a filtration layer which allows us to
+construct causal links to simplify the SoPa++ model into a RE proxy model.
 
 %%% Local Variables: 
 %%% mode: latex
