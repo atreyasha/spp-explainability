@@ -20,42 +20,21 @@
 
 1.  Methodologies
 
-    1.  SoPa++
+    **DEADLINE:** *\<2021-04-04 Sun\>*
 
-        1.  Add section describing transparency of SoPa++; specifically
-            that is still a black-box using previous arguments -\> make
-            it similar to SoPa section structure and link to following
-            regex proxy section saying this is the post-hoc
-            explainability method
+    1.  Regex proxy
 
-    2.  Regex proxy
+        1.  **TODO** SoPa++ simplification to regex proxy
 
-        1.  SoPa++ simplification to regex proxy
+            1.  add psuedocode to further show simplifcation process -\>
+                need to add functions to pseudocode
 
-            1.  describe process of simplification
+            2.  add conditionals to check if document is of sufficient
+                length
 
-            2.  describe importance of TauSTE layer for explainability
-                and how discrete layers help
+            3.  mention compression process
 
-            3.  link back to background concepts when we discuss
-                bringing neural and regex model as close to each other
-                as possible
-
-            4.  link this to explanations by simplification and regular
-                expressions, as well as conversion from WFAs to FAs/REs
-                -\> should be introduced in the background concepts
-
-        2.  Pseudocode
-
-            1.  add pseudocode for SoPa++ simplification to get regular
-                expressions
-
-            2.  add pseudocode for regex proxy compression
-
-            3.  report time complexities of the simplification process
-                as well as compression where possible
-
-        3.  Explain regex proxy forward-pass
+        2.  Explain regex proxy forward-pass
 
             1.  show TikZ visualization of regex computational graph and
                 tweak colors/labels to make explanations easier if need
@@ -68,14 +47,14 @@
                 -\> alternatively consider different notation to imply
                 this is a regex match with arbitrary borders
 
-        4.  Explainability
+        3.  Explainability
 
             1.  talk about regex proxy possibly being a transparent
                 model and motivate arguments for/against this, say this
                 is only theoretical but we come back to this in the
                 discussion segment
 
-    3.  SoPa vs. SoPa++
+    2.  SoPa vs. SoPa++
 
         1.  create table to show exhaustive relevant differences between
             models, perhaps with a tick and cross to indicate
@@ -88,7 +67,7 @@
             embeddings, WFAs, output layer, transparencies,
             explainability techniques and others
 
-    4.  RQ1: Performance evaluation
+    3.  RQ1: Performance evaluation
 
         1.  Training setup
 
@@ -116,7 +95,7 @@
             3.  mention checking if the performance falls in the
                 competitive range
 
-    5.  RQ2: Explanations by simplification evaluation
+    4.  RQ2: Explanations by simplification evaluation
 
         1.  mention we are trying to evaluate how close the models are
 
@@ -136,7 +115,7 @@
             limit how often activation occurs, which we hypothesize
             could have an effect in bringing both models closer together
 
-    6.  RQ3: Insightful explanations insight
+    5.  RQ3: Insightful explanations insight
 
         1.  mention how we analyze the output neurons with legitimacy
             given that it is now a linear layer to find how STE neurons
@@ -151,6 +130,8 @@
             whether there could be strong inductive bias
 
 2.  Results
+
+    **DEADLINE:** *\<2021-04-08 Thu\>*
 
     1.  RQ1: Evaluation of test accuracy scores of SoPa++ and regex
         proxy models
@@ -279,7 +260,8 @@
     2.  Explainability generalization/evaluation
 
         1.  can map linear to decision tree to get clearer picture of
-            possibilities
+            possibilities -\> would make model even more transparent by
+            removing continuous features
 
         2.  use nearest-neighbours to expand adjacent tokens
 
@@ -338,7 +320,9 @@
             explain important features -\> this table can then be
             compared directly with new SoPa++ features
 
-        6.  mention early on that quantized NNs are useful for
+        6.  mention how or why SoPa falls into RNN and CNN categories
+
+        7.  mention early on that quantized NNs are useful for
             low-precision computing, but we use it for other reasons
             later on
 
@@ -347,13 +331,15 @@
         1.  add Github link to repo as a footnote when introducing this
             chapter
 
-        2.  consider adding background section on NLU overall and tasks
+        2.  describe meaning of SoPa++ and how it was improved
+
+        3.  consider adding background section on NLU overall and tasks
             available
 
-        3.  mention the purpose of the intent detection task briefly on
+        4.  mention the purpose of the intent detection task briefly on
             a grander-scheme-of-things
 
-        4.  mention briefly the purpose of the slot filling task
+        5.  mention briefly the purpose of the slot filling task
 
     4.  Terminologies and abbreviations
 

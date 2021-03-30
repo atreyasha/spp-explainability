@@ -5,18 +5,12 @@
 ** Tasks
 *** Manuscript
 **** Methodologies
-***** SoPa++
-****** Add section describing transparency of SoPa++; specifically that is still a black-box using previous arguments -> make it similar to SoPa section structure and link to following regex proxy section saying this is the post-hoc explainability method
+     DEADLINE: <2021-04-04 Sun>
 ***** Regex proxy
-****** SoPa++ simplification to regex proxy
-******* describe process of simplification 
-******* describe importance of TauSTE layer for explainability and how discrete layers help
-******* link back to background concepts when we discuss bringing neural and regex model as close to each other as possible 
-******* link this to explanations by simplification and regular expressions, as well as conversion from WFAs to FAs/REs -> should be introduced in the background concepts
-****** Pseudocode
-******* add pseudocode for SoPa++ simplification to get regular expressions
-******* add pseudocode for regex proxy compression 
-******* report time complexities of the simplification process as well as compression where possible
+****** TODO SoPa++ simplification to regex proxy
+******* add psuedocode to further show simplifcation process -> need to add functions to pseudocode
+******* add conditionals to check if document is of sufficient length
+******* mention compression process
 ****** Explain regex proxy forward-pass
 ******* show TikZ visualization of regex computational graph and tweak colors/labels to make explanations easier if need be
 ******* make sure to state that the regex's represent substring matches to the borders are generic -> or otherwise explicitly add these to the visualizations -> make this clear both here and for the results to questions three -> alternatively consider different notation to imply this is a regex match with arbitrary borders
@@ -26,6 +20,7 @@
 ****** create table to show exhaustive relevant differences between models, perhaps with a tick and cross to indicate similarities and differences
 ****** recycle this table later and add it to the SoPa model section
 ****** list comparisons such as tokenization, input casings, word embeddings, WFAs, output layer, transparencies, explainability techniques and others
+
 ***** RQ1: Performance evaluation
 ****** Training setup
 ******* talk about GloVe embeddings, lowercasing and other important things
@@ -50,6 +45,7 @@
 ****** we can analyze these to see how generalized these are or whether there could be strong inductive bias
 
 **** Results
+     DEADLINE: <2021-04-08 Thu>
 ***** RQ1: Evaluation of test accuracy scores of SoPa++ and regex proxy models
 ****** show visualization of training process for posterity
 ****** provide a table of summarized results w.r.t. random seed deviations
@@ -92,7 +88,7 @@
 ****** use multiple-threads for extracting regular expressions, or store them in a database with indexing for faster regex lookups
 ****** extend to a finite-state transducer for seq2seq tasks
 ***** Explainability generalization/evaluation
-****** can map linear to decision tree to get clearer picture of possibilities
+****** can map linear to decision tree to get clearer picture of possibilities -> would make model even more transparent by removing continuous features
 ****** use nearest-neighbours to expand adjacent tokens
 ****** semantic clustering of common patterns for increased generalization
 ****** this is subjective and a survey from the target audience would be good to have -> would require an interactive interface where we visualize explanations
@@ -115,9 +111,11 @@
 ****** pad definition environments with more explanatory text for flow
 ****** add more information on page numbers and sections in all Arrieta et al. citations so these seem more differentiated
 ****** explain vanilla SoPa in a more prose format using a table to explain important features -> this table can then be compared directly with new SoPa++ features
+****** mention how or why SoPa falls into RNN and CNN categories
 ****** mention early on that quantized NNs are useful for low-precision computing, but we use it for other reasons later on
 ***** Methodologies
 ****** add Github link to repo as a footnote when introducing this chapter
+****** describe meaning of SoPa++ and how it was improved
 ****** consider adding background section on NLU overall and tasks available
 ****** mention the purpose of the intent detection task briefly on a grander-scheme-of-things
 ****** mention briefly the purpose of the slot filling task 
