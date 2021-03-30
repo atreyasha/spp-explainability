@@ -179,7 +179,7 @@ In this section we describe our SoPa++ model's architecture and present both
 similarities and differences compared to the SoPa model in
 \citet{schwartz2018sopa}.
 
-\subsection{Linear-chain WFA-$\omega$}
+\subsection{Strict linear-chain WFA-$\omega$}
 
 As mentioned in Section \ref{section:sopa}, \citet{schwartz2018sopa}
 constructed the SoPa model with an ensemble of linear-chain WFAs which permitted
@@ -305,13 +305,13 @@ characters which are not separated by a space character.
 \begin{algorithm}[t!]
   \small
   \caption{Strict linear-chain WFA-$\omega$ document score$^*$}
-  \label{algo:lc_wfa_w_string_score}
+  \label{algo:lc_wfa_w_document_score}
   \begin{algorithmic}[1]
     \Require{Strict linear-chain WFA-$\omega$ and document $\bm{y}$}
     \Ensure{Document score $s_{\text{doc}}(\bm{y})$}
     \Statex
     \Begin
-    \State $\bm{h}_0 \gets \big[\bar{1}, \bar{0}, \ldots, \bar{0}\big]$ \Comment{Create
+    \State $\bm{h}_0 \gets \big[\bar{1}, -\infty, \ldots, -\infty\big]$ \Comment{Create
       initial hidden state vector $\bm{h}_0: \mathcal{Q} \rightarrow \mathbb{K}$}
     \For{$i \gets 1,2,\ldots,\bm{|y|}$} \Comment{Sequentially iterate over each
       token $y_i$ in string $\bm{y}$}
@@ -324,17 +324,18 @@ characters which are not separated by a space character.
       score with main-path transitions$^{\dagger}$}
     \State $\bm{\omega'} \gets \bm{\omega} \otimes \bm{h}_{i-1}[:-1]$ \Comment{Path
     score with $\omega$ transitions$^{\dagger}$}
-    \State $\bm{h}_{i} \gets [\bar{1}] \mathbin\Vert \oplus(\bm{m'}, \bm{w'})$
-    \Comment{Concatenate $\bar{1}$ to aggregate vector of $\bm{m}$ and $\bm{\omega}$}
+    \State $\bm{h}_{i} \gets [\bar{1}] \mathbin\Vert \max(\bm{m'}, \bm{w'})$
+    \Comment{Concatenate $\bar{1}$ to maximum of $\bm{m}$ and $\bm{\omega}$}
     \EndFor
-    \State \Return $\bigoplus_{i \in 1,2,...,|\bm{y}|}
-    \big(\bm{h}_{i}[-1]\big)$
-    \Comment{Aggregate all hidden vector final states$^{\ddagger}$}
+    \State $s_{\text{doc}}(\bm{y}) \gets  \max_{i \in 1,2,...,|\bm{y}|}
+    \bm{h}_{i}[-1]$
+    \Comment{Get maximum of hidden vector final states$^{\ddagger}$}
+    \State \Return $s_{\text{doc}}(\bm{y})$
     \End
   \end{algorithmic}
   \algcomment{
-    $^*$Symbols such as $\oplus$, $\otimes$, $\bar{0}$ and $\bar{1}$ are all
-    derived from max-based semirings \\
+    $^*$$\otimes$ and $\bar{1}$ are
+    derived from max-based semirings where all semiring operations are element-wise \\
     $^{\dagger}\bm{h}_{i}[:-1]$ follows the Python indexing syntax
     and implies keeping all elements of $\bm{h}_{i}$ except the last \\
     $^{\ddagger}\bm{h}_{i}[-1]$ follows the Python indexing syntax and implies
@@ -347,7 +348,7 @@ characters which are not separated by a space character.
 Similar to \citet{schwartz2018sopa}, SoPa++ was intended to compute scores for
 entire documents and not just fixed-length strings using the strict linear-chain
 WFA-$\omega$. To achieve this, we propose Algorithm
-\ref{algo:lc_wfa_w_string_score} to compute the document score
+\ref{algo:lc_wfa_w_document_score} to compute the document score
 $s_{\text{doc}}(\bm{y})$ for an arbitrary document $\bm{y}$. Here, we score all
 consecutive substrings in a document $\bm{y}$ using either the max-sum or
 max-product semirings assisted with the Viterbi algorithm. Following from this,
@@ -439,7 +440,7 @@ input utterance, pad it with special tokens and project input tokens to
 numerical spaces using the aforementioned GloVe word embeddings. Following this,
 we use our ensemble of $m \in \mathbb{N}$ strict linear-chain WFA-$\omega$'s to
 traverse the input utterance and provide an ultimate document score for this
-utterance; as prescribed by Algorithm \ref{algo:lc_wfa_w_string_score}. When
+utterance; as prescribed by Algorithm \ref{algo:lc_wfa_w_document_score}. When
 processing each input token, we monitor the end states of each of the $m \in
 \mathbb{N}$ WFA-$\omega$ and max-pool the score present in this state. In the
 edge case that an input string was too short for the end state of WFA-$\omega$
@@ -498,8 +499,107 @@ Finally, after applying the linear transformation; we apply a softmax function
 over the linear outputs to project them to probabalistic spaces and then extract
 the highest scoring index to represent the predicted class. In the case of
 Figure \ref{fig:spp_cg}, the output class for the input pre-processed sentence
-\texttt{``[START] 10 day forecast [END]''} is the \texttt{weather/find} label
+\texttt{``[START] 10 day weather forecast [END]''} is the \texttt{weather/find} label
 which corresponds to class 11.
+
+\subsection{Transparency}
+
+Similar to the SoPa model as mentioned in Section
+\ref{section:sopa_transparency}, SoPa++ is also a hybrid model consisting of
+RNN, CNN and weighted finite-state neural components. Following the standards of
+transparency recommended by \citet{arrieta2020explainable}, we can conclude that
+SoPa++ would correspondingly fall into the black-box ML model category. Because
+of this classification, the SoPa++ model would require post-hoc explainability
+methods in order to explain its inner mechanisms. In the next section, we
+expound more on the explanations by simplification post-hoc explainability
+method that can be used on the SoPa++ model.
+
+\section{RE proxy}
+
+In Section \ref{section:xai_techniques} we introduced three important post-hoc
+explainability techniques; specifically local explanations, feature relevance
+and explanations by simplification. In this section, we describe how we leverage
+the latter explanations by simplifications technique with our SoPa++ model.
+Specifically, we show how we can use special features of the antecedent SoPa++
+model to effectively simplify it into a Regular Expression (RE) proxy model.
+
+\subsection{Document score with corresponding path}
+
+\begin{algorithm}[t!]
+  \small
+  \caption{Strict linear-chain WFA-$\omega$ document score with corresponding path$^*$}
+  \label{algo:lc_wfa_w_document_score_trace}
+  \begin{algorithmic}[1]
+    \Require{Strict linear-chain WFA-$\omega$ and document $\bm{y}$}
+    \Ensure{Document score $s_{\text{doc}}(\bm{y})$ and its corresponding path $\pi_{\text{doc}}(\bm{y})$}
+    \Statex
+    \Begin
+    \State $\bm{h}_0 \gets \big[\bar{1}, -\infty, \ldots, -\infty\big]$ \Comment{Create
+      initial hidden state vector $\bm{h}_0: \mathcal{Q} \rightarrow \mathbb{K}$}
+    \For{$i \gets 1,2,\ldots,\bm{|y|}$} \Comment{Sequentially iterate over each
+      token $y_i$ in string $\bm{y}$}
+    \State $\bm{m} \gets \big[[\bm{\Gamma}(y_i)]_{1,2}, [\bm{\Gamma}(y_i)]_{2,3}, \ldots,
+    [\bm{\Gamma}(y_i)]_{|\mathcal{Q}|-1,|\mathcal{Q}|}\big]$ \Comment{Main-path scores for token $y_i$}
+    \State $\bm{\omega} \gets \big[[\bm{\Gamma}(\omega)]_{1,2}, [\bm{\Gamma}(\omega)]_{2,3}, \ldots,
+    [\bm{\Gamma}(\omega)]_{|\mathcal{Q}|-1,|\mathcal{Q}|}\big]$
+    \Comment{State-wise wildcard scores}
+    \State $\bm{m'} \gets \bm{m} \otimes \bm{h}_{i-1}[:-1]$ \Comment{Path
+      score with main-path transitions$^{\dagger}$}
+    \State $\bm{\omega'} \gets \bm{\omega} \otimes \bm{h}_{i-1}[:-1]$ \Comment{Path
+    score with $\omega$ transitions$^{\dagger}$}
+    \State $\bm{h}_{i} \gets [\bar{1}] \mathbin\Vert \max(\bm{m'}, \bm{w'})$
+    \Comment{Concatenate $\bar{1}$ to maximum of $\bm{m}$ and $\bm{\omega}$}
+    \State $\pi_i \gets \text{trace}(h_i)$
+    \Comment{Back-trace path $\pi_i$ corresponding to $h_i$}
+    \EndFor
+    \State $j \gets \argmax_{i \in 1,2,...,|\bm{y}|}
+    \bm{h}_{i}[-1]$
+    \Comment{Get index of hidden vector final states' maximum$^{\ddagger}$}
+    \State $s_{\text{doc}}(\bm{y}) \gets \bm{h}_{j}[-1]$
+    \Comment{Extract maximum hidden vector final state value$^{\ddagger}$}
+    \State $\pi_{\text{doc}}(\bm{y}) \gets \pi_j$
+    \Comment{Extract path corresponding to maximum value}
+    \State \Return $\{s_{\text{doc}}(\bm{y}), \pi_{\text{doc}}(\bm{y})\}$
+    \End
+  \end{algorithmic}
+  \algcomment{
+    $^*$$\otimes$ and $\bar{1}$ are
+    derived from max-based semirings where all semiring operations are element-wise \\
+    $^{\dagger}\bm{h}_{i}[:-1]$ follows the Python indexing syntax
+    and implies keeping all elements of $\bm{h}_{i}$ except the last \\
+    $^{\ddagger}\bm{h}_{i}[-1]$ follows the Python indexing syntax and implies
+    retrieving the last element of the vector $\bm{h}_{i}$
+  }
+\end{algorithm}
+
+As described in Definition \ref{def:string_score}, the Viterbi algorithm returns
+the highest path score which can naturally be attributed to a certain path or
+set of transitions. In order to simplify the SoPa++ model into a RE proxy model,
+we first need to modify our document scoring algorithm to not only return the
+document score $s_{\text{doc}}(\bm{y})$ but also its corresponding path
+$\pi_{\text{doc}}(\bm{y})$. This process is described in Algorithm
+\ref{algo:lc_wfa_w_document_score_trace} where we trace the exact path of each
+transition and return the exact path in addition to the highest path-score. This
+algorithm ultimately allows us to extract the highest scoring path for each
+strict linear-chain WFA-$\omega$ used in SoPa++ per input utterance. Similar to
+Algorithm \ref{algo:lc_wfa_w_document_score}, this algorithm also has a
+time-complexity of $O(|Q||\bm{x}|)$, where $|\mathcal{Q}|$ refers to the number
+of states and $|\bm{x}|$ refers to the length of the input string. It is also
+worth noting that the highest scoring path returned ultimately reflects a set of
+transitions in the form of a strict linear-chain NFA; which can correspondingly
+be transformed into a regular expression. Therefore, it can be inferred that
+Algorithm \ref{algo:lc_wfa_w_document_score_trace} returns the best scoring
+regular expression corresponding to a certain strict linear-chain WFA-$\omega$.
+
+\subsection{}
+
+% Points:
+% Mention Viterbi and max-semirings allow us to find maximum scoring paths
+% Which correspond to substrings in y as well as strict linear-chain NFAs
+% These can be converted into regular expressions, so each WFA-omega can have
+% regular expressions extracted for each training sample
+% These can be pooled together and filtered via the TauSTE layer to provide only
+% the most important regular expressions
 
 %%% Local Variables: 
 %%% mode: latex
