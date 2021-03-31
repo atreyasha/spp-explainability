@@ -22,52 +22,7 @@
 
     **DEADLINE:** *\<2021-04-04 Sun\>*
 
-    1.  Regex proxy
-
-        1.  **TODO** SoPa++ simplification to regex proxy
-
-            1.  add psuedocode to further show simplifcation process -\>
-                need to add functions to pseudocode
-
-            2.  add conditionals to check if document is of sufficient
-                length
-
-            3.  mention compression process
-
-        2.  Explain regex proxy forward-pass
-
-            1.  show TikZ visualization of regex computational graph and
-                tweak colors/labels to make explanations easier if need
-                be
-
-            2.  make sure to state that the regex\'s represent substring
-                matches to the borders are generic -\> or otherwise
-                explicitly add these to the visualizations -\> make this
-                clear both here and for the results to questions three
-                -\> alternatively consider different notation to imply
-                this is a regex match with arbitrary borders
-
-        3.  Explainability
-
-            1.  talk about regex proxy possibly being a transparent
-                model and motivate arguments for/against this, say this
-                is only theoretical but we come back to this in the
-                discussion segment
-
-    2.  SoPa vs. SoPa++
-
-        1.  create table to show exhaustive relevant differences between
-            models, perhaps with a tick and cross to indicate
-            similarities and differences
-
-        2.  recycle this table later and add it to the SoPa model
-            section
-
-        3.  list comparisons such as tokenization, input casings, word
-            embeddings, WFAs, output layer, transparencies,
-            explainability techniques and others
-
-    3.  RQ1: Performance evaluation
+    1.  RQ1: Performance evaluation
 
         1.  Training setup
 
@@ -95,7 +50,7 @@
             3.  mention checking if the performance falls in the
                 competitive range
 
-    4.  RQ2: Explanations by simplification evaluation
+    2.  RQ2: Explanations by simplification evaluation
 
         1.  mention we are trying to evaluate how close the models are
 
@@ -115,7 +70,7 @@
             limit how often activation occurs, which we hypothesize
             could have an effect in bringing both models closer together
 
-    5.  RQ3: Insightful explanations insight
+    3.  RQ3: Insightful explanations insight
 
         1.  mention how we analyze the output neurons with legitimacy
             given that it is now a linear layer to find how STE neurons
@@ -328,10 +283,10 @@
 
     3.  Methodologies
 
-        1.  add Github link to repo as a footnote when introducing this
-            chapter
+        1.  describe meaning of SoPa++ in C-symbology
 
-        2.  describe meaning of SoPa++ and how it was improved
+        2.  improve table of differences with shared columns for
+            similarities, or something else
 
         3.  consider adding background section on NLU overall and tasks
             available

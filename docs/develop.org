@@ -6,21 +6,6 @@
 *** Manuscript
 **** Methodologies
      DEADLINE: <2021-04-04 Sun>
-***** Regex proxy
-****** TODO SoPa++ simplification to regex proxy
-******* add psuedocode to further show simplifcation process -> need to add functions to pseudocode
-******* add conditionals to check if document is of sufficient length
-******* mention compression process
-****** Explain regex proxy forward-pass
-******* show TikZ visualization of regex computational graph and tweak colors/labels to make explanations easier if need be
-******* make sure to state that the regex's represent substring matches to the borders are generic -> or otherwise explicitly add these to the visualizations -> make this clear both here and for the results to questions three -> alternatively consider different notation to imply this is a regex match with arbitrary borders
-****** Explainability
-******* talk about regex proxy possibly being a transparent model and motivate arguments for/against this, say this is only theoretical but we come back to this in the discussion segment
-***** SoPa vs. SoPa++
-****** create table to show exhaustive relevant differences between models, perhaps with a tick and cross to indicate similarities and differences
-****** recycle this table later and add it to the SoPa model section
-****** list comparisons such as tokenization, input casings, word embeddings, WFAs, output layer, transparencies, explainability techniques and others
-
 ***** RQ1: Performance evaluation
 ****** Training setup
 ******* talk about GloVe embeddings, lowercasing and other important things
@@ -114,8 +99,8 @@
 ****** mention how or why SoPa falls into RNN and CNN categories
 ****** mention early on that quantized NNs are useful for low-precision computing, but we use it for other reasons later on
 ***** Methodologies
-****** add Github link to repo as a footnote when introducing this chapter
-****** describe meaning of SoPa++ and how it was improved
+****** describe meaning of SoPa++ in C-symbology
+****** improve table of differences with shared columns for similarities, or something else
 ****** consider adding background section on NLU overall and tasks available
 ****** mention the purpose of the intent detection task briefly on a grander-scheme-of-things
 ****** mention briefly the purpose of the slot filling task 
