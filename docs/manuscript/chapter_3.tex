@@ -148,6 +148,8 @@ statistics of the preprocessed FMTOD data set.
 
 \subsection{Summary statistics}
 
+\label{section:fmtod_summary}
+
 Figure \ref{fig:fmtod} shows the summary statistics of the preprocessed FMTOD
 data set grouped by classes and data set partitions. Similarly, Table
 \ref{tab:fmtod} shows the same summary statistics in a tabular form with
@@ -162,6 +164,8 @@ statistics were computed with the assistance of NLTK's default \texttt{Treebank}
 word tokenizer \citep{bird-loper-2004-nltk}.
 
 \subsection{Performance range}
+
+\label{section:fmtod_performance}
 
 Several studies have optimized deep learning models on the FMTOD English
 language intent classification task using a variety of models from BiLSTMs to
@@ -629,7 +633,7 @@ all other regular expressions were effectively discarded at the TauSTE layer.
     \State $\mathcal{A}_j \gets \text{get\_WFA}(\mathcal{S}, j)$
     \Comment{Get a WFA-$\omega$ by index}
     \State $s^j_{\text{doc}}(\bm{y}_i), \pi^j_{\text{doc}}(\bm{y}_i) \gets
-    {\small\textsc{DOCSCORE\_TRACE}}(\mathcal{A}_j, \bm{y}_i)$
+    {\small\textsc{doscore\_trace}}(\mathcal{A}_j, \bm{y}_i)$
     \If{TauSTE$(s^j_{\text{doc}}(\bm{y}_i)) == 1$}
     \Comment{Save current $\pi^j_{\text{doc}}(\bm{y}_i)$ if it activates TauSTE} 
     \State $\{\textbf{RE}\}_j \gets \{\textbf{RE}\}_j \cup
@@ -741,6 +745,89 @@ and SoPa++ models. The most significants modifications to SoPa++ include the
 modification of linear-chain WFAs to strict linear-chain WFA-$\omega$'s, the
 addition of the TauSTE layer and the significantly different explanations by
 simplification post-hoc explainability technique.
+
+\section{RQ1: Evaluating performance of SoPa++}
+
+In this section, we describe the methodologies used to answer our first research
+question regarding the competitive performance of the SoPa++ model on the FMTOD
+data set. Specifically, we describe how we trained the SoPa++ model and
+afterwards, how we proceeded to evaluate and compare its performance to other
+studies.
+
+\subsection{Training}
+
+First and foremost, we address the issue of data imbalance in the FMTOD data set
+as mentioned in Section \ref{section:fmtod_summary}. For this, we chose a simple
+but effective solution of upsampling all minority data classes such that they
+would have the same frequency as the majority class. We chose this approach over
+other approaches such as gradient-weighting since this is generally a model
+agnostic and straightforward approach.
+
+Returning to the computational graph of SoPa++ in Figure \ref{fig:spp_cg}, we
+compute the cross-entropy loss using the softmax output and target labels. Since
+SoPa++ is in essence a deep neural network, we utilize the well-studied gradient
+descent technique to train and update our SoPa++ model. We utilize the
+\texttt{autograd} engine of PyTorch\footnote{https://pytorch.org/} to assist
+with gradient computations, backward passes and parallelized computations. We
+utilize the Adam optimizer \citep{DBLP:journals/corr/KingmaB14} to stabilize the
+gradient descent learning technique with $\beta_1=0.9$ and $\beta_2=0.999$.
+
+\begin{table}[t!]
+  \centering
+  \begin{tabular}{ll}
+    \toprule
+    Hyperparameter & Values \\
+    \midrule
+    Patterns & \{\texttt{6-10\_5-10\_4-10\_3-10}, \\
+             & ~\texttt{6-25\_5-25\_4-25\_3-25}, \\
+             & ~\texttt{6-50\_5-50\_4-50\_3-50}\} \\[10pt]
+    $\tau$-threshold & $\{0.00, 0.25, 0.50, 0.75, 1.00\}$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Grid-search hyperparameters and their respetive values}
+  \label{tab:grid_hyperparameter}
+\end{table}
+
+In terms of fixed training variables, we utilize a learning rate of 0.001, a
+batch size of 256 input utterances and neuron/word dropout probabilities of 0.2.
+We only apply neuron dropouts on the transition matrices of all the
+WFA-$\omega$'s in SoPa++. We furthermore apply batch sorting based on input
+utterance lengths to ensure maximum efficiency when computing pattern/document
+scores. Based on our own experiments, we observed more stable
+training with the max-sum semiring compared to the max-product semiring. For
+simplicity, we therefore only use the max-sum semiring in all of our
+WFA-$\omega$'s. Finally, we train all models for a maximum of 50 epochs with 10
+patience epochs for early stopping in case of a performance plateau or
+performance worsening. To trigger early stopping in the patience framework, we
+monitor the loss over the validation data set. We run all SoPa++ training
+experiments on a single NVIDIA GeForce GTX 1080 Ti GPU. 
+
+To obtain some variation in our SoPa++ models' performance, we decide to use a
+grid-search technique while varying the patterns and $\tau$-threshold
+hyperparameters. We vary the patterns hyperparameters to test SoPa++ models with
+different numbers of constituent WFA-$\omega$'s; namely
+\texttt{6-10\_5-10\_4-10\_3-10}, \texttt{6-25\_5-25\_4-25\_3-25} and
+\texttt{6-50\_5-50\_4-50\_3-50}. We correspondingly refer to SoPa++ models with
+the aforementioned pattern hyperparameters as small, medium and large models
+respectively. Similarly, we vary the $\tau$-threshold to experiment how this
+threshold could impact both performance and explainability later on. The exact
+values which we varied can be found in Table \ref{tab:grid_hyperparameter}.
+Finally, we repeat all training runs for a total of 10 iterations with different
+initial random seed values. We perform this step to be able to analyze our final
+results with standard deviations.
+
+\subsection{Evaluation}
+
+From the previous section on training SoPa++, we assume that we will have fully
+trained SoPa++ model variants. In order to evaluate the performance of SoPa++ on
+the FMTOD data set, we preprocess the FMTOD test data set in the same way as we
+preprocessed the FMTOD training data sets; naturally without upsampling. We then
+run the FMTOD test data set through the computational graph of the SoPa++ model
+and compute the accuracy of the SoPa++ model performances. Finally, we compare
+the accuracies with the accuracy range of other recent papers on FMTOD as
+described in Section \ref{section:fmtod_performance}. If the accuracy range of
+our SoPa++ model(s) falls into the aforementioned competitive range, we can then
+conclude that our SoPa++ model performs competitively with other recent studies.
 
 %%% Local Variables: 
 %%% mode: latex
