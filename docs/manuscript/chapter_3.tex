@@ -829,6 +829,84 @@ described in Section \ref{section:fmtod_performance}. If the accuracy range of
 our SoPa++ model(s) falls into the aforementioned competitive range, we can then
 conclude that our SoPa++ model performs competitively with other recent studies.
 
+\section{RQ2: Evaluating explanations by simplification}
+
+As mentioned in Definition \ref{def:explain_simplify}, the purpose of
+explanations by simplification is to create a less complex proxy model which can
+both keep a similar performance score and maximize its resemblance to the
+antecedent model. We already discussed how the RE proxy derived from SoPa++ is
+likely to be a transparent model compared to the black-box SoPa++ model; which
+already satisfies the important criterion that the proxy model should be less
+complex. We discuss more regarding the actual vs. theoretical transparency of
+the RE proxy models in the Discussions chapter.
+
+Another key factor related to explanations by simplification is that the proxy
+model should be more explainable compared to its antecedent model. We explore
+this improvement of explainability using the three criteria for ``good''
+explainability techniques as mentioned in Section \ref{section:xai_metrics}.
+An evaluation based on target audiences is also important for explainability;
+with the target audience of SoPa++ and its RE proxy model largely being
+experienced ML practitioners. Due to limitations of this study, we are unable to
+address a detailed survey of explainability on our target audience and instead
+leave this aspect to future work.
+
+We now describe techniques of evaluating explanations by simplification which
+address the performance scores and resemblance portions of Definition
+\ref{def:explain_simplify}. We use the FMTOD test set to do this since the test
+set represents unseen data for both SoPa++ and the RE proxy, and therefore could
+provide a more unbiased representation of these models' performance.
+Furthermore, we conduct this analysis on our small, medium and large models with
+all available $\tau$-thresholds to obtain a variety of results for comparison.
+
+\subsection{Performance score}
+
+As previously mentioned, an important aspect of evaluating explanations by
+simplification is to ensure that the proxy and antecedent models both have
+similar performance scores on a given task. Given this, we evaluate the accuracy
+of both SoPa++ models and their RE proxy counterparts on the FMTOD test set and
+compare their accuracies.
+
+\subsection{Distance metrics}
+
+As previously mentioned, another criteria for effective explanations by
+simplification is to maximum resemblance between the proxy and antecedent
+models. While comparing the performance scores is one way of doing this, this
+can also be seen as an aggregrate output-oriented comparison. We make an
+argument to test other distance metrics between SoPa++ and corresponding RE
+proxy model pairs. We describe these distance metrics and their mathematical
+formulations in this section.
+
+\paragraph{Softmax distance norm:} One method of quantifying a distance between
+the SoPa++ and RE proxy model pairs is to run both of them on the FMTOD test
+data set and obtain the softmax scores on each sample. Next, we can find the
+Euclidean norm of the difference of these two softmax vectors. A low softmax
+Euclidean distance norm would imply that the softmax distributions are similar
+and would imply, to a certain extent, that the models conducted similar
+weightings of input features. This method is not a perfect indicator of
+interpreting distances between models; but it is more refined in that it allows
+us to analyze continuous vector differences. We provide a mathematical
+formulation of the softmax distance norm $\delta(\sigma)$ below for a single
+sample where $\sigma_{\mathcal{S}}$ and $\sigma_{\mathcal{R}}$ represent the
+softmax vectors for the SoPa++ and RE proxy model on the given sample
+respectively and $n$ represents the number of classes in the FMTOD data set:
+
+\begin{equation}
+  \delta(\sigma) = \left\Vert \sigma_{\mathcal{S}} - \sigma_{\mathcal{R}} \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i} - \sigma_{\mathcal{R}_i})^2} 
+\end{equation}
+
+\paragraph{Binary misalignment rate:} Another technique of measuring the
+distance between the SoPa++ and RE proxy model would be to compare their
+internal representations activated in the TauSTE binary layer. This can be
+computed by calculating the 1-norm between the binary vectors and then
+normalizing this norm by the dimensionality of this vector. This would provide a
+mean binary misalignment rate $\delta(b)$, where $b_{\mathcal{S}}$ and
+$b_{\mathcal{R}}$ represent the TauSTE binary vectors for the SoPa++ and RE
+proxy model respectively on a given sample:
+
+\begin{equation}
+  \delta(b) = \dfrac{\left\Vert b_{\mathcal{S}} - b_{\mathcal{R}} \right\Vert_{1}}{dim(b_{\mathcal{S}} - b_{\mathcal{R}})} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i} - b_{\mathcal{R}_i}|}{{dim(b_{\mathcal{S}} - b_{\mathcal{R}})}}
+\end{equation}
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "main"
