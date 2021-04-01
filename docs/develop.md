@@ -22,55 +22,7 @@
 
     **DEADLINE:** *\<2021-04-04 Sun\>*
 
-    1.  RQ1: Performance evaluation
-
-        1.  Training setup
-
-            1.  talk about GloVe embeddings, lowercasing and other
-                important things
-
-            2.  talk about upsampling data set during training
-
-            3.  mention about PyTorch for parallel computation and
-                autograd for backward pass computation
-
-            4.  mention about NLL loss and log softmax for numerical
-                stability
-
-            5.  add sufficient information on grid training and
-                hyperparameter setup
-
-        2.  Evaluation
-
-            1.  explain usage of test set
-
-            2.  explain how we evaluate performance using accuracy on
-                both SoPa++ and its regex proxy
-
-            3.  mention checking if the performance falls in the
-                competitive range
-
-    2.  RQ2: Explanations by simplification evaluation
-
-        1.  mention we are trying to evaluate how close the models are
-
-        2.  delegate the quality of explainability based on a target
-            audience to future work
-
-        3.  mention in general that the target audience for this method
-            is still experts
-
-        4.  explain usage of test set in this case
-
-        5.  motivate all the different metrics such as softmax
-            difference norm, binary misalignment rate and also
-            performance scores
-
-        6.  mention variation of the tau threshold since this would
-            limit how often activation occurs, which we hypothesize
-            could have an effect in bringing both models closer together
-
-    3.  RQ3: Insightful explanations insight
+    1.  RQ3: Insightful explanations insight
 
         1.  mention how we analyze the output neurons with legitimacy
             given that it is now a linear layer to find how STE neurons
@@ -102,6 +54,8 @@
 
             2.  report parameter counts in scores as well
 
+            3.  mention training time
+
         3.  use the plus-minus sign to give the score ranges for all
             model types
 
@@ -113,10 +67,13 @@
             metrics averaged over random seeds with plus-minus deviation
             format
 
-        2.  show plot of how these trends work and that increasing the
+        2.  consider combining all data points and then plotting instead
+            of plotting means
+
+        3.  show plot of how these trends work and that increasing the
             tau threshold brings models closer together
 
-        3.  make statement that explanations by simplifications appears
+        4.  make statement that explanations by simplifications appears
             to effective on the unseen evaluation set with similar
             scores; also a relationship can be observed with respect to
             the tau threshold
@@ -285,16 +242,21 @@
 
         1.  describe meaning of SoPa++ in C-symbology
 
-        2.  improve table of differences with shared columns for
+        2.  mention target audience of explainability somewhere
+
+        3.  consider adding sample notation to equations of distance
+            metrics -\> could help with results
+
+        4.  improve table of differences with shared columns for
             similarities, or something else
 
-        3.  consider adding background section on NLU overall and tasks
+        5.  consider adding background section on NLU overall and tasks
             available
 
-        4.  mention the purpose of the intent detection task briefly on
+        6.  mention the purpose of the intent detection task briefly on
             a grander-scheme-of-things
 
-        5.  mention briefly the purpose of the slot filling task
+        7.  mention briefly the purpose of the slot filling task
 
     4.  Terminologies and abbreviations
 
@@ -395,7 +357,9 @@
             3.  add student registration details to paper such as
                 matriculation number and other details
 
-            4.  take note of all other submission criteria such as
+            4.  update title page date to current submission date
+
+            5.  take note of all other submission criteria such as
                 statement of originality, German abstract, digital copy
                 and others, see:
                 <https://www.uni-potsdam.de/en/studium/studying/organizing-your-exams/final-thesis>

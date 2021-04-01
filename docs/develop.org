@@ -6,24 +6,6 @@
 *** Manuscript
 **** Methodologies
      DEADLINE: <2021-04-04 Sun>
-***** RQ1: Performance evaluation
-****** Training setup
-******* talk about GloVe embeddings, lowercasing and other important things
-******* talk about upsampling data set during training
-******* mention about PyTorch for parallel computation and autograd for backward pass computation
-******* mention about NLL loss and log softmax for numerical stability
-******* add sufficient information on grid training and hyperparameter setup
-****** Evaluation
-******* explain usage of test set
-******* explain how we evaluate performance using accuracy on both SoPa++ and its regex proxy
-******* mention checking if the performance falls in the competitive range
-***** RQ2: Explanations by simplification evaluation
-****** mention we are trying to evaluate how close the models are
-****** delegate the quality of explainability based on a target audience to future work
-****** mention in general that the target audience for this method is still experts
-****** explain usage of test set in this case
-****** motivate all the different metrics such as softmax difference norm, binary misalignment rate and also performance scores
-****** mention variation of the tau threshold since this would limit how often activation occurs, which we hypothesize could have an effect in bringing both models closer together
 ***** RQ3: Insightful explanations insight
 ****** mention how we analyze the output neurons with legitimacy given that it is now a linear layer to find how STE neurons distribute importances 
 ****** in connection with this, we can analyze which textual regular expressions are responsible for each STE neuron activation -> which gives us an insight into which regular expressions are important for classifications
@@ -36,10 +18,12 @@
 ****** provide a table of summarized results w.r.t. random seed deviations
 ******* modify visualize scripts to aggregate and print summary stats in script to re-use later in paper with means and standard deviations across random seeds
 ******* report parameter counts in scores as well
+******* mention training time
 ****** use the plus-minus sign to give the score ranges for all model types
 ****** make statement on the competitiveness of these results
 ***** RQ2: Evaluation of explanations by simplification 
 ****** add table with information on performances and distance metrics averaged over random seeds with plus-minus deviation format
+****** consider combining all data points and then plotting instead of plotting means
 ****** show plot of how these trends work and that increasing the tau threshold brings models closer together
 ****** make statement that explanations by simplifications appears to effective on the unseen evaluation set with similar scores; also a relationship can be observed with respect to the tau threshold
 ***** RQ3: Interesting and insightful explanations on FMTOD
@@ -100,6 +84,8 @@
 ****** mention early on that quantized NNs are useful for low-precision computing, but we use it for other reasons later on
 ***** Methodologies
 ****** describe meaning of SoPa++ in C-symbology
+****** mention target audience of explainability somewhere
+****** consider adding sample notation to equations of distance metrics -> could help with results
 ****** improve table of differences with shared columns for similarities, or something else
 ****** consider adding background section on NLU overall and tasks available
 ****** mention the purpose of the intent detection task briefly on a grander-scheme-of-things
@@ -139,6 +125,7 @@
 ******* 20-90 pages thesis length -> well-motivated yet succinct
 ******* date on bottom of manuscript should be date of submission before mailing to Potsdam
 ******* add student registration details to paper such as matriculation number and other details
+******* update title page date to current submission date
 ******* take note of all other submission criteria such as statement of originality, German abstract, digital copy and others, see: https://www.uni-potsdam.de/en/studium/studying/organizing-your-exams/final-thesis
 
 *** Programming
