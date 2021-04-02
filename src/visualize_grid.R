@@ -155,7 +155,7 @@ visualize_grid_train <- function(input_glob,
     labs(color = "Random\nseed") +
     theme_bw() +
     theme(
-      text = element_text(size = 15),
+      text = element_text(size = 22),
       strip.background = element_blank(),
       legend.position = "bottom",
       strip.text = element_text(face = "bold"),
@@ -180,7 +180,7 @@ visualize_grid_train <- function(input_glob,
     as.integer(as.POSIXct(Sys.time())), ".tex"
   )
   tikz(tex_file,
-    width = 12, height = 6, standAlone = TRUE,
+    width = 12, height = 8, standAlone = TRUE,
     engine = "luatex"
   )
   print(g)
@@ -220,21 +220,21 @@ visualize_grid_evaluate <- function(input_glob,
     ))[["seed"]]
     tau_threshold <- model_config[["tau_threshold"]]
     patterns <- model_config[["patterns"]]
-    spp_f1 <- fromJSON(file = Sys.glob(
+    spp_acc <- fromJSON(file = Sys.glob(
       file.path(
         model_directory,
         "spp_*_classification_*.json"
       )
-    ))[["weighted avg"]][["f1-score"]]
-    regex_f1 <- fromJSON(file = Sys.glob(
+    ))[["accuracy"]]
+    regex_acc <- fromJSON(file = Sys.glob(
       file.path(
         model_directory,
         "regex_*_classification_*.json"
       )
-    ))[["weighted avg"]][["f1-score"]]
+    ))[["accuracy"]]
     return(data.frame(
       patterns = patterns, tau_threshold = tau_threshold,
-      seed = seed, spp_f1 = spp_f1, regex_f1 = regex_f1,
+      seed = seed, spp_acc = spp_acc, regex_acc = regex_acc,
       softmax_distance = distances[1],
       binary_distance = distances[2]
     ))
@@ -273,35 +273,35 @@ visualize_grid_evaluate <- function(input_glob,
   )
   collections$type <- factor(gsub(
     ".*\\_distance",
-    "Model pair distance",
+    "Distance metrics",
     gsub(
-      ".*\\_f1", "Weighted F$_{1}$",
+      ".*\\_acc", "Accuracy",
       collections$variable
     )
   ),
-  levels = c("Weighted F$_{1}$", "Model pair distance")
+  levels = c("Accuracy", "Distance metrics")
   )
   collections$variable <- gsub(
-    "spp\\_f1", "SoPa++\nantecedent",
+    "spp\\_acc", "SoPa++",
     collections$variable
   )
   collections$variable <- gsub(
-    "regex\\_f1", "Regex\nproxy",
+    "regex\\_acc", "RE\nproxy",
     collections$variable
   )
   collections$variable <- gsub(
-    "softmax\\_distance", "Softmax\ndifference\n2-norm",
+    "softmax\\_distance", "$\\\\delta(\\\\sigma)$",
     collections$variable
   )
   collections$variable <- gsub(
-    "binary\\_distance", "Binary\ndifference\nrate",
+    "binary\\_distance", "$\\\\delta(b)$",
     collections$variable
   )
   collections$variable <- factor(collections$variable, levels = c(
-    "SoPa++\nantecedent",
-    "Regex\nproxy",
-    "Softmax\ndifference\n2-norm",
-    "Binary\ndifference\nrate"
+    "SoPa++",
+    "RE\nproxy",
+    "$\\delta(\\sigma)$",
+    "$\\delta(b)$"
   ))
 
   # make ggplot object
@@ -319,7 +319,7 @@ visualize_grid_evaluate <- function(input_glob,
     labs(fill = "") +
     theme_bw() +
     theme(
-      text = element_text(size = 15),
+      text = element_text(size = 22),
       strip.background = element_blank(),
       legend.position = "bottom",
       strip.text = element_text(face = "bold"),
@@ -343,7 +343,7 @@ visualize_grid_evaluate <- function(input_glob,
     as.integer(as.POSIXct(Sys.time())), ".tex"
   )
   tikz(tex_file,
-    width = 12, height = 7, standAlone = TRUE,
+    width = 12, height = 8, standAlone = TRUE,
     engine = "luatex"
   )
   print(g)
