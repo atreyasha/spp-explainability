@@ -887,13 +887,13 @@ and would imply, to a certain extent, that the models conducted similar
 weightings of input features. This method is not a perfect indicator of
 interpreting distances between models; but it is more refined in that it allows
 us to analyze continuous vector differences. We provide a mathematical
-formulation of the softmax distance norm $\delta(\sigma)$ below for a single
-sample where $\sigma_{\mathcal{S}}$ and $\sigma_{\mathcal{R}}$ represent the
+formulation of the softmax distance norm $\delta_{\sigma}(\bm{y})$ below for a single
+document $\bm{y}$ where $\sigma_{\mathcal{S}}$ and $\sigma_{\mathcal{R}}$ represent the
 softmax vectors for the SoPa++ and RE proxy model on the given sample
 respectively and $n$ represents the number of classes in the FMTOD data set:
 
 \begin{equation}
-  \delta(\sigma) = \left\Vert \sigma_{\mathcal{S}} - \sigma_{\mathcal{R}} \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i} - \sigma_{\mathcal{R}_i})^2} 
+  \delta_{\sigma}(\bm{y}) = \left\Vert \sigma_{\mathcal{S}}(\bm{y}) - \sigma_{\mathcal{R}}(\bm{y}) \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i}(\bm{y}) - \sigma_{\mathcal{R}_i}(\bm{y}))^2} 
 \end{equation}
 
 \paragraph{Binary misalignment rate:} Another technique of measuring the
@@ -903,12 +903,13 @@ computed by calculating the 1-norm between the binary vectors and then
 normalizing this norm by the dimensionality of this vector. The step of
 normalization is necessary since we test models with different sizes and these
 could have different binary vector lengths. This would provide a mean binary
-misalignment rate $\delta(b)$, where $b_{\mathcal{S}}$ and $b_{\mathcal{R}}$
-represent the TauSTE binary vectors for the SoPa++ and RE proxy model
-respectively on a given sample:
+misalignment rate $\delta_b(\bm{y})$ for a single document $\bm{y}$, where
+$b_{\mathcal{S}}$ and $b_{\mathcal{R}}$ represent the TauSTE binary vectors for
+the SoPa++ and RE proxy model respectively and $dim$ represents an operator that
+retrieves the dimensionality of a vector space:
 
 \begin{equation}
-  \delta(b) = \dfrac{\left\Vert b_{\mathcal{S}} - b_{\mathcal{R}} \right\Vert_{1}}{dim(b_{\mathcal{S}} - b_{\mathcal{R}})} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i} - b_{\mathcal{R}_i}|}{{dim(b_{\mathcal{S}} - b_{\mathcal{R}})}}
+  \delta_b(\bm{y}) = \dfrac{\left\Vert b_{\mathcal{S}}(\bm{y}) - b_{\mathcal{R}}(\bm{y}) \right\Vert_{1}}{dim(b_{\mathcal{S}}(\bm{y}) - b_{\mathcal{R}}(\bm{y}))} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i}(\bm{y}) - b_{\mathcal{R}_i}(\bm{y})|}{{dim(b_{\mathcal{S}}(\bm{y}) - b_{\mathcal{R}}(\bm{y}))}}
 \end{equation}
 
 \section{RQ3: Interesting and relevant explanations}
