@@ -61,122 +61,77 @@ standard deviations in performance are generally similar.
     Model & Parameters & $\tau$=0.0 & $\tau$=0.25 & $\tau$=0.5 & $\tau$=0.75 & $\tau$=1.0 \\
     \midrule
     Light & 1,260,292 & 97.6 $\pm$ 0.2 & 97.6 $\pm$ 0.2 & 97.3 $\pm$ 0.2 & 97.0 $\pm$ 0.3 & 96.9 $\pm$ 0.3 \\
-    Medium & 1,351,612 & \textbf{98.3 $\bm{\pm}$ 0.2} & 98.1 $\pm$ 0.1 & 98.0 $\pm$ 0.2 & 97.9 $\pm$ 0.1 & 97.7 $\pm$ 0.1  \\
-    Heavy & 1,503,812 & \textbf{98.3 $\bm{\pm}$ 0.2} & \textbf{98.3 $\bm{\pm}$ 0.2} & 98.2 $\pm$ 0.2 & 98.1 $\pm$ 0.2 & 98.0 $\pm$ 0.2 \\
+    Medium & 1,351,612 & \bm{$98.3 \pm 0.2$} & 98.1 $\pm$ 0.1 & 98.0 $\pm$ 0.2 & 97.9 $\pm$ 0.1 & 97.7 $\pm$ 0.1  \\
+    Heavy & 1,503,812 & \bm{$98.3 \pm 0.2$} & \bm{$98.3 \pm 0.2$} & 98.2 $\pm$ 0.2 & 98.1 $\pm$ 0.2 & 98.0 $\pm$ 0.2 \\
     \bottomrule
   \end{tabular}
   \caption{Test accuracies of the SoPa++ models grouped by model sizes and
     $\tau$-thresholds; accuracies and standard deviations were calculated across
-  random seed iterations}
+  random seed iterations; bold scores show best performing models}
   \label{tab:results_evaluation}
 \end{table}
 
 \section{RQ2: Evaluating explanations by simplification}
 
-% > aggregate(regex_acc ~ patterns + tau_threshold, data=collections, FUN=mean)
-%               patterns tau_threshold regex_acc
-% 1  6-10_5-10_4-10_3-10             0 0.9549596
-% 2  6-25_5-25_4-25_3-25             0 0.9745687
-% 3  6-50_5-50_4-50_3-50             0 0.9789218
-% 4  6-10_5-10_4-10_3-10          0.25 0.9617385
-% 5  6-25_5-25_4-25_3-25          0.25 0.9748113
-% 6  6-50_5-50_4-50_3-50          0.25 0.9803639
-% 7  6-10_5-10_4-10_3-10           0.5 0.9645957
-% 8  6-25_5-25_4-25_3-25           0.5 0.9747305
-% 9  6-50_5-50_4-50_3-50           0.5 0.9803369
-% 10 6-10_5-10_4-10_3-10          0.75 0.9634906
-% 11 6-25_5-25_4-25_3-25          0.75 0.9752022
-% 12 6-50_5-50_4-50_3-50          0.75 0.9803100
-% 13 6-10_5-10_4-10_3-10             1 0.9610243
-% 14 6-25_5-25_4-25_3-25             1 0.9748518
-% 15 6-50_5-50_4-50_3-50             1 0.9805256
-% > aggregate(regex_acc ~ patterns + tau_threshold, data=collections, FUN=sd)
-%               patterns tau_threshold   regex_acc
-% 1  6-10_5-10_4-10_3-10             0 0.009687851
-% 2  6-25_5-25_4-25_3-25             0 0.005038281
-% 3  6-50_5-50_4-50_3-50             0 0.004365320
-% 4  6-10_5-10_4-10_3-10          0.25 0.008446945
-% 5  6-25_5-25_4-25_3-25          0.25 0.003450913
-% 6  6-50_5-50_4-50_3-50          0.25 0.003337103
-% 7  6-10_5-10_4-10_3-10           0.5 0.005537846
-% 8  6-25_5-25_4-25_3-25           0.5 0.002384975
-% 9  6-50_5-50_4-50_3-50           0.5 0.002853588
-% 10 6-10_5-10_4-10_3-10          0.75 0.006689082
-% 11 6-25_5-25_4-25_3-25          0.75 0.002635605
-% 12 6-50_5-50_4-50_3-50          0.75 0.002482981
-% 13 6-10_5-10_4-10_3-10             1 0.006328909
-% 14 6-25_5-25_4-25_3-25             1 0.003111233
-% 15 6-50_5-50_4-50_3-50             1 0.002347448
+For evaluating explanations by simplification, we also follow our methodologies.
+Firstly, we refer to Figure \ref{fig:explain_evaluate} for a visualization of
+all results. We can observe a general trend that SoPa++ and RE proxy accuracies
+become more similar to one another as we increase the value of the
+$\tau$-threshold. Similarly, we can observe a general trend that the mean
+model-pair distances $\overline{\delta_{\sigma}}$ and $\overline{\delta_b}$ both
+become smaller as we increase the value of the $\tau$-threshold. In general, we
+can observe that the models with more parameters tend to have better test set
+accuracies for both SoPa++ and RE proxy models. Similarly, we can observe that
+the overall test set performance tends to decrease for SoPa++ but increase for
+the RE proxy models as the $\tau$-threshold value is increased. Table
+\ref{tab:results_evaluation} shows a tabular summary of test set accuracies and
+model-pair distance metrics for both SoPa++ and RE proxy models. 
 
-% > aggregate(softmax_distance ~ patterns + tau_threshold, data=collections, FUN=mean)
-%               patterns tau_threshold softmax_distance
-% 1  6-10_5-10_4-10_3-10             0       0.15010717
-% 2  6-25_5-25_4-25_3-25             0       0.09476992
-% 3  6-50_5-50_4-50_3-50             0       0.07106383
-% 4  6-10_5-10_4-10_3-10          0.25       0.11310785
-% 5  6-25_5-25_4-25_3-25          0.25       0.07315419
-% 6  6-50_5-50_4-50_3-50          0.25       0.04993503
-% 7  6-10_5-10_4-10_3-10           0.5       0.09955704
-% 8  6-25_5-25_4-25_3-25           0.5       0.06148820
-% 9  6-50_5-50_4-50_3-50           0.5       0.04293018
-% 10 6-10_5-10_4-10_3-10          0.75       0.10031126
-% 11 6-25_5-25_4-25_3-25          0.75       0.05843249
-% 12 6-50_5-50_4-50_3-50          0.75       0.04462260
-% 13 6-10_5-10_4-10_3-10             1       0.10272472
-% 14 6-25_5-25_4-25_3-25             1       0.06345463
-% 15 6-50_5-50_4-50_3-50             1       0.04730200
-% > aggregate(softmax_distance ~ patterns + tau_threshold, data=collections, FUN=sd)
-%               patterns tau_threshold softmax_distance
-% 1  6-10_5-10_4-10_3-10             0      0.022698184
-% 2  6-25_5-25_4-25_3-25             0      0.016573534
-% 3  6-50_5-50_4-50_3-50             0      0.014613714
-% 4  6-10_5-10_4-10_3-10          0.25      0.021730004
-% 5  6-25_5-25_4-25_3-25          0.25      0.009497534
-% 6  6-50_5-50_4-50_3-50          0.25      0.008448988
-% 7  6-10_5-10_4-10_3-10           0.5      0.016047160
-% 8  6-25_5-25_4-25_3-25           0.5      0.008094996
-% 9  6-50_5-50_4-50_3-50           0.5      0.005564666
-% 10 6-10_5-10_4-10_3-10          0.75      0.015798138
-% 11 6-25_5-25_4-25_3-25          0.75      0.004955638
-% 12 6-50_5-50_4-50_3-50          0.75      0.004833917
-% 13 6-10_5-10_4-10_3-10             1      0.017653580
-% 14 6-25_5-25_4-25_3-25             1      0.005008278
-% 15 6-50_5-50_4-50_3-50             1      0.005459310
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=14cm]{pdfs/generated/evaluate_spp_grid_1617375541.pdf}
+  \caption{Visualization of accuracy and model-pair distance metrics against
+    pattern hyperparameters and $\tau$-thresholds}
+  \label{fig:explain_evaluate}
+\end{figure}
 
-% > aggregate(binary_distance ~ patterns + tau_threshold, data=collections, FUN=mean)
-%               patterns tau_threshold binary_distance
-% 1  6-10_5-10_4-10_3-10             0       0.2007382
-% 2  6-25_5-25_4-25_3-25             0       0.2165814
-% 3  6-50_5-50_4-50_3-50             0       0.2269580
-% 4  6-10_5-10_4-10_3-10          0.25       0.1890425
-% 5  6-25_5-25_4-25_3-25          0.25       0.2103988
-% 6  6-50_5-50_4-50_3-50          0.25       0.2201441
-% 7  6-10_5-10_4-10_3-10           0.5       0.1770896
-% 8  6-25_5-25_4-25_3-25           0.5       0.2028309
-% 9  6-50_5-50_4-50_3-50           0.5       0.2058340
-% 10 6-10_5-10_4-10_3-10          0.75       0.1545125
-% 11 6-25_5-25_4-25_3-25          0.75       0.1721154
-% 12 6-50_5-50_4-50_3-50          0.75       0.1796683
-% 13 6-10_5-10_4-10_3-10             1       0.1244646
-% 14 6-25_5-25_4-25_3-25             1       0.1348997
-% 15 6-50_5-50_4-50_3-50             1       0.1423266
-% > aggregate(binary_distance ~ patterns + tau_threshold, data=collections, FUN=sd)
-%               patterns tau_threshold binary_distance
-% 1  6-10_5-10_4-10_3-10             0     0.015272982
-% 2  6-25_5-25_4-25_3-25             0     0.015466187
-% 3  6-50_5-50_4-50_3-50             0     0.008555918
-% 4  6-10_5-10_4-10_3-10          0.25     0.006679655
-% 5  6-25_5-25_4-25_3-25          0.25     0.015912701
-% 6  6-50_5-50_4-50_3-50          0.25     0.009791348
-% 7  6-10_5-10_4-10_3-10           0.5     0.015313128
-% 8  6-25_5-25_4-25_3-25           0.5     0.014773546
-% 9  6-50_5-50_4-50_3-50           0.5     0.010081221
-% 10 6-10_5-10_4-10_3-10          0.75     0.013177274
-% 11 6-25_5-25_4-25_3-25          0.75     0.008723274
-% 12 6-50_5-50_4-50_3-50          0.75     0.009173360
-% 13 6-10_5-10_4-10_3-10             1     0.017598744
-% 14 6-25_5-25_4-25_3-25             1     0.010098175
-% 15 6-50_5-50_4-50_3-50             1     0.007099766
+\begin{table}[t!]
+  \centering \def\arraystretch{1.3}
+  \small
+  \begin{tabular}{lllllll}
+    \toprule
+    && \multicolumn{5}{c}{Accuracy in $\%$ with mean $\pm$ standard-deviation} \\
+    \cline{3-7} \\[-10pt]
+    Model & Variant & $\tau$=0.0 & $\tau$=0.25 & $\tau$=0.5 & $\tau$=0.75 & $\tau$=1.0 \\
+    \midrule
+    Light & SoPa++ & 97.6 $\pm$ 0.2 & 97.6 $\pm$ 0.2 & 97.3 $\pm$ 0.2 & \bm{$97.0 \pm 0.3$} & 96.9 $\pm$ 0.3 \\
+    & RE proxy & 95.5 $\pm$ 1.0 & 96.2 $\pm$ 0.8 & 96.5 $\pm$ 0.6 & \bm{$96.3 \pm 0.7$} & 96.1 $\pm$ 0.6 \\
+    Medium & SoPa++ & 98.3 $\pm$ 0.2 & 98.1 $\pm$ 0.1 & 98.0 $\pm$ 0.2 & 97.9 $\pm$ 0.1 & \bm{$97.7 \pm 0.1$}  \\
+    & RE proxy & 97.4 $\pm$ 0.5 & 97.5 $\pm$ 0.3 & 97.5 $\pm$ 0.2 & 97.5 $\pm$ 0.3 & \bm{$97.5 \pm 0.3$} \\
+    Heavy & SoPa++ & 98.3 $\pm$ 0.2 & 98.3 $\pm$ 0.2 & 98.2 $\pm$ 0.2 & \bm{$98.1 \pm 0.2$} & \bm{$98.0 \pm 0.2$} \\
+    & RE proxy & 97.9 $\pm$ 0.4 & 98.0 $\pm$ 0.3 & 98.0 $\pm$ 0.3 & \bm{$98.0 \pm 0.2$} & \bm{$98.1 \pm 0.2$} \\
+    \bottomrule\\[-13pt]
+    && \multicolumn{5}{c}{Metric in $\%$ with mean $\pm$ standard-deviation} \\
+    \cline{3-7} \\[-10pt]
+    Model & Metric & $\tau$=0.0 & $\tau$=0.25 & $\tau$=0.5 & $\tau$=0.75 & $\tau$=1.0 \\
+    \midrule
+    Light & $\overline{\delta_{\sigma}}$ & 15.0 $\pm$ 2.3 & 11.3 $\pm$ 2.2 & \bm{$10.0 \pm 1.6$} & \bm{$10.0 \pm 1.6$} & 10.3 $\pm$ 1.8 \\
+    & $\overline{\delta_b}$ & 20.1 $\pm$ 1.5 & 18.9 $\pm$ 0.7 & \bm{$17.8 \pm 1.5$} & \bm{$15.5 \pm 1.3$} & 12.4 $\pm$ 1.8 \\
+    Medium & $\overline{\delta_{\sigma}}$ & 9.5 $\pm$ 1.7 & 7.3 $\pm$ 0.9 & 6.1 $\pm$ 0.8 & \bm{$5.8 \pm 0.5$} & 6.3 $\pm$ 0.5  \\
+    & $\overline{\delta_b}$ & 21.7 $\pm$ 1.5 & 21.0 $\pm$ 1.6 & 20.3 $\pm$ 1.5 & \bm{$17.2 \pm 0.9$} & 13.5 $\pm$ 1.0 \\
+    Heavy & $\overline{\delta_{\sigma}}$ & 7.1 $\pm$ 1.5 & 5.0 $\pm$ 0.8 & \bm{$4.3 \pm 0.6$} & 4.5 $\pm$ 0.5 & 4.7 $\pm$ 0.5 \\
+    & $\overline{\delta_b}$ & 22.7 $\pm$ 0.9 & 22.0 $\pm$ 1.0 & \bm{$20.6 \pm 1.0$} & 18.0 $\pm$ 0.9 & 14.2 $\pm$ 0.7 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Test accuracies and model-pair distances metrics of the SoPa++ and RE
+    proxy models grouped by model sizes and $\tau$-thresholds; accuracies and
+    standard deviations were calculated across random seed iterations; bold test
+    accuracies show model pairs whose accuracies are closest to one another;
+    bold distance metrics show models whose $\overline{\delta_{\sigma}}$ metric
+    are closest to zero}
+  \label{tab:explain_evaluate_performance}
+\end{table}
+
 
 %%% Local Variables: 
 %%% mode: latex
