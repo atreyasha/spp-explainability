@@ -52,7 +52,7 @@ We enumerate our preprocessing steps below:
   evaluations on the test set with other studies.
 \end{enumerate}
 
-\begin{figure}[t]
+\begin{figure}[t!]
   \centering
   \includegraphics[width=14cm]{pdfs/generated/fmtod_summary_statistics.pdf}
   \caption{Data distribution of the preprocessed FMTOD data set grouped by
@@ -756,6 +756,8 @@ studies.
 
 \subsection{Training}
 
+\label{section:spp_training}
+
 First and foremost, we address the issue of data imbalance in the FMTOD data set
 as mentioned in Section \ref{section:fmtod_summary}. For this, we chose a simple
 but effective solution of upsampling all minority data classes such that they
@@ -793,14 +795,14 @@ batch size of 256 input utterances and neuron/word dropout probabilities of 0.2.
 We only apply neuron dropouts on the transition matrices of all the
 WFA-$\omega$'s in SoPa++. We furthermore apply batch sorting based on input
 utterance lengths to ensure maximum efficiency when computing pattern/document
-scores. Based on our own experiments, we observed more stable
-training with the max-sum semiring compared to the max-product semiring. For
-simplicity, we therefore only use the max-sum semiring in all of our
-WFA-$\omega$'s. Finally, we train all models for a maximum of 50 epochs with 10
-patience epochs for early stopping in case of a performance plateau or
-performance worsening. To trigger early stopping in the patience framework, we
-monitor the loss over the validation data set. We run all SoPa++ training
-experiments on a single NVIDIA GeForce GTX 1080 Ti GPU. 
+scores. Based on our own experiments, we observed more stable training with the
+max-sum semiring compared to the max-product semiring. For simplicity, we
+therefore only use the max-sum semiring in all of our WFA-$\omega$'s. Finally,
+we train all models for a maximum of 50 epochs with 10 patience epochs for early
+stopping in case of a performance plateau or performance worsening. To trigger
+early stopping in the patience framework, we monitor the loss over the
+validation data set. We run all SoPa++ training experiments on a single NVIDIA
+GeForce GTX 1080 Ti GPU.
 
 To obtain some variation in our SoPa++ models' performance, we decide to use a
 grid-search technique while varying the patterns and $\tau$-threshold
@@ -808,7 +810,7 @@ hyperparameters. We vary the patterns hyperparameters to test SoPa++ models with
 different numbers of constituent WFA-$\omega$'s; namely
 \texttt{6-10\_5-10\_4-10\_3-10}, \texttt{6-25\_5-25\_4-25\_3-25} and
 \texttt{6-50\_5-50\_4-50\_3-50}. We correspondingly refer to SoPa++ models with
-the aforementioned pattern hyperparameters as small, medium and large models
+the aforementioned pattern hyperparameters as light, medium and heavy models
 respectively. Similarly, we vary the $\tau$-threshold to experiment how this
 threshold could impact both performance and explainability later on. The exact
 values which we varied can be found in Table \ref{tab:grid_hyperparameter}.
@@ -855,7 +857,7 @@ address the performance scores and resemblance portions of Definition
 \ref{def:explain_simplify}. We use the FMTOD test set to do this since the test
 set represents unseen data for both SoPa++ and the RE proxy, and therefore could
 provide a more unbiased representation of these models' performance.
-Furthermore, we conduct this analysis on our small, medium and large models with
+Furthermore, we conduct this analysis on our light, medium and heavy models with
 all available $\tau$-thresholds to obtain a variety of results for comparison.
 
 \subsection{Performance score}
@@ -898,14 +900,44 @@ respectively and $n$ represents the number of classes in the FMTOD data set:
 distance between the SoPa++ and RE proxy model would be to compare their
 internal representations activated in the TauSTE binary layer. This can be
 computed by calculating the 1-norm between the binary vectors and then
-normalizing this norm by the dimensionality of this vector. This would provide a
-mean binary misalignment rate $\delta(b)$, where $b_{\mathcal{S}}$ and
-$b_{\mathcal{R}}$ represent the TauSTE binary vectors for the SoPa++ and RE
-proxy model respectively on a given sample:
+normalizing this norm by the dimensionality of this vector. The step of
+normalization is necessary since we test models with different sizes and these
+could have different binary vector lengths. This would provide a mean binary
+misalignment rate $\delta(b)$, where $b_{\mathcal{S}}$ and $b_{\mathcal{R}}$
+represent the TauSTE binary vectors for the SoPa++ and RE proxy model
+respectively on a given sample:
 
 \begin{equation}
   \delta(b) = \dfrac{\left\Vert b_{\mathcal{S}} - b_{\mathcal{R}} \right\Vert_{1}}{dim(b_{\mathcal{S}} - b_{\mathcal{R}})} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i} - b_{\mathcal{R}_i}|}{{dim(b_{\mathcal{S}} - b_{\mathcal{R}})}}
 \end{equation}
+
+\section{RQ3: Interesting and relevant explanations}
+
+In this section, we describe the methodologies utilized to answer our third
+research question; particularly to show what interesting and relevant
+explanations the SoPa++ model can provide on the FMTOD data set.
+
+\subsection{Output neuron weights}
+
+Since SoPa++ uses a linear regression layer to provide weights and biases
+towards TauSTE outputs, we can analyze the weights of the linear regression
+layer to probe into how the SoPa++ and its RE proxies distribute importances to
+various binary features present in the TauSTE layer. This is a major advantage
+of using a single additive layer such as the linear regression layer, compared
+to using a MLP. To go about this, we simply perform a softmax operation over all
+weights applied for each class in each TauSTE neuron; and then visualize these
+to observe how SoPa++ and its RE proxies distribute feature importance.
+
+\subsection{Regular expression lookup layer}
+
+One major advantage of producing simpler RE proxy models is the presence of the
+RE lookup layer. This RE lookup layer can be seen as an ontology or database of
+REs that lead to activations in the TauSTE layer. As a result, the RE lookup
+layer can be seen as an ontology of important regular expressions that aid
+SoPa++ and its RE proxies in making decisions based on input utterances. We
+analyze some of these REs juxtaposed next to their representative TauSTE neurons
+to visualize which REs activate which neurons and what kinds of importances are
+placed in said REs.
 
 %%% Local Variables: 
 %%% mode: latex
