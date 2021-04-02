@@ -3,29 +3,12 @@
 #+OPTIONS: p:t
 
 ** Tasks
-*** Manuscript
-**** Methodologies
-     DEADLINE: <2021-04-04 Sun>
-***** RQ3: Insightful explanations insight
-****** mention how we analyze the output neurons with legitimacy given that it is now a linear layer to find how STE neurons distribute importances 
-****** in connection with this, we can analyze which textual regular expressions are responsible for each STE neuron activation -> which gives us an insight into which regular expressions are important for classifications
-****** we can analyze these to see how generalized these are or whether there could be strong inductive bias
-
+*** Manuscript 
 **** Results
      DEADLINE: <2021-04-08 Thu>
-***** RQ1: Evaluation of test accuracy scores of SoPa++ and regex proxy models
-****** show visualization of training process for posterity
-****** provide a table of summarized results w.r.t. random seed deviations
-******* modify visualize scripts to aggregate and print summary stats in script to re-use later in paper with means and standard deviations across random seeds
-******* report parameter counts in scores as well
-******* mention training time
-****** use the plus-minus sign to give the score ranges for all model types
-****** make statement on the competitiveness of these results
-***** RQ2: Evaluation of explanations by simplification 
+***** TODO RQ2: Evaluation of explanations by simplification 
 ****** add table with information on performances and distance metrics averaged over random seeds with plus-minus deviation format
-****** consider combining all data points and then plotting instead of plotting means
 ****** show plot of how these trends work and that increasing the tau threshold brings models closer together
-****** make statement that explanations by simplifications appears to effective on the unseen evaluation set with similar scores; also a relationship can be observed with respect to the tau threshold
 ***** RQ3: Interesting and insightful explanations on FMTOD
 ****** show plot of neuron importance distributions -> consider removing inter-neuron importance with alpha levels since this might be irrelevant
 ****** show relevant plots of regular expressions with neurons to see what kinds of textual patterns are imporant for the SoPa++ model and its regex proxy
@@ -35,20 +18,25 @@
 ******* tweak relative importances between neurons as well, if this is of use otherwise drop it -> need to add color to legend or otherwise fixed size with color gradient
 ******* consider adding subscripts to states
 ***** *Important:* everything shown in the "Results" section should have been well-motivated and should answer all three research questions
+
 **** Discussion
 ***** Performance
 ****** mention issue of being unsure whether other studies removed duplicates -> but in our case using the same test set seems to improve evaluation performance
+****** make statement on the competitiveness of these results
 ***** Explainability
+****** make statement that explanations by simplifications appears to effective on the unseen evaluation set with similar scores; also a relationship can be observed with respect to the tau threshold
 ****** discuss how transparent the regex proxy really is given how many regular expressions are picked up -> link to how rules-based models in Arrieta et al 2020 paper can also become black-boxes -> provide numbers of regular expressions that get captured and stored
 ****** add segment on how useful this might be to a target audience based on the three criteria, but acknowledge that this would need to be consulted with a target audience
 ******* describe how a basic human evaluation of explainability could be done
 ******* mention visualization resources needed for this and it would have to be done with a much simpler and smaller model
 ***** Interesting and insightful observations
+****** make statement to answer research question
 ****** inductive biases might be possible to find by looking into regular expressions
 ****** mention distributed representations in neurons where there is really no clear neuron responsible for one-thing -> which is an impediment to explainability since attribution and causal links are difficult to identify
 ***** Other discussion points
-****** Discuss relationship between tau threshold and the softmax/binary distances
-****** Expound on trade-off between performance and transparency by looking at differently sized models -> and then also looking at other studies which used BERTesque models
+****** discuss relationship between tau threshold and the softmax/binary distances
+****** expound on trade-off between performance and transparency by looking at differently sized models -> and then also looking at other studies which used BERTesque models
+****** use discussions section to bring about more nuanced points on results
 **** Conclusions
 ***** Summarize everything in manuscript
 ***** Address research questions
@@ -90,6 +78,9 @@
 ****** consider adding background section on NLU overall and tasks available
 ****** mention the purpose of the intent detection task briefly on a grander-scheme-of-things
 ****** mention briefly the purpose of the slot filling task 
+****** perhaps provide example of how softmax is conducted over weights to make this clearer
+****** make the RE lookup layer more concise
+****** we can analyze these to see how generalized these are or whether there could be strong inductive bias
 ***** Terminologies and abbreviations
 ****** sort out all abbreviations and standardize formatting in terms of where they are first declared -> perhaps add a page number on list of abbreviations to indicate first declaration
 ****** consider adding abbreviations directly into definitions
@@ -114,6 +105,7 @@
 ****** Text-related
 ******* ensure that areas between chapters-sections and/or sections-subsections are filled with explanatory text to provide a narrative -> use links to/from individual sections/chapters to string everything together -> no area between title and next sub-title or environment should be empty -> an example is adding text before WFA definitions
 ******* replace all epsilon words by the symbol where possible 
+******* make number of decimal places consistent wherever they are used such as in tables with tau
 ******* add remaining features by referring to master template such as abstract (short summarized introduction), list of tables/figures/abbreviations, appendices, etc; see master document for examples
 ******* change to two sided format before printing, as this works well for binding/printing
 ******* EITHER quote + indent sentences directly taken from other studies with page and section OR paraphrase them and leave them in a definition environment

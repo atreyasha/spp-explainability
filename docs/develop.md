@@ -18,67 +18,21 @@
 
 ### Manuscript
 
-1.  Methodologies
-
-    **DEADLINE:** *\<2021-04-04 Sun\>*
-
-    1.  RQ3: Insightful explanations insight
-
-        1.  mention how we analyze the output neurons with legitimacy
-            given that it is now a linear layer to find how STE neurons
-            distribute importances
-
-        2.  in connection with this, we can analyze which textual
-            regular expressions are responsible for each STE neuron
-            activation -\> which gives us an insight into which regular
-            expressions are important for classifications
-
-        3.  we can analyze these to see how generalized these are or
-            whether there could be strong inductive bias
-
-2.  Results
+1.  Results
 
     **DEADLINE:** *\<2021-04-08 Thu\>*
 
-    1.  RQ1: Evaluation of test accuracy scores of SoPa++ and regex
-        proxy models
-
-        1.  show visualization of training process for posterity
-
-        2.  provide a table of summarized results w.r.t. random seed
-            deviations
-
-            1.  modify visualize scripts to aggregate and print summary
-                stats in script to re-use later in paper with means and
-                standard deviations across random seeds
-
-            2.  report parameter counts in scores as well
-
-            3.  mention training time
-
-        3.  use the plus-minus sign to give the score ranges for all
-            model types
-
-        4.  make statement on the competitiveness of these results
-
-    2.  RQ2: Evaluation of explanations by simplification
+    1.  **TODO** RQ2: Evaluation of explanations by
+        simplification
 
         1.  add table with information on performances and distance
             metrics averaged over random seeds with plus-minus deviation
             format
 
-        2.  consider combining all data points and then plotting instead
-            of plotting means
-
-        3.  show plot of how these trends work and that increasing the
+        2.  show plot of how these trends work and that increasing the
             tau threshold brings models closer together
 
-        4.  make statement that explanations by simplifications appears
-            to effective on the unseen evaluation set with similar
-            scores; also a relationship can be observed with respect to
-            the tau threshold
-
-    3.  RQ3: Interesting and insightful explanations on FMTOD
+    2.  RQ3: Interesting and insightful explanations on FMTOD
 
         1.  show plot of neuron importance distributions -\> consider
             removing inter-neuron importance with alpha levels since
@@ -103,11 +57,11 @@
 
             5.  consider adding subscripts to states
 
-    4.  **Important:** everything shown in the \"Results\" section
+    3.  **Important:** everything shown in the \"Results\" section
         should have been well-motivated and should answer all three
         research questions
 
-3.  Discussion
+2.  Discussion
 
     1.  Performance
 
@@ -115,15 +69,22 @@
             duplicates -\> but in our case using the same test set seems
             to improve evaluation performance
 
+        2.  make statement on the competitiveness of these results
+
     2.  Explainability
 
-        1.  discuss how transparent the regex proxy really is given how
+        1.  make statement that explanations by simplifications appears
+            to effective on the unseen evaluation set with similar
+            scores; also a relationship can be observed with respect to
+            the tau threshold
+
+        2.  discuss how transparent the regex proxy really is given how
             many regular expressions are picked up -\> link to how
             rules-based models in Arrieta et al 2020 paper can also
             become black-boxes -\> provide numbers of regular
             expressions that get captured and stored
 
-        2.  add segment on how useful this might be to a target audience
+        3.  add segment on how useful this might be to a target audience
             based on the three criteria, but acknowledge that this would
             need to be consulted with a target audience
 
@@ -136,30 +97,35 @@
 
     3.  Interesting and insightful observations
 
-        1.  inductive biases might be possible to find by looking into
+        1.  make statement to answer research question
+
+        2.  inductive biases might be possible to find by looking into
             regular expressions
 
-        2.  mention distributed representations in neurons where there
+        3.  mention distributed representations in neurons where there
             is really no clear neuron responsible for one-thing -\>
             which is an impediment to explainability since attribution
             and causal links are difficult to identify
 
     4.  Other discussion points
 
-        1.  Discuss relationship between tau threshold and the
+        1.  discuss relationship between tau threshold and the
             softmax/binary distances
 
-        2.  Expound on trade-off between performance and transparency by
+        2.  expound on trade-off between performance and transparency by
             looking at differently sized models -\> and then also
             looking at other studies which used BERTesque models
 
-4.  Conclusions
+        3.  use discussions section to bring about more nuanced points
+            on results
+
+3.  Conclusions
 
     1.  Summarize everything in manuscript
 
     2.  Address research questions
 
-5.  Further work
+4.  Further work
 
     1.  Modeling
 
@@ -203,7 +169,7 @@
         4.  visualize examples/classes where regex and neural model
             align and misalign, eg. with a confusion matrix
 
-6.  Post-paper iteration/formatting
+5.  Post-paper iteration/formatting
 
     1.  Introduction
 
@@ -257,6 +223,14 @@
             a grander-scheme-of-things
 
         7.  mention briefly the purpose of the slot filling task
+
+        8.  perhaps provide example of how softmax is conducted over
+            weights to make this clearer
+
+        9.  make the RE lookup layer more concise
+
+        10. we can analyze these to see how generalized these are or
+            whether there could be strong inductive bias
 
     4.  Terminologies and abbreviations
 
@@ -323,27 +297,30 @@
 
             2.  replace all epsilon words by the symbol where possible
 
-            3.  add remaining features by referring to master template
+            3.  make number of decimal places consistent wherever they
+                are used such as in tables with tau
+
+            4.  add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, etc; see
                 master document for examples
 
-            4.  change to two sided format before printing, as this
+            5.  change to two sided format before printing, as this
                 works well for binding/printing
 
-            5.  EITHER quote + indent sentences directly taken from
+            6.  EITHER quote + indent sentences directly taken from
                 other studies with page and section OR paraphrase them
                 and leave them in a definition environment
 
-            6.  check that all borrowed figures have an explicit
+            7.  check that all borrowed figures have an explicit
                 attribution such as \"taken from paper et al (year)\"
 
-            7.  perform spell-check of all text
+            8.  perform spell-check of all text
 
-            8.  change red link color in table of contents and modify
+            9.  change red link color in table of contents and modify
                 color of URLs
 
-            9.  always mention \"figure taken from study (year)\" when
+            10. always mention \"figure taken from study (year)\" when
                 using external figures
 
         2.  UP-related
