@@ -243,6 +243,10 @@ visualize_grid_evaluate <- function(input_glob,
   # transform data frame to be nicer
   collections <- do.call(rbind, collections)
   collections[["tau_threshold"]] <- as.factor(collections[["tau_threshold"]])
+
+  backup <- data.frame(collections)
+  collections <- data.frame(backup)
+
   collections <- melt(collections, id.var = c("patterns", "tau_threshold", "seed"))
 
   # compute varying arguments here
@@ -290,18 +294,18 @@ visualize_grid_evaluate <- function(input_glob,
     collections$variable
   )
   collections$variable <- gsub(
-    "softmax\\_distance", "$\\\\delta(\\\\sigma)$",
+    "softmax\\_distance", "$\\\\overline{\\\\delta_{\\\\sigma}}$",
     collections$variable
   )
   collections$variable <- gsub(
-    "binary\\_distance", "$\\\\delta(b)$",
+    "binary\\_distance", "$\\\\overline{\\\\delta_{b}}$",
     collections$variable
   )
   collections$variable <- factor(collections$variable, levels = c(
     "SoPa++",
     "RE\nproxy",
-    "$\\delta(\\sigma)$",
-    "$\\delta(b)$"
+    "$\\overline{\\delta_{\\sigma}}$",
+    "$\\overline{\\delta_{b}}$"
   ))
 
   # make ggplot object
