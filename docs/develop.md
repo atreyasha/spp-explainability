@@ -22,17 +22,8 @@
 
     **DEADLINE:** *\<2021-04-08 Thu\>*
 
-    1.  **TODO** RQ2: Evaluation of explanations by
-        simplification
-
-        1.  add table with information on performances and distance
-            metrics averaged over random seeds with plus-minus deviation
-            format
-
-        2.  show plot of how these trends work and that increasing the
-            tau threshold brings models closer together
-
-    2.  RQ3: Interesting and insightful explanations on FMTOD
+    1.  **TODO** RQ3: Interesting and insightful explanations
+        on FMTOD
 
         1.  show plot of neuron importance distributions -\> consider
             removing inter-neuron importance with alpha levels since
@@ -57,7 +48,7 @@
 
             5.  consider adding subscripts to states
 
-    3.  **Important:** everything shown in the \"Results\" section
+    2.  **Important:** everything shown in the \"Results\" section
         should have been well-motivated and should answer all three
         research questions
 

@@ -6,10 +6,7 @@
 *** Manuscript 
 **** Results
      DEADLINE: <2021-04-08 Thu>
-***** TODO RQ2: Evaluation of explanations by simplification 
-****** add table with information on performances and distance metrics averaged over random seeds with plus-minus deviation format
-****** show plot of how these trends work and that increasing the tau threshold brings models closer together
-***** RQ3: Interesting and insightful explanations on FMTOD
+***** TODO RQ3: Interesting and insightful explanations on FMTOD
 ****** show plot of neuron importance distributions -> consider removing inter-neuron importance with alpha levels since this might be irrelevant
 ****** show relevant plots of regular expressions with neurons to see what kinds of textual patterns are imporant for the SoPa++ model and its regex proxy
 ******* figures must be manually put together later directly in latex
