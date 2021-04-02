@@ -25,11 +25,13 @@
     1.  **TODO** RQ3: Interesting and insightful explanations
         on FMTOD
 
-        1.  show plot of neuron importance distributions -\> consider
+        1.  add small, medium and heavy to training charts
+
+        2.  show plot of neuron importance distributions -\> consider
             removing inter-neuron importance with alpha levels since
             this might be irrelevant
 
-        2.  show relevant plots of regular expressions with neurons to
+        3.  show relevant plots of regular expressions with neurons to
             see what kinds of textual patterns are imporant for the
             SoPa++ model and its regex proxy
 
