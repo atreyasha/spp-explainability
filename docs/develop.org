@@ -4,20 +4,8 @@
 
 ** Tasks
 *** Manuscript 
-**** Results
-     DEADLINE: <2021-04-08 Thu>
-***** TODO RQ3: Interesting and insightful explanations on FMTOD
-****** add small, medium and heavy to training charts
-****** show plot of neuron importance distributions -> consider removing inter-neuron importance with alpha levels since this might be irrelevant
-****** show relevant plots of regular expressions with neurons to see what kinds of textual patterns are imporant for the SoPa++ model and its regex proxy
-******* figures must be manually put together later directly in latex
-******* label the states consistently with "q" instead of only numbers
-******* legend in neurons can be shifted below, perhaps to have just one copy for all neurons shown
-******* tweak relative importances between neurons as well, if this is of use otherwise drop it -> need to add color to legend or otherwise fixed size with color gradient
-******* consider adding subscripts to states
-***** *Important:* everything shown in the "Results" section should have been well-motivated and should answer all three research questions
-
 **** Discussion
+     DEADLINE: <2021-04-08 Thu>
 ***** Performance
 ****** mention issue of being unsure whether other studies removed duplicates -> but in our case using the same test set seems to improve evaluation performance
 ****** make statement on the competitiveness of these results
@@ -89,6 +77,7 @@
 ****** fine-tune usage of document vs. input utterance
 ****** fine-tune usage of consume a token and not consume a symbol
 ****** fine-tune usage of patterns vs. substrings vs. WFAs
+****** fine-tune usage of TauSTE neurons and output neurons -> especially for RQ3
 ****** fine-tune string consumption vs. string matching
 ****** fine-tune WFA to mean either automata or automaton, make plural abbreviation WFAs clear
 ****** fine-tune usage of FA vs. NFA and make these consistent with abbreviations versus full
@@ -96,6 +85,8 @@
 ****** fine-tune terminology between intent detection and intent classification
 ****** fine-tune terminology between data set and partition
 ****** fine-tune token length, sentence length and utterance length
+***** Results
+****** add small, medium and heavy to training and evaluation charts on facet titles
 ***** Bibliography
 ****** improve capitalization with braces in bibtex file
 ****** find alternative journal/conference citations for current arxiv papers

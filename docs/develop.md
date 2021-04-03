@@ -18,43 +18,9 @@
 
 ### Manuscript
 
-1.  Results
+1.  Discussion
 
     **DEADLINE:** *\<2021-04-08 Thu\>*
-
-    1.  **TODO** RQ3: Interesting and insightful explanations
-        on FMTOD
-
-        1.  add small, medium and heavy to training charts
-
-        2.  show plot of neuron importance distributions -\> consider
-            removing inter-neuron importance with alpha levels since
-            this might be irrelevant
-
-        3.  show relevant plots of regular expressions with neurons to
-            see what kinds of textual patterns are imporant for the
-            SoPa++ model and its regex proxy
-
-            1.  figures must be manually put together later directly in
-                latex
-
-            2.  label the states consistently with \"q\" instead of only
-                numbers
-
-            3.  legend in neurons can be shifted below, perhaps to have
-                just one copy for all neurons shown
-
-            4.  tweak relative importances between neurons as well, if
-                this is of use otherwise drop it -\> need to add color
-                to legend or otherwise fixed size with color gradient
-
-            5.  consider adding subscripts to states
-
-    2.  **Important:** everything shown in the \"Results\" section
-        should have been well-motivated and should answer all three
-        research questions
-
-2.  Discussion
 
     1.  Performance
 
@@ -112,13 +78,13 @@
         3.  use discussions section to bring about more nuanced points
             on results
 
-3.  Conclusions
+2.  Conclusions
 
     1.  Summarize everything in manuscript
 
     2.  Address research questions
 
-4.  Further work
+3.  Further work
 
     1.  Modeling
 
@@ -162,7 +128,7 @@
         4.  visualize examples/classes where regex and neural model
             align and misalign, eg. with a confusion matrix
 
-5.  Post-paper iteration/formatting
+4.  Post-paper iteration/formatting
 
     1.  Introduction
 
@@ -252,31 +218,39 @@
 
         9.  fine-tune usage of patterns vs. substrings vs. WFAs
 
-        10. fine-tune string consumption vs. string matching
+        10. fine-tune usage of TauSTE neurons and output neurons -\>
+            especially for RQ3
 
-        11. fine-tune WFA to mean either automata or automaton, make
+        11. fine-tune string consumption vs. string matching
+
+        12. fine-tune WFA to mean either automata or automaton, make
             plural abbreviation WFAs clear
 
-        12. fine-tune usage of FA vs. NFA and make these consistent with
+        13. fine-tune usage of FA vs. NFA and make these consistent with
             abbreviations versus full
 
-        13. fine-tune the slot-filling terminology
+        14. fine-tune the slot-filling terminology
 
-        14. fine-tune terminology between intent detection and intent
+        15. fine-tune terminology between intent detection and intent
             classification
 
-        15. fine-tune terminology between data set and partition
+        16. fine-tune terminology between data set and partition
 
-        16. fine-tune token length, sentence length and utterance length
+        17. fine-tune token length, sentence length and utterance length
 
-    5.  Bibliography
+    5.  Results
+
+        1.  add small, medium and heavy to training and evaluation
+            charts on facet titles
+
+    6.  Bibliography
 
         1.  improve capitalization with braces in bibtex file
 
         2.  find alternative journal/conference citations for current
             arxiv papers
 
-    6.  Manuscript admin
+    7.  Manuscript admin
 
         1.  Text-related
 
