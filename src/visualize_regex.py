@@ -70,10 +70,6 @@ def visualize_only_neurons(args: argparse.Namespace) -> None:
     # load pre-requisite data
     model_dict, weights = get_model_linear_weights(args.regex_model_checkpoint)
     rev_class_mapping = get_rev_class_mapping(args.class_mapping_config)
-    relative_sizes = torch.softmax(
-        torch.norm(model_dict["linear_state_dict"]["weight"].t(), dim=1),
-        0).numpy()
-    relative_sizes = (relative_sizes/np.max(relative_sizes))*1.0
 
     # get pre-defined neuron colors
     colors = get_neuron_colors()
@@ -88,27 +84,24 @@ def visualize_only_neurons(args: argparse.Namespace) -> None:
     # create figure outline
     ncol = 10
     nrow = ceil(weights.shape[0] / ncol)
-    fig, axs = plt.subplots(nrow, ncol, figsize=(14, 7))
+    fig, axs = plt.subplots(nrow, ncol, figsize=(18.75, 11))
 
     # start adding pie charts to figure
     for i, ax in enumerate(axs.flatten()):
-        current_colors = np.copy(colors)
-        current_colors[:, -1] *= relative_sizes[i]
         ax.pie(weights[i],
-               colors=current_colors,
+               colors=colors,
                wedgeprops=dict(width=0.5, edgecolor='w'),
                startangle=90,
                normalize=True)
-        ax.set_title("N$_{%s}$" % i, size=15)
+        ax.set_title("N$_{%s}$" % i, size=22)
 
     # add legend and title to figure
     fig.legend(handles=patches,
                loc="lower center",
-               ncol=len(patches) // 2,
+               ncol=len(patches) // 3,
                frameon=False,
-               prop={"size": 11})
-    fig.suptitle("\\textbf{STE neuron relative-weights by output class}",
-                 fontsize=16)
+               prop={"size": 22},
+               borderaxespad=-0.5)
 
     # adjust formatting and save plot to pdf
     fig.subplots_adjust(wspace=0, hspace=0)
@@ -171,10 +164,7 @@ def visualize_regex_neurons(args: argparse.Namespace) -> None:
         for pattern_index in range(pattern_lengths[i]):
             if pattern_index == 0:
                 with d.subgraph() as s:
-                    s.attr("node",
-                           rank="same",
-                           shape="circle",
-                           width="1")
+                    s.attr("node", rank="same", shape="circle", width="1")
                     for regex_index in range(len(regexes)):
                         s.node('S_%s_%s' % (regex_index, pattern_index),
                                label="START / %s" % pattern_index)
