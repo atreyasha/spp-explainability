@@ -132,6 +132,64 @@ model-pair distance metrics for both SoPa++ and RE proxy models.
   \label{tab:explain_evaluate_performance}
 \end{table}
 
+\clearpage
+
+\section{RQ3: Interesting and relevant explanations}
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=14cm]{pdfs/generated/neurons_1617466833.pdf}
+  \caption{STE neuron relative-weights by output class}
+  \label{fig:neuron_weights}
+\end{figure}
+
+Based on our methodologies for RQ3, we proceed to firstly analyze the weights of
+our linear regression layer and plot the weights provided to each neuron. This
+is shown in Figure \ref{fig:neuron_weights} for a light SoPa++ or RE proxy model
+with 40 TauSTE neurons. We can observe that each of the 40 neurons distribute
+the weights provided for each class continuously; with certain neurons having
+more weights placed on certain classes than others. But in general, weights are
+quite continuously distributed. For ease of visualization, we grouped all of the
+12 individual classes into three subclasses and coloured these as well. This
+makes the visualization slightly easier to understand. 
+
+Next, we single out neuron 21, 27 and 32 as they appear to place proportionately
+high importance weights on the alarm, reminder and weight sub-classes
+respectively. For the sake of further analysis, we probe into the RE lookup
+layer for REs that tend to activate the aforementioned three neurons. We
+visualize these regular expressions as strict linear-chain NFA with
+$\omega$-transitions as shown in Figures \ref{fig:regex_example_neuron_21},
+\ref{fig:regex_example_neuron_27} and \ref{fig:regex_example_neuron_32}
+respectively. It should be noted that we only sampled three regular expressions
+per neuron for brevity. There are however many more regular expressions that
+could be explored and analyzed. Superficially, we can observe that the regular
+expressions corresponding to these neurons tend to show contextual relevance to
+each of the aforementioned sub-classes.
+
+\newpage
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[trim={1.1cm 1.1cm 1.1cm 1.1cm},clip,width=12cm]{pdfs/generated/neurons_regex_1617464328/activating_regex_sample_21.pdf}
+  \caption{Sampled regular expressions corresponding to Neuron 21}
+  \label{fig:regex_example_neuron_21}
+\end{figure}
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[trim={1.1cm 1.1cm 1.1cm 1.1cm},clip,width=12cm]{pdfs/generated/neurons_regex_1617464328/activating_regex_sample_27.pdf}
+  \caption{Sampled regular expressions corresponding to Neuron 27}
+  \label{fig:regex_example_neuron_27}
+\end{figure}
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[trim={1.2cm 1.2cm 1.2cm 1.2cm},clip,width=14cm]{pdfs/generated/neurons_regex_1617464328/activating_regex_sample_32.pdf}
+  \caption{Sampled regular expressions corresponding to Neuron 32}
+  \label{fig:regex_example_neuron_32}
+\end{figure}
+
+\clearpage
 
 %%% Local Variables: 
 %%% mode: latex
