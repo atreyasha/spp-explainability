@@ -196,9 +196,22 @@ def visualize_regex_neurons(args: argparse.Namespace) -> None:
                                                 1)]
                     transitions[-1] = "..."
                 for transition in transitions:
-                    d.edge("S_%s_%s" % (regex_index, pattern_index),
-                           "S_%s_%s" % (regex_index, pattern_index + 1),
-                           label=transition)
+                    if transition == "\\":
+                        d.edge("S_%s_%s" % (regex_index, pattern_index),
+                               "S_%s_%s" % (regex_index, pattern_index + 1),
+                               label=transition.replace("\\", "\\\\"),
+                               fontname="times-bold")
+                    elif transition == "ω":
+                        d.edge("S_%s_%s" % (regex_index, pattern_index),
+                               "S_%s_%s" % (regex_index, pattern_index + 1),
+                               label=transition,
+                               fontcolor="blue",
+                               fontname="times-bold")
+                    else:
+                        d.edge("S_%s_%s" % (regex_index, pattern_index),
+                               "S_%s_%s" % (regex_index, pattern_index + 1),
+                               label=transition,
+                               fontname="times-bold")
 
         # render dotfile as pdf and save it
         d.render(os.path.join(save_directory,
