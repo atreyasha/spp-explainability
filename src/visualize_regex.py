@@ -225,6 +225,7 @@ def visualize_regex_neurons(args: argparse.Namespace) -> None:
         ax.pie(weights[i],
                colors=colors,
                wedgeprops=dict(width=0.5, edgecolor='w'),
+               startangle=90,
                normalize=True)
         ax.set_title("N$_{%s}$" % i, size=20)
 
