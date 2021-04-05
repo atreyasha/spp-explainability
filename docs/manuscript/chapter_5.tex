@@ -1,0 +1,123 @@
+\chapter{Discussion}
+
+In this chapter, we investigate the implications of the aforementioned results
+based on our methodologies and attempt to interpret these results in order to
+answer our research questions. Furthermore, we evaluate to what extent these
+results can answer our research questions and what limitations our methodologies
+pose in this regard.
+
+\section{RQ1: Evaluating performance of SoPa++}
+
+In order to answer our first research question on whether SoPa++ can deliver
+competitive performance for the English language intent detection task on the
+FMTOD data set, we must compare the general performance range of our SoPa++
+model(s) against the results from other recent studies as mentioned in Section
+\ref{section:fmtod_performance}. Referring to our accuracy ranges from Table
+\ref{tab:results_evaluation}, we can observe the SoPa++ model shows a general
+accuracy range from 96.9-98.3$\%$ for the aforementioned task. This falls into
+the general performance range of 96.6-99.5$\%$ observed in other studies; albeit
+in the lower end of the performance spectrum. We can therefore conclude that
+SoPa++ offers competitive performance on the FMTOD's English language intent
+detection task compared to other recent studies.
+
+While SoPa++'s performance range being on the lower spectrum can be seen as
+disadvantageous, it is worth noting that the models it is being compared against
+are vastly different. For one, the BERT models shown in
+\ref{tab:fmtod_results} had parameter counts ranging from $\sim$110-340 million
+parameters \citep{devlin-etal-2019-bert}; which are $\sim$100-300 times larger
+than our SoPa++ model. It is therefore also useful to take these differences
+into account when evaluating and comparing model performances. Next, models from
+\citet{zhang-etal-2020-intent} showed an exceptionally high accuracy of
+99.5$\%$ because of pre-training on the external WikiHow data set for general
+intent detection tasks. As a result, it might be difficult to compare our
+results with that of \citet{zhang-etal-2020-intent} since they utilized external
+specialized data to pre-train their models while we did not.
+
+\section{RQ2: Evaluating explanations by simplification}
+
+In order to answer our second research question on whether SoPa++ provides
+effective explanations by simplification, we need to first interpret some of the
+results on comparing SoPa++ and RE proxy model pairs. Firstly, we can compare
+the accuracy scores of SoPa++ and RE proxy model pairs as shown in the top
+portion of Table \ref{tab:explain_evaluate_performance}. Here, we can observe
+that the medium and heavy models with $\tau$-threshold values of 0.75 and 1.00
+result in SoPa++ and RE proxy model pairs with performance differences as low as
+$\sim$1-2$\%$. Similarly, medium and heavy models with $\tau$-thresholds of
+0.50 and 0.75 show $\delta_{\sigma}$ metrics in the range of 4.3-5.8$\%$. We
+interpret these results to imply that SoPa++ can provide effective explanations
+by simplification for models with more WFA-$\omega$'s and with $\tau$-thresholds
+in range of 0.50-1.00. This is however not necessarily the case for smaller
+models or models with low $\tau$-thresholds.
+
+While our results show that conversion of SoPa++ to RE proxy models are
+generally effective with a minimal loss in performance and high resemblance
+given large models and high $\tau$-thresholds; there are still certain
+limitations to our RE proxy models. While we did mention that the RE proxy
+models should theoretically be transparent models in Section
+\ref{sec:re_transparency}, this could very easily no longer be the case given
+large RE proxy models with too many internal regular expressions. As an example,
+some of the RE lookup layers in heavy RE proxy models contain tens to hundreds
+of thousands of REs. Reading and understanding all of these internal REs might
+not be a practical task for a human, which may essentially render the
+theoretically transparent RE proxy model as a black-box model in a practical
+sense. This is a natural trade-off that we observe here.
+
+\section{RQ3: Interesting and relevant explanations}
+
+In this section, we interpret the results of probing into our best performing
+light RE proxy model in order to gain interesting and relevant explanations
+regarding the FMTOD English language intent detection data task. For one, we can
+analyze the TauSTE neuron-based weight distributions as shown in Figure
+\ref{fig:neuron_weights} and observe that weights are generally continously
+distributed across all neurons; with some exceptions such as neurons 21, 27 and
+32 where the weights are more skewed towards the alarm, reminder and weather
+sub-classes respectively. This implies that despite the quantization applied in
+the TauSTE layer, the SoPa++ and RE proxy models still distribute feature
+importances across neurons in a connective sense; which also implies that the
+purpose of each neuron in making any decision would be difficult to understand
+since each neuron would have a mixed impact on different classes. This could
+possibly be an impediment to explainability since clear causes and effects
+between neurons and output classes would be hard to identify.
+
+Next, we can observe the RE samples from the RE lookup layer pertaining to
+neurons 21, 27 and 32 in Figures \ref{fig:regex_example_neuron_21},
+\ref{fig:regex_example_neuron_27} and \ref{fig:regex_example_neuron_32}
+respectively. Firstly, we can observe a clear stratification of the types of REs
+captured between neurons 21, 27 and 32. As mentioned earlier, neurons 21, 27 and
+32 specialize in alarm, reminder and weather sub-classes respectively. Similary,
+the REs captured for each of these neurons tend to show high similarity for each
+of these sub-classes. This could imply that certain neurons which place high
+weights on a particular sub-class set tend to gather similar REs as well.
+
+Next, we can observe clustering or branching of REs in the RE lookup layer. For
+example, the top-most RE in Figure \ref{fig:regex_example_neuron_21} shows that
+the third transition capturing many different words. This branching can also be
+observed in many other RE examples. Finally, another interesting phenomenon is
+that this branching of RE transitions tend to have semantic similarities as
+well. For example using the aforementioned RE example, we can observe words such
+as ``sunday'' and ``thursdays'' occur in the same transition and could therefore
+imply that days of the week trigger a high score in this transition.
+
+Lastly, we can also observe certain inductive biases that the RE proxy model
+(and correspondingly the SoPa++ model) has acquired from the training data set.
+For example, the fourth and eighth REs from the top in Figure
+\ref{fig:regex_example_neuron_27} show transitions with the word ``repairman''
+and ``girlfriend'' which led to high path scores. While these words were indeed
+relevant in both the training and test data set, the utility of a different
+gender such as ``repairwoman'' or ``boyfriend'' might not lead to the same model
+decisions since these words could be either outside of the model's vocabulary or
+unseen and therefore poorly weighted. A major advantage of the SoPa++ and its RE
+proxy model is that the user can have direct access to these representative REs
+in the RE lookup layer and can theoretically parse through these and adjust
+these ``problematic'' REs to adjust the inductive bias. One way to adjust the
+inductive biases in this case could be to add branching transitions with the
+different gender roles in the above single-gender cases. This is an advantageous
+component of the SoPa++ model framework compared to other deep learning models
+without explanations by simplification capabilities, since it would be difficult
+if not impossible to easily discover such inductive biases within these
+black-box models. 
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
