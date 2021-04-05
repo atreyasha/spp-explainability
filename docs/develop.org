@@ -4,26 +4,8 @@
 
 ** Tasks
 *** Manuscript 
-**** Discussion
-     DEADLINE: <2021-04-08 Thu>
-***** Performance
-****** mention issue of being unsure whether other studies removed duplicates -> but in our case using the same test set seems to improve evaluation performance
-****** make statement on the competitiveness of these results
-***** Explainability
-****** make statement that explanations by simplifications appears to effective on the unseen evaluation set with similar scores; also a relationship can be observed with respect to the tau threshold
-****** discuss how transparent the regex proxy really is given how many regular expressions are picked up -> link to how rules-based models in Arrieta et al 2020 paper can also become black-boxes -> provide numbers of regular expressions that get captured and stored
-****** add segment on how useful this might be to a target audience based on the three criteria, but acknowledge that this would need to be consulted with a target audience
-******* describe how a basic human evaluation of explainability could be done
-******* mention visualization resources needed for this and it would have to be done with a much simpler and smaller model
-***** Interesting and insightful observations
-****** make statement to answer research question
-****** inductive biases might be possible to find by looking into regular expressions
-****** mention distributed representations in neurons where there is really no clear neuron responsible for one-thing -> which is an impediment to explainability since attribution and causal links are difficult to identify
-***** Other discussion points
-****** discuss relationship between tau threshold and the softmax/binary distances
-****** expound on trade-off between performance and transparency by looking at differently sized models -> and then also looking at other studies which used BERTesque models
-****** use discussions section to bring about more nuanced points on results
 **** Conclusions
+     DEADLINE: <2021-04-08 Thu>
 ***** Summarize everything in manuscript
 ***** Address research questions
 **** Further work
@@ -37,6 +19,9 @@
 ****** this is subjective and a survey from the target audience would be good to have -> would require an interactive interface where we visualize explanations
 ****** UNK token handling workflow for regex model where UNK has to representation other than indirect wildcards
 ****** human intervention inside regex model to monitor/improve performance
+****** add segment on how useful this might be to a target audience based on the three criteria, but acknowledge that this would need to be consulted with a target audience
+******* describe how a basic human evaluation of explainability could be done
+******* mention visualization resources needed for this and it would have to be done with a much simpler and smaller model
 ***** Analysis
 ****** extension to more NLU data sets such as SNIPS, ATIS
 ****** analyzing whether patterns can help discover possible adversarial patterns or inductive biases
@@ -44,6 +29,11 @@
 ****** visualize examples/classes where regex and neural model align and misalign, eg. with a confusion matrix
 
 **** Post-paper iteration/formatting
+***** Thoughts for proceeding
+****** break all tasks into major and minor ones
+****** focus on major tasks first and leave all minor ones to later
+****** major ones include general read-through + improvement, as well as adding new segments
+****** minor ones include terminology changes or basic checks
 ***** Introduction
 ****** abstract and introduction should already mention key findings
 ****** update motivations from Arrieta et al. 2020 "What for" section
@@ -56,6 +46,9 @@
 ****** explain vanilla SoPa in a more prose format using a table to explain important features -> this table can then be compared directly with new SoPa++ features
 ****** mention how or why SoPa falls into RNN and CNN categories
 ****** mention early on that quantized NNs are useful for low-precision computing, but we use it for other reasons later on
+****** add how nfa can be extracted from wfa for non semiring zero path scores
+****** explain omega in nfa means special regex in regex, make this clear for posterity
+****** consider removing performance-interpretability trade-off segment
 ***** Methodologies
 ****** describe meaning of SoPa++ in C-symbology
 ****** mention target audience of explainability somewhere
@@ -67,6 +60,25 @@
 ****** perhaps provide example of how softmax is conducted over weights to make this clearer
 ****** make the RE lookup layer more concise
 ****** we can analyze these to see how generalized these are or whether there could be strong inductive bias
+****** change light medium heavy to small medium large and change filenames and log variables as well
+****** add detailed information on what small medium large means in terms of model specifics
+****** add mention that spp is fast while regex is slow
+****** add a short segment to mention backward passes since this was not mentioned
+****** explain more what regex lookup layer does mention that it memorises REs which lead to activations which can help in discussion segment
+****** change regex to RE in computational graphs to be consistent with paper
+****** mention RE lookup layer can be attributed to TauSTE neurons
+***** Results
+****** re-do bolding in tables to be more intuitive, add description in captions 
+****** add a mention of which model with exact specifications was used for the neuron and regex sampling for clarity -> explain why we used the light model to keep things tractable
+****** add neuron subscript in captions and add some description as well
+****** mention that regex was converted to NFA for visualization purposes or change terminology here
+****** add small, medium and heavy to training and evaluation charts on facet titles
+***** Discussion
+****** add statement on quality of explanations based on three criteria in XAI -> link this to RQ2 and find an appropriate place to add it
+****** discuss relationship between tau threshold and the softmax/binary distances
+****** expound on trade-off between performance and transparency by looking at differently sized models -> and then also looking at other studies which used BERTesque models
+****** use discussions section to bring about more nuanced points on results -> perhaps related to inductive biases in the RE lookup layer
+****** provide examples of RE similarities and types
 ***** Terminologies and abbreviations
 ****** sort out all abbreviations and standardize formatting in terms of where they are first declared -> perhaps add a page number on list of abbreviations to indicate first declaration
 ****** consider adding abbreviations directly into definitions
@@ -85,8 +97,10 @@
 ****** fine-tune terminology between intent detection and intent classification
 ****** fine-tune terminology between data set and partition
 ****** fine-tune token length, sentence length and utterance length
-***** Results
-****** add small, medium and heavy to training and evaluation charts on facet titles
+****** fine-tune regex vs. RE
+****** fine-tune usage of the RE lookup layer
+****** fine-tune linear vs. linear regression layer
+****** fine-tune FMTOD data set vs. intent detection task
 ***** Bibliography
 ****** improve capitalization with braces in bibtex file
 ****** find alternative journal/conference citations for current arxiv papers
@@ -124,6 +138,7 @@
 ***** add information on best model downloads and preparation -> add these to Google Drive later on
 ***** test out all shell-scripts and python code to make sure everything works the same after major renamings
 ***** test download and all other scripts to ensure they work
+***** remove all neural sopa from readme and everywhere else since spp already implies neural -> leave the arguments in parser the same though
 ***** perform formatting on latex code
 ***** ensure all label names and figure names are consitent
 ***** perform spell-check on readme 

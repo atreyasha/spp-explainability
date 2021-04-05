@@ -18,73 +18,15 @@
 
 ### Manuscript
 
-1.  Discussion
+1.  Conclusions
 
     **DEADLINE:** *\<2021-04-08 Thu\>*
-
-    1.  Performance
-
-        1.  mention issue of being unsure whether other studies removed
-            duplicates -\> but in our case using the same test set seems
-            to improve evaluation performance
-
-        2.  make statement on the competitiveness of these results
-
-    2.  Explainability
-
-        1.  make statement that explanations by simplifications appears
-            to effective on the unseen evaluation set with similar
-            scores; also a relationship can be observed with respect to
-            the tau threshold
-
-        2.  discuss how transparent the regex proxy really is given how
-            many regular expressions are picked up -\> link to how
-            rules-based models in Arrieta et al 2020 paper can also
-            become black-boxes -\> provide numbers of regular
-            expressions that get captured and stored
-
-        3.  add segment on how useful this might be to a target audience
-            based on the three criteria, but acknowledge that this would
-            need to be consulted with a target audience
-
-            1.  describe how a basic human evaluation of explainability
-                could be done
-
-            2.  mention visualization resources needed for this and it
-                would have to be done with a much simpler and smaller
-                model
-
-    3.  Interesting and insightful observations
-
-        1.  make statement to answer research question
-
-        2.  inductive biases might be possible to find by looking into
-            regular expressions
-
-        3.  mention distributed representations in neurons where there
-            is really no clear neuron responsible for one-thing -\>
-            which is an impediment to explainability since attribution
-            and causal links are difficult to identify
-
-    4.  Other discussion points
-
-        1.  discuss relationship between tau threshold and the
-            softmax/binary distances
-
-        2.  expound on trade-off between performance and transparency by
-            looking at differently sized models -\> and then also
-            looking at other studies which used BERTesque models
-
-        3.  use discussions section to bring about more nuanced points
-            on results
-
-2.  Conclusions
 
     1.  Summarize everything in manuscript
 
     2.  Address research questions
 
-3.  Further work
+2.  Further work
 
     1.  Modeling
 
@@ -115,6 +57,17 @@
         6.  human intervention inside regex model to monitor/improve
             performance
 
+        7.  add segment on how useful this might be to a target audience
+            based on the three criteria, but acknowledge that this would
+            need to be consulted with a target audience
+
+            1.  describe how a basic human evaluation of explainability
+                could be done
+
+            2.  mention visualization resources needed for this and it
+                would have to be done with a much simpler and smaller
+                model
+
     3.  Analysis
 
         1.  extension to more NLU data sets such as SNIPS, ATIS
@@ -128,9 +81,20 @@
         4.  visualize examples/classes where regex and neural model
             align and misalign, eg. with a confusion matrix
 
-4.  Post-paper iteration/formatting
+3.  Post-paper iteration/formatting
 
-    1.  Introduction
+    1.  Thoughts for proceeding
+
+        1.  break all tasks into major and minor ones
+
+        2.  focus on major tasks first and leave all minor ones to later
+
+        3.  major ones include general read-through + improvement, as
+            well as adding new segments
+
+        4.  minor ones include terminology changes or basic checks
+
+    2.  Introduction
 
         1.  abstract and introduction should already mention key
             findings
@@ -140,7 +104,7 @@
 
         3.  add links to chapters in thesis structure
 
-    2.  Background concepts
+    3.  Background concepts
 
         1.  think more about how to improve (W)FA definitions
 
@@ -163,7 +127,16 @@
             low-precision computing, but we use it for other reasons
             later on
 
-    3.  Methodologies
+        8.  add how nfa can be extracted from wfa for non semiring zero
+            path scores
+
+        9.  explain omega in nfa means special regex in regex, make this
+            clear for posterity
+
+        10. consider removing performance-interpretability trade-off
+            segment
+
+    4.  Methodologies
 
         1.  describe meaning of SoPa++ in C-symbology
 
@@ -191,7 +164,64 @@
         10. we can analyze these to see how generalized these are or
             whether there could be strong inductive bias
 
-    4.  Terminologies and abbreviations
+        11. change light medium heavy to small medium large and change
+            filenames and log variables as well
+
+        12. add detailed information on what small medium large means in
+            terms of model specifics
+
+        13. add mention that spp is fast while regex is slow
+
+        14. add a short segment to mention backward passes since this
+            was not mentioned
+
+        15. explain more what regex lookup layer does mention that it
+            memorises REs which lead to activations which can help in
+            discussion segment
+
+        16. change regex to RE in computational graphs to be consistent
+            with paper
+
+        17. mention RE lookup layer can be attributed to TauSTE neurons
+
+    5.  Results
+
+        1.  re-do bolding in tables to be more intuitive, add
+            description in captions
+
+        2.  add a mention of which model with exact specifications was
+            used for the neuron and regex sampling for clarity -\>
+            explain why we used the light model to keep things tractable
+
+        3.  add neuron subscript in captions and add some description as
+            well
+
+        4.  mention that regex was converted to NFA for visualization
+            purposes or change terminology here
+
+        5.  add small, medium and heavy to training and evaluation
+            charts on facet titles
+
+    6.  Discussion
+
+        1.  add statement on quality of explanations based on three
+            criteria in XAI -\> link this to RQ2 and find an appropriate
+            place to add it
+
+        2.  discuss relationship between tau threshold and the
+            softmax/binary distances
+
+        3.  expound on trade-off between performance and transparency by
+            looking at differently sized models -\> and then also
+            looking at other studies which used BERTesque models
+
+        4.  use discussions section to bring about more nuanced points
+            on results -\> perhaps related to inductive biases in the RE
+            lookup layer
+
+        5.  provide examples of RE similarities and types
+
+    7.  Terminologies and abbreviations
 
         1.  sort out all abbreviations and standardize formatting in
             terms of where they are first declared -\> perhaps add a
@@ -238,19 +268,22 @@
 
         17. fine-tune token length, sentence length and utterance length
 
-    5.  Results
+        18. fine-tune regex vs. RE
 
-        1.  add small, medium and heavy to training and evaluation
-            charts on facet titles
+        19. fine-tune usage of the RE lookup layer
 
-    6.  Bibliography
+        20. fine-tune linear vs. linear regression layer
+
+        21. fine-tune FMTOD data set vs. intent detection task
+
+    8.  Bibliography
 
         1.  improve capitalization with braces in bibtex file
 
         2.  find alternative journal/conference citations for current
             arxiv papers
 
-    7.  Manuscript admin
+    9.  Manuscript admin
 
         1.  Text-related
 
@@ -351,11 +384,15 @@
 
     10. test download and all other scripts to ensure they work
 
-    11. perform formatting on latex code
+    11. remove all neural sopa from readme and everywhere else since spp
+        already implies neural -\> leave the arguments in parser the
+        same though
 
-    12. ensure all label names and figure names are consitent
+    12. perform formatting on latex code
 
-    13. perform spell-check on readme
+    13. ensure all label names and figure names are consitent
+
+    14. perform spell-check on readme
 
 ## Notes
 
