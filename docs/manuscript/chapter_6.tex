@@ -1,0 +1,42 @@
+\chapter{Conclusions}
+
+In this thesis, we emphasized the importance of XAI research and laid out clear
+definitions of XAI-related concepts. We drew inspiration from the SoPa model in
+\citet{schwartz2018sopa} and worked on improving the SoPa model to create our
+SoPa++ model. We focused on targetted changed to the SoPa model in order to
+create a SoPa++ model that allows for the ability to conduct the post-hoc
+explanations by simplification explainability method; where we ultimately
+simplify a SoPa++ model into a RE proxy model. This ability can be largely
+attributed to the special features of WFAs as well as the flexibility of the
+TauSTE layer. With all of these features, we were able to answer our research
+questions.
+
+Firstly, we were able to show that SoPa++'s performance range of 96.9-98.3$\%$
+falls into the competitive accuracy range of 96.6-99-5$\%$ on the FMTOD English
+language intent detection task while comparing with other recent studies. In
+this respect, we conclude that SoPa++ offers competitive performance on the
+aforementioned data set and task.
+
+Next, we address to what extent SoPa++ allows for effective explanations by
+simplification. In order to address this question, we analyzed a variety of
+performance scores and distance metrics for SoPa++ and RE proxy models. We were
+able to show that larger models with higher $\tau$-thresholds tend to have
+highly similar performance scores within $\sim$1-2$\%$ accuracy and mean softmax
+distance norms as low as $\sim$4-5$\%$. As a result, we show that explanations
+by simplification are effective especially under the aforementioned special
+conditions where SoPa++ models are large with high $\tau$-thresholds.
+
+Finally, we address our third research question by probing for interesting and
+relevant explanations for classification on the FMTOD English language intent
+detection data set. We analyze light variants of SoPa++ and RE proxy model pairs
+by looking at their linear weight distributions in TauSTE neurons. Based on this
+distribution, we analyze captured activating REs in the RE lookup layer
+corresponding to these neurons and found interesting captured REs. These REs
+capture semantic and syntactic information which reflect important phrases for
+reaching classification decisions. Furthermore, we were also able to identify
+some inductive biases in the REs captured, such as those related to gender.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
