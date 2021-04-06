@@ -18,72 +18,12 @@
 
 ### Manuscript
 
-1.  Conclusions
+1.  Post-paper iteration/formatting
 
-    **DEADLINE:** *\<2021-04-08 Thu\>*
+    **DEADLINE:** *\<2021-04-12 Mon\>*
 
-    1.  Summarize everything in manuscript
-
-    2.  Address research questions
-
-2.  Further work
-
-    1.  Modeling
-
-        1.  use multiple-threads for extracting regular expressions, or
-            store them in a database with indexing for faster regex
-            lookups
-
-        2.  extend to a finite-state transducer for seq2seq tasks
-
-    2.  Explainability generalization/evaluation
-
-        1.  can map linear to decision tree to get clearer picture of
-            possibilities -\> would make model even more transparent by
-            removing continuous features
-
-        2.  use nearest-neighbours to expand adjacent tokens
-
-        3.  semantic clustering of common patterns for increased
-            generalization
-
-        4.  this is subjective and a survey from the target audience
-            would be good to have -\> would require an interactive
-            interface where we visualize explanations
-
-        5.  UNK token handling workflow for regex model where UNK has to
-            representation other than indirect wildcards
-
-        6.  human intervention inside regex model to monitor/improve
-            performance
-
-        7.  add segment on how useful this might be to a target audience
-            based on the three criteria, but acknowledge that this would
-            need to be consulted with a target audience
-
-            1.  describe how a basic human evaluation of explainability
-                could be done
-
-            2.  mention visualization resources needed for this and it
-                would have to be done with a much simpler and smaller
-                model
-
-    3.  Analysis
-
-        1.  extension to more NLU data sets such as SNIPS, ATIS
-
-        2.  analyzing whether patterns can help discover possible
-            adversarial patterns or inductive biases
-
-        3.  for the target audience of end-users -\> how can a user make
-            use of the regex model
-
-        4.  visualize examples/classes where regex and neural model
-            align and misalign, eg. with a confusion matrix
-
-3.  Post-paper iteration/formatting
-
-    1.  Thoughts for proceeding
+    1.  **TODO** Re-read to get high-level idea first to
+        augment own notes -\> write these on paper
 
         1.  break all tasks into major and minor ones
 
@@ -93,6 +33,8 @@
             well as adding new segments
 
         4.  minor ones include terminology changes or basic checks
+
+        5.  design strategy to handle everything sequentially
 
     2.  Introduction
 
@@ -138,51 +80,63 @@
 
     4.  Methodologies
 
-        1.  describe meaning of SoPa++ in C-symbology
+        1.  consider using a better term for FMTOD English language
+            intent detection
 
-        2.  mention target audience of explainability somewhere
+        2.  describe meaning of SoPa++ in C-symbology
 
-        3.  consider adding sample notation to equations of distance
+        3.  mention target audience of explainability somewhere
+
+        4.  consider adding sample notation to equations of distance
             metrics -\> could help with results
 
-        4.  improve table of differences with shared columns for
+        5.  improve notation for metrics as well as their definitions
+            with or without overlines
+
+        6.  improve table of differences with shared columns for
             similarities, or something else
 
-        5.  consider adding background section on NLU overall and tasks
+        7.  consider adding background section on NLU overall and tasks
             available
 
-        6.  mention the purpose of the intent detection task briefly on
+        8.  mention the purpose of the intent detection task briefly on
             a grander-scheme-of-things
 
-        7.  mention briefly the purpose of the slot filling task
+        9.  mention briefly the purpose of the slot filling task
 
-        8.  perhaps provide example of how softmax is conducted over
+        10. perhaps provide example of how softmax is conducted over
             weights to make this clearer
 
-        9.  make the RE lookup layer more concise
+        11. make the RE lookup layer more concise
 
-        10. we can analyze these to see how generalized these are or
+        12. we can analyze these to see how generalized these are or
             whether there could be strong inductive bias
 
-        11. change light medium heavy to small medium large and change
-            filenames and log variables as well
+        13. change light medium heavy to small medium large
 
-        12. add detailed information on what small medium large means in
+        14. add detailed information on what small medium large means in
             terms of model specifics
 
-        13. add mention that spp is fast while regex is slow
+        15. add mention that spp is fast while regex is slow
 
-        14. add a short segment to mention backward passes since this
+        16. add a short segment to mention backward passes since this
             was not mentioned
 
-        15. explain more what regex lookup layer does mention that it
+        17. explain more what regex lookup layer does mention that it
             memorises REs which lead to activations which can help in
             discussion segment
 
-        16. change regex to RE in computational graphs to be consistent
+        18. change regex to RE in computational graphs to be consistent
             with paper
 
-        17. mention RE lookup layer can be attributed to TauSTE neurons
+        19. mention RE lookup layer can be attributed to TauSTE neurons
+
+        20. emphasize that SoPa++ and RE proxy models come in pairs
+
+        21. add statement on quality of explanations based on three
+            criteria in XAI -\> link this to RQ2 and find an appropriate
+            place to add it -\> or perhaps put this in SoPa vs. SoPa++
+            section with some motivation
 
     5.  Results
 
@@ -204,24 +158,35 @@
 
     6.  Discussion
 
-        1.  add statement on quality of explanations based on three
-            criteria in XAI -\> link this to RQ2 and find an appropriate
-            place to add it
-
-        2.  discuss relationship between tau threshold and the
+        1.  discuss relationship between tau threshold and the
             softmax/binary distances
 
-        3.  expound on trade-off between performance and transparency by
+        2.  expound on trade-off between performance and transparency by
             looking at differently sized models -\> and then also
             looking at other studies which used BERTesque models
 
-        4.  use discussions section to bring about more nuanced points
+        3.  use discussions section to bring about more nuanced points
             on results -\> perhaps related to inductive biases in the RE
             lookup layer
 
-        5.  provide examples of RE similarities and types
+        4.  provide examples of RE similarities and types
 
-    7.  Terminologies and abbreviations
+    7.  Further work
+
+        1.  for the target audience of end-users -\> how can a user make
+            use of the regex model
+
+        2.  visualize examples/classes where regex and neural model
+            align and misalign, eg. with a confusion matrix
+
+    8.  Bibliography
+
+        1.  improve capitalization with braces in bibtex file
+
+        2.  find alternative journal/conference citations for current
+            arxiv papers
+
+    9.  Terminologies and abbreviations
 
         1.  sort out all abbreviations and standardize formatting in
             terms of where they are first declared -\> perhaps add a
@@ -276,18 +241,20 @@
 
         21. fine-tune FMTOD data set vs. intent detection task
 
-    8.  Bibliography
+        22. define GPU somewhere and add to abbreviation
 
-        1.  improve capitalization with braces in bibtex file
+        23. perform formatting on latex code
 
-        2.  find alternative journal/conference citations for current
-            arxiv papers
+        24. ensure all label names and figure names are consitent
 
-    9.  Manuscript admin
+    10. Manuscript admin
 
         1.  Text-related
 
-            1.  ensure that areas between chapters-sections and/or
+            1.  read through text to figure out what all to address -\>
+                some parts might need more elaboration
+
+            2.  ensure that areas between chapters-sections and/or
                 sections-subsections are filled with explanatory text to
                 provide a narrative -\> use links to/from individual
                 sections/chapters to string everything together -\> no
@@ -295,32 +262,32 @@
                 should be empty -\> an example is adding text before WFA
                 definitions
 
-            2.  replace all epsilon words by the symbol where possible
+            3.  replace all epsilon words by the symbol where possible
 
-            3.  make number of decimal places consistent wherever they
+            4.  make number of decimal places consistent wherever they
                 are used such as in tables with tau
 
-            4.  add remaining features by referring to master template
+            5.  add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, etc; see
                 master document for examples
 
-            5.  change to two sided format before printing, as this
+            6.  change to two sided format before printing, as this
                 works well for binding/printing
 
-            6.  EITHER quote + indent sentences directly taken from
+            7.  EITHER quote + indent sentences directly taken from
                 other studies with page and section OR paraphrase them
                 and leave them in a definition environment
 
-            7.  check that all borrowed figures have an explicit
+            8.  check that all borrowed figures have an explicit
                 attribution such as \"taken from paper et al (year)\"
 
-            8.  perform spell-check of all text
+            9.  perform spell-check of all text
 
-            9.  change red link color in table of contents and modify
+            10. change red link color in table of contents and modify
                 color of URLs
 
-            10. always mention \"figure taken from study (year)\" when
+            11. always mention \"figure taken from study (year)\" when
                 using external figures
 
         2.  UP-related
@@ -384,13 +351,16 @@
 
     10. test download and all other scripts to ensure they work
 
-    11. remove all neural sopa from readme and everywhere else since spp
-        already implies neural -\> leave the arguments in parser the
-        same though
+    11. rename RegexSoftPatternClassifier class to RegexProxy if
+        possible without breakages
 
-    12. perform formatting on latex code
+    12. change light, medium and heavy to small, medium and large in all
+        scripts, filenames and log variables consistently
 
-    13. ensure all label names and figure names are consitent
+    13. remove all neural sopa from readme and everywhere else since spp
+        already implies neural -\> consider changing parser arguments as
+        well if possible for consistency from --neural-model-checkpoint
+        to --spp-model-checkpoint
 
     14. perform spell-check on readme
 
