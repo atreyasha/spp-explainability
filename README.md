@@ -99,7 +99,7 @@ bash scripts/preprocess_fmtod.sh
 <details><summary>ii. Training</summary>
 <p>
 
-For training the neural SoPa++ model, we use `src/train_spp.py`:
+For training the SoPa++ model, we use `src/train_spp.py`:
 
 ```
 usage: train_spp.py [-h] --embeddings <file_path> --train-data <file_path>
@@ -231,29 +231,29 @@ optional progress-bar arguments:
                            (default: 5)
 ```
 
-#### Neural SoPa++ model training
+#### SoPa++ model training
 
-To train a single neural SoPa++ model using our defaults on the CPU, execute:
+To train a single SoPa++ model using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/train_spp.sh
 ```
 
-To train a single neural SoPa++ model using our defaults on a single GPU, execute:
+To train a single SoPa++ model using our defaults on a single GPU, execute:
 
 ```shell
 bash scripts/train_spp_gpu.sh
 ```
 
-#### Grid-based neural SoPa++ model training
+#### Grid-based SoPa++ model training
 
-To apply grid-based training on neural SoPa++ models using our defaults on the CPU, execute:
+To apply grid-based training on SoPa++ models using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/train_spp_grid.sh
 ```
 
-To apply grid-based training on neural SoPa++ models using our defaults on a single GPU, execute:
+To apply grid-based training on SoPa++ models using our defaults on a single GPU, execute:
 
 ```shell
 bash scripts/train_spp_grid_gpu.sh
@@ -308,29 +308,29 @@ optional progress-bar arguments:
                          (default: 5)
 ```
 
-#### Resume neural SoPa++ model training
+#### Resume SoPa++ model training
 
-To resume training of a single neural SoPa++ model using our defaults on the CPU, execute:
+To resume training of a single SoPa++ model using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/train_resume_spp.sh /path/to/model/log/directory
 ```
 
-To resume training of a single neural SoPa++ model using our defaults on a single GPU, execute:
+To resume training of a single SoPa++ model using our defaults on a single GPU, execute:
 
 ```shell
 bash scripts/train_resume_spp_gpu.sh /path/to/model/log/directory
 ```
 
-#### Resume grid-based neural SoPa++ model training
+#### Resume grid-based SoPa++ model training
 
-To resume grid-based training of neural SoPa++ models using our defaults on the CPU, execute:
+To resume grid-based training of SoPa++ models using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/train_resume_spp_grid.sh /path/to/model/log/directory
 ```
 
-To resume grid-based training of neural SoPa++ models using our defaults on a single GPU, execute:
+To resume grid-based training of SoPa++ models using our defaults on a single GPU, execute:
 
 ```shell
 bash scripts/train_resume_spp_grid_gpu.sh /path/to/model/log/directory
@@ -342,7 +342,7 @@ bash scripts/train_resume_spp_grid_gpu.sh /path/to/model/log/directory
 <details><summary>iv. Evaluation</summary>
 <p>
 
-For evaluating trained neural SoPa++ model(s), we use `src/evaluate_spp.py`:
+For evaluating trained SoPa++ model(s), we use `src/evaluate_spp.py`:
 
 ```
 usage: evaluate_spp.py [-h] --eval-data <file_path> --eval-labels <file_path>
@@ -399,29 +399,29 @@ optional logging arguments:
                             Set logging level (default: info)
 ```
 
-#### Neural SoPa++ model evaluation
+#### SoPa++ model evaluation
 
-To evaluate neural SoPa++ model(s) using our defaults on the CPU, execute:
+To evaluate SoPa++ model(s) using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/evaluate_spp.sh "/glob/to/neural/model/*/checkpoint(s)"
 ```
 
-To evaluate neural SoPa++ model(s) using our defaults on a single GPU, execute:
+To evaluate SoPa++ model(s) using our defaults on a single GPU, execute:
 
 ```shell
 bash scripts/evaluate_spp_gpu.sh "/glob/to/neural/model/*/checkpoint(s)"
 ```
 
-#### Grid-based neural SoPa++ model evaluation
+#### Grid-based SoPa++ model evaluation
 
-To evaluate grid-based neural SoPa++ models using our defaults on the CPU, execute:
+To evaluate grid-based SoPa++ models using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/evaluate_spp_grid.sh "/glob/to/neural/model/*/checkpoints"
 ```
 
-To evaluate grid-based neural SoPa++ models using our defaults on a single GPU, execute:
+To evaluate grid-based SoPa++ models using our defaults on a single GPU, execute:
 
 ```shell
 bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/neural/model/*/checkpoints"
@@ -435,7 +435,7 @@ bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/neural/model/*/checkpoints"
 <details><summary>i. Explanations by simplification</summary>
 <p>
 
-For explaining neural SoPa++ model(s) by simplifying it into a regex proxy model, we use `src/explain_simplify_spp.py`:
+For explaining SoPa++ model(s) by simplifying it into a regex proxy model, we use `src/explain_simplify_spp.py`:
 
 ```
 usage: explain_simplify_spp.py [-h] --neural-model-checkpoint <glob_path>
@@ -499,13 +499,13 @@ optional progress-bar arguments:
                              diagnostics (default: 5)
 ```
 
-To simplify neural SoPa++ model(s) using our defaults on the CPU, execute:
+To simplify SoPa++ model(s) using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/explain_simplify_spp.sh "/glob/to/neural/model/*/checkpoint(s)"
 ```
 
-To simplify neural SoPa++ model(s) using our defaults on a GPU, execute:
+To simplify SoPa++ model(s) using our defaults on a GPU, execute:
 
 ```shell
 bash scripts/explain_simplify_spp_gpu.sh "/glob/to/neural/model/*/checkpoint(s)"
@@ -631,7 +631,7 @@ bash scripts/evaluate_regex_gpu.sh "/glob/to/regex/model/*/checkpoint(s)"
 <details><summary>i. Model pair comparison</summary>
 <p>
 
-For comparing neural SoPa++ and regex proxy model pair(s), we use `src/compare_model_pairs.py`:
+For comparing SoPa++ and regex proxy model pair(s), we use `src/compare_model_pairs.py`:
 
 ```
 usage: compare_model_pairs.py [-h] --eval-data <file_path> --eval-labels
@@ -689,13 +689,13 @@ optional progress-bar arguments:
                          (default: 5)
 ```
 
-To compare neural SoPa++ and regex proxy model pair(s) using our defaults on the CPU, execute:
+To compare SoPa++ and regex proxy model pair(s) using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/compare_model_pairs.sh "/glob/to/model/log/*/director(ies)"
 ```
 
-To compare neural SoPa++ and regex proxy model pair(s) using our defaults on a GPU, execute:
+To compare SoPa++ and regex proxy model pair(s) using our defaults on a GPU, execute:
 
 ```shell
 bash scripts/compare_model_pairs_gpu.sh "/glob/to/model/log/*/director(ies)"
