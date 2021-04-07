@@ -4,133 +4,134 @@
 
 ** Tasks
 *** Manuscript 
-**** Post-paper iteration/formatting
-     DEADLINE: <2021-04-12 Mon>
-***** TODO Re-read to get high-level idea first to augment own notes -> write these on paper
-****** break all tasks into major and minor ones
-****** focus on major tasks first and leave all minor ones to later
-****** major ones include general read-through + improvement, as well as adding new segments
-****** minor ones include terminology changes or basic checks
-****** design strategy to handle everything sequentially
+**** Post-paper iterations
+***** Iteration 1 (content and readability)
+****** TODO Introduction
+******* consider removing quote and instead describe issues in more detail 
+******* add links to chapters in thesis structure
+******* add meta-text for padding and linking
+******* improve overall readability
+****** Background concepts
+******* add more information on page numbers and sections in all Arrieta et al. citations so these seem more differentiated
+******* slightly reword performance-interpretability trade-off segment
+******* mention early on that quantized NNs are useful for low-precision computing, but we use it for other reasons later on
+******* add how nfa can be extracted from wfa for non semiring zero path scores
+******* mention how or why SoPa falls into RNN and CNN categories
+******* mention target audience of SoPa explainability
+******* change SoPa post-hoc explainability methods to mention quality of them
+******* add meta-text for padding and linking
+******* improve overall readability
+****** Methodologies
+******* mention briefly the purpose of the slot filling task 
+******* consider adding background section on NLU overall and tasks available
+******* consider using a better term for FMTOD English language intent detection 
+******* mention the purpose of the intent detection task briefly on a grander-scheme-of-things
+******* describe meaning of SoPa++ in C-symbology
+******* explain what omega transition means in a FA vs. in a regex
+******* add a short segment to mention backward passes since this was not mentioned
+******* make the RE lookup layer algorithm more concise
+******* mention RE lookup layer can be attributed to TauSTE neurons
+******* explain more what regex lookup layer does mention that it memorises REs which lead to activations which can help in discussion segment
+******* change regex to RE in computational graphs to be consistent with paper
+******* emphasize that SoPa++ and RE proxy models come in pairs
+******* add mention that SoPa++ is fast while regex is slow
+******* mention target audience of SoPa++ explainability
+******* add statement on quality of explanations based on three criteria in XAI -> link this to RQ2 and find an appropriate place to add it -> or perhaps put this in SoPa vs. SoPa++ section with some motivation
+******* improve table of similarities and differences
+******* change light, medium, heavy to small, medium, large 
+******* add detailed information on what small medium large means in terms of model specifics 
+******* improve notation for metrics as well as their definitions with or without overlines
+******* perhaps provide example of how softmax is conducted over weights to make this clearer
+******* we can analyze these to see how generalized these are or whether there could be strong inductive bias
+******* add meta-text for padding and linking
+******* improve overall readability
+****** Results
+******* add small, medium and heavy to training and evaluation charts on facet titles
+******* re-do bolding in tables to be more intuitive and improve descriptions in captions 
+******* mention that regex was converted to NFA for visualizatio -> link back to background conceptsn purposes or change terminology here
+******* add a mention of which model with exact specifications was used for the neuron and regex sampling for clarity -> explain why we used the light model to keep things tractable
+******* add neuron subscript in captions and add some description as well
+******* add meta-text for padding and linking
+******* improve overall readability
+****** Discussion
+******* expound on trade-off between performance and transparency by looking at differently sized models -> and then also looking at other studies which used BERTesque models -> link back to background concepts
+******* discuss relationship between tau threshold and the softmax/binary distances
+******* use discussions section to bring about more nuanced points on results -> perhaps related to inductive biases in the RE lookup layer
+******* provide examples of RE similarities and types
+******* add meta-text for padding and linking
+******* improve overall readability
+****** Further work
+******* for the target audience of end-users -> how can a user make use of the regex model
+******* visualize examples/classes where regex and neural model align and misalign, eg. with a confusion matrix
+******* add meta-text for padding and linking
+******* improve overall readability
 
-***** Introduction
-****** abstract and introduction should already mention key findings
-****** update motivations from Arrieta et al. 2020 "What for" section
-****** add links to chapters in thesis structure
-***** Background concepts
-****** think more about how to improve (W)FA definitions
-****** think more about adding document scoring algorithm in SoPa or whether to just leave it
-****** pad definition environments with more explanatory text for flow
-****** add more information on page numbers and sections in all Arrieta et al. citations so these seem more differentiated
-****** explain vanilla SoPa in a more prose format using a table to explain important features -> this table can then be compared directly with new SoPa++ features
-****** mention how or why SoPa falls into RNN and CNN categories
-****** mention early on that quantized NNs are useful for low-precision computing, but we use it for other reasons later on
-****** add how nfa can be extracted from wfa for non semiring zero path scores
-****** explain omega in nfa means special regex in regex, make this clear for posterity
-****** consider removing performance-interpretability trade-off segment
-***** Methodologies
-****** consider using a better term for FMTOD English language intent detection 
-****** describe meaning of SoPa++ in C-symbology
-****** mention target audience of explainability somewhere
-****** consider adding sample notation to equations of distance metrics -> could help with results
-****** improve notation for metrics as well as their definitions with or without overlines
-****** improve table of differences with shared columns for similarities, or something else
-****** consider adding background section on NLU overall and tasks available
-****** mention the purpose of the intent detection task briefly on a grander-scheme-of-things
-****** mention briefly the purpose of the slot filling task 
-****** perhaps provide example of how softmax is conducted over weights to make this clearer
-****** make the RE lookup layer more concise
-****** we can analyze these to see how generalized these are or whether there could be strong inductive bias
-****** change light medium heavy to small medium large 
-****** add detailed information on what small medium large means in terms of model specifics
-****** add mention that spp is fast while regex is slow
-****** add a short segment to mention backward passes since this was not mentioned
-****** explain more what regex lookup layer does mention that it memorises REs which lead to activations which can help in discussion segment
-****** change regex to RE in computational graphs to be consistent with paper
-****** mention RE lookup layer can be attributed to TauSTE neurons
-****** emphasize that SoPa++ and RE proxy models come in pairs
-****** add statement on quality of explanations based on three criteria in XAI -> link this to RQ2 and find an appropriate place to add it -> or perhaps put this in SoPa vs. SoPa++ section with some motivation
-***** Results
-****** re-do bolding in tables to be more intuitive, add description in captions 
-****** add a mention of which model with exact specifications was used for the neuron and regex sampling for clarity -> explain why we used the light model to keep things tractable
-****** add neuron subscript in captions and add some description as well
-****** mention that regex was converted to NFA for visualization purposes or change terminology here
-****** add small, medium and heavy to training and evaluation charts on facet titles
-***** Discussion
-****** discuss relationship between tau threshold and the softmax/binary distances
-****** expound on trade-off between performance and transparency by looking at differently sized models -> and then also looking at other studies which used BERTesque models
-****** use discussions section to bring about more nuanced points on results -> perhaps related to inductive biases in the RE lookup layer
-****** provide examples of RE similarities and types
-***** Further work
-****** for the target audience of end-users -> how can a user make use of the regex model
-****** visualize examples/classes where regex and neural model align and misalign, eg. with a confusion matrix
-***** Bibliography
-****** improve capitalization with braces in bibtex file
-****** find alternative journal/conference citations for current arxiv papers
-***** Terminologies and abbreviations
-****** sort out all abbreviations and standardize formatting in terms of where they are first declared -> perhaps add a page number on list of abbreviations to indicate first declaration
-****** consider adding abbreviations directly into definitions
-****** consider respelling "preprocessing" as "pre-processing" if necessary, fine-tune their usage
-****** ensure linear-chain and strict linear-chain are added before WFAs
-****** fine-tune antecedent/proxy terminology and synchronize everywhere
-****** fine-tune usage of string length and document length while consuming
-****** fine-tune usage of document vs. input utterance
-****** fine-tune usage of consume a token and not consume a symbol
-****** fine-tune usage of patterns vs. substrings vs. WFAs
-****** fine-tune usage of TauSTE neurons and output neurons -> especially for RQ3
-****** fine-tune string consumption vs. string matching
-****** fine-tune WFA to mean either automata or automaton, make plural abbreviation WFAs clear
-****** fine-tune usage of FA vs. NFA and make these consistent with abbreviations versus full
-****** fine-tune the slot-filling terminology 
-****** fine-tune terminology between intent detection and intent classification
-****** fine-tune terminology between data set and partition
-****** fine-tune token length, sentence length and utterance length
-****** fine-tune regex vs. RE
-****** fine-tune usage of the RE lookup layer
-****** fine-tune linear vs. linear regression layer
-****** fine-tune FMTOD data set vs. intent detection task
-****** define GPU somewhere and add to abbreviation
-****** perform formatting on latex code
-****** ensure all label names and figure names are consitent
-***** Manuscript admin
-****** Text-related
-******* read through text to figure out what all to address -> some parts might need more elaboration 
-******* ensure that areas between chapters-sections and/or sections-subsections are filled with explanatory text to provide a narrative -> use links to/from individual sections/chapters to string everything together -> no area between title and next sub-title or environment should be empty -> an example is adding text before WFA definitions
+***** Iteration 2 (consistency and formatting)
+****** Terminologies and abbreviations
+******* consider adding abbreviations directly into definitions
+******* fine-tune preprocessing vs. pre-processing
+******* fine-tune antecedent/proxy terminology and synchronize everywhere
+******* fine-tune usage of string length and document length while consuming
+******* fine-tune usage of document vs. input utterance
+******* fine-tune usage of consume a token and not consume a symbol
+******* fine-tune usage of patterns vs. substrings vs. WFAs
+******* fine-tune usage of TauSTE neurons and output neurons -> especially for RQ3
+******* fine-tune string consumption vs. string matching
+******* fine-tune WFA to mean either automata or automaton, make plural abbreviation WFAs clear
+******* fine-tune usage of FA vs. NFA and make these consistent with abbreviations versus full
+******* fine-tune the slot-filling terminology 
+******* fine-tune terminology between intent detection and intent classification
+******* fine-tune terminology between data set and partition
+******* fine-tune token length, sentence length and utterance length
+******* fine-tune regex vs. RE
+******* fine-tune usage of the RE lookup layer
+******* fine-tune linear vs. linear regression layer
+******* fine-tune FMTOD data set vs. intent detection task
+******* ensure linear-chain and strict linear-chain are added before WFAs
+******* define GPU somewhere and add to abbreviation
 ******* replace all epsilon words by the symbol where possible 
 ******* make number of decimal places consistent wherever they are used such as in tables with tau
-******* add remaining features by referring to master template such as abstract (short summarized introduction), list of tables/figures/abbreviations, appendices, etc; see master document for examples
-******* change to two sided format before printing, as this works well for binding/printing
+******* sort out all abbreviations and standardize formatting in terms of where they are first declared -> perhaps add a page number on list of abbreviations to indicate first declaration
+****** Formatting
+******* ensure that areas between chapters-sections and/or sections-subsections are filled with explanatory text to provide a narrative -> use links to/from individual sections/chapters to string everything together -> no area between title and next sub-title or environment should be empty -> an example is adding text before WFA definitions
 ******* EITHER quote + indent sentences directly taken from other studies with page and section OR paraphrase them and leave them in a definition environment
 ******* check that all borrowed figures have an explicit attribution such as "taken from paper et al (year)"
-******* perform spell-check of all text
 ******* change red link color in table of contents and modify color of URLs
-******* always mention "figure taken from study (year)" when using external figures
-****** UP-related
+****** Formalities
 ******* 20-90 pages thesis length -> well-motivated yet succinct
+******* abstract and introduction should already mention key findings -> synthesize these
+******* add remaining features by referring to master template such as abstract (short summarized introduction), list of tables/figures/abbreviations, appendices, etc; see master document for examples
 ******* date on bottom of manuscript should be date of submission before mailing to Potsdam
 ******* add student registration details to paper such as matriculation number and other details
 ******* update title page date to current submission date
 ******* take note of all other submission criteria such as statement of originality, German abstract, digital copy and others, see: https://www.uni-potsdam.de/en/studium/studying/organizing-your-exams/final-thesis
+****** Bibliography
+******* improve capitalization with braces in bibtex file
+******* find alternative journal/conference citations for current arxiv papers
+****** Final steps
+******* perform spell-check of all text
+******* re-read paper for flow and sensibility 
 
 *** Programming
+**** Clean-code and documentation
+***** Source-code
+****** rename RegexSoftPatternClassifier class to RegexProxy if possible without breakages
+****** change light, medium and heavy to small, medium and large in all scripts, filenames and log variables consistently
+****** remove all neural sopa from readme and everywhere else since spp already implies neural -> consider changing parser arguments as well if possible for consistency from --neural-model-checkpoint to --spp-model-checkpoint
+****** add pydocstrings to all functions and improve argparse documentation
+****** add a comment above each code chunk which explains inner mechanisms better
+***** Readme
+****** update readme and usages with finalized antecedent and proxy terminologies 
+****** upadte readme and usages with finalized STE/output neurons terminologies
+****** add information on best model downloads and preparation -> add these to Google Drive later on
+****** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
+****** test out all shell-scripts and python code to make sure everything works the same after major renamings
+****** test download and all other scripts to ensure they work
+****** perform spell-check on readme 
 **** Dependencies, typing and testing
 ***** if using R, document R dependencies with ~sessionInfo()~
 ***** look into cases where List was replaced by Sequential and how this can be changed or understood to keep consistency (ie. keep everything to List with overloads)
-**** Documentation and clean-code
-***** update readme and usages with finalized antecedent and proxy terminologies 
-***** upadte readme and usages with finalized STE/output neurons terminologies
-***** find attributable naming standards for PDFs produced with timestamp, perhaps dump a json file
 ***** GPU/CPU runs not always reproducible depending on multi-threading, see: https://pytorch.org/docs/stable/notes/randomness.html#reproducibility
-***** add a comment above each code chunk which explains inner mechanisms better
-***** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
-***** add pydocstrings to all functions and improve argparse documentation
-***** add information on best model downloads and preparation -> add these to Google Drive later on
-***** test out all shell-scripts and python code to make sure everything works the same after major renamings
-***** test download and all other scripts to ensure they work
-***** rename RegexSoftPatternClassifier class to RegexProxy if possible without breakages
-***** change light, medium and heavy to small, medium and large in all scripts, filenames and log variables consistently
-***** remove all neural sopa from readme and everywhere else since spp already implies neural -> consider changing parser arguments as well if possible for consistency from --neural-model-checkpoint to --spp-model-checkpoint
-***** perform spell-check on readme 
 
 ** Notes
 *** Admin
