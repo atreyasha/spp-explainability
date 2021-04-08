@@ -22,110 +22,88 @@
 
     1.  Iteration 1 (content and readability)
 
-        1.  **TODO** Introduction
+        1.  **TODO** Methodologies
 
-            1.  consider removing quote and instead describe issues in
-                more detail
+            1.  change chapter name to data set and methodologies
 
-            2.  add links to chapters in thesis structure
+            2.  mention briefly the purpose of the slot filling task
 
-            3.  add meta-text for padding and linking
-
-            4.  improve overall readability
-
-        2.  Background concepts
-
-            1.  add more information on page numbers and sections in all
-                Arrieta et al. citations so these seem more
-                differentiated
-
-            2.  slightly reword performance-interpretability trade-off
-                segment
-
-            3.  mention early on that quantized NNs are useful for
-                low-precision computing, but we use it for other reasons
-                later on
-
-            4.  add how nfa can be extracted from wfa for non semiring
-                zero path scores
-
-            5.  mention how or why SoPa falls into RNN and CNN
-                categories
-
-            6.  mention target audience of SoPa explainability
-
-            7.  change SoPa post-hoc explainability methods to mention
-                quality of them
-
-            8.  add meta-text for padding and linking
-
-            9.  improve overall readability
-
-        3.  Methodologies
-
-            1.  mention briefly the purpose of the slot filling task
-
-            2.  consider adding background section on NLU overall and
+            3.  consider adding background section on NLU overall and
                 tasks available
 
-            3.  consider using a better term for FMTOD English language
+            4.  consider using a better term for FMTOD English language
                 intent detection
 
-            4.  mention the purpose of the intent detection task briefly
+            5.  mention the purpose of the intent detection task briefly
                 on a grander-scheme-of-things
 
-            5.  describe meaning of SoPa++ in C-symbology
+            6.  describe meaning of SoPa++ in C-symbology
 
-            6.  explain what omega transition means in a FA vs. in a
+            7.  explain what omega transition means in a FA vs. in a
                 regex
 
-            7.  add a short segment to mention backward passes since
+            8.  manage terminology for activation quantized NNs
+
+            9.  manage terminologies for end vs. final vs. accepting
+                states
+
+            10. emphasise how we use STE for a new purpose and this
+                could be a possible novel contribution
+
+            11. add a short segment to mention backward passes since
                 this was not mentioned
 
-            8.  make the RE lookup layer algorithm more concise
+            12. mention limitations of the SoPa model related to
+                explainability -\> which we address using SoPa++
 
-            9.  mention RE lookup layer can be attributed to TauSTE
+            13. make the RE lookup layer algorithm more concise
+
+            14. mention RE lookup layer can be attributed to TauSTE
                 neurons
 
-            10. explain more what regex lookup layer does mention that
+            15. explain more what regex lookup layer does mention that
                 it memorises REs which lead to activations which can
                 help in discussion segment
 
-            11. change regex to RE in computational graphs to be
+            16. change regex to RE in computational graphs to be
                 consistent with paper
 
-            12. emphasize that SoPa++ and RE proxy models come in pairs
+            17. emphasize that SoPa++ and RE proxy models come in pairs
 
-            13. add mention that SoPa++ is fast while regex is slow
+            18. add mention that SoPa++ is fast while regex is slow
 
-            14. mention target audience of SoPa++ explainability
+            19. mention target audience of SoPa++ explainability -\>
+                expert users compared to end-users
 
-            15. add statement on quality of explanations based on three
+            20. add statement on quality of explanations based on three
                 criteria in XAI -\> link this to RQ2 and find an
                 appropriate place to add it -\> or perhaps put this in
                 SoPa vs. SoPa++ section with some motivation
 
-            16. improve table of similarities and differences
+            21. improve table of similarities and differences
 
-            17. change light, medium, heavy to small, medium, large
+            22. motivate usage of the pattern hyperparameter and link it
+                back
 
-            18. add detailed information on what small medium large
+            23. change light, medium, heavy to small, medium, large
+
+            24. add detailed information on what small medium large
                 means in terms of model specifics
 
-            19. improve notation for metrics as well as their
+            25. improve notation for metrics as well as their
                 definitions with or without overlines
 
-            20. perhaps provide example of how softmax is conducted over
+            26. perhaps provide example of how softmax is conducted over
                 weights to make this clearer
 
-            21. we can analyze these to see how generalized these are or
+            27. we can analyze these to see how generalized these are or
                 whether there could be strong inductive bias
 
-            22. add meta-text for padding and linking
+            28. add meta-text for padding and linking
 
-            23. improve overall readability
+            29. improve overall readability
 
-        4.  Results
+        2.  Results
 
             1.  add small, medium and heavy to training and evaluation
                 charts on facet titles
@@ -149,37 +127,44 @@
 
             7.  improve overall readability
 
-        5.  Discussion
+        3.  Discussion
 
-            1.  expound on trade-off between performance and
+            1.  look up definition of competitive performance and use it
+                to answer in relation to \"mean performance metric\"
+
+            2.  expound on trade-off between performance and
                 transparency by looking at differently sized models -\>
                 and then also looking at other studies which used
                 BERTesque models -\> link back to background concepts
 
-            2.  discuss relationship between tau threshold and the
+            3.  discuss relationship between tau threshold and the
                 softmax/binary distances
 
-            3.  use discussions section to bring about more nuanced
+            4.  use discussions section to bring about more nuanced
                 points on results -\> perhaps related to inductive
                 biases in the RE lookup layer
 
-            4.  provide examples of RE similarities and types
+            5.  provide examples of RE similarities and types
 
-            5.  add meta-text for padding and linking
+            6.  add meta-text for padding and linking
 
-            6.  improve overall readability
+            7.  improve overall readability
 
-        6.  Further work
+        4.  Further work
 
             1.  for the target audience of end-users -\> how can a user
                 make use of the regex model
 
-            2.  visualize examples/classes where regex and neural model
+            2.  encode information on the position of the pattern where
+                it got maxed out -\> might help to encode information in
+                longer documents
+
+            3.  visualize examples/classes where regex and neural model
                 align and misalign, eg. with a confusion matrix
 
-            3.  add meta-text for padding and linking
+            4.  add meta-text for padding and linking
 
-            4.  improve overall readability
+            5.  improve overall readability
 
     2.  Iteration 2 (consistency and formatting)
 
@@ -231,20 +216,27 @@
 
             19. fine-tune FMTOD data set vs. intent detection task
 
-            20. ensure linear-chain and strict linear-chain are added
+            20. fine-tune explainability method vs. technique
+
+            21. fine-tune study vs. thesis
+
+            22. fine-tune final vs. end vs. accepting states
+
+            23. ensure linear-chain and strict linear-chain are added
                 before WFAs
 
-            21. define GPU somewhere and add to abbreviation
+            24. define GPU somewhere and add to abbreviation
 
-            22. replace all epsilon words by the symbol where possible
+            25. replace all epsilon words by the symbol where possible
 
-            23. make number of decimal places consistent wherever they
+            26. make number of decimal places consistent wherever they
                 are used such as in tables with tau
 
-            24. sort out all abbreviations and standardize formatting in
+            27. sort out all abbreviations and standardize formatting in
                 terms of where they are first declared -\> perhaps add a
                 page number on list of abbreviations to indicate first
-                declaration
+                declaration -\> consider using a package to help with
+                this process
 
         2.  Formatting
 
@@ -266,28 +258,32 @@
             4.  change red link color in table of contents and modify
                 color of URLs
 
+            5.  re-read all figure and table captions to ensure they
+                make sense and are written well -\> remove schematic for
+                better readability
+
+            6.  abstract and introduction should already mention key
+                findings -\> synthesize these
+
         3.  Formalities
 
             1.  20-90 pages thesis length -\> well-motivated yet
                 succinct
 
-            2.  abstract and introduction should already mention key
-                findings -\> synthesize these
-
-            3.  add remaining features by referring to master template
+            2.  add remaining features by referring to master template
                 such as abstract (short summarized introduction), list
                 of tables/figures/abbreviations, appendices, etc; see
                 master document for examples
 
-            4.  date on bottom of manuscript should be date of
+            3.  date on bottom of manuscript should be date of
                 submission before mailing to Potsdam
 
-            5.  add student registration details to paper such as
+            4.  add student registration details to paper such as
                 matriculation number and other details
 
-            6.  update title page date to current submission date
+            5.  update title page date to current submission date
 
-            7.  take note of all other submission criteria such as
+            6.  take note of all other submission criteria such as
                 statement of originality, German abstract, digital copy
                 and others, see:
                 <https://www.uni-potsdam.de/en/studium/studying/organizing-your-exams/final-thesis>
