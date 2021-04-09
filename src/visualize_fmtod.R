@@ -61,8 +61,7 @@ visualize_fmtod <- function(train_labels, valid_labels, test_labels) {
           margin(t = 10, r = 0, b = -5, l = 0)
       )
     ) +
-    scale_fill_manual(values = c("cornflowerblue", "darkgreen", "orangered")) +
-    ggtitle("Preprocessed FMTOD data distribution by class and partition")
+    scale_fill_manual(values = c("cornflowerblue", "darkgreen", "orangered"))
 
   # plot object and convert to pdf via tikz
   tex_file <- paste0("fmtod_summary_statistics.tex")
