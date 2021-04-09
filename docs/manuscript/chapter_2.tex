@@ -296,7 +296,7 @@ sciences:
   why a model made decision X, but also why it made decision X over decision Y.
 
   \item Next, they suggest that good explanations should be able to communicate
-  causal links over probabilities; which could be a challenge for black-box
+  \textit{causal} links over probabilities; which could be a challenge for black-box
   models which generally compute aggregate probabilities without necessarily
   considering causal links.
 
@@ -432,6 +432,7 @@ definitions and descriptions for these mutually exclusive model categories.
   closer to the accepting state.
 
   \begin{remark}
+    \label{rmk:strict_linear_chain}
     A linear-chain finite-state automaton can be considered as \textit{strict}
     if it does not permit self-loop transitions and therefore only permits
     transitions to adjacent states which are strictly closer to the
@@ -472,19 +473,19 @@ consuming an input symbol.
 
 Regular expressions (REs) and FAs have been shown to be equivalent in their
 expressive power in that they both recognize regular languages
-\citep{sipser1996introduction}. Several algorithms have been historically
+\citep{sipser1996introduction}. Historically, several algorithms have been
 studied and optimized for converting FAs to REs and vice-versa
-\citep{mcnaughton1960regular,thompson1968programming}. Figure
-\ref{fig:regex_fa} shows a simple example of converting the regular expression
-\texttt{``how are (you|they) doing ?''} into a strict linear-chain
-NFA. The aforementioned regular expression is written using the Perl-compatible
-regular expression syntax with the \texttt{``|''} character indicating alternative possibilities.
+\citep{mcnaughton1960regular,thompson1968programming}. Figure \ref{fig:regex_fa}
+shows a simple example of converting the regular expression \texttt{``how are
+  (you|they) doing ?''} into a strict linear-chain NFA. The aforementioned
+regular expression is written using the Perl-compatible regular expression
+syntax with the \texttt{``|''} character indicating alternative possibilities.
 
 \subsection{Weighted finite-state automaton}
 
 Weighted finite-state automata (WFAs) are extensions of finite-state automata
-which allow for the assignment of numerical weights to transitions given an
-algebraic semiring to govern the algebra of the transitions. Compared to
+which allow for the assignment of numerical weights to transitions given a
+semiring to govern the algebra of the transitions. Compared to
 the aforementioned FAs that only accept or reject strings, WFAs numerically
 score strings which has made them useful for several applications in NLP such as
 tokenization and part-of-speech tagging \citep{maletti2017survey}. Here, we provide
@@ -620,14 +621,14 @@ As mentioned previously in Chapter \ref{chapter:introduction}, a key focus of
 this thesis is in improving the \textbf{So}ft \textbf{Pa}tterns (SoPa) model
 presented in \citet{schwartz2018sopa}. In this section, we describe important
 aspects of the SoPa model which ultimately become relevant for our
-methodologies in Chapter \ref{chapter:methodologies}. \citet{schwartz2018sopa}
-introduce SoPa as a novel and lightweight hybridized RNN, CNN and WFA-based neural
-architecture. SoPa resembles a RNN because it processes text sequentially and can
-encode strings of arbitrary lengths. Similarly, the architecture contains a
-variable number of constrained linear-chain WFAs with variable numbers of states
-or window sizes; which resembles both one-layer CNNs and an ensemble of
-linear-chain WFAs. The combination of the aforementioned features ultimately allows
-SoPa to learn soft versions of traditionally hard surface patterns.
+methodologies. \citet{schwartz2018sopa} introduce SoPa as a novel and
+lightweight hybridized RNN, CNN and WFA-based neural architecture. SoPa
+resembles a RNN because it processes text sequentially and can encode strings of
+arbitrary lengths. Similarly, the architecture contains a variable number of
+constrained linear-chain WFAs with variable numbers of states or window sizes;
+which resembles both one-layer CNNs and an ensemble of linear-chain WFAs. The
+combination of the aforementioned features ultimately allows SoPa to learn soft
+versions of traditionally hard surface patterns.
 
 In their study, \citet{schwartz2018sopa} test the SoPa architecture on three
 separate sentiment classification tasks and compare the results with four
@@ -647,7 +648,7 @@ techniques.
   \label{fig:fa}
 \end{figure}
 
-\subsection{Linear-chain WFA}
+\subsection{Linear-chain WFAs}
 
 \label{section:sopa_lc_wfa}
 
@@ -788,7 +789,7 @@ been made in their study regarding the black-box natures of both RNNs and CNNs.
 Naturally, this would imply that post-hoc explainability methods are required to
 explain the SoPa model.
 
-\subsection{Post-hoc explainability techniques}
+\subsection{Explainability}
 
 \label{section:sopa_post_hoc}
 
