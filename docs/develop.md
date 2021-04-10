@@ -22,88 +22,7 @@
 
     1.  Iteration 1 (content and readability)
 
-        1.  **TODO** Methodologies
-
-            1.  change chapter name to data set and methodologies
-
-            2.  mention briefly the purpose of the slot filling task
-
-            3.  consider adding background section on NLU overall and
-                tasks available
-
-            4.  consider using a better term for FMTOD English language
-                intent detection
-
-            5.  mention the purpose of the intent detection task briefly
-                on a grander-scheme-of-things
-
-            6.  describe meaning of SoPa++ in C-symbology
-
-            7.  explain what omega transition means in a FA vs. in a
-                regex
-
-            8.  manage terminology for activation quantized NNs
-
-            9.  manage terminologies for end vs. final vs. accepting
-                states
-
-            10. emphasise how we use STE for a new purpose and this
-                could be a possible novel contribution
-
-            11. add a short segment to mention backward passes since
-                this was not mentioned
-
-            12. mention limitations of the SoPa model related to
-                explainability -\> which we address using SoPa++
-
-            13. make the RE lookup layer algorithm more concise
-
-            14. mention RE lookup layer can be attributed to TauSTE
-                neurons
-
-            15. explain more what regex lookup layer does mention that
-                it memorises REs which lead to activations which can
-                help in discussion segment
-
-            16. change regex to RE in computational graphs to be
-                consistent with paper
-
-            17. emphasize that SoPa++ and RE proxy models come in pairs
-
-            18. add mention that SoPa++ is fast while regex is slow
-
-            19. mention target audience of SoPa++ explainability -\>
-                expert users compared to end-users
-
-            20. add statement on quality of explanations based on three
-                criteria in XAI -\> link this to RQ2 and find an
-                appropriate place to add it -\> or perhaps put this in
-                SoPa vs. SoPa++ section with some motivation
-
-            21. improve table of similarities and differences
-
-            22. motivate usage of the pattern hyperparameter and link it
-                back
-
-            23. change light, medium, heavy to small, medium, large
-
-            24. add detailed information on what small medium large
-                means in terms of model specifics
-
-            25. improve notation for metrics as well as their
-                definitions with or without overlines
-
-            26. perhaps provide example of how softmax is conducted over
-                weights to make this clearer
-
-            27. we can analyze these to see how generalized these are or
-                whether there could be strong inductive bias
-
-            28. add meta-text for padding and linking
-
-            29. improve overall readability
-
-        2.  Results
+        1.  **TODO** Results
 
             1.  add small, medium and heavy to training and evaluation
                 charts on facet titles
@@ -111,9 +30,9 @@
             2.  re-do bolding in tables to be more intuitive and improve
                 descriptions in captions
 
-            3.  mention that regex was converted to NFA for visualizatio
-                -\> link back to background conceptsn purposes or change
-                terminology here
+            3.  mention that regex was converted to NFA for
+                visualization -\> link back to background concepts or
+                change terminology here
 
             4.  add a mention of which model with exact specifications
                 was used for the neuron and regex sampling for clarity
@@ -121,36 +40,43 @@
                 tractable
 
             5.  add neuron subscript in captions and add some
-                description as well
+                description as well -\> link to relevant figure for
+                clarity
 
             6.  add meta-text for padding and linking
 
             7.  improve overall readability
 
-        3.  Discussion
+        2.  Discussion
 
             1.  look up definition of competitive performance and use it
                 to answer in relation to \"mean performance metric\"
 
-            2.  expound on trade-off between performance and
+            2.  mention the TauSTE layer can be seen with a new purpose
+                -\> this might be something novel -\> be added to
+                abstract and other areas as well
+
+            3.  expound on trade-off between performance and
                 transparency by looking at differently sized models -\>
                 and then also looking at other studies which used
                 BERTesque models -\> link back to background concepts
 
-            3.  discuss relationship between tau threshold and the
+            4.  discuss relationship between tau threshold and the
                 softmax/binary distances
 
-            4.  use discussions section to bring about more nuanced
+            5.  use discussions section to bring about more nuanced
                 points on results -\> perhaps related to inductive
                 biases in the RE lookup layer
 
-            5.  provide examples of RE similarities and types
+            6.  talk about the explainability survey directly here
 
-            6.  add meta-text for padding and linking
+            7.  provide examples of RE similarities and types
 
-            7.  improve overall readability
+            8.  add meta-text for padding and linking
 
-        4.  Further work
+            9.  improve overall readability
+
+        3.  Further work
 
             1.  for the target audience of end-users -\> how can a user
                 make use of the regex model
@@ -225,14 +151,20 @@
             23. ensure linear-chain and strict linear-chain are added
                 before WFAs
 
-            24. define GPU somewhere and add to abbreviation
+            24. ensure pattern length is replaced by the number of
+                states
 
-            25. replace all epsilon words by the symbol where possible
+            25. define GPU somewhere and add to abbreviation
 
-            26. make number of decimal places consistent wherever they
+            26. replace all epsilon words by the symbol where possible
+
+            27. make number of decimal places consistent wherever they
                 are used such as in tables with tau
 
-            27. sort out all abbreviations and standardize formatting in
+            28. replace string length with token count -\> think of how
+                and where this makes sense
+
+            29. sort out all abbreviations and standardize formatting in
                 terms of where they are first declared -\> perhaps add a
                 page number on list of abbreviations to indicate first
                 declaration -\> consider using a package to help with
@@ -260,10 +192,14 @@
 
             5.  re-read all figure and table captions to ensure they
                 make sense and are written well -\> remove schematic for
-                better readability
+                better readability -\> remove visualization as well
+                since it is redundant
 
             6.  abstract and introduction should already mention key
                 findings -\> synthesize these
+
+            7.  consider replacing all wildcard regex with single slash
+                `\s`{=latex}
 
         3.  Formalities
 
@@ -332,19 +268,22 @@
         2.  upadte readme and usages with finalized STE/output neurons
             terminologies
 
-        3.  add information on best model downloads and preparation -\>
+        3.  rename all mentions of regex to RE in readme if this is
+            possible
+
+        4.  add information on best model downloads and preparation -\>
             add these to Google Drive later on
 
-        4.  update metadata eg. with comprehensive python/shell help
+        5.  update metadata eg. with comprehensive python/shell help
             scripts, comments describing functionality and readme
             descriptions for git hooks
 
-        5.  test out all shell-scripts and python code to make sure
+        6.  test out all shell-scripts and python code to make sure
             everything works the same after major renamings
 
-        6.  test download and all other scripts to ensure they work
+        7.  test download and all other scripts to ensure they work
 
-        7.  perform spell-check on readme
+        8.  perform spell-check on readme
 
 2.  Dependencies, typing and testing
 

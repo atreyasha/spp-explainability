@@ -6,49 +6,21 @@
 *** Manuscript 
 **** Post-paper iterations
 ***** Iteration 1 (content and readability)
-****** TODO Methodologies
-******* change chapter name to data set and methodologies
-******* mention briefly the purpose of the slot filling task 
-******* consider adding background section on NLU overall and tasks available
-******* consider using a better term for FMTOD English language intent detection 
-******* mention the purpose of the intent detection task briefly on a grander-scheme-of-things
-******* describe meaning of SoPa++ in C-symbology
-******* explain what omega transition means in a FA vs. in a regex
-******* manage terminology for activation quantized NNs
-******* manage terminologies for end vs. final vs. accepting states
-******* emphasise how we use STE for a new purpose and this could be a possible novel contribution
-******* add a short segment to mention backward passes since this was not mentioned
-******* mention limitations of the SoPa model related to explainability -> which we address using SoPa++
-******* make the RE lookup layer algorithm more concise
-******* mention RE lookup layer can be attributed to TauSTE neurons
-******* explain more what regex lookup layer does mention that it memorises REs which lead to activations which can help in discussion segment
-******* change regex to RE in computational graphs to be consistent with paper
-******* emphasize that SoPa++ and RE proxy models come in pairs
-******* add mention that SoPa++ is fast while regex is slow
-******* mention target audience of SoPa++ explainability -> expert users compared to end-users
-******* add statement on quality of explanations based on three criteria in XAI -> link this to RQ2 and find an appropriate place to add it -> or perhaps put this in SoPa vs. SoPa++ section with some motivation
-******* improve table of similarities and differences
-******* motivate usage of the pattern hyperparameter and link it back
-******* change light, medium, heavy to small, medium, large 
-******* add detailed information on what small medium large means in terms of model specifics 
-******* improve notation for metrics as well as their definitions with or without overlines
-******* perhaps provide example of how softmax is conducted over weights to make this clearer
-******* we can analyze these to see how generalized these are or whether there could be strong inductive bias
-******* add meta-text for padding and linking
-******* improve overall readability
-****** Results
+****** TODO Results
 ******* add small, medium and heavy to training and evaluation charts on facet titles
 ******* re-do bolding in tables to be more intuitive and improve descriptions in captions 
-******* mention that regex was converted to NFA for visualizatio -> link back to background conceptsn purposes or change terminology here
+******* mention that regex was converted to NFA for visualization -> link back to background concepts or change terminology here
 ******* add a mention of which model with exact specifications was used for the neuron and regex sampling for clarity -> explain why we used the light model to keep things tractable
-******* add neuron subscript in captions and add some description as well
+******* add neuron subscript in captions and add some description as well -> link to relevant figure for clarity
 ******* add meta-text for padding and linking
 ******* improve overall readability
 ****** Discussion
 ******* look up definition of competitive performance and use it to answer in relation to "mean performance metric" 
+******* mention the TauSTE layer can be seen with a new purpose -> this might be something novel -> be added to abstract and other areas as well
 ******* expound on trade-off between performance and transparency by looking at differently sized models -> and then also looking at other studies which used BERTesque models -> link back to background concepts
 ******* discuss relationship between tau threshold and the softmax/binary distances
 ******* use discussions section to bring about more nuanced points on results -> perhaps related to inductive biases in the RE lookup layer
+******* talk about the explainability survey directly here
 ******* provide examples of RE similarities and types
 ******* add meta-text for padding and linking
 ******* improve overall readability
@@ -84,17 +56,20 @@
 ******* fine-tune study vs. thesis
 ******* fine-tune final vs. end vs. accepting states
 ******* ensure linear-chain and strict linear-chain are added before WFAs
+******* ensure pattern length is replaced by the number of states
 ******* define GPU somewhere and add to abbreviation
 ******* replace all epsilon words by the symbol where possible 
 ******* make number of decimal places consistent wherever they are used such as in tables with tau
+******* replace string length with token count -> think of how and where this makes sense
 ******* sort out all abbreviations and standardize formatting in terms of where they are first declared -> perhaps add a page number on list of abbreviations to indicate first declaration -> consider using a package to help with this process
 ****** Formatting
 ******* ensure that areas between chapters-sections and/or sections-subsections are filled with explanatory text to provide a narrative -> use links to/from individual sections/chapters to string everything together -> no area between title and next sub-title or environment should be empty -> an example is adding text before WFA definitions
 ******* EITHER quote + indent sentences directly taken from other studies with page and section OR paraphrase them and leave them in a definition environment
 ******* check that all borrowed figures have an explicit attribution such as "taken from paper et al (year)"
 ******* change red link color in table of contents and modify color of URLs
-******* re-read all figure and table captions to ensure they make sense and are written well -> remove schematic for better readability
+******* re-read all figure and table captions to ensure they make sense and are written well -> remove schematic for better readability -> remove visualization as well since it is redundant
 ******* abstract and introduction should already mention key findings -> synthesize these
+******* consider replacing all wildcard regex with single slash \s
 ****** Formalities
 ******* 20-90 pages thesis length -> well-motivated yet succinct
 ******* add remaining features by referring to master template such as abstract (short summarized introduction), list of tables/figures/abbreviations, appendices, etc; see master document for examples
@@ -120,6 +95,7 @@
 ***** Readme
 ****** update readme and usages with finalized antecedent and proxy terminologies 
 ****** upadte readme and usages with finalized STE/output neurons terminologies
+****** rename all mentions of regex to RE in readme if this is possible
 ****** add information on best model downloads and preparation -> add these to Google Drive later on
 ****** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
 ****** test out all shell-scripts and python code to make sure everything works the same after major renamings
