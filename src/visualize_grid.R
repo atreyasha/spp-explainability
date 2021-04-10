@@ -136,6 +136,16 @@ visualize_grid_train <- function(input_glob,
     "$"
   )
 
+  # add extra text to patterns
+  levels(collections$patterns) <- paste0(
+    c("Small\n", "Medium\n", "Large\n"),
+    levels(collections$patterns)
+  )
+  levels(convergence_window$patterns) <- paste0(
+    c("Small\n", "Medium\n", "Large\n"),
+    levels(convergence_window$patterns)
+  )
+
   # create ggplot object
   g <- ggplot() +
     geom_rect(
@@ -158,7 +168,6 @@ visualize_grid_train <- function(input_glob,
       text = element_text(size = 22),
       strip.background = element_blank(),
       legend.position = "bottom",
-      strip.text = element_text(face = "bold"),
       panel.grid = element_line(size = 1),
       axis.ticks.length = unit(.15, "cm"),
       axis.title.y = element_text(
@@ -180,7 +189,7 @@ visualize_grid_train <- function(input_glob,
     as.integer(as.POSIXct(Sys.time())), ".tex"
   )
   tikz(tex_file,
-    width = 12, height = 8, standAlone = TRUE,
+    width = 12, height = 10, standAlone = TRUE,
     engine = "luatex"
   )
   print(g)
@@ -308,6 +317,12 @@ visualize_grid_evaluate <- function(input_glob,
     "$\\overline{\\delta_{b}}$"
   ))
 
+  # add extra text to patterns
+  levels(collections$patterns) <- paste0(
+    c("Small\n", "Medium\n", "Large\n"),
+    levels(collections$patterns)
+  )
+
   # make ggplot object
   g <- ggplot(collections, aes(x = tau_threshold, y = value, fill = variable)) +
     stat_boxplot(
@@ -326,7 +341,6 @@ visualize_grid_evaluate <- function(input_glob,
       text = element_text(size = 22),
       strip.background = element_blank(),
       legend.position = "bottom",
-      strip.text = element_text(face = "bold"),
       panel.grid = element_line(size = 1),
       axis.ticks.length = unit(.15, "cm"),
       axis.title.y = element_text(
