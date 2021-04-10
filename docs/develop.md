@@ -22,75 +22,30 @@
 
     1.  Iteration 1 (content and readability)
 
-        1.  **TODO** Results
-
-            1.  add small, medium and heavy to training and evaluation
-                charts on facet titles
-
-            2.  re-do bolding in tables to be more intuitive and improve
-                descriptions in captions
-
-            3.  mention that regex was converted to NFA for
-                visualization -\> link back to background concepts or
-                change terminology here
-
-            4.  add a mention of which model with exact specifications
-                was used for the neuron and regex sampling for clarity
-                -\> explain why we used the light model to keep things
-                tractable
-
-            5.  add neuron subscript in captions and add some
-                description as well -\> link to relevant figure for
-                clarity
-
-            6.  add meta-text for padding and linking
-
-            7.  improve overall readability
-
-        2.  Discussion
-
-            1.  look up definition of competitive performance and use it
-                to answer in relation to \"mean performance metric\"
-
-            2.  mention the TauSTE layer can be seen with a new purpose
-                -\> this might be something novel -\> be added to
-                abstract and other areas as well
-
-            3.  expound on trade-off between performance and
-                transparency by looking at differently sized models -\>
-                and then also looking at other studies which used
-                BERTesque models -\> link back to background concepts
-
-            4.  discuss relationship between tau threshold and the
-                softmax/binary distances
-
-            5.  use discussions section to bring about more nuanced
-                points on results -\> perhaps related to inductive
-                biases in the RE lookup layer
-
-            6.  talk about the explainability survey directly here
-
-            7.  provide examples of RE similarities and types
-
-            8.  add meta-text for padding and linking
-
-            9.  improve overall readability
-
-        3.  Further work
+        1.  **TODO** Further work
 
             1.  for the target audience of end-users -\> how can a user
                 make use of the regex model
 
-            2.  encode information on the position of the pattern where
+            2.  bring up human survey in further work or discussion and
+                also in methods
+
+            3.  encode information on the position of the pattern where
                 it got maxed out -\> might help to encode information in
                 longer documents
 
-            3.  visualize examples/classes where regex and neural model
+            4.  visualize examples/classes where regex and neural model
                 align and misalign, eg. with a confusion matrix
 
-            4.  add meta-text for padding and linking
+            5.  add meta-text for padding and linking
 
-            5.  improve overall readability
+            6.  improve overall readability
+
+        2.  Conclusions
+
+            1.  mention new purpose of TauSTE layer
+
+            2.  improve overall readability
 
     2.  Iteration 2 (consistency and formatting)
 
@@ -196,7 +151,8 @@
                 since it is redundant
 
             6.  abstract and introduction should already mention key
-                findings -\> synthesize these
+                findings -\> synthesize these -\> mention TauSTE layer
+                with new purpose
 
             7.  consider replacing all wildcard regex with single slash
                 `\s`{=latex}
@@ -254,11 +210,11 @@
             arguments as well if possible for consistency from
             --neural-model-checkpoint to --spp-model-checkpoint
 
-        4.  add pydocstrings to all functions and improve argparse
-            documentation
-
-        5.  add a comment above each code chunk which explains inner
+        4.  add a comment above each code chunk which explains inner
             mechanisms better
+
+        5.  add pydocstrings to all functions and improve argparse
+            documentation -\> maybe not necessary
 
     2.  Readme
 

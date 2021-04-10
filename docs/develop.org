@@ -6,29 +6,15 @@
 *** Manuscript 
 **** Post-paper iterations
 ***** Iteration 1 (content and readability)
-****** TODO Results
-******* add small, medium and heavy to training and evaluation charts on facet titles
-******* re-do bolding in tables to be more intuitive and improve descriptions in captions 
-******* mention that regex was converted to NFA for visualization -> link back to background concepts or change terminology here
-******* add a mention of which model with exact specifications was used for the neuron and regex sampling for clarity -> explain why we used the light model to keep things tractable
-******* add neuron subscript in captions and add some description as well -> link to relevant figure for clarity
-******* add meta-text for padding and linking
-******* improve overall readability
-****** Discussion
-******* look up definition of competitive performance and use it to answer in relation to "mean performance metric" 
-******* mention the TauSTE layer can be seen with a new purpose -> this might be something novel -> be added to abstract and other areas as well
-******* expound on trade-off between performance and transparency by looking at differently sized models -> and then also looking at other studies which used BERTesque models -> link back to background concepts
-******* discuss relationship between tau threshold and the softmax/binary distances
-******* use discussions section to bring about more nuanced points on results -> perhaps related to inductive biases in the RE lookup layer
-******* talk about the explainability survey directly here
-******* provide examples of RE similarities and types
-******* add meta-text for padding and linking
-******* improve overall readability
-****** Further work
+****** TODO Further work
 ******* for the target audience of end-users -> how can a user make use of the regex model
+******* bring up human survey in further work or discussion and also in methods
 ******* encode information on the position of the pattern where it got maxed out -> might help to encode information in longer documents
 ******* visualize examples/classes where regex and neural model align and misalign, eg. with a confusion matrix
 ******* add meta-text for padding and linking
+******* improve overall readability
+****** Conclusions
+******* mention new purpose of TauSTE layer
 ******* improve overall readability
 
 ***** Iteration 2 (consistency and formatting)
@@ -68,7 +54,7 @@
 ******* check that all borrowed figures have an explicit attribution such as "taken from paper et al (year)"
 ******* change red link color in table of contents and modify color of URLs
 ******* re-read all figure and table captions to ensure they make sense and are written well -> remove schematic for better readability -> remove visualization as well since it is redundant
-******* abstract and introduction should already mention key findings -> synthesize these
+******* abstract and introduction should already mention key findings -> synthesize these -> mention TauSTE layer with new purpose
 ******* consider replacing all wildcard regex with single slash \s
 ****** Formalities
 ******* 20-90 pages thesis length -> well-motivated yet succinct
@@ -90,8 +76,8 @@
 ****** rename RegexSoftPatternClassifier class to RegexProxy if possible without breakages
 ****** change light, medium and heavy to small, medium and large in all scripts, filenames and log variables consistently
 ****** remove all neural sopa from readme and everywhere else since spp already implies neural -> consider changing parser arguments as well if possible for consistency from --neural-model-checkpoint to --spp-model-checkpoint
-****** add pydocstrings to all functions and improve argparse documentation
 ****** add a comment above each code chunk which explains inner mechanisms better
+****** add pydocstrings to all functions and improve argparse documentation -> maybe not necessary
 ***** Readme
 ****** update readme and usages with finalized antecedent and proxy terminologies 
 ****** upadte readme and usages with finalized STE/output neurons terminologies
