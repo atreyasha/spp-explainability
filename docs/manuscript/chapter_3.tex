@@ -625,7 +625,7 @@ best paths and regular expressions as per Algorithm
 TauSTE neuron for each input utterance with an "activating" regular expression.
 By iterating over all our training data, we can collect many such "activating"
 regular expressions which activate the various TauSTE neurons; such that each
-TauSTE neuron $\bm{N_i}$ is assigned a set of "activating" regular expressions
+TauSTE neuron $\textbf{N}_i$ is assigned a set of "activating" regular expressions
 \textbf{\{RE\}$_i$}. The collection of all regular expressions
 $[\{\textbf{RE}\}_1, \ldots, \{\textbf{RE}\}_m]$ which activate $m$ TauSTE
 neurons is known as the RE lookup layer. Overall, the RE lookup layer represents
@@ -988,12 +988,12 @@ proxy models distribute feature importance across TauSTE neurons.
 
 Based on the aforementioned visualization of relative linear weights, we
 identify salient TauSTE neurons which receive disproportionately large relative
-linear weights for the alarm, reminder and weather sub-classes. Correspondingly,
+linear weights for the alarm, reminder and weather domains. Correspondingly,
 we probe the RE lookup layer corresponding to these salient TauSTE neurons and
 sample ten "activating" regular expressions for each of these salient TauSTE
 neurons. Theoretically, this could provide us with an insight as to which
 regular expressions were of particular importance for the classification of the
-three sub-classes. Furthermore, a deeper analysis of these regular expressions
+three domains. Furthermore, a deeper analysis of these regular expressions
 could provide us with insights into possible inductive biases incorporated by the
 SoPa++ and the RE proxy models.
 
