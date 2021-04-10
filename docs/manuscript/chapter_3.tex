@@ -630,7 +630,7 @@ TauSTE neuron $\bm{N_i}$ is assigned a set of "activating" regular expressions
 $[\{\textbf{RE}\}_1, \ldots, \{\textbf{RE}\}_m]$ which activate $m$ TauSTE
 neurons is known as the RE lookup layer. Overall, the RE lookup layer represents
 a knowledge base of important regular expressions that cause the SoPa++ model to
-make a weighted decision. This process of extracting the RE lookup layer from
+make weighted decisions. This process of extracting the RE lookup layer from
 the SoPa++ model is reflected in Algorithm \ref{algo:simplification_process}.
 
 \begin{algorithm}[t!]
@@ -653,6 +653,7 @@ the SoPa++ model is reflected in Algorithm \ref{algo:simplification_process}.
     \Comment{Get WFA-$\omega$ by index}
     \State $s^j_{\text{doc}}(\bm{y}_i), \pi^j_{\text{doc}}(\bm{y}_i) \gets
     {\small\textsc{docscore\_path}}(\mathcal{A}_j, \bm{y}_i)$
+    \Comment{As per Algorithm \ref{algo:lc_wfa_w_document_score_trace}}
     \If{TauSTE$(s^j_{\text{doc}}(\bm{y}_i)) == 1$}
     \State $\{\textbf{RE}\}_j \gets \{\textbf{RE}\}_j \cup
     \pi^j_{\text{doc}}(\bm{y}_i)$
@@ -699,11 +700,11 @@ Then, we combine the RE lookup layer and the SoPa++ linear layer in order to
 create the RE proxy model. A visualization of this is shown in Figure
 \ref{fig:regex_cg} and we can observe how the RE lookup layer essentially
 replaces most of the lower neural components of the SoPa++ model up until the
-TauSTE layer. The resulting RE proxy should ideally be a good approximator
-of the SoPa++ model; with the exact degree of approximation being an empirical
-matter. Given this process of assembly, it is important to note that each SoPa++
-model allows for exactly one RE proxy model that can be assembled. Therefore, SoPa++
-and RE proxy models occur in model-pairs.
+TauSTE layer. The resulting RE proxy should ideally be a good approximator of
+the SoPa++ model; with the exact degree of approximation being reserved for
+empirical investigation. Given this process of assembly, it is important to note
+that each SoPa++ model allows for exactly one RE proxy model that can be
+assembled. Therefore, SoPa++ and RE proxy models occur in model-pairs.
 
 One major limitation of the RE proxy model is in its RE lookup layer. Since the
 RE lookup layer is essentially a memorized knowledge base, it could contribute
@@ -711,8 +712,8 @@ to overfitting on the training data and result in a RE proxy model that is not
 representative of the SoPa++ model on unseen data. While this limitation could
 theoretically be offset by the presence of sufficient variable-length regular
 expression samples with wildcards, it would ultimately boil down to an empirical
-investigation to quantify how similar the RE proxy model is to its antecedent
-SoPa++ model.
+investigation to quantify how similarly the RE proxy model performs compared to
+its antecedent SoPa++ model on previously unseen data.
 
 \subsection{Computational graph}
 
@@ -853,7 +854,7 @@ therefore only use the max-sum semiring in all of our WFA-$\omega$'s.
   \centering
   \begin{tabular}{lll}
     \toprule
-    Model & Pattern hyperparameter $P$ & Parameter count \\
+    Model size & Pattern hyperparameter $P$ & Parameter count \\
     \midrule
     Small & \texttt{6-10\_5-10\_4-10\_3-10} & 1,260,292 \\
     Medium & \texttt{6-25\_5-25\_4-25\_3-25} & 1,351,612  \\
@@ -906,85 +907,95 @@ simplification post-hoc explainability method. As mentioned in Definition
 create a less complex proxy model which can both keep a similar performance
 score and maximize its resemblance to the antecedent model. We already discussed
 how the RE proxy derived from SoPa++ is likely to be a transparent model
-compared to the black-box SoPa++ model; which already satisfies the important
-criterion that the proxy model should be less complex.
+compared to the black-box SoPa++ model; which already satisfies the first
+criterion that the proxy model should be less complex than the antecedent model.
 
-To address the similarity of the performance scores of both SoPa++ and RE proxy
-model pairs, we compute and compare the accuracy scores of model pairs on the
-FMTOD data set's test partition since this represents previously unseen data for
-both SoPa++ and its RE proxy model pair and could provide an unbiased
-representation of the performances of both models. The final criterion for
-effective explanations by simplification is to ensure maximum resemblance
-between the antecedent and proxy models. In order to evaluate the degree of
-resemblance, we propose computing the following two inner-model distance metrics
-to quantify the distance between the SoPa++ and RE proxy model pairs. Naturally,
-a smaller distance metric would symbolize greater resemblance between model pairs.
+To address the next criterion regarding the similarity of the performance scores
+of both SoPa++ and RE proxy model pairs, we compute and compare the accuracy
+scores of all model pairs on the FMTOD data set's test partition since this
+represents previously unseen data for both SoPa++ and RE proxy models. To
+address the final criterion of maximum resemblance between the antecedent and
+proxy models, we propose computing the softmax distance norm and binary
+misalignment rate distance metrics to quantify the distance between the SoPa++
+and RE proxy model pairs. Naturally, a smaller distance metric would symbolize
+greater resemblance between model pairs. We describe these distance metrics with
+mathematical formalisms in the following sections.
 
 \subsection{Softmax distance norm}
 
-One method of quantifying a distance between
-the SoPa++ and RE proxy model pairs is to run both of them on the FMTOD test
-data set and obtain the softmax scores on each sample. Next, we can find the
-Euclidean norm of the difference of these two softmax vectors. A low softmax
-Euclidean distance norm would imply that the softmax distributions are similar
-and would imply, to a certain extent, that the models conducted similar
-weightings of input features. This method is not a perfect indicator of
-interpreting distances between models; but it is more refined in that it allows
-us to analyze continuous vector differences. We provide a mathematical
-formulation of the softmax distance norm $\delta_{\sigma}(\bm{y})$ below for a single
-document $\bm{y}$ where $\sigma_{\mathcal{S}}$ and $\sigma_{\mathcal{R}}$ represent the
-softmax vectors for the SoPa++ and RE proxy model on the given sample
-respectively and $n$ represents the number of classes in the FMTOD data set:
+The softmax distance norm $\delta_{\sigma}(\bm{y})$ refers to the Euclidean norm
+of the difference in the softmax vectors of the SoPa++ and RE proxy models for a
+given document $\bm{y}$, which are represented by
+$\bm{\sigma_{\mathcal{S}}}(\bm{y})$ and $\bm{\sigma_{\mathcal{R}}}(\bm{y})$
+respectively:
 
 \begin{equation}
-  \delta_{\sigma}(\bm{y}) = \left\Vert \sigma_{\mathcal{S}}(\bm{y}) - \sigma_{\mathcal{R}}(\bm{y}) \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i}(\bm{y}) - \sigma_{\mathcal{R}_i}(\bm{y}))^2} 
+  \delta_{\sigma}(\bm{y}) = \left\Vert \bm{\sigma_{\mathcal{S}}}(\bm{y}) - \bm{\sigma_{\mathcal{R}}}(\bm{y}) \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i}(\bm{y}) - \sigma_{\mathcal{R}_i}(\bm{y}))^2} 
 \end{equation}
+
+In order to measure the central tendency of the softmax distance norm across the
+FMTOD data set's test partition, we compute this distance metric for all
+instances and correspondingly compute the mean softmax distance norm; which we
+denote here as $\overline{\delta_{\sigma}}$. A low mean softmax distance norm
+norm would imply that the softmax distributions of SoPa++ and RE proxy models
+were similar and would imply, to a certain extent, that the models conducted
+similar weightings of input features. This method is not a perfect indicator of
+interpreting distances between models; but it is more refined than analyzing
+discrete classification outputs.
 
 \subsection{Binary misalignment rate}
 
-Another technique of measuring the
-distance between the SoPa++ and RE proxy model would be to compare their
-internal representations activated in the TauSTE binary layer. This can be
-computed by calculating the 1-norm between the binary vectors and then
-normalizing this norm by the dimensionality of this vector. The step of
-normalization is necessary since we test models with different sizes and these
-could have different binary vector lengths. This would provide a mean binary
-misalignment rate $\delta_b(\bm{y})$ for a single document $\bm{y}$, where
-$b_{\mathcal{S}}$ and $b_{\mathcal{R}}$ represent the TauSTE binary vectors for
-the SoPa++ and RE proxy model respectively and $dim$ represents an operator that
-retrieves the dimensionality of a vector space:
+The binary misalignment rate $\delta_b(\bm{y})$ refers to the dimension
+normalized Manhattan norm of the difference in the binary TauSTE vectors of the
+SoPa++ and RE proxy models for a given document $\bm{y}$, which are represented
+by $\bm{b_{\mathcal{S}}}(\bm{y})$ and $\bm{b_{\mathcal{R}}}(\bm{y})$
+respectively:
 
 \begin{equation}
-  \delta_b(\bm{y}) = \dfrac{\left\Vert b_{\mathcal{S}}(\bm{y}) - b_{\mathcal{R}}(\bm{y}) \right\Vert_{1}}{dim(b_{\mathcal{S}}(\bm{y}) - b_{\mathcal{R}}(\bm{y}))} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i}(\bm{y}) - b_{\mathcal{R}_i}(\bm{y})|}{{dim(b_{\mathcal{S}}(\bm{y}) - b_{\mathcal{R}}(\bm{y}))}}
+  \delta_b(\bm{y}) = \dfrac{\left\Vert \bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}) \right\Vert_{1}}{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i}(\bm{y}) - b_{\mathcal{R}_i}(\bm{y})|}{{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))}}
 \end{equation}
+
+Here, the $dim$ operator retrieves the dimensionality of a vector space.
+Normalization of the Manhattan norm with this dimensionality is necessary since
+we compare models with different sizes which could have different binary vector
+dimensions. In order to measure the central tendency of the binary misalignment
+rate across the FMTOD data set's test partition, we compute this distance metric
+for all instances and correspondingly compute the mean binary misalignment rate;
+which we denote here as $\overline{\delta_b}$. A low mean binary misalignment
+rate would imply that the TauSTE binary vector distributions were close
+together. Therefore, the binary misalignment could be used as another indicator
+to measure the distance between SoPa++ and RE proxy model pairs.
 
 \section{RQ3: Interesting and relevant explanations}
 
-In this section, we describe the methodologies utilized to answer our third
-research question; particularly to show what interesting and relevant
-explanations the SoPa++ model can provide on the FMTOD data set.
+Finally, we arrive at the methodologies used to answer our third research
+question related to showing interesting and relevant explanations that the
+SoPa++ and RE proxy models can provide on the FMTOD data set. To approach this
+research question, we pursue two key strategies of visualizing relative linear
+weights and sampling REs from the RE lookup layer corresponding to salient
+TauSTE neurons.
 
-\subsection{Output neuron weights}
+\subsection{Relative linear weights}
 
-Since SoPa++ uses a linear regression layer to provide weights and biases
-towards TauSTE outputs, we can analyze the weights of the linear regression
-layer to probe into how the SoPa++ and its RE proxies distribute importances to
-various binary features present in the TauSTE layer. This is a major advantage
-of using a single additive layer such as the linear regression layer, compared
-to using a MLP. To go about this, we simply perform a softmax operation over all
-weights applied for each class in each TauSTE neuron; and then visualize these
-to observe how SoPa++ and its RE proxies distribute feature importance.
+A major advantage of the linear layer in both SoPa++ and RE proxy models is its
+interpretability or transparency compared to the MLP in the SoPa model. To
+visualize the relative linear weights applied to the TauSTE neurons, we apply a
+softmax operation over weights in the linear layer assigned to each TauSTE
+neuron and visualize these relative weights to observe how SoPa++ and its RE
+proxy models distribute feature importance across TauSTE neurons.
 
-\subsection{Regular expression lookup layer}
+\subsection{Samples from RE lookup layer}
 
-One major advantage of producing simpler RE proxy models is the presence of the
-RE lookup layer. This RE lookup layer can be seen as an ontology or database of
-REs that lead to activations in the TauSTE layer. As a result, the RE lookup
-layer can be seen as an ontology of important regular expressions that aid
-SoPa++ and its RE proxies in making decisions based on input utterances. We
-analyze some of these REs juxtaposed next to their representative TauSTE neurons
-to visualize which REs activate which neurons and what kinds of importances are
-placed in said REs.
+Based on the aforementioned visualization of relative linear weights, we
+identify salient TauSTE neurons which receive disproportionately large relative
+linear weights for the alarm, reminder and weather sub-classes. Correspondingly,
+we probe the RE lookup layer corresponding to these salient TauSTE neurons and
+sample ten "activating" regular expressions for each of these salient TauSTE
+neurons. Theoretically, this could provide us with an insight as to which
+regular expressions were of particular importance for the classification of the
+three sub-classes. Furthermore, a deeper analysis of these regular expressions
+could provide us with insights into possible inductive biases incorporated by the
+SoPa++ and the RE proxy models.
 
 %%% Local Variables: 
 %%% mode: latex
