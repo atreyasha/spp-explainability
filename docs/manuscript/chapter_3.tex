@@ -734,11 +734,12 @@ argmax operations, we arrive at our predicted output class. It is worth
 mentioning that while the execution of the SoPa++ forward pass can be
 accelerated due to tensor-based parallelization with hardware acceleration on a
 Graphics Processing Unit (GPU), the forward pass of the RE proxy model is
-significantly slower due to our unoptimized single-threaded RE lookup process.
+significantly slower since we utilized an unoptimized single-threaded RE lookup
+process.
 
 \subsection{Transparency}
 
-\label{sec:re_transparency}
+\label{section:re_transparency}
 
 So far, we have described the process of simplifying a fully-trained black-box
 SoPa++ model into a RE proxy model. We now investigate the RE proxy model and
@@ -777,7 +778,7 @@ scored higher or lower. Regarding causal links, it is likely that the RE proxy
 model meets this criterion since the RE lookup layer matches fixed REs whose
 binary matching scores are then clearly propagated from the start to the end of
 the model. Therefore, a decision occurring at the end of the model could be
-easily causally attributed to the start of the model. Regarding the selective
+causally attributed to features at the start of the model. Regarding the selective
 quality, it is possible that the RE proxy model meets this criterion since the
 linear weights applied to matched regular expressions can be easily ranked to
 understand which were the most important causal links influencing the model's
