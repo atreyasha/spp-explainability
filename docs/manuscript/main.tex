@@ -56,6 +56,10 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{enumitem}
 
 % specialized settings
+\addto\captionsenglish{% Replace "english" with the language you use
+  \renewcommand{\contentsname}%
+  {Table of Contents}
+}
 \acsetup{list-style = tabular}
 \counterwithout{equation}{chapter}
 \counterwithout{figure}{chapter}
@@ -116,12 +120,12 @@ headsepline, % Uncomment to get a line under the header
 }
 \DeclareAcronym{ste}{
   short = STE,
-  long  = Straight-through Estimator,
+  long  = Straight-Through Estimator,
   class = abbrev
 }
 \DeclareAcronym{tauste}{
   short = TauSTE,
-  long  = Tau-threshold Straight-through Estimator,
+  long  = Tau-threshold Straight-Through Estimator,
   class = abbrev
 }
 \DeclareAcronym{ml}{
@@ -156,7 +160,7 @@ headsepline, % Uncomment to get a line under the header
 }
 \DeclareAcronym{mlp}{
   short = MLP,
-  long  = Multi-layer Perceptron,
+  long  = Multi-Layer Perceptron,
   class = abbrev
 }
 \DeclareAcronym{rnn}{
@@ -240,9 +244,8 @@ headsepline, % Uncomment to get a line under the header
 
 \begin{document}
 
-\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
-
 \pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
+\pagenumbering{gobble}
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -282,7 +285,7 @@ headsepline, % Uncomment to get a line under the header
  
 \vfill
 
-{\large \today}\\[4cm] % Date
+{\large April 12, 2021}\\[4cm] % Date
 % \includegraphics[width=5cm]{images/UP.jpg} % University/department logo - uncomment to place it
  
 \vfill
@@ -293,13 +296,21 @@ headsepline, % Uncomment to get a line under the header
 %	LIST OF CONTENTS/FIGURES/TABLES PAGES
 %----------------------------------------------------------------------------------------
 
-\tableofcontents % Prints the main table of contents
+{
+  \hypersetup{linkcolor=black}
+  
+  \tableofcontents % Prints the main table of contents
 
-\listoffigures % Prints the list of figures
+  \frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+  \listoffigures % Prints the list of figures
+  \addcontentsline{toc}{section}{List of Figures}
 
-\listoftables % Prints the list of tables
+  \listoftables % Prints the list of tables
+  \addcontentsline{toc}{section}{List of Tables}
 
-\printacronyms[name=List of Abbreviations, sort=true] % Print list of abbreviations
+  \printacronyms[name=List of Abbreviations, sort=true] % Print list of abbreviations
+  \addcontentsline{toc}{section}{List of Abbreviations}
+}
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - CHAPTERS

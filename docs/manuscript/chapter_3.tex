@@ -446,7 +446,8 @@ spaces.
 \begin{figure}[t!]
   \centering
   \includegraphics[width=15cm]{pdfs/generated/spp_computational_graph/main.pdf}
-  \caption{Visualization of the SoPa++ computational graph}
+  \caption{Visualization of the SoPa++ computational graph; flow of graph is
+    from bottom to top and left to right }
   \label{fig:spp_cg}
 \end{figure}
 
@@ -481,21 +482,21 @@ with differing ranges. Layer normalization therefore helps to project these
 variations of pattern scores to a uniform range; which ultimately allows the \ac{tauste}
 layer to discriminate inputs and produce diverse binary outputs.
 
-A natural criticism of the \ac{tauste} layer could be that it strongly limits the
-flow of information in the SoPa++ model. While the binarization present in this
-layer does indeed limit the rich flow of continuous numerical information, it is
-still worth noting that this layer can preserve significant information given a
-sufficiently large $m$ value, corresponding to the number of strict linear-chain
-\ac{wfaw} and \ac{tauste} neurons. For example, if we allow for $m=40$ and therefore provide 40
-\ac{wfaw} and \ac{tauste} neurons, we can have a total of
-2$^{40}\approx1.1\times10^{12}$ binary state possibilities; which is slightly
-greater than one trillion possible binary states. To provide some context to this
-order of magnitude, the aforementioned number of possibilities is roughly equal
-to estimated number of stars present in the Andromeda Galaxy
+A natural criticism of the \ac{tauste} layer could be that it strongly limits
+the flow of information in the SoPa++ model. While the binarization present in
+this layer does indeed limit the rich flow of continuous numerical information,
+it is still worth noting that this layer can preserve significant information
+given a sufficiently large $m$ value, corresponding to the number of strict
+linear-chain \ac{wfaw} and \ac{tauste} neurons. For example, if we allow for
+$m=40$ and therefore provide 40 \ac{wfaw} and \ac{tauste} neurons, we can have a
+total of 2$^{40}\approx1.1\times10^{12}$ binary state possibilities; which is
+slightly greater than one trillion possible binary states. To provide some
+context to this order of magnitude, the aforementioned number of possibilities
+is roughly equal to estimated number of stars present in the Andromeda Galaxy
 \citep{10.1093/mnras/stu879}. This would imply that despite the reduction in
-information content on the \ac{tauste} layer, there are still sufficient mappable
-states available to learn various representations relevant to output classes;
-given a large enough $m$ value or number of \ac{wfaw}.
+information content on the \ac{tauste} layer, there are still sufficient
+mappable states available to learn various representations relevant to output
+classes; given a large enough $m$ value or number of \ac{wfaw}.
 
 After binarizing the hidden values in the \ac{tauste} layer, we apply a simple linear
 transformation to the \ac{tauste} binary outputs to modify their dimensionality from
@@ -686,7 +687,8 @@ to comprehend for a human.
 \begin{figure}[t!]
   \centering
   \includegraphics[width=15cm]{pdfs/generated/regex_computational_graph/main.pdf}
-  \caption{Visualization of the RE proxy computational graph}
+  \caption{Visualization of the RE proxy computational graph; flow of graph is
+    from bottom to top and left to right}
   \label{fig:regex_cg}
 \end{figure}
 

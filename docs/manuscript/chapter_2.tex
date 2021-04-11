@@ -163,9 +163,9 @@ separate or external techniques must be utilized in order to reasonably explain
 these models. Such explainability techniques are referred to in the study as
 post-hoc explainability techniques; which is derived from the idea that
 explanations for such models are usually extracted post-modeling. Notable
-examples of post-hoc explainability techniques include local explanations,
-feature relevance and explanations by simplification; for which we provide
-adapted definitions below.
+post-hoc explainability techniques used in recent research include local
+explanations, feature relevance and explanations by simplification; for which we
+provide adapted definitions below.
 
 \begin{definition}[Local explanations; \citealt{arrieta2020explainable}; Page 11,
   Section 4.1]
@@ -634,12 +634,12 @@ versions of traditionally hard surface patterns.
 
 In their study, \citet{schwartz2018sopa} test the SoPa architecture on three
 separate sentiment classification tasks and compare the results with four
-baselines which include a bidirectional \ac{lstm} and a \ac{cnn}. With their results, they
-show that SoPa performed on par or better than all baselines on all tasks.
-Additionally, they show that SoPa outperformed all baselines significantly in
-low-data settings. Finally, the authors present workflows to explain the SoPa
-model using both the local explanations and feature relevance explainability
-techniques.
+baselines which include a bidirectional \ac{lstm} neural network and a \ac{cnn}.
+With their results, they show that SoPa performed on par or better than all
+baselines on all tasks. Additionally, they show that SoPa outperformed all
+baselines significantly in low-data settings. Finally, the authors present
+workflows to explain the SoPa model using both the local explanations and
+feature relevance explainability techniques.
 
 \begin{figure}[t]
   \centering
@@ -730,11 +730,11 @@ short strings, \citet[Page 3, Section 3.2]{schwartz2018sopa} propose computing
 the string score, as per Definition \ref{def:string_score}, over all consecutive
 substrings in the document which ultimately returns a document score
 $s_{\text{doc}}(\bm{y})$ for an arbitrary document $\bm{y}$. The document score
-$s_{\text{doc}}(\bm{y})$ for a \ac{wfa} would represent an aggregated score over all
-consecutive substrings and would therefore also depend on the semiring used in
-the \ac{wfas}. In the case of max-based semirings using the Viterbi algorithm, the
-document score $s_{\text{doc}}(\bm{y})$ would reflect the highest path score
-corresponding to a substring in document $\bm{y}$.
+$s_{\text{doc}}(\bm{y})$ for a linear-chain \ac{wfa} would represent an
+aggregated score over all consecutive substrings and would therefore also depend
+on the semiring used in the \ac{wfas}. In the case of max-based semirings using
+the Viterbi algorithm, the document score $s_{\text{doc}}(\bm{y})$ would reflect
+the highest path score corresponding to a substring in document $\bm{y}$.
 
 \subsection{Computational graph}
 
