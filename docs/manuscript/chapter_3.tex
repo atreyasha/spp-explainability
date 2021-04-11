@@ -316,11 +316,11 @@ because of the introduction of wildcards. An example of a strict linear-chain
 NFA extracted from a strict linear-chain WFA-$\omega$ is shown in Figure
 \ref{fig:omega_fa}. Interestingly, we can observe that this NFA corresponds to
 the Perl-compatible regular expression \texttt{``what a (great|entertaining)
-  [\^{}\textbackslash\textbackslash s]+ !''}, where
-\texttt{[\^{}\textbackslash\textbackslash s]+} refers to any set of consecutive
+  [\^{}\textbackslash s]+ !''}, where
+\texttt{[\^{}\textbackslash s]+} refers to any set of consecutive
 characters which are not separated by a space character. We can therefore infer
 that a $\omega$-transition in a FA corresponds to the
-\texttt{[\^{}\textbackslash\textbackslash s]+} regular expression term.
+\texttt{[\^{}\textbackslash s]+} regular expression term.
 
 \begin{algorithm}[t!]
   \small
@@ -507,7 +507,7 @@ linear regressors are known to be transparent models
 in our explanations by simplification post-hoc explainability technique, which
 we describe in greater detail in the next sections. Finally, we apply a softmax
 function over the linear outputs to project them to probabalistic spaces and
-then compute an \texttt{argmax} to extract the highest scoring index which represents the
+then compute an argmax to extract the highest scoring index which represents the
 predicted class. In the case of Figure \ref{fig:spp_cg}, the output class for
 the input pre-processed utterance \texttt{``[START] 10 day weather forecast
   [END]''} is the \texttt{weather/find} class which corresponds to class index 11.
@@ -717,6 +717,8 @@ its antecedent SoPa++ model on previously unseen data.
 
 \subsection{Computational graph}
 
+\label{section:re_cg}
+
 We now provide a description of the computational graph or forward pass of the
 assembled RE proxy model with reference to Figure \ref{fig:regex_cg}. Similar to
 the computational graph of SoPa++, we process our input text sequentially.
@@ -734,8 +736,8 @@ argmax operations, we arrive at our predicted output class. It is worth
 mentioning that while the execution of the SoPa++ forward pass can be
 accelerated due to tensor-based parallelization with hardware acceleration on a
 Graphics Processing Unit (GPU), the forward pass of the RE proxy model is
-significantly slower since we utilized an unoptimized single-threaded RE lookup
-process.
+significantly slower since we utilized an unoptimized single-threaded lookup
+process to match regular expressions in the RE lookup layer.
 
 \subsection{Transparency}
 
@@ -805,10 +807,10 @@ decision.
 
 To wrap up this current segment on the SoPa++ model, we summarize the key
 differences between SoPa and SoPa++ as shown in Table
-\ref{tab:sopa_spp_comparison}. The most significant modifications to SoPa++
+\ref{tab:sopa_spp_comparison}. The most significant changes in SoPa++
 include the modification of linear-chain WFAs to strict linear-chain
 WFA-$\omega$'s, the replacement of the MLP with layer normalization, TauSTE and
-linear layers and the significantly different explanations by simplification
+linear layers and the introduction of the explanations by simplification
 post-hoc explainability technique to create RE proxy models. With the
 construction of SoPa++ and its RE proxy models established, we now proceed to
 describe the methodologies used to answer our three research questions.

@@ -157,17 +157,15 @@ non-USA-centric domains. An advantageous aspect of the RE proxy model is that
 these inductive biases can be easily identified and also corrected. In the case
 of correcting USA-centric locations, we could manually add more non-USA-based
 locations in the branching transition of the third regular expression from the
-top in Figure \ref{fig:regex_example_neuron_weather}. In the case of correcting
-USA-centric temperature metrics, we could manually augment more numerical
-temperature possibilities to the third regular expression from the bottom in
-Figure \ref{fig:regex_example_neuron_weather}. These could include all natural
-numbers from -20 to 110 to account for many possible daily temperatures in both
-Celsius and Fahrenheit scales. Another possible inductive bias could be in the
-third regular expression from the top in Figure
+top in Figure \ref{fig:regex_example_neuron_weather}. Another possible inductive
+bias could be in the third regular expression from the top in Figure
 \ref{fig:regex_example_neuron_alarm}, where the first transition only allows for
 the pronoun \textit{"i"}. This inductive bias could be corrected in the RE proxy
 model by augmenting it with all other pronouns available in the English
-language.
+language. Finally, we can propagate these manual corrections in the RE proxy
+model back to SoPa++ by copying the word embeddings and transition matrix
+diagonals of the biased word to now represent those of the manually added new
+words.
 
 %%% Local Variables: 
 %%% mode: latex

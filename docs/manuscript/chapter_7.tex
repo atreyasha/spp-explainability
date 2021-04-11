@@ -2,81 +2,85 @@
 
 \label{chapter:further_work}
 
-In this final chapter, we address the limitations of our thesis and provide
-ideas for future research which could address these limitations.
+In this final chapter, we address the limitations of our methodologies and
+discuss possible future research directions which could be pursued to mitigate
+these limitations.
 
 \section{Efficiency}
 
 In this thesis, we showed the effectiveness of simplifying SoPa++ models into RE
-proxy models. In the course of our experiments, we realized that while this
-process was effective; the simplification and evaluation processes using RE
-proxy models tended to be slow. This is largely because we used single-threaded
-processes for both simplification and evaluation of RE proxy models; in contrast
-to PyTorch's parallelized functionalities on a GPU which made SoPa++ very fast.
-To overcome the low efficiency of simplifcation and evaluation using RE proxy
-models, we could recommend two approaches. One approach could be to save the RE
-lookup layer as a data base and utilize indexed searches to make regular
-expression searches and lookups much faster. Another approach could be to
-utilize GPU-accelerated regular expression matching algorithms to parallelize
-the overall RE lookup layer and its searching functionalities
-\citep{wang2011gregex,zu2012gpu,yu2013gpu}.
-
-\section{Explainability}
-
-As mentioned in Section \ref{section:evaluate_explain}, we were only able to
-address the technical requirements of explanations by simplification without
-necessarily delving into how good the explanations provided are for given target
-audiences. This process is subjective and would require a thorough survey with a
-given target audience. Conducting such a survey of quality of explanations could
-be useful to further evaluate the explainability of SoPa++ and its RE proxy
-counterparts.
-
-\section{Discovery and correction of inductive biases}
-
-As shown in Section \ref{section:discussion_regex}, we provided examples of how
-a human could manually find and correct inductive biases in the RE lookup layer.
-It would be interesting to explore how extensively this process could be
-conducted to find and correct inductive biases in the REs inside the RE lookup
-layer. Furthermore, it would be interesting if we could also find adversarial
-samples in this layer. While correcting the RE lookup layer ``fixes'' problems
-on the RE proxy model's side, it does not modify the functionality of the
-antecedent SoPa++ model. It would therefore also be interesting to explore how
-we could propagate the corrections in the RE lookup layer back into the SoPa++
-model's neural network components.
+proxy models. While SoPa++ models ran very efficiently because of tensor-based
+parallelizations and GPU hardware-acceleration derived from \texttt{PyTorch}'s
+mature computational ecosystem, we observed that the RE proxy models ran
+significantly slower with the main bottleneck being the slow lookup process in
+the RE lookup layer; as was mentioned in Section \ref{section:re_cg}. To
+overcome this low efficiency in RE proxy models, we could recommend three
+approaches. One approach could be to save the RE lookup layer as a data base and
+utilize indexed searches to make regular expression searches and lookups much
+faster. Another approach could be to attempt CPU-based multi-threading on the RE
+lookup process; which is likely to be a complex task and would require
+experimental tweaking to attain the best efficiencies. The final approach could
+be to utilize GPU-accelerated regular expression matching algorithms
+\citep{wang2011gregex,zu2012gpu,yu2013gpu} to parallelize the overall RE lookup
+layer and its matching functionalities.
 
 \section{Generalization}
 
-Based on sampled regular expressions shown in Figures
-\ref{fig:regex_example_neuron_21}, \ref{fig:regex_example_neuron_27} and
-\ref{fig:regex_example_neuron_32}, we can observe certain transitions which
-contain many possible words. We can conduct semantic analyses on these highly
-utilized transitions and perhaps generalize these to include more tokens which
-may even be outside of the initial model vocabulary. For example, in the fourth
-RE from the top in Figure \ref{fig:regex_example_neuron_21}, we can observe that
-the third transition generally captures numbers formatted as time. We could
-generalize this transition to capture any tokens that express the time; which
-could lead to generalization on previously unseen data instances. This could
-also address issues of unknown tokens altogether. 
+Returning back to the last two paragraphs in Section
+\ref{section:discussion_regex}, we recall how certain transitions in the RE
+lookup layer tend to be populated with tokens which have similar lexical
+semantics. We specifically draw attention to the example of digital temperature
+tokens mentioned in the aforementioned paragraphs and how both SoPa++ and the RE
+proxy model tend to memorize specific digital tokens such as \textit{"44"},
+\textit{"70"} and \textit{"67"}. While it is clear that these tokens could be
+replaced by any other finite digital tokens, both SoPa++ and the RE proxy model
+overfit on these particular tokens. It would therefore be of interest to explore
+generalizations on these types of tokens. In the case of the aforementioned
+digital tokens, we could replace these transitions in the RE lookup layer with a
+generic Perl-compatible regular expression
+\texttt{\textbackslash-?[\textbackslash d]+\textbackslash .?[\textbackslash d]*}
+which would match digital tokens with arbitrary lengths, period-separated
+decimal precision and a possible minus sign. As a result, this transition would
+now be able to accomodate various digital tokens with different formats and
+scales. It would be interesting to explore similar generalizations on other
+branching transitions such as those for commmunicating time. Naturally, this
+process would be much more difficult for tokens that do not have consistent
+formatting; which could include synonyms and proper nouns.
 
-\section{Modeling extensions}
+\section{Modeling}
 
-Since our current SoPa++ passes binary outputs from the TauSTE layer to the
-linear regression layer, we can infer that the classification outputs will be
-discretized as are the TauSTE outputs. As a result, we could transform the
-linear regression layer during the SoPa++ to RE proxy simplification phase into
-a decision tree; which could make the RE proxy model even more transparent given
-a small enough decision tree. This process could however be difficult for larger
-models with more TauSTE neurons; therefore this process could be more viable for
-smaller models.
+Currently, the SoPa++ model conducts classification decisions by max-pooling
+document scores from its constitutent strict-linear chain WFA-$\omega$'s. These
+document scores correspondingly reflect substrings in the document but do not
+necessarily contain positional information regarding them, such as substring
+X occurring after substring Y. While this was not a shortcoming in the generally
+short-sequence FMTOD data set, it could become a hindrance when applying SoPa++
+to longer documents. As a result, it would be interesting to incorporate
+positional information alongside the Viterbi algorithm to allow for
+classification on longer documents. Another possible extension could be to
+extend SoPa++'s weighted finite-state automata to finite-state transducers;
+which are highly similar but return scored seqeuences instead of scored paths.
+In this way, SoPa++ with finite-state transducers could even be used for
+sequence-to-sequence tasks; making it viable for other applications in NLP such
+as Machine Translation (MT).
 
-Another possible extension could be to extend SoPa++'s weighted finite-state
-automata to finite-state transducers; which are highly similar but return scored
-seqeuences instead of only path scores. In this way, SoPa++ with finite-state
-transducers could even be used for sequence-to-sequence tasks; making it viable
-to other applications in NLP such as Neural Machine Translation (NMT). Finally,
-it would be interesting to see how SoPa++ performs in tasks given longer
-sequence lengths since the FMTOD data set generally contains short input
-utterances.
+\section{Explainability}
+
+In regards to explainability, we largely focused on the technical requirements
+for showing effective explanations by simplification for the SoPa++ model. To
+evaluate the quality of explanations of SoPa vs. SoPa++, we only used the three
+guidelines for good explanations as per Section \ref{section:xai_metrics}. While
+useful, these are ultimately only guidelines and do not necessarily reflect the
+evaluation of explanations perceived by the target audiences of SoPa and SoPa++;
+which are average end-users and exper-users respectively. As a result, it would
+be interesting to conduct a survey on how satisfactory the provided explanations
+from SoPa and SoPa++ were to these target audiences. This survey could, for
+example, be done in a University's department-wide setting using one of the many
+well-developed web-based survey tools where participants provide a basic
+positive or negative rating on the provided explanations from their assigned
+models. Although subjective, this might help to provide a rating of the
+explainability methods of SoPa and SoPa++ through their respective target
+audiences.
 
 %%% Local Variables: 
 %%% mode: latex
