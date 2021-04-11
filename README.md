@@ -2,6 +2,12 @@
 
 This repository documents M.Sc. thesis research titled *"SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted finite-state neural architectures"*. The manuscript for this thesis can be found [here](./docs/manuscript/main.pdf).
 
+<p align="center">
+  <img src="./docs/visuals/pdfs/generated/spp_computational_graph/main.png" height="350" />
+  &nbsp;
+  <img src="./docs/visuals/pdfs/generated/regex_computational_graph/main.png" height="350" />
+</p>
+
 ## Dependencies :neckbeard:
 
 1. This repository's code was tested with Python versions `3.7.*`. To sync dependencies, we recommend creating a virtual environment and installing the relevant packages via `pip`:
