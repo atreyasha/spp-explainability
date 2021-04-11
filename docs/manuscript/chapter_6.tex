@@ -4,35 +4,35 @@
 
 We now arrive at our Conclusions chapter where we summarize and conclude the
 main contents of this thesis. We started off this thesis by emphasizing the
-importance of XAI research and correspondingly laid out clear definitions of
-XAI-related concepts adapted from \citet{arrieta2020explainable}. We then drew
+importance of \ac{xai} research and correspondingly laid out clear definitions of
+\ac{xai}-related concepts adapted from \citet{arrieta2020explainable}. We then drew
 inspiration from the SoPa model in \citet{schwartz2018sopa} and focused on
 improving the SoPa model to ultimately create our SoPa++ model. The most
-significant changes in SoPa++ included the modification of linear-chain WFAs to
-strict linear-chain WFA-$\omega$'s, the replacement of the MLP with layer
-normalization, TauSTE and linear layers and the introduction of the explanations
-by simplification post-hoc explainability technique to create RE proxy models.
+significant changes in SoPa++ included the modification of linear-chain \ac{wfas} to
+strict linear-chain \ac{wfaws}, the replacement of the \ac{mlp} with layer
+normalization, \ac{tauste} and linear layers and the introduction of the explanations
+by simplification post-hoc explainability technique to create \ac{re} proxy models.
 With these changes, we proceeded to answer our three research questions listed
 in Section \ref{section:rq}.
 
 Regarding our first research question, we observe that SoPa++'s best accuracy
-range on the FMTOD data set of 97.6-98.3$\%$ falls into the competitive accuracy
+range on the \ac{fmtod} data set of 97.6-98.3$\%$ falls into the competitive accuracy
 range of 96.6-99-5$\%$ based on other recent studies. In this respect, we
-conclude that SoPa++ offers competitive performance on the FMTOD English
+conclude that SoPa++ offers competitive performance on the \ac{fmtod} English
 language intent classification task.
 
 Regarding our second research question, we compare the accuracy scores and
-distance metrics between SoPa++ and RE proxy model pairs and observe accuracy
+distance metrics between SoPa++ and \ac{re} proxy model pairs and observe accuracy
 differences as low as $\sim$1$\%$ and softmax distance norms as small as $\sim$4$\%$ for
 medium and large-sized models with $\tau$-thresholds ranging from 0.50-1.00. We
 therefore conclude that the explanations by simplification post-hoc
-explainability technique is effective on the FMTOD English language intent
+explainability technique is effective on the \ac{fmtod} English language intent
 classification task given larger model sizes and $\tau$-thresholds.
 
-Regarding our third and final research question, we identify salient TauSTE
+Regarding our third and final research question, we identify salient \ac{tauste}
 neurons which received disproportionately large relative linear weights in our
-best performing small RE proxy model. Next, we analyze regular expression
-samples in the RE lookup layer from the aforementioned RE proxy model
+best performing small \ac{re} proxy model. Next, we analyze regular expression
+samples in the \ac{re} lookup layer from the aforementioned \ac{re} proxy model
 corresponding to these salient neurons. Based on an analysis of these sampled
 regular expressions, we observe several interesting phenomena such as lexical
 segmentation, branching transitions with tokens having similar lexical semantics

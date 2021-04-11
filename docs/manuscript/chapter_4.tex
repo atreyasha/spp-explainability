@@ -89,11 +89,11 @@ best performing models for each model size are those where $\tau$=0.00.
     Size & Model & $\tau$=0.00 & $\tau$=0.25 & $\tau$=0.50 & $\tau$=0.75 & $\tau$=1.00 \\
     \midrule
     Small & SoPa++ & 97.6 $\pm$ 0.2 & 97.6 $\pm$ 0.2 & 97.3 $\pm$ 0.2 & \bm{$97.0 \pm 0.3$} & 96.9 $\pm$ 0.3 \\
-    & RE proxy & 95.5 $\pm$ 1.0 & 96.2 $\pm$ 0.8 & 96.5 $\pm$ 0.6 & \bm{$96.3 \pm 0.7$} & 96.1 $\pm$ 0.6 \\
+    & \ac{re} proxy & 95.5 $\pm$ 1.0 & 96.2 $\pm$ 0.8 & 96.5 $\pm$ 0.6 & \bm{$96.3 \pm 0.7$} & 96.1 $\pm$ 0.6 \\
     Medium & SoPa++ & 98.3 $\pm$ 0.2 & 98.1 $\pm$ 0.1 & 98.0 $\pm$ 0.2 & 97.9 $\pm$ 0.1 & \bm{$97.7 \pm 0.1$}  \\
-    & RE proxy & 97.4 $\pm$ 0.5 & 97.5 $\pm$ 0.3 & 97.5 $\pm$ 0.2 & 97.5 $\pm$ 0.3 & \bm{$97.5 \pm 0.3$} \\
+    & \ac{re} proxy & 97.4 $\pm$ 0.5 & 97.5 $\pm$ 0.3 & 97.5 $\pm$ 0.2 & 97.5 $\pm$ 0.3 & \bm{$97.5 \pm 0.3$} \\
     Large & SoPa++ & 98.3 $\pm$ 0.2 & 98.3 $\pm$ 0.2 & 98.2 $\pm$ 0.2 & 98.1 $\pm$ 0.2 & \bm{$98.0 \pm 0.2$} \\
-    & RE proxy & 97.9 $\pm$ 0.4 & 98.0 $\pm$ 0.3 & 98.0 $\pm$ 0.3 & 98.0 $\pm$ 0.2 & \bm{$98.1 \pm 0.2$} \\
+    & \ac{re} proxy & 97.9 $\pm$ 0.4 & 98.0 $\pm$ 0.3 & 98.0 $\pm$ 0.3 & 98.0 $\pm$ 0.2 & \bm{$98.1 \pm 0.2$} \\
     \bottomrule\\[-13pt]
     && \multicolumn{5}{c}{Metric in $\%$ with mean $\pm$ standard-deviation} \\
     \cline{3-7} \\[-15pt]
@@ -117,14 +117,14 @@ best performing models for each model size are those where $\tau$=0.00.
 
 Following our methodologies for evaluating explanations by simplification for
 the SoPa++ model, we compare test set accuarcies and distance metrics between
-SoPa++ and RE proxy model pairs. Figure \ref{fig:explain_evaluate} and Table
+SoPa++ and \ac{re} proxy model pairs. Figure \ref{fig:explain_evaluate} and Table
 \ref{tab:explain_evaluate_performance} provide both a visualization and tabular
 summary of all the aforementioned comparisons respectively. Overall, we can
-observe three general trends. Firstly, we observe that SoPa++ and RE proxy test
+observe three general trends. Firstly, we observe that SoPa++ and \ac{re} proxy test
 accuracies tend to become converge towards one another as we increase the
-$\tau$-threshold. Next, we can observe that RE proxy accuracies tend to be lower
+$\tau$-threshold. Next, we can observe that \ac{re} proxy accuracies tend to be lower
 than their SoPa++ counterparts during this convergence process; with a single
-exception of the large model at $\tau=1.00$ where the RE proxy mean accuracy
+exception of the large model at $\tau=1.00$ where the \ac{re} proxy mean accuracy
 exceeds that of SoPa++. Finally, we observe the general trend that both
 $\overline{\delta_{\sigma}}$ and $\overline{\delta_b}$ become closer to zero as
 we increase the $\tau$-threshold. This trend is consistently observed for
@@ -143,34 +143,34 @@ $\overline{\delta_{\sigma}}$; which is minimized at $\tau$-threshold values of
 \end{figure}
 
 Following our methologies to find interesting and relevant explanations on the
-FMTOD data set, we start off by selecting a particular RE proxy model and
-analyzing the relative linear weights applied to each TauSTE neuron. For
-simplicity and to minimize the number of TauSTE neurons to visualize, we select
-the best performing small RE proxy model with 40 TauSTE neurons and a test set
+\ac{fmtod} data set, we start off by selecting a particular \ac{re} proxy model and
+analyzing the relative linear weights applied to each \ac{tauste} neuron. For
+simplicity and to minimize the number of \ac{tauste} neurons to visualize, we select
+the best performing small \ac{re} proxy model with 40 \ac{tauste} neurons and a test set
 accuracy of 97.4$\%$. Figure \ref{fig:neuron_weights} visualizes the relative
-linear weights applied to each TauSTE neuron in this RE proxy model. We can
+linear weights applied to each \ac{tauste} neuron in this \ac{re} proxy model. We can
 observe that the relative linear weights are generally smoothly and evenly
-distributed for each TauSTE neuron among all the 12 FMTOD classes. That being
-said, there exist salient TauSTE neurons on which there are disproportionatey
+distributed for each \ac{tauste} neuron among all the 12 \ac{fmtod} classes. That being
+said, there exist salient \ac{tauste} neurons on which there are disproportionatey
 large relative weights placed for certain domains compared to others. Examples
 of these include neuron 19, 25 and 17 which place disproportionately large
 relative weights on the alarm, reminder and weather domains respectively.
 
-Next, we isolate the aforementioned salient TauSTE neurons 19, 25 and 17 and we
-sample ten "activating" regular expressions from the RE lookup layer
+Next, we isolate the aforementioned salient \ac{tauste} neurons 19, 25 and 17 and we
+sample ten "activating" regular expressions from the \ac{re} lookup layer
 corresponding to these three neurons. We visualize these regular expressions as
-strict linear-chain NFA with $\omega$-transitions as shown in Figures
+strict linear-chain \ac{nfa} with $\omega$-transitions as shown in Figures
 \ref{fig:regex_example_neuron_alarm}, \ref{fig:regex_example_neuron_reminder}
 and \ref{fig:regex_example_neuron_weather} respectively. We can observe that
-TauSTE neurons 17 and 19 are used for capturing sub-strings of length 3, while
-TauSTE neuron 25 is used for capturing sub-strings of length 4. Next, we can
+\ac{tauste} neurons 17 and 19 are used for capturing sub-strings of length 3, while
+\ac{tauste} neuron 25 is used for capturing sub-strings of length 4. Next, we can
 observe the segmentation of domain related information among the three neurons.
 Finally, we can observe certain main-path transitions which show high degrees of
 branching; which implies that these transitions were frequently utilized. While
-we only sampled ten regular expressions per neuron from the RE lookup layer, it
+we only sampled ten regular expressions per neuron from the \ac{re} lookup layer, it
 should be noted that there exist many more regular expressions to explore.
 Therefore, the following regular expressions only function as samples to provide
-us with some notion of what kinds of regular expressions the SoPa++ and RE proxy
+us with some notion of what kinds of regular expressions the SoPa++ and \ac{re} proxy
 models captured as important.
 
 \newpage

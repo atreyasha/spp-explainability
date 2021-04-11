@@ -4,29 +4,29 @@
 
 In this chapter, we describe the various background concepts which are necessary
 in order to support the methodologies pursued in this thesis. These background
-concepts range from conceptualizations and definitions in XAI, variants of
+concepts range from conceptualizations and definitions in \ac{xai}, variants of
 finite-state automata, straight-through estimators and finally the SoPa model
 framework. We start off by introducing the most important concepts related to
-XAI.
+\ac{xai}.
 
 \section{Explainable artificial intelligence}
 
 \label{section:xai}
 
-In this section, we lay out background concepts for Explainable Artificial
-Intelligence (XAI) which have been largely adopted from
-\citet{arrieta2020explainable}. The study is particularly helpful for us since
-it summarizes the findings of $\sim$400 XAI contributions and presents
-these findings in the form of well-defined concepts and taxonomies. In addition,
-the study discusses the many possible future directions of XAI research.
+In this section, we lay out background concepts for \ac{xai} which have been
+largely adopted from \citet{arrieta2020explainable}. The study is particularly
+helpful for us since it summarizes the findings of $\sim$400 \ac{xai}
+contributions and presents these findings in the form of well-defined concepts
+and taxonomies. In addition, the study discusses the many possible future
+directions of \ac{xai} research.
 
 \subsection{Transparency}
 
 One of the key contributions of \citet{arrieta2020explainable} to the field of
-XAI is the introduction of the concept of transparency, as well as the
-classification of various Machine Learning (ML) models into transparent and
+\ac{xai} is the introduction of the concept of transparency, as well as the
+classification of various \ac{ml} models into transparent and
 black-box categories. In this section, we provide an adapted definition of
-transparency and list examples of transparent and black-box ML models.
+transparency and list examples of transparent and black-box \ac{ml} models.
 
 \begin{definition}[Transparency; \citealt{arrieta2020explainable}; Page 4,
   Section 2.1]
@@ -70,9 +70,9 @@ transparency and list examples of transparent and black-box ML models.
   Therefore, we use these terms equivalently and interchangeably.
 \end{remark}
 
-Examples of well-known transparent ML models are linear/logistic regressors,
+Examples of well-known transparent \ac{ml} models are linear/logistic regressors,
 decision trees and rules-based learners. Similarly, common examples of black-box
-ML models are tree ensembles and deep neural networks.
+\ac{ml} models are tree ensembles and deep neural networks.
 \citet{arrieta2020explainable} provide extensive justifications using the
 aforementioned three criteria in conducting model classifications into the
 transparent and black-box categories. We would direct the reader to their study
@@ -81,10 +81,10 @@ for a full analysis and justification of these classifications.
 \subsection{Explainability and XAI}
 
 Another key contribution of \citet{arrieta2020explainable} is a unified
-conceptualization of explainability and XAI based on an extensive literature
+conceptualization of explainability and \ac{xai} based on an extensive literature
 review. Drawing inspiration from their study, we provide adapted definitions of
-explainability and XAI, as well as comment on interesting aspects related to
-XAI.
+explainability and \ac{xai}, as well as comment on interesting aspects related to
+\ac{xai}.
 
 \begin{definition}[Explainability; \citealt{arrieta2020explainable}; Page 4,
   Section 2.1]
@@ -99,19 +99,19 @@ XAI.
   its functioning understandable to a given target audience.
 \end{definition}
 
-\citet{arrieta2020explainable} observe that black-box ML models are increasingly
-being employed to make important predictions in critical contexts, citing
-high-risk areas such as precision medicine and autonomous vehicles. Of
-particular relevance to the field of Natural Language Processing (NLP), the
+\citet{arrieta2020explainable} observe that black-box \ac{ml} models are
+increasingly being employed to make important predictions in critical contexts,
+citing high-risk areas such as precision medicine and autonomous vehicles. Of
+particular relevance to the field of \ac{nlp}, the
 study notes a myriad of issues related to inductive biases within training data
 sets and the ethical issues involved in using black-box models trained on such
 data sets. As a result, they describe an increased demand for transparency in
-black-box ML models from the various stakeholders in Artificial Intelligence
-(AI). In addition, \citet{arrieta2020explainable} emphasize the presence of a
-target audience for XAI; implying that different XAI techniques should be
-employed for different target audiences. In their study, they provide examples
-of target audiences such as domain experts, end-users and managers as shown in
-Figure \ref{fig:xai_target_audience}.
+black-box \ac{ml} models from the various stakeholders in Artificial
+Intelligence. In addition, \citet{arrieta2020explainable} emphasize the presence
+of a target audience for \ac{xai}; implying that different \ac{xai} techniques
+should be employed for different target audiences. In their study, they provide
+examples of target audiences such as domain experts, end-users and managers as
+shown in Figure \ref{fig:xai_target_audience}.
 
 \begin{figure}[t]
   \centering \includegraphics[trim={0.1cm 0.1cm 0.1cm
@@ -148,15 +148,15 @@ not necessarily be the case for interpretability or transparency.
 
 \label{section:xai_techniques}
 
-Based on the aforementioned classification of ML models into transparent and
+Based on the aforementioned classification of \ac{ml} models into transparent and
 black-box models, \citet{arrieta2020explainable} expound on explainability
 techniques for each of these model types. Due to their transparent nature, the
-study states that transparent ML models are usually explainable in themselves to
+study states that transparent \ac{ml} models are usually explainable in themselves to
 most target audiences and therefore usually do not require any external
 technique to extract explanations. The study does however highlight some target
 audiences, such as non-expert users, who may require external explainability
 techniques such as model output visualizations in order to explain the inner
-workings of transparent ML models.
+workings of transparent \ac{ml} models.
 
 For the case of black-box models, \citet{arrieta2020explainable} argue that
 separate or external techniques must be utilized in order to reasonably explain
@@ -174,13 +174,13 @@ adapted definitions below.
 \end{definition}
 
 \begin{remark}
-  Local explanations are commonly used in XAI research and function by using
+  Local explanations are commonly used in \ac{xai} research and function by using
   differentiating properties on model solution space subsets.
 \end{remark}
 
 \begin{remark}
   Two well-known examples of local explainability techniques are Local
-  Interpretable Model-Agnostic Explanations (LIME; \citealt{lime}) and G-REX
+  Interpretable Model-Agnostic Explanations \citep{lime} and G-REX
   \citep{konig2008g}.
 \end{remark}
 
@@ -199,7 +199,7 @@ adapted definitions below.
 
 \begin{remark}
   Well-known feature relevance explainability techniques include the Shapley
-  Additive Explanations (SHAP; \citealt{lundberg2017unified}) and the occlusion
+  Additive Explanations \citep{lundberg2017unified} and the occlusion
   sensitivity method \citep{zeiler2014visualizing}.
 \end{remark}
 
@@ -227,7 +227,7 @@ adapted definitions below.
 \end{remark}
 
 Through our own survey of recent literature on explainability techniques used in
-NLP, we came across several interesting studies employing the local
+\ac{nlp}, we came across several interesting studies employing the local
 explanations, feature relevance and explanations by simplification
 explainability techniques to better explain black-box models; particularly deep
 neural networks.
@@ -250,7 +250,7 @@ respectively.
 An interesting and insightful contribution of \citet{arrieta2020explainable} is
 their conceptualization of the performance-interpretability tradeoff; which in
 its essence states that the interpretability or transparency of models is
-negatively correlated with performance on ML tasks. \citet[Page 18, Section
+negatively correlated with performance on \ac{ml} tasks. \citet[Page 18, Section
 5.1]{arrieta2020explainable} introduce the performance-interpretability tradeoff
 with the caveat that \textit{``the matter of interpretability versus performance
   is one that repeats itself through time, but as any other big statement, has
@@ -275,13 +275,13 @@ contains significant noise.
 \label{section:xai_metrics}
 
 Towards the end of their study, \citet{arrieta2020explainable} note two major
-limitations of the current state of XAI research. Firstly, they observe the lack
+limitations of the current state of \ac{xai} research. Firstly, they observe the lack
 of a unified conceptualization of explainability and transparency between
 various studies. To address this, they acknowledge that their study could
-provide a good unified starting point for other XAI studies to branch out from.
+provide a good unified starting point for other \ac{xai} studies to branch out from.
 Secondly, \citet{arrieta2020explainable} note the lack of a unified metric that
 denotes how explainable any given model is. They explain why developing
-such a metric has been a difficult process for many XAI studies; particularly
+such a metric has been a difficult process for many \ac{xai} studies; particularly
 because such a metric would entail incorporating psychological, sociological and
 cognitive elements to accommodate the goodness of fit of an explainability
 technique to a certain target audience. Furthermore, incorporating such elements
@@ -321,13 +321,12 @@ such piecewise discrete activation functions typically default to zero
 \citep{bengio2013estimating,courbariaux2016binarized,yin2019understanding}.
 
 One significant workaround for this issue was proposed by
-\citet{bengio2013estimating} through the introduction of the Straight-Through
-Estimator (STE). In the vanilla version of the STE, the STE neuron emits a
-signal of 1 when its input is strictly positive, and emits a zero signal in all
-other cases (Equation \ref{eq:ste_forward}). The STE then uses a simple identity
-function to estimate the gradient during the backward pass (Equation
-\ref{eq:ste_backward}). The vanilla STE is visualized in
-Figure \ref{fig:ste}.
+\citet{bengio2013estimating} through the introduction of the \ac{ste}. In the
+vanilla version of the \ac{ste}, the \ac{ste} neuron emits a signal of 1 when its input is
+strictly positive, and emits a zero signal in all other cases (Equation
+\ref{eq:ste_forward}). The \ac{ste} then uses a simple identity function to estimate
+the gradient during the backward pass (Equation \ref{eq:ste_backward}). The
+vanilla \ac{ste} is visualized in Figure \ref{fig:ste}.
 
 \begin{equation}
   \label{eq:ste_forward}
@@ -350,7 +349,7 @@ Figure \ref{fig:ste}.
   \label{fig:ste}
 \end{figure}
 
-Aside from the vanilla STE, several other flavors of STEs have been proposed by
+Aside from the vanilla \ac{ste}, several other flavors of \ac{ste}s have been proposed by
 studies such as \citet{courbariaux2016binarized} and
 \citet{yin2019understanding}. In general, these studies have shown that
 quantized neural networks perform competitively with their
@@ -363,11 +362,11 @@ driven neural activation functions.
 \label{section:fa}
 
 As mentioned in Section \ref{section:xai_techniques}, our survey of
-explainability in NLP yielded several studies employing a post-hoc
+explainability in \ac{nlp} yielded several studies employing a post-hoc
 explainability techniques on deep neural networks. One common factor among
 several of these studies was the simplification of black-box models to
-Finite-state Automata (FAs). As this will eventually become a key focus of this
-thesis, we define key concepts related to the FAs; as well as extensions to FAs.
+\ac{fas}. As this will eventually become a key focus of this
+thesis, we define key concepts related to the \ac{fas}; as well as extensions to \ac{fas}.
 
 \subsection{Finite-state automaton}
 
@@ -438,28 +437,29 @@ definitions and descriptions for these mutually exclusive model categories.
     A linear-chain finite-state automaton can be considered as \textit{strict}
     if it does not permit self-loop transitions and therefore only permits
     transitions to adjacent states which are strictly closer to the
-    accepting state. An example of a strict linear-chain NFA can be seen in
+    accepting state. An example of a strict linear-chain \ac{nfa} can be seen in
     Figure \ref{fig:regex_fa}.
   \end{remark}
 
   \begin{remark}
     The presence of the linear-chain terminology is effectively absent in
     theoretical computer science literature but is prevalent in practical
-    research related to Hidden Markov Models (HMMs) and Conditional Random
-    Fields (CRFs) such as in \citet{tsuruoka2009fast}. As a result, we are only
+    research related to Hidden Markov Models and Conditional Random
+    Fields such as in \citet{tsuruoka2009fast}. As a result, we are only
     able to provide a text-based definition here.
   \end{remark}
   
 \end{definition}
 
-A string $\bm{x}$ is said to be \textit{accepted} by any FA $\mathcal{M}$ if the
+A string $\bm{x}$ is said to be \textit{accepted} by any \ac{fa} $\mathcal{M}$ if the
 current state after consuming string $\bm{x}$ is the accepting state. Similarly,
-a string $\bm{x}$ is said to be \textit{rejected} by any FA $\mathcal{M}$ if the
+a string $\bm{x}$ is said to be \textit{rejected} by any \ac{fa} $\mathcal{M}$ if the
 string $\bm{x}$ cannot be consumed or the current state after consuming $\bm{x}$
-is a non-accepting state. The key difference between DFAs and NFAs is present in
+is a non-accepting state. The key difference between deterministic \ac{fas} and
+non-deterministic \ac{fas} is present in
 their transition functions; specifically that the former guarantees that each
 state allows for a unique transition to another state given a non-empty input
-string. Contrastingly, NFAs allow for arbitrary transitions without necessarily
+string. Contrastingly, \ac{nfas} allow for arbitrary transitions without necessarily
 consuming an input token.
 
 \begin{figure}[t]
@@ -473,25 +473,25 @@ consuming an input token.
 
 \subsection{Regular expressions}
 
-Regular expressions (REs) and FAs have been shown to be equivalent in their
+Regular expressions and \ac{fas} have been shown to be equivalent in their
 expressive power in that they both recognize regular languages
 \citep{sipser1996introduction}. Historically, several algorithms have been
-studied and optimized for converting FAs to REs and vice-versa
+studied and optimized for converting \ac{fas} to regular expressions and vice-versa
 \citep{mcnaughton1960regular,thompson1968programming}. Figure \ref{fig:regex_fa}
 shows a simple example of converting the regular expression \texttt{``how are
-  (you|they) doing ?''} into a strict linear-chain NFA. The aforementioned
+  (you|they) doing ?''} into a strict linear-chain \ac{nfa}. The aforementioned
 regular expression is written using the Perl-compatible regular expression
 syntax with the \texttt{``|''} character indicating alternative possibilities.
 
 \subsection{Weighted finite-state automaton}
 
-Weighted finite-state automata (WFAs) are extensions of finite-state automata
+\ac{wfas} are extensions of finite-state automata
 which allow for the assignment of numerical weights to transitions given a
 semiring to govern the algebra of the transitions. Compared to
-the aforementioned FAs that only accept or reject strings, WFAs numerically
-score strings which has made them useful for several applications in NLP such as
+the aforementioned \ac{fas} that only accept or reject strings, \ac{wfas} numerically
+score strings which has made them useful for several applications in \ac{nlp} such as
 tokenization and part-of-speech tagging \citep{maletti2017survey}. Here, we provide
-extensive definitions of a semiring, WFA, path score and string score.
+extensive definitions of a semiring, \ac{wfa}, path score and string score.
 
 \begin{definition}[Semiring; \citealt{kuich1986linear}]
   \label{def:semiring}
@@ -549,7 +549,7 @@ extensive definitions of a semiring, WFA, path score and string score.
   \begin{remark}
     As with finite-state automata, it is also possible to construct (strict)
     linear-chain weighted finite-state automata. Similarly, it is possible to
-    extract a FA from a WFA given a particular set of valid transitions.
+    extract a \ac{fa} from a \ac{wfa} given a particular set of valid transitions.
   \end{remark}
  
 \end{definition}
@@ -624,17 +624,17 @@ this thesis is in improving the \textbf{So}ft \textbf{Pa}tterns (SoPa) model
 presented in \citet{schwartz2018sopa}. In this section, we describe important
 aspects of the SoPa model which ultimately become relevant for our
 methodologies. \citet{schwartz2018sopa} introduce SoPa as a novel and
-lightweight hybridized RNN, CNN and WFA-based neural architecture. SoPa
-resembles a RNN because it processes text sequentially and can encode strings of
+lightweight hybridized \ac{rnn}, \ac{cnn} and \ac{wfa}-based neural architecture. SoPa
+resembles a \ac{rnn} because it processes text sequentially and can encode strings of
 arbitrary lengths. Similarly, the architecture contains a variable number of
-constrained linear-chain WFAs with variable numbers of states or window sizes;
-which resembles both one-layer CNNs and an ensemble of linear-chain WFAs. The
+constrained linear-chain \ac{wfas} with variable numbers of states or window sizes;
+which resembles both one-layer \ac{cnn}s and an ensemble of linear-chain \ac{wfas}. The
 combination of the aforementioned features ultimately allows SoPa to learn soft
 versions of traditionally hard surface patterns.
 
 In their study, \citet{schwartz2018sopa} test the SoPa architecture on three
 separate sentiment classification tasks and compare the results with four
-baselines which include a bidirectional LSTM and a CNN. With their results, they
+baselines which include a bidirectional \ac{lstm} and a \ac{cnn}. With their results, they
 show that SoPa performed on par or better than all baselines on all tasks.
 Additionally, they show that SoPa outperformed all baselines significantly in
 low-data settings. Finally, the authors present workflows to explain the SoPa
@@ -654,17 +654,17 @@ techniques.
 
 \label{section:sopa_lc_wfa}
 
-In regards to the WFAs used in SoPa, \citet{schwartz2018sopa} utilize
-linear-chain WFAs where each linear-chain WFA is alloted a sequence of
-$|\mathcal{Q}|$ states. Each state $i$ in the linear-chain WFA has three
+In regards to the \ac{wfas} used in SoPa, \citet{schwartz2018sopa} utilize
+linear-chain \ac{wfas} where each linear-chain \ac{wfa} is alloted a sequence of
+$|\mathcal{Q}|$ states. Each state $i$ in the linear-chain \ac{wfa} has three
 possible outgoing transitions; namely a \textbf{self-loop transition} which
 consumes a token but stays in the same state $i$, an
 \textbf{$\bm{\epsilon}$-transition} which does not consume a token but transitions to
 state $i+1$ and a \textbf{main-path transition} which consumes a specific token
 and transitions to state $i+1$. Furthermore, \citet{schwartz2018sopa} utilize
-only the max-sum and max-product semirings in their linear-chain WFAs. Figure
-\ref{fig:fa} shows a sample NFA extracted from the aforementioned linear-chain
-WFA with all three aforementioned transitions, which could accept
+only the max-sum and max-product semirings in their linear-chain \ac{wfas}. Figure
+\ref{fig:fa} shows a sample \ac{nfa} extracted from the aforementioned linear-chain
+\ac{wfa} with all three aforementioned transitions, which could accept
 strings such as \texttt{"what a great book !"} and \texttt{"what a great
   entertaining book !"}.
 
@@ -709,17 +709,17 @@ state $i$. Next, \citet{schwartz2018sopa} fix the initial vector $\bm{\lambda} =
 zero values specified in the semiring as per Definition \ref{def:semiring}.
 Ultimately, these are formalisms to imply that there only exists one start and
 one accepting state and these are present at both extremes of the linear-chain
-WFA; which is ultimately consistent with the linear-chain definition as per Definition
+\ac{wfa}; which is ultimately consistent with the linear-chain definition as per Definition
 \ref{def:lfa}.
 
-The aforementioned constraints in the linear-chain WFA structure result in the
+The aforementioned constraints in the linear-chain \ac{wfa} structure result in the
 transition matrix $\bm{\Gamma}$ being reduced to a sparse diagonal matrix.
 Correspondingly, the runtime of the Forward algorithm under the linear-chain
-WFAs gets reduced to $O(|Q||\bm{x}|)$ compared to the original runtime in
+\ac{wfas} gets reduced to $O(|Q||\bm{x}|)$ compared to the original runtime in
 Remark \ref{rmk:old_runtime}. Finally, it is worth noting that \citet[Page 3,
-Section 3.1]{schwartz2018sopa} refer to the linear-chain WFAs simply as
+Section 3.1]{schwartz2018sopa} refer to the linear-chain \ac{wfas} simply as
 \textit{``patterns''}. For brevity and consistency, we refer to linear-chain
-WFAs as patterns interchangeably.
+\ac{wfas} as patterns interchangeably.
 
 \subsection{Document score}
 
@@ -730,9 +730,9 @@ short strings, \citet[Page 3, Section 3.2]{schwartz2018sopa} propose computing
 the string score, as per Definition \ref{def:string_score}, over all consecutive
 substrings in the document which ultimately returns a document score
 $s_{\text{doc}}(\bm{y})$ for an arbitrary document $\bm{y}$. The document score
-$s_{\text{doc}}(\bm{y})$ for a WFA would represent an aggregated score over all
+$s_{\text{doc}}(\bm{y})$ for a \ac{wfa} would represent an aggregated score over all
 consecutive substrings and would therefore also depend on the semiring used in
-the WFAs. In the case of max-based semirings using the Viterbi algorithm, the
+the \ac{wfas}. In the case of max-based semirings using the Viterbi algorithm, the
 document score $s_{\text{doc}}(\bm{y})$ would reflect the highest path score
 corresponding to a substring in document $\bm{y}$.
 
@@ -741,20 +741,21 @@ corresponding to a substring in document $\bm{y}$.
 \label{section:sopa_cg}
 
 To explain the overall computational graph of the SoPa model, we refer to the
-visualization shown in Figure \ref{fig:sopa} with two WFAs highlighted in blue and
-red. The WFAs compute the aforementioned document scores as they traverse the document.
-Given max-based semirings, the max-pooled scores accumulate in an output layer
-as shown on the top of Figure \ref{fig:sopa}. After traversing the full
-document, the max-pooled scores are passed through a Multi-Layer Perceptron
-(MLP) which conducts the final classification to an output label. It is worth
-noting that without $\epsilon$-transitions and self-loops, a linear-chain WFA
-with $|\mathcal{Q}|$ states should always consume $\mathcal{|Q|}-1$ tokens.
-However, by allowing the aforementioned special transitions; it is possible for
-strings of variable lengths to be consumed since an $\epsilon$-transition can
-transition to the next state without consuming tokens while a self-loop can
-consume tokens without transitioning to the next state. This is indeed the case
-for Pattern 2 in Figure \ref{fig:sopa}, when a self-loop is encountered in the
-transition from the token \textit{``and''} to the token \textit{``most''}.
+visualization shown in Figure \ref{fig:sopa} with two \ac{wfas} highlighted in
+blue and red. The \ac{wfas} compute the aforementioned document scores as they
+traverse the document. Given max-based semirings, the max-pooled scores
+accumulate in an output layer as shown on the top of Figure \ref{fig:sopa}.
+After traversing the full document, the max-pooled scores are passed through a
+\ac{mlp} which conducts the final classification to an output label. It is worth
+noting that without $\epsilon$-transitions and self-loops, a linear-chain
+\ac{wfa} with $|\mathcal{Q}|$ states should always consume $\mathcal{|Q|}-1$
+tokens. However, by allowing the aforementioned special transitions; it is
+possible for strings of variable lengths to be consumed since an
+$\epsilon$-transition can transition to the next state without consuming tokens
+while a self-loop can consume tokens without transitioning to the next state.
+This is indeed the case for Pattern 2 in Figure \ref{fig:sopa}, when a self-loop
+is encountered in the transition from the token \textit{``and''} to the token
+\textit{``most''}.
 
 \begin{figure}[t]
   \centering
@@ -771,7 +772,7 @@ Training the SoPa model requires both commonly used and special hyperparameters.
 Commonly used hyperparameters include the learning rate, neuron dropout and word
 dropout probabilities. A special hyperparameter unique to the SoPa model is the
 patterns hyperparameter $P$ which contains information on the number of
-linear-chain WFAs and the number of states allotted to each of them. The
+linear-chain \ac{wfas} and the number of states allotted to each of them. The
 hyperparameter $P$ is encoded as a string with the following syntax:
 \texttt{Length$_{1}$-Count$_{1}$\_$\dots$\_Length$_{k}$-Count$_{k}$}. An example
 of this hyperparameter $P$ is \texttt{5-15\_4-10\_3-5}, which would signify 15
@@ -782,12 +783,12 @@ patterns with 5 states each, 10 patterns with 4 states each and 5 patterns with
 
 \label{section:sopa_transparency}
 
-Since we expounded on XAI in Section \ref{section:xai} and made a case for
-viewing ML models from the lens of XAI, it would only make sense to extend the
+Since we expounded on \ac{xai} in Section \ref{section:xai} and made a case for
+viewing \ac{ml} models from the lens of \ac{xai}, it would only make sense to extend the
 same standards to the SoPa model. Based on the arguments made by
 \citet{arrieta2020explainable}, we can classify the SoPa model as a black-box
-model since it closely resembles RNNs and CNNs; and a strong case has already
-been made in their study regarding the black-box natures of both RNNs and CNNs.
+model since it closely resembles \ac{rnn}s and \ac{cnn}s; and a strong case has already
+been made in their study regarding the black-box natures of both \ac{rnn}s and \ac{cnn}s.
 Naturally, this would imply that post-hoc explainability techniques are required to
 explain the SoPa model.
 
@@ -806,9 +807,9 @@ on each classification decision.
 Using the post-hoc explainability taxonomies described in Section
 \ref{section:xai_techniques}, we can correspondingly classify the explainability
 techniques presented in \citet{schwartz2018sopa} using terminology consistent with
-XAI research. The first explainability technique uses individual text samples to
+\ac{xai} research. The first explainability technique uses individual text samples to
 determine the highest scoring substrings in documents; as well as the patterns
-or WFAs corresponding to them. Since this analysis is conducted at an individual
+or \ac{wfas} corresponding to them. Since this analysis is conducted at an individual
 document level and is never synthesized to a more global context, we would
 classify this under the local explanations explainability technique. The next
 technique involves an occlusion or sensitivity analysis over all patterns and
@@ -838,11 +839,3 @@ explanation.
 %%% mode: latex
 %%% TeX-master: "main"
 %%% End: 
-
-% LocalWords:  XAI Interpretability understandability simulatable decomposable
-% LocalWords:  algorithmically Simulatability Decomposability regressors NLP
-% LocalWords:  Explainability interpretability explainability subspaces Shapley
-% LocalWords:  Interpretable SHAP Automata FAs WFAs pdfs tradeoff pdf ste MLP
-% LocalWords:  quantized STE's STEs Semiring semiring Semirings semirings WFA
-% LocalWords:  substring Viterbi CNNs LSTM automata substrings Perceptron RNNs
-% LocalWords:  Hyperparameters hyperparameters tterns hyperparameter

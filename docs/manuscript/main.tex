@@ -40,7 +40,6 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage[utf8]{inputenc} % Required for inputting international characters
 \usepackage[T1]{fontenc} % Output font encoding for international characters
-\usepackage{enumitem}
 \usepackage{mathpazo} % Use the Palatino font by default
 \usepackage[backend=bibtex,style=authoryear,natbib=true,maxbibnames=99]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
@@ -53,8 +52,11 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{algpseudocode}
 \usepackage{bm}
 \usepackage{etoolbox}
+\usepackage{acro}
+\usepackage{enumitem}
 
 % specialized settings
+\acsetup{list-style = tabular}
 \counterwithout{equation}{chapter}
 \counterwithout{figure}{chapter}
 \counterwithout{table}{chapter}
@@ -85,6 +87,118 @@ headsepline, % Uncomment to get a line under the header
   \def\@fs@mid{\kern2pt\hrule\kern2pt}%
   \let\@fs@iftopcapt\iftrue}
 \makeatother
+
+% list all acronyms
+\DeclareAcronym{re}{
+  short = RE,
+  long  = Regular Expression,
+  class = abbrev
+}
+\DeclareAcronym{wfa}{
+  short = WFA,
+  long  = Weighted Finite-state Automaton,
+  class = abbrev
+}
+\DeclareAcronym{wfas}{
+  short = WFAs,
+  long  = Weighted Finite-state Automata,
+  class = abbrev
+}
+\DeclareAcronym{fmtod}{
+  short = FMTOD,
+  long  = Facebook Multilingual Task Oriented Dialog,
+  class = abbrev
+}
+\DeclareAcronym{xai}{
+  short = XAI,
+  long  = Explainable Artificial Intelligence,
+  class = abbrev
+}
+\DeclareAcronym{ste}{
+  short = STE,
+  long  = Straight-through Estimator,
+  class = abbrev
+}
+\DeclareAcronym{tauste}{
+  short = TauSTE,
+  long  = Tau-threshold Straight-through Estimator,
+  class = abbrev
+}
+\DeclareAcronym{ml}{
+  short = ML,
+  long  = Machine Learning,
+  class = abbrev
+}
+\DeclareAcronym{nlp}{
+  short = NLP,
+  long  = Natural Language Processing,
+  class = abbrev
+}
+\DeclareAcronym{nfa}{
+  short = NFA,
+  long  = Nondeterministic Finite-state Automaton,
+  class = abbrev
+}
+\DeclareAcronym{nfas}{
+  short = NFAs,
+  long  = Nondeterministic Finite-state Automata,
+  class = abbrev
+}
+\DeclareAcronym{fa}{
+  short = FA,
+  long  = Finite-state Automaton,
+  class = abbrev
+}
+\DeclareAcronym{fas}{
+  short = FAs,
+  long  = Finite-state Automata,
+  class = abbrev
+}
+\DeclareAcronym{mlp}{
+  short = MLP,
+  long  = Multi-layer Perceptron,
+  class = abbrev
+}
+\DeclareAcronym{rnn}{
+  short = RNN,
+  long  = Recurrent Neural Network,
+  class = abbrev
+}
+\DeclareAcronym{cnn}{
+  short = CNN,
+  long  = Convolutional Neural Network,
+  class = abbrev
+}
+\DeclareAcronym{gpu}{
+  short = GPU,
+  long  = Graphics Processing Unit,
+  class = abbrev
+}
+\DeclareAcronym{nlu}{
+  short = NLU,
+  long  = Natural Language Understanding,
+  class = abbrev
+}
+\DeclareAcronym{nltk}{
+  short = NLTK,
+  long  = Natural Language Toolkit,
+  class = abbrev
+}
+\DeclareAcronym{lstm}{
+  short = LSTM,
+  long  = Long Short-Term Memory,
+  class = abbrev
+}
+\DeclareAcronym{wfaw}{
+  short = WFA-$\omega$,
+  long  = Weighted Finite-state Automaton-$\omega$,
+  class = abbrev
+}
+\DeclareAcronym{wfaws}{
+  short = WFA-$\omega$'s,
+  long  = Weighted Finite-state Automata-$\omega$,
+  class = abbrev
+}
 
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
@@ -184,6 +298,8 @@ headsepline, % Uncomment to get a line under the header
 \listoffigures % Prints the list of figures
 
 \listoftables % Prints the list of tables
+
+\printacronyms[name=List of Abbreviations, sort=true] % Print list of abbreviations
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - CHAPTERS

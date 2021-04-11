@@ -12,7 +12,7 @@ motivate future research.
 \section{RQ1: Evaluating performance of SoPa++}
 
 To answer our first research question on whether SoPa++ can deliver competitive
-performance on the FMTOD English language intent classification task, we compare
+performance on the \ac{fmtod} English language intent classification task, we compare
 the mean performance metrics of our SoPa++ models against those from other
 recent studies as mentioned in Section \ref{section:fmtod_performance}.
 Referring to our accuracy ranges from Table \ref{tab:results_evaluation}, we
@@ -20,7 +20,7 @@ observe that the SoPa++ models show an accuracy range from 97.6-98.3$\%$ for the
 best performing models given their respective sizes. This falls into the general
 accuracy range of 96.6-99.5$\%$ observed in other studies as per Table
 \ref{tab:fmtod_examples}; albeit in the lower end of this spectrum. We can
-therefore conclude that SoPa++ offers competitive performance on the FMTOD's
+therefore conclude that SoPa++ offers competitive performance on the \ac{fmtod}'s
 English language intent classification task.
 
 While SoPa++'s performance range falling in the lower end of the aforementioned
@@ -32,7 +32,7 @@ $\sim$100-300 times larger than our SoPa++ models. In addition, models from
 \citet{zhang-etal-2020-intent} showed an exceptionally high accuracy of 99.5$\%$
 mainly because of pre-training on the external WikiHow data set for general
 intent classification tasks. Finally, many of the models described in Table
-\ref{tab:fmtod_results} were jointly trained on both FMTOD intent classification
+\ref{tab:fmtod_results} were jointly trained on both \ac{fmtod} intent classification
 and slot filling tasks; which could have contributed to certain joint-task
 performance benefits. These significant differences between SoPa++ and the
 aforementioned models should be taken into account when comparing SoPa++'s
@@ -42,10 +42,10 @@ performance with other studies.
 
 To answer our second research question on whether SoPa++ provides effective
 explanations by simplification, we summarize the minimum differences in SoPa++
-and RE proxy model-pair performance metrics; as well as the minimum distance
+and \ac{re} proxy model-pair performance metrics; as well as the minimum distance
 metrics observed as per Table \ref{tab:explain_evaluate_performance}. Regarding
 performance metrics, we can observe that lowest accuracy score differences
-between SoPa++ and RE proxy model-pairs to be 7$\%$ for small-sized models, 2$\%$
+between SoPa++ and \ac{re} proxy model-pairs to be 7$\%$ for small-sized models, 2$\%$
 for medium-sized models and 1$\%$ for large-sized models. Regarding distance
 metrics, we observe the lowest $\overline{\delta_{\sigma}}$ and
 $\overline{\delta_{b}}$ to be 10.0$\%$ and 12.4$\%$ for small-sized models, 5.8
@@ -58,7 +58,7 @@ with other studies. As a result, our interpretation of the effectiveness of the
 explanations by simplification post-hoc explainability technique will be
 subjective. That being said, we still believe that accuracy differences as low
 as 1$\%$ and softmax distance norms as small as 4.3$\%$ provide significant
-evidence towards a high degree of resemblance between SoPa++ and RE proxy
+evidence towards a high degree of resemblance between SoPa++ and \ac{re} proxy
 models. In summary, we find that the explanations by simplification post-hoc
 explainability technique in SoPa++ is effective, in particular for medium and
 large-sized models with $\tau$-thresholds ranging from 0.50-1.00.
@@ -68,14 +68,14 @@ which the explanations by simplification technique is not effective. For one,
 explanations by simplification as a post-hoc explainability technique as per
 Definition \ref{def:explain_simplify} explicitly requires the simplified proxy
 model to be more transparent than its antecedent counterpart. While we made a
-case for the transparency of the RE proxy model in Section
-\ref{section:re_transparency}, one could also provide arguments for the RE proxy
-model being non-transparent; especially when the RE lookup layer contains too
+case for the transparency of the \ac{re} proxy model in Section
+\ref{section:re_transparency}, one could also provide arguments for the \ac{re} proxy
+model being non-transparent; especially when the \ac{re} lookup layer contains too
 many regular expressions for a human to comprehend. This could indeed be the
-case for medium and large-sized RE proxy models which have RE lookup layers
+case for medium and large-sized \ac{re} proxy models which have \ac{re} lookup layers
 containing tens of thousands of "activating" regular expressions. In cases such,
 it would not be possible for a human to understand all of the regular
-expressions; which could ultimately render the RE proxy model as yet another
+expressions; which could ultimately render the \ac{re} proxy model as yet another
 black-box model. In such cases, the explanations by simplification post-hoc
 explainability technique would likely be ineffective.
 
@@ -83,20 +83,20 @@ With these arguments set aside, we now proceed to discuss some interesting
 observations in regards to our results for RQ2. Firstly, we can observe the
 performance-interpretability tradeoff from Section
 \ref{section:performance_interpretability_tradeoff} in Table
-\ref{tab:explain_evaluate_performance} with the more transparent RE proxy models
+\ref{tab:explain_evaluate_performance} with the more transparent \ac{re} proxy models
 consistently performing worse than their black-box SoPa++ counterparts; with the
-exception of the large-sized model-pair with $\tau$=1.00 where the RE proxy
+exception of the large-sized model-pair with $\tau$=1.00 where the \ac{re} proxy
 generally outperforms the SoPa++ antecedent model. Next, as per Table
-\ref{tab:explain_evaluate_performance}; we observe that RE proxy models tend to
+\ref{tab:explain_evaluate_performance}; we observe that \ac{re} proxy models tend to
 perform better as the $\tau$-threshold increases. We hypothesize that this
 occurs mainly because larger $\tau$-threshold forces the memorization of higher
-scoring paths which ultimately reduces the chances of the RE proxy model
-memorizing superfluous or unimportant regular expressions in the RE lookup
+scoring paths which ultimately reduces the chances of the \ac{re} proxy model
+memorizing superfluous or unimportant regular expressions in the \ac{re} lookup
 layer. Finally as per Figure \ref{fig:explain_evaluate}, we
 observe that the $\overline{\delta_{b}}$ metric continues to decrease as the
 $\tau$-threshold increases, while the $\overline{\delta_{\sigma}}$ metric
 plateaus beforehand and then slighly increases. This could be seen as
-counter-intuitive, since more similar TauSTE binary vectors should imply more
+counter-intuitive, since more similar \ac{tauste} binary vectors should imply more
 similar softmax distributions. It would be interesting to further explore these
 trends with even higher $\tau$-thresholds.
 
@@ -105,21 +105,21 @@ trends with even higher $\tau$-thresholds.
 \label{section:discussion_regex}
 
 To answer our third research question on interesting and relevant explanations
-derived from SoPa++ on the FMTOD data set, we refer back to our results for this
+derived from SoPa++ on the \ac{fmtod} data set, we refer back to our results for this
 research question and attempt to interpret them. Since this research question is
 more open-ended than the previous two, our approach to answer it will also be
 opinionated and subjective. One interesting observation is in the relative
-linear weights applied to the TauSTE neurons in Figure \ref{fig:neuron_weights}.
+linear weights applied to the \ac{tauste} neurons in Figure \ref{fig:neuron_weights}.
 We can observe that weights are generally continously distributed across all
 neurons; with some exceptions such as neurons 19, 25 and 17 where the weights
 are more skewed towards the alarm, reminder and weather domains respectively.
-This implies that SoPa++ and RE proxy models still distribute feature
-importances across TauSTE neurons in a highly connective sense; which also implies that
-each TauSTE neuron has a non-negligible impact on all classification decisions.
+This implies that SoPa++ and \ac{re} proxy models still distribute feature
+importances across \ac{tauste} neurons in a highly connective sense; which also implies that
+each \ac{tauste} neuron has a non-negligible impact on all classification decisions.
 
-With the identification of the salient TauSTE neurons 19, 25 and 17 specializing
+With the identification of the salient \ac{tauste} neurons 19, 25 and 17 specializing
 in the alarm, reminder and weather domains respectively; we draw out ten regular
-expression samples from RE lookup layer corresponding to each of these neurons
+expression samples from \ac{re} lookup layer corresponding to each of these neurons
 as reflected in Figures \ref{fig:regex_example_neuron_alarm},
 \ref{fig:regex_example_neuron_reminder} and
 \ref{fig:regex_example_neuron_weather} respectively. To extract interesting and
@@ -130,7 +130,7 @@ many of the regular expressions corresponding to neuron 19 use words related to
 alarms such as \textit{"snooze"} and \textit{"clock"}; while those corresponding to neuron 17 use
 words related to weather such as \textit{"fahrenheit"} and \textit{"forecast"}. Next, we can
 observe transition clustering or branching in sampled regular expressions across
-all three TauSTE neurons. This branching phenomenon is interesting because words
+all three \ac{tauste} neurons. This branching phenomenon is interesting because words
 in these branches can sometimes have very similar lexical semantics. For
 example, in the third regular expression from the bottom in Figure
 \ref{fig:regex_example_neuron_weather}, we observe branching with three
@@ -143,26 +143,26 @@ locations in the USA encountered in the training data. Finally, we can observe
 interesting positional, or possibly syntactic, features in the regular
 expressions in Figures \ref{fig:regex_example_neuron_alarm} and
 \ref{fig:regex_example_neuron_reminder}; which all have a $\omega$-transition in
-the same transition.
+the same position.
 
 Finally, the sampled regular expressions allow us to identify various inductive
-biases incorporated by SoPa++ and its RE proxy models from the training data.
+biases incorporated by SoPa++ and its \ac{re} proxy models from the training data.
 Going back to the digital and location-based tokens mentioned in the previous
 paragraph, we can observe how the training data induces USA-centric biases
 pertaining to locations such as \textit{"atlanta"} and hard-coded Fahrenheit
 temperatures such as \textit{"70"}. As a result, we can extrapolate that the
-SoPa++ and RE proxy models will likely only perform well on unseen data based in
+SoPa++ and \ac{re} proxy models will likely only perform well on unseen data based in
 USA-centric domains since they likely would not have encountered tokens from
-non-USA-centric domains. An advantageous aspect of the RE proxy model is that
+non-USA-centric domains. An advantageous aspect of the \ac{re} proxy model is that
 these inductive biases can be easily identified and also corrected. In the case
 of correcting USA-centric locations, we could manually add more non-USA-based
 locations in the branching transition of the third regular expression from the
 top in Figure \ref{fig:regex_example_neuron_weather}. Another possible inductive
 bias could be in the third regular expression from the top in Figure
 \ref{fig:regex_example_neuron_alarm}, where the first transition only allows for
-the pronoun \textit{"i"}. This inductive bias could be corrected in the RE proxy
+the pronoun \textit{"i"}. This inductive bias could be corrected in the \ac{re} proxy
 model by augmenting it with all other pronouns available in the English
-language. Finally, we can propagate these manual corrections in the RE proxy
+language. Finally, we can propagate these manual corrections in the \ac{re} proxy
 model back to SoPa++ by copying the word embeddings and transition matrix
 diagonals of the biased word to now represent those of the manually added new
 words.
