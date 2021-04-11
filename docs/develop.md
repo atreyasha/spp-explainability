@@ -20,178 +20,57 @@
 
 1.  Post-paper iterations
 
-    1.  Iteration 1 (content and readability)
+    1.  Iteration 2 (consistency and formatting)
 
-        1.  **TODO** Further work
+        1.  Final steps
 
-            1.  for the target audience of end-users -\> how can a user
-                make use of the regex model
+            1.  update everything from Miku\'s comments
 
-            2.  bring up human survey in further work or discussion and
-                also in methods
+                1.  update objective to be clear -\> improve sentence
+                    structure
 
-            3.  encode information on the position of the pattern where
-                it got maxed out -\> might help to encode information in
-                longer documents
+                2.  update background concepts to mention localized and
+                    indirect
 
-            4.  visualize examples/classes where regex and neural model
-                align and misalign, eg. with a confusion matrix
+                3.  need to update methodologies as well with motivation
 
-            5.  add meta-text for padding and linking
+                4.  add objective to conclusion as well
 
-            6.  improve overall readability
+            2.  perform spell-check of all text -\> reformat
+                spell-corrections if need be
 
-        2.  Conclusions
+                1.  check that all quotes have page/section attribution
 
-            1.  mention new purpose of TauSTE layer
+                2.  check that all borrowed figures have \"taken from\"
 
-            2.  improve overall readability
+                3.  ensure all text is padded
 
-    2.  Iteration 2 (consistency and formatting)
+            3.  re-read paper for flow and sensibility
 
-        1.  Terminologies and abbreviations
+                1.  check all figure and table captions -\> remove
+                    visualization as well since it is redundant
 
-            1.  consider adding abbreviations directly into definitions
+                2.  look out for possible abbreviation errors
 
-            2.  fine-tune preprocessing vs. pre-processing
+        2.  Formalities
 
-            3.  fine-tune antecedent/proxy terminology and synchronize
-                everywhere
+            1.  write abstract and mention results and TauSTE with new
+                purpose -\> add it into the TOC as well
 
-            4.  fine-tune usage of string length and document length
-                while consuming
+            2.  add student registration details and latest date on
+                bottom
 
-            5.  fine-tune usage of document vs. input utterance
-
-            6.  fine-tune usage of consume a token and not consume a
-                symbol
-
-            7.  fine-tune usage of patterns vs. substrings vs. WFAs
-
-            8.  fine-tune usage of TauSTE neurons and output neurons -\>
-                especially for RQ3
-
-            9.  fine-tune string consumption vs. string matching
-
-            10. fine-tune WFA to mean either automata or automaton, make
-                plural abbreviation WFAs clear
-
-            11. fine-tune usage of FA vs. NFA and make these consistent
-                with abbreviations versus full
-
-            12. fine-tune the slot-filling terminology
-
-            13. fine-tune terminology between intent detection and
-                intent classification
-
-            14. fine-tune terminology between data set and partition
-
-            15. fine-tune token length, sentence length and utterance
-                length
-
-            16. fine-tune regex vs. RE
-
-            17. fine-tune usage of the RE lookup layer
-
-            18. fine-tune linear vs. linear regression layer
-
-            19. fine-tune FMTOD data set vs. intent detection task
-
-            20. fine-tune explainability method vs. technique
-
-            21. fine-tune study vs. thesis
-
-            22. fine-tune final vs. end vs. accepting states
-
-            23. ensure linear-chain and strict linear-chain are added
-                before WFAs
-
-            24. ensure pattern length is replaced by the number of
-                states
-
-            25. define GPU somewhere and add to abbreviation
-
-            26. replace all epsilon words by the symbol where possible
-
-            27. make number of decimal places consistent wherever they
-                are used such as in tables with tau
-
-            28. replace string length with token count -\> think of how
-                and where this makes sense
-
-            29. sort out all abbreviations and standardize formatting in
-                terms of where they are first declared -\> perhaps add a
-                page number on list of abbreviations to indicate first
-                declaration -\> consider using a package to help with
-                this process
-
-        2.  Formatting
-
-            1.  ensure that areas between chapters-sections and/or
-                sections-subsections are filled with explanatory text to
-                provide a narrative -\> use links to/from individual
-                sections/chapters to string everything together -\> no
-                area between title and next sub-title or environment
-                should be empty -\> an example is adding text before WFA
-                definitions
-
-            2.  EITHER quote + indent sentences directly taken from
-                other studies with page and section OR paraphrase them
-                and leave them in a definition environment
-
-            3.  check that all borrowed figures have an explicit
-                attribution such as \"taken from paper et al (year)\"
-
-            4.  change red link color in table of contents and modify
-                color of URLs
-
-            5.  re-read all figure and table captions to ensure they
-                make sense and are written well -\> remove schematic for
-                better readability -\> remove visualization as well
-                since it is redundant
-
-            6.  abstract and introduction should already mention key
-                findings -\> synthesize these -\> mention TauSTE layer
-                with new purpose
-
-            7.  consider replacing all wildcard regex with single slash
-                `\s`{=latex}
-
-        3.  Formalities
-
-            1.  20-90 pages thesis length -\> well-motivated yet
-                succinct
-
-            2.  add remaining features by referring to master template
-                such as abstract (short summarized introduction), list
-                of tables/figures/abbreviations, appendices, etc; see
-                master document for examples
-
-            3.  date on bottom of manuscript should be date of
-                submission before mailing to Potsdam
-
-            4.  add student registration details to paper such as
-                matriculation number and other details
-
-            5.  update title page date to current submission date
-
-            6.  take note of all other submission criteria such as
+            3.  take note of all other submission criteria such as
                 statement of originality, German abstract, digital copy
                 and others, see:
                 <https://www.uni-potsdam.de/en/studium/studying/organizing-your-exams/final-thesis>
 
-        4.  Bibliography
+                1.  20-90 pages thesis length
 
-            1.  improve capitalization with braces in bibtex file
+                2.  add these after TOC and list them into TOC
 
-            2.  find alternative journal/conference citations for
-                current arxiv papers
-
-        5.  Final steps
-
-            1.  perform spell-check of all text
-
-            2.  re-read paper for flow and sensibility
+                3.  add remaining features by referring back to master
+                    template
 
 ### Programming
 
@@ -205,16 +84,8 @@
         2.  change light, medium and heavy to small, medium and large in
             all scripts, filenames and log variables consistently
 
-        3.  remove all neural sopa from readme and everywhere else since
-            spp already implies neural -\> consider changing parser
-            arguments as well if possible for consistency from
-            --neural-model-checkpoint to --spp-model-checkpoint
-
-        4.  add a comment above each code chunk which explains inner
+        3.  add a comment above each code chunk which explains inner
             mechanisms better
-
-        5.  add pydocstrings to all functions and improve argparse
-            documentation -\> maybe not necessary
 
     2.  Readme
 
@@ -224,8 +95,8 @@
         2.  upadte readme and usages with finalized STE/output neurons
             terminologies
 
-        3.  rename all mentions of regex to RE in readme if this is
-            possible
+        3.  rename all mentions of regex to RE in readme other than
+            usage
 
         4.  add information on best model downloads and preparation -\>
             add these to Google Drive later on
@@ -240,18 +111,6 @@
         7.  test download and all other scripts to ensure they work
 
         8.  perform spell-check on readme
-
-2.  Dependencies, typing and testing
-
-    1.  if using R, document R dependencies with `sessionInfo()`
-
-    2.  look into cases where List was replaced by Sequential and how
-        this can be changed or understood to keep consistency (ie. keep
-        everything to List with overloads)
-
-    3.  GPU/CPU runs not always reproducible depending on
-        multi-threading, see:
-        <https://pytorch.org/docs/stable/notes/randomness.html#reproducibility>
 
 ## Notes
 
