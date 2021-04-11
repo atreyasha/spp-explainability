@@ -41,7 +41,7 @@ best performing models for each model size are those where $\tau$=0.00.
   \centering
   \includegraphics[width=14cm]{pdfs/generated/train_spp_grid_1618061447.pdf}
   \caption{Visualization of validation accuracy against number of training
-    updates grouped by pattern $P$ and $\tau$-threshold hyperparameters; the
+    updates grouped by patterns $P$ and $\tau$-threshold hyperparameters; the
     different coloured lines represent random seed iterations with a
     specific initial random seed}
   \label{fig:results_training}
@@ -74,7 +74,7 @@ best performing models for each model size are those where $\tau$=0.00.
   \centering
   \includegraphics[width=14cm]{pdfs/generated/evaluate_spp_grid_1618059389.pdf}
   \caption{Visualization of accuracy and model-pair distance metrics against the
-    $\tau$-threshold hyperparameter grouped by the pattern
+    $\tau$-threshold hyperparameter grouped by the patterns
     hyperparameter $P$}
   \label{fig:explain_evaluate}
 \end{figure}
@@ -178,7 +178,9 @@ models captured as important.
 \begin{figure}[t!]
   \centering \includegraphics[trim={1.1cm 1.1cm 1.1cm
     1.1cm},clip,height=0.96\textheight]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_19.pdf}
-  \caption{Ten sampled regular expressions from the RE lookup layer
+  \caption[Ten sampled regular expressions from the RE lookup layer
+  corresponding to TauSTE neuron 19 for the best performing small RE proxy
+  model]{Ten sampled regular expressions from the RE lookup layer
     corresponding to TauSTE neuron 19 for the best performing small RE proxy
     model; REs are presented as equivalent NFAs; black signifies a
     main-path transition while blue signifies a $\omega$-transition}
@@ -188,7 +190,9 @@ models captured as important.
 \begin{figure}[t!]
   \centering
   \includegraphics[trim={1.1cm 1.1cm 1.1cm 1.1cm},clip,height=0.96\textheight]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_25.pdf}
-  \caption{Ten sampled regular expressions from the RE lookup layer
+  \caption[Ten sampled regular expressions from the RE lookup layer
+  corresponding to TauSTE neuron 25 for the best performing small RE proxy
+  model]{Ten sampled regular expressions from the RE lookup layer
     corresponding to TauSTE neuron 25 for the best performing small RE proxy
     model; REs are presented as equivalent NFAs; black signifies a
     main-path transition while blue signifies a $\omega$-transition}
@@ -198,7 +202,9 @@ models captured as important.
 \begin{figure}[t!]
   \centering
   \includegraphics[trim={1.1cm 1.1cm 1.1cm 1.1cm},clip,height=0.96\textheight]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf}
-  \caption{Ten sampled regular expressions from the RE lookup layer
+  \caption[Ten sampled regular expressions from the RE lookup layer
+  corresponding to TauSTE neuron 17 for the best performing small RE proxy
+  model]{Ten sampled regular expressions from the RE lookup layer
     corresponding to TauSTE neuron 17 for the best performing small RE proxy
     model; REs are presented as equivalent NFAs; black signifies a
     main-path transition while blue signifies a $\omega$-transition}

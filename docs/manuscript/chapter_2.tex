@@ -284,7 +284,7 @@ denotes how explainable any given model is. They explain why developing
 such a metric has been a difficult process for many XAI studies; particularly
 because such a metric would entail incorporating psychological, sociological and
 cognitive elements to accommodate the goodness of fit of an explainability
-method to a certain target audience. Furthermore, incorporating such elements
+technique to a certain target audience. Furthermore, incorporating such elements
 might involve significant amounts of subjectivity in the desired metric.
 
 To reduce some of the aforementioned subjectivity involved, \citet{MILLER20191}
@@ -409,7 +409,7 @@ definitions and descriptions for these mutually exclusive model categories.
   \begin{remark}
     $\epsilon \notin \Sigma$ refers to an empty-string transition
     and results in a change of state without consuming any input
-    symbol. These transitions are unique to nondeterministic finite-state automata.
+    token. These transitions are unique to nondeterministic finite-state automata.
   \end{remark}
 
   \begin{remark}
@@ -460,7 +460,7 @@ is a non-accepting state. The key difference between DFAs and NFAs is present in
 their transition functions; specifically that the former guarantees that each
 state allows for a unique transition to another state given a non-empty input
 string. Contrastingly, NFAs allow for arbitrary transitions without necessarily
-consuming an input symbol.
+consuming an input token.
 
 \begin{figure}[t]
   \centering
@@ -605,7 +605,7 @@ extensive definitions of a semiring, WFA, path score and string score.
   The Forward algorithm can be generalized to any semiring
   \citep{eisner2002parameter} and has a runtime of $O(|Q|^3 + |Q|^2|\bm{x}|)$
   \citep{schwartz2018sopa}; notably with a linear runtime with respect to the
-  length of the input string $\bm{x}$.
+  length in tokens of the input string $\bm{x}$.
 \end{remark}
 
 \begin{remark}
@@ -765,12 +765,12 @@ transition from the token \textit{``and''} to the token \textit{``most''}.
   \label{fig:sopa}
 \end{figure}
 
-\subsection{Pattern hyperparameter $P$}
+\subsection{Patterns hyperparameter $P$}
 
 Training the SoPa model requires both commonly used and special hyperparameters.
 Commonly used hyperparameters include the learning rate, neuron dropout and word
 dropout probabilities. A special hyperparameter unique to the SoPa model is the
-pattern hyperparameter $P$ which contains information on the number of
+patterns hyperparameter $P$ which contains information on the number of
 linear-chain WFAs and the number of states allotted to each of them. The
 hyperparameter $P$ is encoded as a string with the following syntax:
 \texttt{Length$_{1}$-Count$_{1}$\_$\dots$\_Length$_{k}$-Count$_{k}$}. An example
@@ -788,7 +788,7 @@ same standards to the SoPa model. Based on the arguments made by
 \citet{arrieta2020explainable}, we can classify the SoPa model as a black-box
 model since it closely resembles RNNs and CNNs; and a strong case has already
 been made in their study regarding the black-box natures of both RNNs and CNNs.
-Naturally, this would imply that post-hoc explainability methods are required to
+Naturally, this would imply that post-hoc explainability techniques are required to
 explain the SoPa model.
 
 \subsection{Explainability}
@@ -805,32 +805,32 @@ on each classification decision.
 
 Using the post-hoc explainability taxonomies described in Section
 \ref{section:xai_techniques}, we can correspondingly classify the explainability
-methods presented in \citet{schwartz2018sopa} using terminology consistent with
-XAI research. The first explainability method uses individual text samples to
+techniques presented in \citet{schwartz2018sopa} using terminology consistent with
+XAI research. The first explainability technique uses individual text samples to
 determine the highest scoring substrings in documents; as well as the patterns
 or WFAs corresponding to them. Since this analysis is conducted at an individual
 document level and is never synthesized to a more global context, we would
-classify this under the local explanations explainability method. The next
+classify this under the local explanations explainability technique. The next
 technique involves an occlusion or sensitivity analysis over all patterns and
 documents to determine which pattern had the greatest impact for each class.
 Since this involves systematic perturbation to determine the importance of
-pattern features, we would classify this method as a feature relevance
-explainability method. While the target audience(s) of these
+pattern features, we would classify this technique as a feature relevance
+explainability technique. While the target audience(s) of these
 explainability techniques is not explicitly mentioned in their study, we infer that
 the target audience for these techniques is likely to be end-users since the
-outputs of these post-hoc explainability methods are generally easy to understand.
+outputs of these post-hoc explainability techniques are generally easy to understand.
 
 In order to objectively probe the quality of the post-hoc explainability
 techniques proposed by \citet{schwartz2018sopa}, we utilize the three guidelines
 provided in Section \ref{section:xai_metrics}; namely that a good explanation
 should be constrictive, causal and selective. For the constrictive quality, it
-is likely that the explainability methods do not meet this criterion since they
+is likely that the explainability techniques do not meet this criterion since they
 only highlight individual features that were important for SoPa, and do not
 necessarily go into detail regarding why these features superseded adjacent
-features. Next, the explainability methods likely do not fulfill the criterion
+features. Next, the explainability techniques likely do not fulfill the criterion
 of providing causal links; since they generally provide explanations by
 aggregating probabilistic quantities inside SoPa. Finally and in
-contrast, the explainability methods likely pass the criterion of being
+contrast, the explainability techniques likely pass the criterion of being
 selective since they only provide the most important features for an
 explanation.
 

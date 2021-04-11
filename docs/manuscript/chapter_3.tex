@@ -205,7 +205,7 @@ experimentation during our development phase; we observed a key concern that the
 highest scoring substrings in the linear-chain WFAs in SoPa tended to have a
 large variation of string lengths due to the effect of both
 $\epsilon$-transitions and self-loops. We believe that this reduces the impact
-of SoPa's explainability methods due to a lack of consistency in the lengths
+of SoPa's explainability techniques due to a lack of consistency in the lengths
 of highest scoring paths and substrings. As a result, the first change we decided
 for was to remove both $\epsilon$ and self-loop transitions in constituent WFAs
 or patterns. With this change, we could at least ensure that each WFA would
@@ -455,9 +455,9 @@ Following this, we use our ensemble of $m \in \mathbb{N}$ strict linear-chain
 WFA-$\omega$'s to traverse the input utterance and provide individual document
 scores for this utterance; as prescribed by Algorithm
 \ref{algo:lc_wfa_w_document_score}. When processing each input token, we monitor
-the end states of each of the $m$ strict linear-chain WFA-$\omega$'s and
+the final states of each of the $m$ strict linear-chain WFA-$\omega$'s and
 max-pool the score present in this state. In the edge case that an input string
-was too short for the end state of a WFA-$\omega$ to register a non-$\bar{0}$
+was too short for the final state of a WFA-$\omega$ to register a non-$\bar{0}$
 score, we simply discard this score in further analysis. This description so far
 corresponds to the lower half of Figure \ref{fig:spp_cg}. After max-pooling
 scores from all the $m$ strict linear-chain WFA-$\omega$'s, we then pass this
@@ -509,7 +509,7 @@ we describe in greater detail in the next sections. Finally, we apply a softmax
 function over the linear outputs to project them to probabalistic spaces and
 then compute an argmax to extract the highest scoring index which represents the
 predicted class. In the case of Figure \ref{fig:spp_cg}, the output class for
-the input pre-processed utterance \texttt{``[START] 10 day weather forecast
+the input preprcessed utterance \texttt{``[START] 10 day weather forecast
   [END]''} is the \texttt{weather/find} class which corresponds to class index 11.
 
 \subsection{Transparency}
@@ -730,7 +730,7 @@ the input utterance, the index of this RE set if given a value of 1. If no
 regular expression in the set matches, the index of this RE set is given a value
 of 0. These values are assembled into a binary vector that mimics the outputs of
 the TauSTE layer in the antecedent SoPa++ model. This binary vector is then
-passed to the linear regression layer; which transforms the binary vector back
+passed to the linear layer; which transforms the binary vector back
 into continuous space with the appropriate dimensionality. Following softmax and
 argmax operations, we arrive at our predicted output class. It is worth
 mentioning that while the execution of the SoPa++ forward pass can be
@@ -848,7 +848,7 @@ training hyperparameters, we utilize a learning rate of 0.001, a batch size of
 256 input utterances and neuron/word dropout probabilities of 0.2. We only apply
 neuron dropouts on the transition matrices of all the strict linear-chain
 WFA-$\omega$'s in SoPa++. We furthermore apply batch sorting based on input
-utterance lengths to ensure maximum efficiency when computing pattern/document
+utterance lengths to ensure maximum efficiency when computing pattern
 scores. Based on our own experiments, we observed more stable training with the
 max-sum semiring compared to the max-product semiring. For simplicity, we
 therefore only use the max-sum semiring in all of our WFA-$\omega$'s.
@@ -857,7 +857,7 @@ therefore only use the max-sum semiring in all of our WFA-$\omega$'s.
   \centering
   \begin{tabular}{lll}
     \toprule
-    Model size & Pattern hyperparameter $P$ & Parameter count \\
+    Model size & Patterns hyperparameter $P$ & Parameter count \\
     \midrule
     Small & \texttt{6-10\_5-10\_4-10\_3-10} & 1,260,292 \\
     Medium & \texttt{6-25\_5-25\_4-25\_3-25} & 1,351,612  \\
@@ -865,7 +865,7 @@ therefore only use the max-sum semiring in all of our WFA-$\omega$'s.
     \bottomrule
   \end{tabular}
   \caption{Three different SoPa++ model sizes used during training with
-    corresponding pattern hyperparameter $P$ and parameter counts}
+    corresponding patterns hyperparameter $P$ and parameter counts}
   \label{tab:model_types}
 \end{table}
 
@@ -905,7 +905,7 @@ SoPa++ model performs competitively with other recent studies.
 
 We now move on to describe the methodologies pursued to answer our second
 research question on evaluating the effectiveness of our explanations by
-simplification post-hoc explainability method. As mentioned in Definition
+simplification post-hoc explainability technique. As mentioned in Definition
 \ref{def:explain_simplify}, the purpose of explanations by simplification is to
 create a less complex proxy model which can both keep a similar performance
 score and maximize its resemblance to the antecedent model. We already discussed

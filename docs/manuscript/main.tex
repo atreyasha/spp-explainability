@@ -54,6 +54,7 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{bm}
 \usepackage{etoolbox}
 
+% specialized settings
 \counterwithout{equation}{chapter}
 \counterwithout{figure}{chapter}
 \counterwithout{table}{chapter}
@@ -72,12 +73,12 @@ headsepline, % Uncomment to get a line under the header
 \algnewcommand\algorithmicforeach{\textbf{for each}}
 \algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
 
+% macro for algorithmic comment
 \makeatletter
 \AfterEndEnvironment{algorithm}{\let\@algcomment\relax}
 \AtEndEnvironment{algorithm}{\kern2pt\hrule\relax\vskip3pt\@algcomment}
 \let\@algcomment\relax
 \newcommand\algcomment[1]{\def\@algcomment{\footnotesize#1}}
-
 \renewcommand\fs@ruled{\def\@fs@cfont{\bfseries}\let\@fs@capt\floatc@ruled
   \def\@fs@pre{\hrule height.8pt depth0pt \kern2pt}%
   \def\@fs@post{}%
@@ -179,6 +180,10 @@ headsepline, % Uncomment to get a line under the header
 %----------------------------------------------------------------------------------------
 
 \tableofcontents % Prints the main table of contents
+
+\listoffigures % Prints the list of figures
+
+\listoftables % Prints the list of tables
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - CHAPTERS
