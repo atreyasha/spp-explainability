@@ -63,15 +63,15 @@
 
     % lay out all small regex's
     \node[above of=text-2, yshift=1.5cm, xshift=0.25cm]
-    (re_1_1) {\textbf{[\^{}\textbackslash\textbackslash s] (forecast|check)}};
+    (re_1_1) {\textbf{[\^{}\textbackslash s]+ (forecast|check)}};
     \node[neuron h-missing, right of=re_1_1, xshift=3.5cm, scale=1.5] (dots_S) {};
-    \node[right of=dots_S, xshift=3cm] (re_1_2) {\textbf{(set|alarm) [\^{}\textbackslash\textbackslash s]}};
+    \node[right of=dots_S, xshift=3cm] (re_1_2) {\textbf{(set|alarm) [\^{}\textbackslash s]+}};
     \node[left of=re_1_1, xshift=-4.25cm] (RE1) {\textbf{\{RE\}$_1$}};
     
     % lay out all large regex's
-    \node[above of=re_1_1, yshift=2.5cm] (re_m_1) {\textbf{[\^{}\textbackslash\textbackslash s] [\^{}\textbackslash\textbackslash s] [\^{}\textbackslash\textbackslash s] weather forecast}};
+    \node[above of=re_1_1, yshift=2.5cm] (re_m_1) {\textbf{[\^{}\textbackslash s]+ [\^{}\textbackslash s]+ [\^{}\textbackslash s]+ weather forecast}};
     \path let \p1 = (dots_S), \p2 = (re_m_1) in node[neuron h-missing, scale=1.5] (dots_L) at (\x1, \y2) {};
-    \node[right of=dots_L, xshift=3.25cm] (re_m_2) {\textbf{please set [\^{}\textbackslash\textbackslash s] alarm today}};
+    \node[right of=dots_L, xshift=3.25cm] (re_m_2) {\textbf{please set [\^{}\textbackslash s]+ alarm today}};
     \node[left of=re_m_1, xshift=-4.25cm] (REM) {\textbf{\{RE\}$_m$}};
 
     % lay out dots in between
