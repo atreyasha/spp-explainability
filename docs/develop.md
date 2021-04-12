@@ -1,7 +1,6 @@
 ## Table of Contents
 -   [Tasks](#tasks)
-    -   [Manuscript](#manuscript)
-    -   [Programming](#programming)
+    -   [**TODO** Programming](#programming)
 -   [Notes](#notes)
     -   [Admin](#admin)
 -   [Legacy](#legacy)
@@ -16,63 +15,7 @@
 
 ## Tasks
 
-### Manuscript
-
-1.  Post-paper iterations
-
-    1.  Iteration 2 (consistency and formatting)
-
-        1.  Final steps
-
-            1.  update everything from Miku\'s comments
-
-                1.  update objective to be clear -\> improve sentence
-                    structure
-
-                2.  update background concepts to mention localized and
-                    indirect
-
-                3.  need to update methodologies as well with motivation
-
-                4.  add objective to conclusion as well
-
-            2.  perform spell-check of all text -\> reformat
-                spell-corrections if need be
-
-                1.  check that all quotes have page/section attribution
-
-                2.  check that all borrowed figures have \"taken from\"
-
-                3.  ensure all text is padded
-
-            3.  re-read paper for flow and sensibility
-
-                1.  check all figure and table captions -\> remove
-                    visualization as well since it is redundant
-
-                2.  look out for possible abbreviation errors
-
-        2.  Formalities
-
-            1.  write abstract and mention results and TauSTE with new
-                purpose -\> add it into the TOC as well
-
-            2.  add student registration details and latest date on
-                bottom
-
-            3.  take note of all other submission criteria such as
-                statement of originality, German abstract, digital copy
-                and others, see:
-                <https://www.uni-potsdam.de/en/studium/studying/organizing-your-exams/final-thesis>
-
-                1.  20-90 pages thesis length
-
-                2.  add these after TOC and list them into TOC
-
-                3.  add remaining features by referring back to master
-                    template
-
-### Programming
+### **TODO**
 
 1.  Clean-code and documentation
 
@@ -92,7 +35,7 @@
         1.  update readme and usages with finalized antecedent and proxy
             terminologies
 
-        2.  upadte readme and usages with finalized STE/output neurons
+        2.  update readme and usages with finalized STE/output neurons
             terminologies
 
         3.  rename all mentions of regex to RE in readme other than

@@ -3,32 +3,7 @@
 #+OPTIONS: p:t
 
 ** Tasks
-*** Manuscript 
-**** Post-paper iterations
-***** Iteration 2 (consistency and formatting)
-****** Final steps
-******* update everything from Miku's comments
-******** update objective to be clear -> improve sentence structure 
-******** update background concepts to mention localized and indirect
-******** need to update methodologies as well with motivation
-******** add objective to conclusion as well
-******* perform spell-check of all text -> reformat spell-corrections if need be
-******** check that all quotes have page/section attribution
-******** check that all borrowed figures have "taken from"
-******** ensure all text is padded
-******* re-read paper for flow and sensibility 
-******** check all figure and table captions -> remove visualization as well since it is redundant
-******** look out for possible abbreviation errors
-
-****** Formalities
-******* write abstract and mention results and TauSTE with new purpose -> add it into the TOC as well
-******* add student registration details and latest date on bottom
-******* take note of all other submission criteria such as statement of originality, German abstract, digital copy and others, see: https://www.uni-potsdam.de/en/studium/studying/organizing-your-exams/final-thesis
-******** 20-90 pages thesis length
-******** add these after TOC and list them into TOC
-******** add remaining features by referring back to master template
-        
-*** Programming
+*** TODO Programming 
 **** Clean-code and documentation
 ***** Source-code
 ****** rename RegexSoftPatternClassifier class to RegexProxy if possible without breakages
@@ -36,7 +11,7 @@
 ****** add a comment above each code chunk which explains inner mechanisms better
 ***** Readme
 ****** update readme and usages with finalized antecedent and proxy terminologies 
-****** upadte readme and usages with finalized STE/output neurons terminologies
+****** update readme and usages with finalized STE/output neurons terminologies
 ****** rename all mentions of regex to RE in readme other than usage
 ****** add information on best model downloads and preparation -> add these to Google Drive later on
 ****** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
