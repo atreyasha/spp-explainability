@@ -3,9 +3,9 @@
 \label{chapter:background}
 
 In this chapter, we describe the various background concepts which are necessary
-in order to support the methodologies pursued in this thesis. These background
-concepts range from conceptualizations and definitions in \ac{xai}, variants of
-finite-state automata, straight-through estimators and finally the SoPa model
+to support the methodologies pursued in this thesis. These background concepts
+range from conceptualizations and definitions in \ac{xai}, variants of
+finite-state automata, straight-through estimators and finally the \ac{sopa} model
 framework. We start off by introducing the most important concepts related to
 \ac{xai}.
 
@@ -193,6 +193,7 @@ provide adapted definitions below.
 \end{definition}
 
 \begin{remark}
+  \label{rmk:feature_relevance_indirect}
   Feature relevance methods can be considered as indirect methods of explaining
   a model.
 \end{remark}
@@ -230,7 +231,7 @@ Through our own survey of recent literature on explainability techniques used in
 \ac{nlp}, we came across several interesting studies employing the local
 explanations, feature relevance and explanations by simplification
 explainability techniques to better explain black-box models; particularly deep
-neural networks.
+neural networks
 \citep{schwartz2018sopa,peng2018rational,suresh-etal-2019-distilling,wang2019state,jiang2020cold}.
 We expound more on these in Sections \ref{section:fa} and \ref{section:sopa}
 respectively.
@@ -620,25 +621,25 @@ extensive definitions of a semiring, \ac{wfa}, path score and string score.
 \label{section:sopa}
 
 As mentioned previously in Chapter \ref{chapter:introduction}, a key focus of
-this thesis is in improving the \textbf{So}ft \textbf{Pa}tterns (SoPa) model
+this thesis is in improving the \ac{sopa} model
 presented in \citet{schwartz2018sopa}. In this section, we describe important
-aspects of the SoPa model which ultimately become relevant for our
-methodologies. \citet{schwartz2018sopa} introduce SoPa as a novel and
-lightweight hybridized \ac{rnn}, \ac{cnn} and \ac{wfa}-based neural architecture. SoPa
+aspects of the \ac{sopa} model which ultimately become relevant for our
+methodologies. \citet{schwartz2018sopa} introduce \ac{sopa} as a novel and
+lightweight hybridized \ac{rnn}, \ac{cnn} and \ac{wfa}-based neural architecture. \ac{sopa}
 resembles a \ac{rnn} because it processes text sequentially and can encode strings of
 arbitrary lengths. Similarly, the architecture contains a variable number of
 constrained linear-chain \ac{wfas} with variable numbers of states or window sizes;
 which resembles both one-layer \ac{cnn}s and an ensemble of linear-chain \ac{wfas}. The
-combination of the aforementioned features ultimately allows SoPa to learn soft
+combination of the aforementioned features ultimately allows \ac{sopa} to learn soft
 versions of traditionally hard surface patterns.
 
-In their study, \citet{schwartz2018sopa} test the SoPa architecture on three
+In their study, \citet{schwartz2018sopa} test the \ac{sopa} architecture on three
 separate sentiment classification tasks and compare the results with four
 baselines which include a bidirectional \ac{lstm} neural network and a \ac{cnn}.
-With their results, they show that SoPa performed on par or better than all
-baselines on all tasks. Additionally, they show that SoPa outperformed all
+With their results, they show that \ac{sopa} performed on par or better than all
+baselines on all tasks. Additionally, they show that \ac{sopa} outperformed all
 baselines significantly in low-data settings. Finally, the authors present
-workflows to explain the SoPa model using both the local explanations and
+workflows to explain the \ac{sopa} model using both the local explanations and
 feature relevance explainability techniques.
 
 \begin{figure}[t]
@@ -654,7 +655,7 @@ feature relevance explainability techniques.
 
 \label{section:sopa_lc_wfa}
 
-In regards to the \ac{wfas} used in SoPa, \citet{schwartz2018sopa} utilize
+In regards to the \ac{wfas} used in \ac{sopa}, \citet{schwartz2018sopa} utilize
 linear-chain \ac{wfas} where each linear-chain \ac{wfa} is alloted a sequence of
 $|\mathcal{Q}|$ states. Each state $i$ in the linear-chain \ac{wfa} has three
 possible outgoing transitions; namely a \textbf{self-loop transition} which
@@ -725,7 +726,7 @@ Section 3.1]{schwartz2018sopa} refer to the linear-chain \ac{wfas} simply as
 
 \label{section:sopa_doc_score}
 
-Since SoPa was intended to compute scores for entire documents and not just
+Since \ac{sopa} was intended to compute scores for entire documents and not just
 short strings, \citet[Page 3, Section 3.2]{schwartz2018sopa} propose computing
 the string score, as per Definition \ref{def:string_score}, over all consecutive
 substrings in the document which ultimately returns a document score
@@ -740,7 +741,7 @@ the highest path score corresponding to a substring in document $\bm{y}$.
 
 \label{section:sopa_cg}
 
-To explain the overall computational graph of the SoPa model, we refer to the
+To explain the overall computational graph of the \ac{sopa} model, we refer to the
 visualization shown in Figure \ref{fig:sopa} with two \ac{wfas} highlighted in
 blue and red. The \ac{wfas} compute the aforementioned document scores as they
 traverse the document. Given max-based semirings, the max-pooled scores
@@ -768,9 +769,9 @@ is encountered in the transition from the token \textit{``and''} to the token
 
 \subsection{Patterns hyperparameter $P$}
 
-Training the SoPa model requires both commonly used and special hyperparameters.
+Training the \ac{sopa} model requires both commonly used and special hyperparameters.
 Commonly used hyperparameters include the learning rate, neuron dropout and word
-dropout probabilities. A special hyperparameter unique to the SoPa model is the
+dropout probabilities. A special hyperparameter unique to the \ac{sopa} model is the
 patterns hyperparameter $P$ which contains information on the number of
 linear-chain \ac{wfas} and the number of states allotted to each of them. The
 hyperparameter $P$ is encoded as a string with the following syntax:
@@ -785,19 +786,19 @@ patterns with 5 states each, 10 patterns with 4 states each and 5 patterns with
 
 Since we expounded on \ac{xai} in Section \ref{section:xai} and made a case for
 viewing \ac{ml} models from the lens of \ac{xai}, it would only make sense to extend the
-same standards to the SoPa model. Based on the arguments made by
-\citet{arrieta2020explainable}, we can classify the SoPa model as a black-box
+same standards to the \ac{sopa} model. Based on the arguments made by
+\citet{arrieta2020explainable}, we can classify the \ac{sopa} model as a black-box
 model since it closely resembles \ac{rnn}s and \ac{cnn}s; and a strong case has already
 been made in their study regarding the black-box natures of both \ac{rnn}s and \ac{cnn}s.
 Naturally, this would imply that post-hoc explainability techniques are required to
-explain the SoPa model.
+explain the \ac{sopa} model.
 
 \subsection{Explainability}
 
 \label{section:sopa_post_hoc}
 
 In their study, \citet[Page 7, Section 7]{schwartz2018sopa} describe two simple
-post-hoc explainability techniques for the SoPa model. One method involves the
+post-hoc explainability techniques for the \ac{sopa} model. One method involves the
 usage of back-pointers during the Viterbi computation to determine the patterns
 and substrings in a document which contributed the highest pattern scores.
 Another method involves zeroing out the corresponding patterns scores via the
@@ -826,14 +827,24 @@ techniques proposed by \citet{schwartz2018sopa}, we utilize the three guidelines
 provided in Section \ref{section:xai_metrics}; namely that a good explanation
 should be constrictive, causal and selective. For the constrictive quality, it
 is likely that the explainability techniques do not meet this criterion since they
-only highlight individual features that were important for SoPa, and do not
+only highlight individual features that were important for \ac{sopa}, and do not
 necessarily go into detail regarding why these features superseded adjacent
 features. Next, the explainability techniques likely do not fulfill the criterion
 of providing causal links; since they generally provide explanations by
-aggregating probabilistic quantities inside SoPa. Finally and in
+aggregating probabilistic quantities inside \ac{sopa}. Finally and in
 contrast, the explainability techniques likely pass the criterion of being
 selective since they only provide the most important features for an
 explanation.
+
+Overall, we gather three key limitations regarding the explainability techniques
+of \ac{sopa}. Firstly, we find them to be localized because the local explanations
+component of explainability was not synthesized to a global context. Next, we
+find them to be indirect because of a lack of causal links and high reliance on
+the feature relevance explainability technique which is known to be indirect as
+per Remark \ref{rmk:feature_relevance_indirect}. Finally, as per our evaluation
+of explainability using the three aforementioned guidelines; we find the
+explainability techniques to likely only meet one of the three guidelines for
+good explanations.
 
 %%% Local Variables: 
 %%% mode: latex

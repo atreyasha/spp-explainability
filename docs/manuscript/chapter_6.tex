@@ -2,27 +2,36 @@
 
 \label{chapter:conclusions}
 
-In this chapter, we summarize and highlight the key findings of this thesis. We
+In this chapter, we summarize the key findings of this thesis. We
 started off this thesis by emphasizing the importance of \ac{xai} research and
 correspondingly laid out clear definitions of \ac{xai}-related concepts adapted
-from \citet{arrieta2020explainable}. We then drew inspiration from the SoPa
-model in \citet{schwartz2018sopa} and focused on improving the SoPa model to
-ultimately create our SoPa++ model. The most significant changes in SoPa++
-included the modification of linear-chain \ac{wfas} to strict linear-chain
-\ac{wfaws}, the replacement of the \ac{mlp} with layer normalization,
-\ac{tauste} and linear layers and the introduction of the explanations by
-simplification post-hoc explainability technique to create \ac{re} proxy models.
-With these changes, we proceeded to answer our three research questions listed
-in Section \ref{section:rq}.
+from \citet{arrieta2020explainable}. Through our own survey of recent literature
+on explainability techniques used in \ac{nlp}, we came across several
+interesting studies and drew particular inspiration from
+\citet{schwartz2018sopa} who developed the novel \ac{sopa} model. While functioning
+well, we found \ac{sopa}'s explainability techniques to be localized and indirect
+despite its neural architecture being suited for the globalized and direct
+explanations by simplification explainability technique. This inspired our main
+objective to propose a modified model \ac{sopa}++, which could allow for
+effective explanations by simplification. To guide us in addressing our
+objective, we listed our three research questions in Section \ref{section:rq}.
 
-Regarding our first research question, we observe that SoPa++'s best accuracy
+The most significant changes from \ac{sopa} to \ac{sopa}++ include the utility of strict
+linear-chain \ac{wfaws} over linear-chain \ac{wfas}, replacement of the \ac{mlp}
+in \ac{sopa} with quantized and transparent hidden layers and the introduction of a
+new globalized and direct explanations by simplification post-hoc explainability
+technique to simplify the black-box \ac{sopa}++ model into a transparent \ac{re}
+proxy model. With these changes, we proceeded to answer our three research
+questions.
+
+Regarding our first research question, we observe that \ac{sopa}++'s best accuracy
 range on the \ac{fmtod} data set of 97.6-98.3$\%$ falls into the competitive accuracy
 range of 96.6-99-5$\%$ based on other recent studies. In this respect, we
-conclude that SoPa++ offers competitive performance on the \ac{fmtod} English
+conclude that \ac{sopa}++ offers competitive performance on the \ac{fmtod} English
 language intent classification task.
 
 Regarding our second research question, we compare the accuracy scores and
-distance metrics between SoPa++ and \ac{re} proxy model pairs and observe accuracy
+distance metrics between \ac{sopa}++ and \ac{re} proxy model pairs and observe accuracy
 differences as low as $\sim$1$\%$ and softmax distance norms as small as $\sim$4$\%$ for
 medium and large-sized models with $\tau$-thresholds ranging from 0.50-1.00. We
 therefore conclude that the explanations by simplification post-hoc
@@ -38,6 +47,15 @@ regular expressions, we observe several interesting phenomena such as lexical
 segmentation, branching transitions with tokens having similar lexical semantics
 and also the presence of USA-centric inductive biases captured from the training
 data.
+
+\clearpage
+
+With these answers to our research questions, we addressed our objective of
+proposing a modified \ac{sopa}++ model that could allow for effective
+explanations by simplification. However, we did encounter several limitations to
+the \ac{sopa}++ model while answering our research questions. In the next
+chapter, we expound on these limitations and how they could be addressed in
+future research.
 
 %%% Local Variables: 
 %%% mode: latex

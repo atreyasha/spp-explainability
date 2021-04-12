@@ -8,8 +8,8 @@ these limitations.
 
 \section{Efficiency}
 
-In this thesis, we showed the effectiveness of simplifying SoPa++ models into \ac{re}
-proxy models. While SoPa++ models ran very efficiently because of tensor-based
+In this thesis, we showed the effectiveness of simplifying \ac{sopa}++ models into \ac{re}
+proxy models. While \ac{sopa}++ models ran very efficiently because of tensor-based
 parallelizations and \ac{gpu} hardware-acceleration derived from \texttt{PyTorch}'s
 mature computational ecosystem, we observed that the \ac{re} proxy models ran
 significantly slower with the main bottleneck being the slow lookup process in
@@ -30,10 +30,10 @@ Returning back to the last two paragraphs in Section
 \ref{section:discussion_regex}, we recall how certain transitions in the \ac{re}
 lookup layer tend to be populated with tokens which have similar lexical
 semantics. We specifically draw attention to the example of digital temperature
-tokens mentioned in the aforementioned paragraphs and how both SoPa++ and the \ac{re}
+tokens mentioned in the aforementioned paragraphs and how both \ac{sopa}++ and the \ac{re}
 proxy model tend to memorize specific digital tokens such as \textit{"44"},
 \textit{"70"} and \textit{"67"}. While it is clear that these tokens could be
-replaced by any other finite digital tokens, both SoPa++ and the \ac{re} proxy model
+replaced by any other finite digital tokens, both \ac{sopa}++ and the \ac{re} proxy model
 overfit on these particular tokens. It would therefore be of interest to explore
 generalizations on these types of tokens. In the case of the aforementioned
 digital tokens, we could replace these transitions in the \ac{re} lookup layer with a
@@ -49,37 +49,37 @@ formatting; which could include synonyms and proper nouns.
 
 \section{Modeling}
 
-Currently, the SoPa++ model conducts classification decisions by max-pooling
+Currently, the \ac{sopa}++ model conducts classification decisions by max-pooling
 document scores from its constitutent strict-linear chain \ac{wfaws}. These
 document scores correspondingly reflect substrings in the document but do not
 necessarily contain positional information regarding them, such as substring
 X occurring after substring Y. While this was not a shortcoming in the generally
-short-sequence \ac{fmtod} data set, it could become a hindrance when applying SoPa++
+short-sequence \ac{fmtod} data set, it could become a hindrance when applying \ac{sopa}++
 to longer documents. As a result, it would be interesting to incorporate
 positional information alongside the Viterbi algorithm to allow for
 classification on longer documents. Another possible extension could be to
-extend SoPa++'s weighted finite-state automata to finite-state transducers;
+extend \ac{sopa}++'s weighted finite-state automata to finite-state transducers;
 which are highly similar but return scored seqeuences instead of scored paths.
-In this way, SoPa++ with finite-state transducers could even be used for
+In this way, \ac{sopa}++ with finite-state transducers could even be used for
 sequence-to-sequence tasks; making it viable for other applications in \ac{nlp} such
 as Machine Translation.
 
 \section{Explainability}
 
 In regards to explainability, we largely focused on the technical requirements
-for showing effective explanations by simplification for the SoPa++ model. To
-evaluate the quality of explanations of SoPa vs. SoPa++, we only used the three
+for showing effective explanations by simplification for the \ac{sopa}++ model. To
+evaluate the quality of explanations of \ac{sopa} vs. \ac{sopa}++, we only used the three
 guidelines for good explanations as per Section \ref{section:xai_metrics}. While
 useful, these are ultimately only guidelines and do not necessarily reflect the
-evaluation of explanations perceived by the target audiences of SoPa and SoPa++;
+evaluation of explanations perceived by the target audiences of \ac{sopa} and \ac{sopa}++;
 which are average end-users and exper-users respectively. As a result, it would
 be interesting to conduct a survey on how satisfactory the provided explanations
-from SoPa and SoPa++ were to these target audiences. This survey could, for
+from \ac{sopa} and \ac{sopa}++ were to these target audiences. This survey could, for
 example, be done in a University's department-wide setting using one of the many
 well-developed web-based survey tools where participants provide a basic
 positive or negative rating on the provided explanations from their assigned
 models. Although subjective, this might help to provide a rating of the
-explainability techniques of SoPa and SoPa++ through their respective target
+explainability techniques of \ac{sopa} and \ac{sopa}++ through their respective target
 audiences.
 
 %%% Local Variables: 

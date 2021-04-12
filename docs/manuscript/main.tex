@@ -203,6 +203,21 @@ headsepline, % Uncomment to get a line under the header
   long  = Weighted Finite-state Automata-$\omega$,
   class = abbrev
 }
+\DeclareAcronym{bert}{
+  short = BERT,
+  long  = Bidirectional Encoder Representations from Transformers,
+  class = abbrev
+}
+\DeclareAcronym{glove}{
+  short = GloVe,
+  long  = Global Vectors for Word Representation,
+  class = abbrev
+}
+\DeclareAcronym{sopa}{
+  short = SoPa,
+  long  = Soft Patterns,
+  class = abbrev
+}
 
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
@@ -245,7 +260,6 @@ headsepline, % Uncomment to get a line under the header
 \begin{document}
 
 \pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
-\pagenumbering{gobble}
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -298,18 +312,22 @@ headsepline, % Uncomment to get a line under the header
 
 {
   \hypersetup{linkcolor=black}
+  \pagenumbering{gobble}
   
   \tableofcontents % Prints the main table of contents
 
   \frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+  \addcontentsline{toc}{chapter}{List of Figures}
   \listoffigures % Prints the list of figures
-  \addcontentsline{toc}{section}{List of Figures}
 
+  \addcontentsline{toc}{chapter}{List of Tables}
   \listoftables % Prints the list of tables
-  \addcontentsline{toc}{section}{List of Tables}
 
+  \addcontentsline{toc}{chapter}{List of Algorithms}
+  \listofalgorithms
+  
   \printacronyms[name=List of Abbreviations, sort=true] % Print list of abbreviations
-  \addcontentsline{toc}{section}{List of Abbreviations}
+  \addcontentsline{toc}{chapter}{List of Abbreviations}
 }
 
 %----------------------------------------------------------------------------------------

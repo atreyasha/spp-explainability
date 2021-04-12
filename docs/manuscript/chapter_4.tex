@@ -13,12 +13,12 @@ results in greater detail in the next Discussion chapter.
 
 Following our methodologies, we conducted a grid-search training scheme where we
 varied our patterns $P$ and $\tau$-threshold parameters. The variation in the
-patterns hyperparameter $P$ resulted in three different SoPa++ model sizes;
+patterns hyperparameter $P$ resulted in three different \ac{sopa}++ model sizes;
 specifically the small, medium and large model sizes as reported in Table
 \ref{tab:model_types}. Along with ten random seed iterations for each grid
 instance in our grid-search scheme, we ran a total of 150 models runs.
 
-We start off by describing the training process for our SoPa++ models. Figure
+We start off by describing the training process for our \ac{sopa}++ models. Figure
 \ref{fig:results_training} shows a visualization of the validation accuracy
 against training updates in our grid-search training runs. Firstly, we
 observe a trend that the larger models tend to have a higher validation accuracy
@@ -28,7 +28,7 @@ profile across all model sizes, albeit more drastically for smaller models than
 larger models. Finally, we observe that the larger models tend to have an
 earlier convergence window compared to the smaller models.
 
-In regards to the evaluation of SoPa++ performance, we refer to Table
+In regards to the evaluation of \ac{sopa}++ performance, we refer to Table
 \ref{tab:results_evaluation} for a tabular summary of test accuracies across the
 small, medium and large model sizes grouped by the various $\tau$-threshold
 hyperparameters. Here, we can observe two trends. Firstly, the larger models
@@ -116,16 +116,16 @@ best performing models for each model size are those where $\tau$=0.00.
 \end{table}
 
 Following our methodologies for evaluating explanations by simplification for
-the SoPa++ model, we compare test set accuarcies and distance metrics between
-SoPa++ and \ac{re} proxy model pairs. Figure \ref{fig:explain_evaluate} and Table
+the \ac{sopa}++ model, we compare test set accuarcies and distance metrics between
+\ac{sopa}++ and \ac{re} proxy model pairs. Figure \ref{fig:explain_evaluate} and Table
 \ref{tab:explain_evaluate_performance} provide both a visualization and tabular
 summary of all the aforementioned comparisons respectively. Overall, we can
-observe three general trends. Firstly, we observe that SoPa++ and \ac{re} proxy test
+observe three general trends. Firstly, we observe that \ac{sopa}++ and \ac{re} proxy test
 accuracies tend to become converge towards one another as we increase the
 $\tau$-threshold. Next, we can observe that \ac{re} proxy accuracies tend to be lower
-than their SoPa++ counterparts during this convergence process; with a single
+than their \ac{sopa}++ counterparts during this convergence process; with a single
 exception of the large model at $\tau=1.00$ where the \ac{re} proxy mean accuracy
-exceeds that of SoPa++. Finally, we observe the general trend that both
+exceeds that of \ac{sopa}++. Finally, we observe the general trend that both
 $\overline{\delta_{\sigma}}$ and $\overline{\delta_b}$ become closer to zero as
 we increase the $\tau$-threshold. This trend is consistently observed for
 $\overline{\delta_b}$ but is not always the case for
@@ -170,7 +170,7 @@ branching; which implies that these transitions were frequently utilized. While
 we only sampled ten regular expressions per neuron from the \ac{re} lookup layer, it
 should be noted that there exist many more regular expressions to explore.
 Therefore, the following regular expressions only function as samples to provide
-us with some notion of what kinds of regular expressions the SoPa++ and \ac{re} proxy
+us with some notion of what kinds of regular expressions the \ac{sopa}++ and \ac{re} proxy
 models captured as important.
 
 \newpage

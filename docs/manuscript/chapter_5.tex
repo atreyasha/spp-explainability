@@ -11,41 +11,41 @@ motivate future research.
 
 \section{RQ1: Evaluating performance of SoPa++}
 
-To answer our first research question on whether SoPa++ can deliver competitive
+To answer our first research question on whether \ac{sopa}++ can deliver competitive
 performance on the \ac{fmtod} English language intent classification task, we compare
-the mean performance metrics of our SoPa++ models against those from other
+the mean performance metrics of our \ac{sopa}++ models against those from other
 recent studies as mentioned in Section \ref{section:fmtod_performance}.
 Referring to our accuracy ranges from Table \ref{tab:results_evaluation}, we
-observe that the SoPa++ models show an accuracy range from 97.6-98.3$\%$ for the
+observe that the \ac{sopa}++ models show an accuracy range from 97.6-98.3$\%$ for the
 best performing models given their respective sizes. This falls into the general
 accuracy range of 96.6-99.5$\%$ observed in other studies as per Table
 \ref{tab:fmtod_examples}; albeit in the lower end of this spectrum. We can
-therefore conclude that SoPa++ offers competitive performance on the \ac{fmtod}'s
+therefore conclude that \ac{sopa}++ offers competitive performance on the \ac{fmtod}'s
 English language intent classification task.
 
-While SoPa++'s performance range falling in the lower end of the aforementioned
+While \ac{sopa}++'s performance range falling in the lower end of the aforementioned
 spectrum can be seen as disadvantageous, it is worth noting that the models
-SoPa++ is being compared against are vastly different. For one, the BERT-based
+\ac{sopa}++ is being compared against are vastly different. For one, the \ac{bert}
 models shown in Table \ref{tab:fmtod_results} had parameter counts ranging from
 $\sim$110-340 million parameters \citep{devlin-etal-2019-bert}; which are
-$\sim$100-300 times larger than our SoPa++ models. In addition, models from
+$\sim$100-300 times larger than our \ac{sopa}++ models. In addition, models from
 \citet{zhang-etal-2020-intent} showed an exceptionally high accuracy of 99.5$\%$
 mainly because of pre-training on the external WikiHow data set for general
 intent classification tasks. Finally, many of the models described in Table
 \ref{tab:fmtod_results} were jointly trained on both \ac{fmtod} intent classification
 and slot filling tasks; which could have contributed to certain joint-task
-performance benefits. These significant differences between SoPa++ and the
-aforementioned models should be taken into account when comparing SoPa++'s
+performance benefits. These significant differences between \ac{sopa}++ and the
+aforementioned models should be taken into account when comparing \ac{sopa}++'s
 performance with other studies. 
 
 \section{RQ2: Evaluating explanations by simplification}
 
-To answer our second research question on whether SoPa++ provides effective
-explanations by simplification, we summarize the minimum differences in SoPa++
+To answer our second research question on whether \ac{sopa}++ provides effective
+explanations by simplification, we summarize the minimum differences in \ac{sopa}++
 and \ac{re} proxy model-pair performance metrics; as well as the minimum distance
 metrics observed as per Table \ref{tab:explain_evaluate_performance}. Regarding
 performance metrics, we can observe that lowest accuracy score differences
-between SoPa++ and \ac{re} proxy model-pairs to be 7$\%$ for small-sized models, 2$\%$
+between \ac{sopa}++ and \ac{re} proxy model-pairs to be 7$\%$ for small-sized models, 2$\%$
 for medium-sized models and 1$\%$ for large-sized models. Regarding distance
 metrics, we observe the lowest $\overline{\delta_{\sigma}}$ and
 $\overline{\delta_{b}}$ to be 10.0$\%$ and 12.4$\%$ for small-sized models, 5.8
@@ -58,9 +58,9 @@ with other studies. As a result, our interpretation of the effectiveness of the
 explanations by simplification post-hoc explainability technique will be
 subjective. That being said, we still believe that accuracy differences as low
 as 1$\%$ and softmax distance norms as small as 4.3$\%$ provide significant
-evidence towards a high degree of resemblance between SoPa++ and \ac{re} proxy
+evidence towards a high degree of resemblance between \ac{sopa}++ and \ac{re} proxy
 models. In summary, we find that the explanations by simplification post-hoc
-explainability technique in SoPa++ is effective, in particular for medium and
+explainability technique in \ac{sopa}++ is effective, in particular for medium and
 large-sized models with $\tau$-thresholds ranging from 0.50-1.00.
 
 In the interest of objectivity, we would like to provide some perspectives in
@@ -84,9 +84,9 @@ observations in regards to our results for RQ2. Firstly, we can observe the
 performance-interpretability tradeoff from Section
 \ref{section:performance_interpretability_tradeoff} in Table
 \ref{tab:explain_evaluate_performance} with the more transparent \ac{re} proxy models
-consistently performing worse than their black-box SoPa++ counterparts; with the
+consistently performing worse than their black-box \ac{sopa}++ counterparts; with the
 exception of the large-sized model-pair with $\tau$=1.00 where the \ac{re} proxy
-generally outperforms the SoPa++ antecedent model. Next, as per Table
+generally outperforms the \ac{sopa}++ antecedent model. Next, as per Table
 \ref{tab:explain_evaluate_performance}; we observe that \ac{re} proxy models tend to
 perform better as the $\tau$-threshold increases. We hypothesize that this
 occurs mainly because larger $\tau$-threshold forces the memorization of higher
@@ -105,7 +105,7 @@ trends with even higher $\tau$-thresholds.
 \label{section:discussion_regex}
 
 To answer our third research question on interesting and relevant explanations
-derived from SoPa++ on the \ac{fmtod} data set, we refer back to our results for this
+derived from \ac{sopa}++ on the \ac{fmtod} data set, we refer back to our results for this
 research question and attempt to interpret them. Since this research question is
 more open-ended than the previous two, our approach to answer it will also be
 opinionated and subjective. One interesting observation is in the relative
@@ -113,7 +113,7 @@ linear weights applied to the \ac{tauste} neurons in Figure \ref{fig:neuron_weig
 We can observe that weights are generally continously distributed across all
 neurons; with some exceptions such as neurons 19, 25 and 17 where the weights
 are more skewed towards the alarm, reminder and weather domains respectively.
-This implies that SoPa++ and \ac{re} proxy models still distribute feature
+This implies that \ac{sopa}++ and \ac{re} proxy models still distribute feature
 importances across \ac{tauste} neurons in a highly connective sense; which also implies that
 each \ac{tauste} neuron has a non-negligible impact on all classification decisions.
 
@@ -129,7 +129,7 @@ between the regular expressions corresponding to these neurons. For example,
 many of the regular expressions corresponding to neuron 19 use words related to
 alarms such as \textit{"snooze"} and \textit{"clock"}; while those corresponding to neuron 17 use
 words related to weather such as \textit{"fahrenheit"} and \textit{"forecast"}. Next, we can
-observe transition clustering or branching in sampled regular expressions across
+observe transition branching in sampled regular expressions across
 all three \ac{tauste} neurons. This branching phenomenon is interesting because words
 in these branches can sometimes have very similar lexical semantics. For
 example, in the third regular expression from the bottom in Figure
@@ -146,12 +146,12 @@ expressions in Figures \ref{fig:regex_example_neuron_alarm} and
 the same position.
 
 Finally, the sampled regular expressions allow us to identify various inductive
-biases incorporated by SoPa++ and its \ac{re} proxy models from the training data.
+biases incorporated by \ac{sopa}++ and its \ac{re} proxy models from the training data.
 Going back to the digital and location-based tokens mentioned in the previous
 paragraph, we can observe how the training data induces USA-centric biases
 pertaining to locations such as \textit{"atlanta"} and hard-coded Fahrenheit
 temperatures such as \textit{"70"}. As a result, we can extrapolate that the
-SoPa++ and \ac{re} proxy models will likely only perform well on unseen data based in
+\ac{sopa}++ and \ac{re} proxy models will likely only perform well on unseen data based in
 USA-centric domains since they likely would not have encountered tokens from
 non-USA-centric domains. An advantageous aspect of the \ac{re} proxy model is that
 these inductive biases can be easily identified and also corrected. In the case
@@ -163,7 +163,7 @@ bias could be in the third regular expression from the top in Figure
 the pronoun \textit{"i"}. This inductive bias could be corrected in the \ac{re} proxy
 model by augmenting it with all other pronouns available in the English
 language. Finally, we can propagate these manual corrections in the \ac{re} proxy
-model back to SoPa++ by copying the word embeddings and transition matrix
+model back to \ac{sopa}++ by copying the word embeddings and transition matrix
 diagonals of the biased word to now represent those of the manually added new
 words.
 

@@ -6,7 +6,7 @@ In this chapter, we introduce this thesis by presenting its motivation,
 describing our research questions and providing an overview of the thesis
 structure.
 
-\section{Motivation}
+\section{Motivation and objective}
 
 With the recent trend of increasingly large deep learning models achieving
 state-of-the-art performance on a myriad of \ac{ml} tasks including in \ac{nlp}
@@ -27,22 +27,20 @@ explanations, feature relevance and explanations by simplification.
 Through our own survey of recent literature on explainability techniques used in
 \ac{nlp}, we came across several interesting studies employing the three
 aforementioned post-hoc explainability techniques to better explain black-box
-models; particularly deep neural networks.
+models; particularly deep neural networks
 \citep{schwartz2018sopa,peng2018rational,suresh-etal-2019-distilling,wang2019state,jiang2020cold}.
 Of these studies, we draw inspiration from \citet{schwartz2018sopa} who
 developed the novel hybridized \ac{rnn}, \ac{cnn} and weighted finite-state
-\textbf{So}ft \textbf{Pa}tterns (SoPa) model architecture with a special focus
-in model explainability. While the SoPa model functions well, we found its
-explainability techniques to be localized and indirect despite its weighted
-finite-state components providing a strong potential for effective explanations
-by simplification into a transparent and global regular-expression-based model.
-The main objective of this thesis is to address these limitations and
-to propose a modified model, \textbf{SoPa++}, which could allow for effective
-explanations by simplification. To facilitate this objective, we evaluate the
-performance and explanations by simplification of the modified SoPa++ model on
-the recently released \ac{fmtod} data set from
-\citet{schuster-etal-2019-cross-lingual}; focusing on the English-language
-intent classification task.
+\ac{sopa} model architecture with a special focus in model explainability. While
+the \ac{sopa} model functions well, we find its explainability techniques to be
+localized and indirect despite its neural architecture being suited for the
+globalized and direct explanations by simplification explainability technique.
+The main objective of this thesis is to address these limitations and to propose
+a modified model, \textbf{\ac{sopa}++}, which could allow for effective explanations
+by simplification. To facilitate this objective, we study both the performance and
+explanations by simplification of the modified \ac{sopa}++ model on the recently
+released \ac{fmtod} data set from \citet{schuster-etal-2019-cross-lingual};
+focusing on the English-language intent classification task.
 
 \begin{figure}[t!]
   \centering
@@ -61,13 +59,13 @@ To guide us in addressing our objective, we aim to answer the following three
 research questions:
 
 \begin{enumerate}
-  \item Does SoPa++ contribute to competitive performance\footnote{We define
+  \item Does \ac{sopa}++ provide competitive\footnote{We define
     competitive performance as the scenario where a mean performance metric on a
     certain task falls within the range obtained from other recent studies on
-    the same task} on the \ac{fmtod} English language intent classification task?
-  \item To what extent does SoPa++ contribute to effective explanations by
+    the same task} performance on the \ac{fmtod} English language intent classification task?
+  \item To what extent does \ac{sopa}++ contribute to effective explanations by
   simplification on the \ac{fmtod} English language intent classification task?
-  \item What interesting and relevant explanations can SoPa++ provide on the
+  \item What interesting and relevant explanations can \ac{sopa}++ provide on the
   \ac{fmtod} English language intent classification task?
 \end{enumerate}
 

@@ -4,10 +4,9 @@
 
 In this chapter, we describe the \ac{fmtod} data set in greater detail and
 survey the performance of other studies that addressed this data set and its
-tasks. Following this, we introduce the core content of this thesis by
-describing the methodologies used for answering our three research questions.
-Comprehensive source code reflecting our methodologies can be found in our
-public GitHub
+tasks. Following this, we introduce the \ac{sopa}++ model and describe the
+methodologies used for answering our three research questions. Comprehensive
+source code reflecting our methodologies can be found in our public GitHub
 repository\footnote{\url{https://github.com/atreyasha/spp-explainability}}.
 
 \section{Facebook Multilingual Task Oriented Dialog}
@@ -34,9 +33,9 @@ relatively straightforward task which allows us to place a greater focus on
 performance and explainability. Furthermore, the English language subset entails
 the highest resources in the \ac{fmtod} data set. Finally, we find the \ac{fmtod} data
 set's intent classification task especially attractive because it allows us
-to test the SoPa++ model on a multi-class \ac{nlu} problem; which is significantly
+to test the \ac{sopa}++ model on a multi-class \ac{nlu} problem; which is significantly
 different from the focus on binary classification sentiment detection tasks in
-SoPa. 
+\ac{sopa}. 
 
 \subsection{Preprocessing}
 
@@ -140,7 +139,7 @@ section, we describe the summary statistics of the preprocessed \ac{fmtod} data 
     \toprule
     Study & Summary & Accuracy \\
     \midrule
-    \citet{schuster-etal-2019-cross-lingual} & Bi\ac{lstm} jointly trained on both the slot filling and intent classification tasks & 99.1$\%$ \\
+    \citet{schuster-etal-2019-cross-lingual} & Bidirectional LSTM jointly trained on both the slot filling and intent classification tasks & 99.1$\%$ \\
     \citet{zhang2019joint} & BERT along with various decoders jointly fine-tuned on both the slot filling and intent classification tasks & 96.6--98.9$\%$ \\
     \citet{zhang-etal-2020-intent} & RoBERTa and XLM-RoBERTa fine-tuned on the English language and multilingual intent classification tasks along with WikiHow pre-training & 99.3--99.5$\%$ \\
     \bottomrule
@@ -174,38 +173,45 @@ computed with the assistance of the \ac{nltk} \texttt{Treebank} word tokenizer
 \label{section:fmtod_performance}
 
 Several recent studies have addressed the \ac{fmtod} English language intent
-classification task using a variety of deep neural networks such as Bi\ac{lstm}s and
-large language models such as XLM-RoBERTa
+classification task using a variety of deep neural networks from bidirectional
+\ac{lstm}s to large Transformer language models such as \ac{bert}
 \citep{schuster-etal-2019-cross-lingual,zhang2019joint,zhang-etal-2020-intent}.
 Table \ref{tab:fmtod_results} summarizes these studies along with their reported
-accuracy scores on the \ac{fmtod} English language intent classification task. Based
-on the presented results, we can observe that the competitive accuracy range for
-the \ac{fmtod} English language intent classification task is 96.6-99.5$\%$.
+accuracy scores on the \ac{fmtod} English language intent classification task.
+Based on the presented results, we can observe that the competitive accuracy
+range for the \ac{fmtod} English language intent classification task is
+96.6-99.5$\%$.
 
 \section{SoPa++}
 
-We now introduce the main contribution of this thesis: the SoPa++ model.
-Etymologically, SoPa++ derives its name from the variable increment operator
-\texttt{"++"} used in programming languages such as C and Java. In essence, the
-name SoPa++ signifies an improvement or major modification to the SoPa model.
-Some of the major modifications from SoPa to SoPa++ include the utility of
-strict linear-chain \ac{wfaws} over linear-chain \ac{wfas}, replacement of the
-\ac{mlp} in SoPa with quantized and transparent hidden layers and the introduction of
-a new explanations by simplification post-hoc explainability technique which
-leverages on the aforementioned modifications in SoPa++'s neural architecture.
+Based on our analysis in Section \ref{section:sopa_post_hoc}, we found \ac{sopa}'s
+explainability techniques to be localized and indirect. Furthermore, we believe
+that these techniques did not fully capitalize on the rich theoretical
+foundations offered by \ac{wfas} in the neural architecture; such as possible
+extractions of \ac{nfas} and conversions to regular expressions. In order to
+address these limitations, we introduce the main contribution of this thesis:
+the \ac{sopa}++ model. Etymologically, \ac{sopa}++ derives its name from the variable
+increment operator \texttt{"++"} used in programming languages such as C and
+Java. In essence, the name \ac{sopa}++ signifies an improvement or major modification
+to the \ac{sopa} model. Some of the major modifications from \ac{sopa} to \ac{sopa}++ include
+the utility of strict linear-chain \ac{wfaws} over linear-chain \ac{wfas},
+replacement of the \ac{mlp} in \ac{sopa} with quantized and transparent hidden layers
+and the introduction of a new globalized and direct explanations by
+simplification post-hoc explainability technique to simplify the black-box
+\ac{sopa}++ model into a transparent \ac{re} proxy model.
 
 \subsection{Strict linear-chain WFA-$\omega$'s}
 
 As mentioned in Section \ref{section:sopa}, \citet{schwartz2018sopa} constructed
-the SoPa model with an ensemble of linear-chain \ac{wfas} which permitted both
+the \ac{sopa} model with an ensemble of linear-chain \ac{wfas} which permitted both
 $\epsilon$ and self-loop transitions. As noted in Section \ref{section:sopa_cg},
 $\epsilon$ and self-loop transitions are useful constructs in abstracting \ac{wfas}
 and allowing them to consume variable length strings. However, based on
 experimentation during our development phase; we observed a key concern that the
-highest scoring substrings in the linear-chain \ac{wfas} in SoPa tended to have a
+highest scoring substrings in the linear-chain \ac{wfas} in \ac{sopa} tended to have a
 large variation of string lengths due to the effect of both
 $\epsilon$-transitions and self-loops. We believe that this reduces the impact
-of SoPa's explainability techniques due to a lack of consistency in the lengths
+of \ac{sopa}'s explainability techniques due to a lack of consistency in the lengths
 of highest scoring paths and substrings. As a result, the first change we decided
 for was to remove both $\epsilon$ and self-loop transitions in constituent \ac{wfas}
 or patterns. With this change, we could at least ensure that each \ac{wfa} would
@@ -324,7 +330,7 @@ that a $\omega$-transition in a \ac{fa} corresponds to the
 
 \begin{algorithm}[t!]
   \small
-  \caption{Strict linear-chain \ac{wfaw} document score$^*$}
+  \caption{Strict linear-chain WFA-$\omega$ document score$^*$}
   \label{algo:lc_wfa_w_document_score}
   \begin{algorithmic}[1]
     \Require{Strict linear-chain \ac{wfaw} (denoted as $\mathcal{A}$) and document $\bm{y}$}
@@ -365,7 +371,7 @@ that a $\omega$-transition in a \ac{fa} corresponds to the
 
 \subsection{Document score}
 
-Similar to \citet{schwartz2018sopa}, SoPa++ was intended to compute scores for
+Similar to \citet{schwartz2018sopa}, \ac{sopa}++ was intended to compute scores for
 entire documents and not just fixed-length strings using the strict linear-chain
 \ac{wfaw}. To achieve this, we propose Algorithm
 \ref{algo:lc_wfa_w_document_score} to compute the document score
@@ -382,7 +388,7 @@ In Section \ref{section:ste}, we described the concept of a \ac{ste} in quantize
 neural networks and explained how \ac{ste}s function in both their forward and
 backward passes. Furthermore, we provided a motivation as to why \ac{ste}s and other
 quantized activation functions are of interest; for example in relation to
-computational savings linked to low-precision computing. In SoPa++, we make use
+computational savings linked to low-precision computing. In \ac{sopa}++, we make use
 of a variant of the \ac{ste} activation function which we define here as the \ac{tauste}.
 
 \begin{equation}
@@ -421,25 +427,25 @@ remains fixed at -1 or +1 beyond these limits. This restriction was placed to
 ensure that gradients do not blow up in size.
 
 We chose to use the \ac{tauste} because we believed it could prove useful for the
-explainability purposes of our SoPa++ model. This is mainly because the \ac{tauste}
+explainability purposes of our \ac{sopa}++ model. This is mainly because the \ac{tauste}
 (or even the \ac{ste}) activation function simplifies continuous inputs into discrete
 outputs; thereby reducing the information content of the signal it receives. In
 later sections, we show how we capitalize on this reduction in signal
-information in our SoPa++ model for our explanations by simplification post-hoc
+information in our \ac{sopa}++ model for our explanations by simplification post-hoc
 explainability technique.
 
 \subsection{Computational graph}
 
-With the core modifications in the SoPa++ model explained, we now shift to
-describing the computational graph or forward pass of the SoPa++ model by
+With the core modifications in the \ac{sopa}++ model explained, we now shift to
+describing the computational graph or forward pass of the \ac{sopa}++ model by
 referring to its various neural components. This description is linked to the
-visualization of the computational graph of SoPa++ in Figure \ref{fig:spp_cg}.
+visualization of the computational graph of \ac{sopa}++ in Figure \ref{fig:spp_cg}.
 Firstly, we utilize \ac{nltk}'s default \texttt{Treebank} word tokenizer
 \citep{bird-loper-2004-nltk} to conduct tokenization of input utterances into
 word-level tokens. Next, we pad input utterances with special \texttt{[START]}
 and \texttt{[END]} tokens at the start and end indices of the utterances to
 signify the location where the utterance begins and ends. Finally, we utilize
-GloVe 6B 300-dimensional uncased word-level embeddings
+\ac{glove} 6B 300-dimensional uncased word-level embeddings
 \citep{pennington2014glove} to project the input tokens to continuous numerical
 spaces. 
 
@@ -461,7 +467,7 @@ was too short for the final state of a \ac{wfaw} to register a non-$\bar{0}$
 score, we simply discard this score in further analysis. This description so far
 corresponds to the lower half of Figure \ref{fig:spp_cg}. After max-pooling
 scores from all the $m$ strict linear-chain \ac{wfaws}, we then pass this
-collection of pattern scores for further processing using SoPa++'s hidden neural
+collection of pattern scores for further processing using \ac{sopa}++'s hidden neural
 components; which can be seen in the upper portion of Figure \ref{fig:spp_cg}.
 Firstly, we apply layer normalization \citep{ba2016layer} to all pattern scores
 without any additional affine transformations. We omit the affine transformation
@@ -483,7 +489,7 @@ variations of pattern scores to a uniform range; which ultimately allows the \ac
 layer to discriminate inputs and produce diverse binary outputs.
 
 A natural criticism of the \ac{tauste} layer could be that it strongly limits
-the flow of information in the SoPa++ model. While the binarization present in
+the flow of information in the \ac{sopa}++ model. While the binarization present in
 this layer does indeed limit the rich flow of continuous numerical information,
 it is still worth noting that this layer can preserve significant information
 given a sufficiently large $m$ value, corresponding to the number of strict
@@ -516,39 +522,33 @@ the input preprcessed utterance \texttt{``[START] 10 day weather forecast
 
 \label{section:spp_transparency}
 
-In regards to transparency, SoPa++ is a hybridized model consisting of \ac{rnn},
-\ac{cnn} and weighted finite-state neural components similar to that of SoPa.
+In regards to transparency, \ac{sopa}++ is a hybridized model consisting of \ac{rnn},
+\ac{cnn} and weighted finite-state neural components similar to that of \ac{sopa}.
 Following the arguments of \citet{arrieta2020explainable} related to the
-black-box natures of \ac{rnn}s and \ac{cnn}s, we can conclude that SoPa++ would
+black-box natures of \ac{rnn}s and \ac{cnn}s, we can conclude that \ac{sopa}++ would
 correspondingly fall into the black-box model category. Because of this
-classification, the SoPa++ model would require post-hoc explainability
-techniques in order to explain its inner mechanisms.
-
-Reviewing the post-hoc explainability techniques offered by SoPa as per Section
-\ref{section:sopa_post_hoc}, we would opine that a major limitation of these
-techniques is that they do not fully capitalize on the rich theoretical
-foundations offered by \ac{wfas}; such as their possible conversions to \ac{nfa}
-and ultimately regular expressions. In order to address this limitation, we
-propose a new explanations by simplification post-hoc explainability technique
-for simplifying a fully trained black-box SoPa++ model into a transparent
-regular expression proxy model. We describe this new explanations by
-simplification post-hoc explainability technique in the next section.
+classification, the \ac{sopa}++ model would require post-hoc explainability
+techniques in order to explain its inner mechanisms. We capitalize on the rich
+theoretical foundations offered by the constituent \ac{wfas} in \ac{sopa}++ and
+propose a new globalized and direct explanations by simplification post-hoc
+explainability technique to simplify the black-box \ac{sopa}++ model into a
+transparent \ac{re} proxy model.
 
 \section{RE proxy}
 
-In this section, we describe the key processes required to convert a
-fully trained black-box SoPa++ model into a transparent \ac{re} proxy model. These include
-the introduction of a path-augmented document scoring algorithm and the creation
-of the \ac{re} lookup layer. Next, we describe the computational graph or forward
-pass of the \ac{re} proxy model. Finally, we provide some comments on
-explainability-related aspects of the simplified \ac{re} proxy model and its
-antecedent SoPa++ counterpart.
+In this section, we describe the key processes required to convert a fully
+trained black-box \ac{sopa}++ model into a transparent \ac{re} proxy model. We start
+off with the introduction of a path-augmented document scoring algorithm and the
+extraction of the \ac{re} lookup layer. Following this, we describe the assembly
+and computational graph of the \ac{re} proxy model. Finally, we provide some
+comments on explainability-related aspects of the simplified \ac{re} proxy model
+and its antecedent \ac{sopa}++ counterpart.
 
 \subsection{Path-augmented document score}
 
 \begin{algorithm}[t!]
   \small
-  \caption{Strict linear-chain \ac{wfaw} path-augmented document score$^*$}
+  \caption{Strict linear-chain WFA-$\omega$ path-augmented document score$^*$}
   \label{algo:lc_wfa_w_document_score_trace}
   \begin{algorithmic}[1]
     \Require{Strict linear-chain \ac{wfaw} (denoted as $\mathcal{A}$) and document $\bm{y}$}
@@ -596,7 +596,7 @@ antecedent SoPa++ counterpart.
 One major advantage of the Viterbi algorithm, as per Definition
 \ref{def:string_score}, is its ability to return the highest path score which
 can ultimately allow for attribution to a certain path and substring in a
-document. In order to simplify SoPa++ into a \ac{re} proxy model, we first need to
+document. In order to simplify \ac{sopa}++ into a \ac{re} proxy model, we first need to
 modify our document scoring algorithm to not only return the document score
 $s_{\text{doc}}(\bm{y})$ but also its corresponding path
 $\pi_{\text{doc}}(\bm{y})$. This process is described as a path-augmented
@@ -614,9 +614,9 @@ regular expression corresponding to a certain strict linear-chain \ac{wfaw}.
 
 \subsection{RE lookup layer}
 
-The next step in simplifying a fully-trained SoPa++ to a \ac{re} proxy model is the
+The next step in simplifying a fully-trained \ac{sopa}++ to a \ac{re} proxy model is the
 extraction of a \ac{re} lookup layer. To motivate this process, we shortly revert to
-the SoPa++ computational graph in Figure \ref{fig:spp_cg}. The \ac{tauste} layer
+the \ac{sopa}++ computational graph in Figure \ref{fig:spp_cg}. The \ac{tauste} layer
 filters input signals from normalized pattern scores and provides +1 outputs for
 normalized pattern scores which exceed the $\tau$-threshold. Since pattern
 scores correspond to document scores and document scores can be augmented with
@@ -629,9 +629,9 @@ regular expressions which activate the various \ac{tauste} neurons; such that ea
 \textbf{\{RE\}$_i$}. The collection of all regular expressions
 $[\{\textbf{RE}\}_1, \ldots, \{\textbf{RE}\}_m]$ which activate $m$ \ac{tauste}
 neurons is known as the \ac{re} lookup layer. Overall, the \ac{re} lookup layer represents
-a knowledge base of important regular expressions that cause the SoPa++ model to
+a knowledge base of important regular expressions that cause the \ac{sopa}++ model to
 make weighted decisions. This process of extracting the \ac{re} lookup layer from
-the SoPa++ model is reflected in Algorithm \ref{algo:simplification_process}.
+the \ac{sopa}++ model is reflected in Algorithm \ref{algo:simplification_process}.
 
 \begin{algorithm}[t!]
   \small
@@ -669,7 +669,7 @@ the SoPa++ model is reflected in Algorithm \ref{algo:simplification_process}.
 
 This leads us to several interesting conclusions. Firstly, we observe here that
 the \ac{tauste} layer is not only useful for reducing information complexity; but
-also for attributing causal links to SoPa++'s decision-making. In this case,
+also for attributing causal links to \ac{sopa}++'s decision-making. In this case,
 the causal links are the "activating" regular expressions returned by the
 strict-linear chain \ac{wfaw} when computing the path-augmented document
 score. Next, we can also observe the effect of the $\tau$-threshold on the \ac{re}
@@ -694,27 +694,27 @@ to comprehend for a human.
 
 \subsection{Assembling RE proxy}
 
-The final step in simplifying a fully-trained SoPa++ model into a \ac{re} proxy model
-is to assemble the \ac{re} proxy model using the \ac{re} lookup and SoPa++ linear layers.
-Specifically, for a given SoPa++ model; we firstly extract the \ac{re} lookup layer.
-Then, we combine the \ac{re} lookup layer and the SoPa++ linear layer in order to
+The final step in simplifying a fully-trained \ac{sopa}++ model into a \ac{re} proxy model
+is to assemble the \ac{re} proxy model using the \ac{re} lookup and \ac{sopa}++ linear layers.
+Specifically, for a given \ac{sopa}++ model; we firstly extract the \ac{re} lookup layer.
+Then, we combine the \ac{re} lookup layer and the \ac{sopa}++ linear layer in order to
 create the \ac{re} proxy model. A visualization of this is shown in Figure
 \ref{fig:regex_cg} and we can observe how the \ac{re} lookup layer essentially
-replaces most of the lower neural components of the SoPa++ model up until the
+replaces most of the lower neural components of the \ac{sopa}++ model up until the
 \ac{tauste} layer. The resulting \ac{re} proxy should ideally be a good approximator of
-the SoPa++ model; with the exact degree of approximation being reserved for
+the \ac{sopa}++ model; with the exact degree of approximation being reserved for
 empirical investigation. Given this process of assembly, it is important to note
-that each SoPa++ model allows for exactly one \ac{re} proxy model that can be
-assembled. Therefore, SoPa++ and \ac{re} proxy models occur in model-pairs.
+that each \ac{sopa}++ model allows for exactly one \ac{re} proxy model that can be
+assembled. Therefore, \ac{sopa}++ and \ac{re} proxy models occur in model-pairs.
 
 One major limitation of the \ac{re} proxy model is in its \ac{re} lookup layer. Since the
 \ac{re} lookup layer is essentially a memorized knowledge base, it could contribute
 to overfitting on the training data and result in a \ac{re} proxy model that is not
-representative of the SoPa++ model on unseen data. While this limitation could
+representative of the \ac{sopa}++ model on unseen data. While this limitation could
 theoretically be offset by the presence of sufficient variable-length regular
 expression samples with wildcards, it would ultimately boil down to an empirical
 investigation to quantify how similarly the \ac{re} proxy model performs compared to
-its antecedent SoPa++ model on previously unseen data.
+its antecedent \ac{sopa}++ model on previously unseen data.
 
 \subsection{Computational graph}
 
@@ -722,7 +722,7 @@ its antecedent SoPa++ model on previously unseen data.
 
 We now provide a description of the computational graph or forward pass of the
 assembled \ac{re} proxy model with reference to Figure \ref{fig:regex_cg}. Similar to
-the computational graph of SoPa++, we process our input text sequentially.
+the computational graph of \ac{sopa}++, we process our input text sequentially.
 However, instead of using token embeddings and neural network components; we
 pass our input utterance through our \ac{re} lookup layer which conducts substring
 matches over all sets of regular expressions in $[\{\textbf{RE}\}_1, \ldots,
@@ -730,11 +730,11 @@ matches over all sets of regular expressions in $[\{\textbf{RE}\}_1, \ldots,
 the input utterance, the index of this \ac{re} set if given a value of 1. If no
 regular expression in the set matches, the index of this \ac{re} set is given a value
 of 0. These values are assembled into a binary vector that mimics the outputs of
-the \ac{tauste} layer in the antecedent SoPa++ model. This binary vector is then
+the \ac{tauste} layer in the antecedent \ac{sopa}++ model. This binary vector is then
 passed to the linear layer; which transforms the binary vector back
 into continuous space with the appropriate dimensionality. Following softmax and
 argmax operations, we arrive at our predicted output class. It is worth
-mentioning that while the execution of the SoPa++ forward pass can be
+mentioning that while the execution of the \ac{sopa}++ forward pass can be
 accelerated due to tensor-based parallelization with hardware acceleration on a
 \ac{gpu}, the forward pass of the \ac{re} proxy model is
 significantly slower since we utilized an unoptimized single-threaded lookup
@@ -745,7 +745,7 @@ process to match regular expressions in the \ac{re} lookup layer.
 \label{section:re_transparency}
 
 So far, we have described the process of simplifying a fully-trained black-box
-SoPa++ model into a \ac{re} proxy model. We now investigate the \ac{re} proxy model and
+\ac{sopa}++ model into a \ac{re} proxy model. We now investigate the \ac{re} proxy model and
 comment on its degree of transparency. In essence, a \ac{re} proxy model consists of
 a \ac{re} lookup layer followed by a linear regressor. The \ac{re} lookup layer can be
 seen as a rules-based learner component where inputs are processed via clear and
@@ -763,13 +763,13 @@ model depending most importantly on the size of the \ac{re} lookup layer.
 \subsection{Explainability}
 
 We now provide additional comments on the explanations by simplification
-post-hoc explainability technique to simplify a fully-trained black-box SoPa++
+post-hoc explainability technique to simplify a fully-trained black-box \ac{sopa}++
 model into a transparent \ac{re} proxy model. Firstly, we would assign the target
 audience of this explainability technique as expert-users compared to the
-inferred target audience of average end-users for the SoPa model. We designate
+inferred target audience of average end-users for the \ac{sopa} model. We designate
 expert-users as our target audience mainly because the process of constructing
 and understanding the \ac{re} proxy model is not as straightforward as the local
-explanations and feature relevance techniques in SoPa as per Section
+explanations and feature relevance techniques in \ac{sopa} as per Section
 \ref{section:sopa_post_hoc}.
 
 Next, we evaluate the quality of explanations offered by using the explanations
@@ -786,6 +786,15 @@ the start of the model. Regarding the selective quality, it is possible that the
 \ac{re} proxy model meets this criterion since the linear weights applied to
 matched regular expressions can be easily ranked to understand which were the
 most important causal links influencing the model's decision.
+
+Overall, we gather three key observations regarding the explanations by
+simplification technique of the \ac{sopa}++ model. Firstly, we find that this
+technique is globalized compared to the localized methods of \ac{sopa}; since it
+results in the production of a globally synthesized \ac{re} proxy model. Next,
+we find that this technique is direct since it conveys clear causal links
+compared to the indirect methods in \ac{sopa}. Finally, we observe that this
+technique likely fulfils all three guidelines for good explanations; compared to
+\ac{sopa} only fulfilling one of these guidelines.
 
 \begin{table}[t!]
   \centering \def\arraystretch{1.3}
@@ -806,21 +815,21 @@ most important causal links influencing the model's decision.
 
 \section{Differences between SoPa and SoPa++}
 
-To wrap up this current segment on the SoPa++ model, we summarize the key
-differences between SoPa and SoPa++ as shown in Table
-\ref{tab:sopa_spp_comparison}. The most significant changes in SoPa++
+To wrap up this current segment on the \ac{sopa}++ model, we summarize the key
+differences between \ac{sopa} and \ac{sopa}++ as shown in Table
+\ref{tab:sopa_spp_comparison}. The most significant changes in \ac{sopa}++
 include the modification of linear-chain \ac{wfas} to strict linear-chain
 \ac{wfaws}, the replacement of the \ac{mlp} with layer normalization, \ac{tauste} and
 linear layers and the introduction of the explanations by simplification
 post-hoc explainability technique to create \ac{re} proxy models. With the
-construction of SoPa++ and its \ac{re} proxy models established, we now proceed to
+construction of \ac{sopa}++ and its \ac{re} proxy models established, we now proceed to
 describe the methodologies used to answer our three research questions.
 
 \section{RQ1: Evaluating performance of SoPa++}
 
 In this section, we describe the methodologies used to answer our first research
-question regarding the competitive performance of the SoPa++ model on the \ac{fmtod}
-data set. Specifically, we describe how we trained the SoPa++ model and
+question regarding the competitive performance of the \ac{sopa}++ model on the \ac{fmtod}
+data set. Specifically, we describe how we trained the \ac{sopa}++ model and
 afterwards, how we proceeded to evaluate and compare its performance to other
 studies.
 
@@ -835,10 +844,10 @@ would have the same frequency as the majority class. We chose this approach over
 other approaches such as gradient-weighting since this is generally a model
 agnostic and straightforward approach.
 
-Returning to the computational graph of SoPa++ in Figure \ref{fig:spp_cg}, we
+Returning to the computational graph of \ac{sopa}++ in Figure \ref{fig:spp_cg}, we
 compute the cross-entropy loss using the softmax output and target one-hot
-encoded classes. Since SoPa++ is in essence a deep neural network, we utilize
-the well-studied gradient descent technique to train and update our SoPa++ model
+encoded classes. Since \ac{sopa}++ is in essence a deep neural network, we utilize
+the well-studied gradient descent technique to train and update our \ac{sopa}++ model
 with the objective of minimizing the aforementioned cross-entropy loss. To
 facilitate this learning process, we utilize
 PyTorch\footnote{\url{https://pytorch.org/}} to assist with gradient computations,
@@ -848,7 +857,7 @@ learning technique with $\beta_1=0.9$ and $\beta_2=0.999$. In terms of fixed
 training hyperparameters, we utilize a learning rate of 0.001, a batch size of
 256 input utterances and neuron/word dropout probabilities of 0.2. We only apply
 neuron dropouts on the transition matrices of all the strict linear-chain
-\ac{wfaws} in SoPa++. We furthermore apply batch sorting based on input
+\ac{wfaws} in \ac{sopa}++. We furthermore apply batch sorting based on input
 utterance lengths to ensure maximum efficiency when computing pattern
 scores. Based on our own experiments, we observed more stable training with the
 max-sum semiring compared to the max-product semiring. For simplicity, we
@@ -870,10 +879,10 @@ therefore only use the max-sum semiring in all of our \ac{wfaws}.
   \label{tab:model_types}
 \end{table}
 
-To obtain some variation in our SoPa++ models, we decide to use a grid-search
+To obtain some variation in our \ac{sopa}++ models, we decide to use a grid-search
 technique while varying the patterns $P$ and $\tau$-threshold hyperparameters.
 Our variations in the patterns hypereparameter $P$ result in three different
-SoPa++ model sizes which we define as small, medium and large as per Table
+\ac{sopa}++ model sizes which we define as small, medium and large as per Table
 \ref{tab:model_types}. Correspondingly, we vary the $\tau$-threshold
 hyperparameter with the following five possible values: $\{0.00, 0.25, 0.50,
 0.75, 1.00\}$. For each model configuration in our grid-search routine, we
@@ -883,22 +892,22 @@ produces a total of $3\times5\times10=150$ model runs. Finally, we train all
 models for a maximum of 50 epochs with 10 patience epochs for early stopping in
 case of a performance plateau or worsening. To trigger early stopping in the
 patience framework, we monitor the cross-entropy loss over the validation data
-set. We run all SoPa++ training experiments on a single NVIDIA GeForce GTX 1080
+set. We run all \ac{sopa}++ training experiments on a single NVIDIA GeForce GTX 1080
 Ti \ac{gpu} for $\sim$24 hours.
 
 \subsection{Evaluation}
 
-Given fully trained SoPa++ models from the previous training step, we now
-proceed to evaluate the performance of the SoPa++ models on the \ac{fmtod} data set's
+Given fully trained \ac{sopa}++ models from the previous training step, we now
+proceed to evaluate the performance of the \ac{sopa}++ models on the \ac{fmtod} data set's
 test partition. We simply run the preprocessed \ac{fmtod} test partition through the
-computational graph of the SoPa++ model and obtain the predicted classes. With
-the predicted and target classes, we compute the accuracy of the SoPa++ models
+computational graph of the \ac{sopa}++ model and obtain the predicted classes. With
+the predicted and target classes, we compute the accuracy of the \ac{sopa}++ models
 and summarize these to obtain a distribution of performances over the random
 seed iterations. Finally, we compare our mean accuracies with the accuracy range
 of other recent papers on \ac{fmtod} as described in Section
-\ref{section:fmtod_performance}. If the mean accuracy of our SoPa++ models
+\ref{section:fmtod_performance}. If the mean accuracy of our \ac{sopa}++ models
 falls into the aforementioned competitive range, we can then conclude that our
-SoPa++ model performs competitively with other recent studies.
+\ac{sopa}++ model performs competitively with other recent studies.
 
 \section{RQ2: Evaluating explanations by simplification}
 
@@ -910,17 +919,17 @@ simplification post-hoc explainability technique. As mentioned in Definition
 \ref{def:explain_simplify}, the purpose of explanations by simplification is to
 create a less complex proxy model which can both keep a similar performance
 score and maximize its resemblance to the antecedent model. We already discussed
-how the \ac{re} proxy derived from SoPa++ is likely to be a transparent model
-compared to the black-box SoPa++ model; which already satisfies the first
+how the \ac{re} proxy derived from \ac{sopa}++ is likely to be a transparent model
+compared to the black-box \ac{sopa}++ model; which already satisfies the first
 criterion that the proxy model should be less complex than the antecedent model.
 
 To address the next criterion regarding the similarity of the performance scores
-of both SoPa++ and \ac{re} proxy model pairs, we compute and compare the accuracy
+of both \ac{sopa}++ and \ac{re} proxy model pairs, we compute and compare the accuracy
 scores of all model pairs on the \ac{fmtod} data set's test partition since this
-represents previously unseen data for both SoPa++ and \ac{re} proxy models. To
+represents previously unseen data for both \ac{sopa}++ and \ac{re} proxy models. To
 address the final criterion of maximum resemblance between the antecedent and
 proxy models, we propose computing the softmax distance norm and binary
-misalignment rate distance metrics to quantify the distance between the SoPa++
+misalignment rate distance metrics to quantify the distance between the \ac{sopa}++
 and \ac{re} proxy model pairs. Naturally, a smaller distance metric would symbolize
 greater resemblance between model pairs. We describe these distance metrics with
 mathematical formalisms in the following sections.
@@ -928,7 +937,7 @@ mathematical formalisms in the following sections.
 \subsection{Softmax distance norm}
 
 The softmax distance norm $\delta_{\sigma}(\bm{y})$ refers to the Euclidean norm
-of the difference in the softmax vectors of the SoPa++ and \ac{re} proxy models for a
+of the difference in the softmax vectors of the \ac{sopa}++ and \ac{re} proxy models for a
 given document $\bm{y}$, which are represented by
 $\bm{\sigma_{\mathcal{S}}}(\bm{y})$ and $\bm{\sigma_{\mathcal{R}}}(\bm{y})$
 respectively:
@@ -941,7 +950,7 @@ In order to measure the central tendency of the softmax distance norm across the
 \ac{fmtod} data set's test partition, we compute this distance metric for all
 instances and correspondingly compute the mean softmax distance norm; which we
 denote here as $\overline{\delta_{\sigma}}$. A low mean softmax distance norm
-norm would imply that the softmax distributions of SoPa++ and \ac{re} proxy models
+norm would imply that the softmax distributions of \ac{sopa}++ and \ac{re} proxy models
 were similar and would imply, to a certain extent, that the models conducted
 similar weightings of input features. This method is not a perfect indicator of
 interpreting distances between models; but it is more refined than analyzing
@@ -951,7 +960,7 @@ discrete classification outputs.
 
 The binary misalignment rate $\delta_b(\bm{y})$ refers to the dimension
 normalized Manhattan norm of the difference in the binary \ac{tauste} vectors of the
-SoPa++ and \ac{re} proxy models for a given document $\bm{y}$, which are represented
+\ac{sopa}++ and \ac{re} proxy models for a given document $\bm{y}$, which are represented
 by $\bm{b_{\mathcal{S}}}(\bm{y})$ and $\bm{b_{\mathcal{R}}}(\bm{y})$
 respectively:
 
@@ -968,24 +977,24 @@ for all instances and correspondingly compute the mean binary misalignment rate;
 which we denote here as $\overline{\delta_b}$. A low mean binary misalignment
 rate would imply that the \ac{tauste} binary vector distributions were close
 together. Therefore, the binary misalignment could be used as another indicator
-to measure the distance between SoPa++ and \ac{re} proxy model pairs.
+to measure the distance between \ac{sopa}++ and \ac{re} proxy model pairs.
 
 \section{RQ3: Interesting and relevant explanations}
 
 Finally, we arrive at the methodologies used to answer our third research
 question related to showing interesting and relevant explanations that the
-SoPa++ and \ac{re} proxy models can provide on the \ac{fmtod} data set. To
+\ac{sopa}++ and \ac{re} proxy models can provide on the \ac{fmtod} data set. To
 approach this research question, we pursue two key strategies of visualizing
 relative linear weights and sampling regular expressions from the \ac{re} lookup
 layer corresponding to salient \ac{tauste} neurons.
 
 \subsection{Relative linear weights}
 
-A major advantage of the linear layer in both SoPa++ and \ac{re} proxy models is its
-interpretability or transparency compared to the \ac{mlp} in the SoPa model. To
+A major advantage of the linear layer in both \ac{sopa}++ and \ac{re} proxy models is its
+interpretability or transparency compared to the \ac{mlp} in the \ac{sopa} model. To
 visualize the relative linear weights applied to the \ac{tauste} neurons, we apply a
 softmax operation over weights in the linear layer assigned to each \ac{tauste}
-neuron and visualize these relative weights to observe how SoPa++ and its \ac{re}
+neuron and visualize these relative weights to observe how \ac{sopa}++ and its \ac{re}
 proxy models distribute feature importance across \ac{tauste} neurons.
 
 \subsection{Samples from RE lookup layer}
@@ -999,7 +1008,7 @@ neurons. Theoretically, this could provide us with an insight as to which
 regular expressions were of particular importance for the classification of the
 three domains. Furthermore, a deeper analysis of these regular expressions
 could provide us with insights into possible inductive biases incorporated by the
-SoPa++ and the \ac{re} proxy models.
+\ac{sopa}++ and the \ac{re} proxy models.
 
 %%% Local Variables: 
 %%% mode: latex
