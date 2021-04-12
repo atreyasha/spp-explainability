@@ -13,12 +13,12 @@ results in greater detail in the next Discussion chapter.
 
 Following our methodologies, we conducted a grid-search training scheme where we
 varied our patterns $P$ and $\tau$-threshold parameters. The variation in the
-patterns hyperparameter $P$ resulted in three different \ac{sopa}++ model sizes;
+patterns hyperparameter $P$ resulted in three different \ac{spp} model sizes;
 specifically the small, medium and large model sizes as reported in Table
 \ref{tab:model_types}. Along with ten random seed iterations for each grid
 instance in our grid-search scheme, we ran a total of 150 models runs.
 
-We start off by describing the training process for our \ac{sopa}++ models. Figure
+We start off by describing the training process for our \ac{spp} models. Figure
 \ref{fig:results_training} shows a visualization of the validation accuracy
 against training updates in our grid-search training runs. Firstly, we
 observe a trend that the larger models tend to have a higher validation accuracy
@@ -28,21 +28,21 @@ profile across all model sizes, albeit more drastically for smaller models than
 larger models. Finally, we observe that the larger models tend to have an
 earlier convergence window compared to the smaller models.
 
-In regards to the evaluation of \ac{sopa}++ performance, we refer to Table
+In regards to the evaluation of \ac{spp} performance, we refer to Table
 \ref{tab:results_evaluation} for a tabular summary of test accuracies across the
 small, medium and large model sizes grouped by the various $\tau$-threshold
 hyperparameters. Here, we can observe two trends. Firstly, the larger models
-tend to have a higher mean test accuarcy. Secondly, the mean test accuarcy for
+tend to have a higher mean test accuracy. Secondly, the mean test accuracy for
 all models tends to decrease as the $\tau$-threshold increases. These trends are
-also consistent with the validation accuracy trends in the previous section. The
-best performing models for each model size are those where $\tau$=0.00.
+also consistent with the validation accuracy trends. The best performing models
+for each model size are those where $\tau$=0.00.
 
 \begin{figure}[t!]
   \centering
   \includegraphics[width=14cm]{pdfs/generated/train_spp_grid_1618061447.pdf}
   \caption{Visualization of validation accuracy against number of training
     updates grouped by patterns $P$ and $\tau$-threshold hyperparameters; the
-    different coloured lines represent random seed iterations with a
+    different colored lines represent random seed iterations with a
     specific initial random seed}
   \label{fig:results_training}
 \end{figure}
@@ -73,7 +73,7 @@ best performing models for each model size are those where $\tau$=0.00.
 \begin{figure}[t!]
   \centering
   \includegraphics[width=14cm]{pdfs/generated/evaluate_spp_grid_1618059389.pdf}
-  \caption{Visualization of accuracy and model-pair distance metrics against the
+  \caption{Visualization of accuracy and model pair distance metrics against the
     $\tau$-threshold hyperparameter grouped by the patterns
     hyperparameter $P$}
   \label{fig:explain_evaluate}
@@ -107,8 +107,8 @@ best performing models for each model size are those where $\tau$=0.00.
     & $\overline{\delta_b}$ & 22.7 $\pm$ 0.9 & 22.0 $\pm$ 1.0 & 20.6 $\pm$ 1.0 & 18.0 $\pm$ 0.9 & \bm{$14.2 \pm 0.7$} \\
     \bottomrule
   \end{tabular}
-  \caption{Test accuracies and model-pair distances metrics of the SoPa++ and RE
-    proxy models grouped by model sizes and $\tau$-thresholds; accuracies and
+  \caption{Test accuracies and model pair distance metrics of the SoPa++ and RE
+    proxy models grouped by model sizes and $\tau$-thresholds; means and
     standard deviations were calculated across random seed iterations; bold test
     accuracies show model pairs where mean accuracies are closest to one another;
     bold distance metrics indicate mean metrics that are closest to zero}
@@ -116,16 +116,16 @@ best performing models for each model size are those where $\tau$=0.00.
 \end{table}
 
 Following our methodologies for evaluating explanations by simplification for
-the \ac{sopa}++ model, we compare test set accuarcies and distance metrics between
-\ac{sopa}++ and \ac{re} proxy model pairs. Figure \ref{fig:explain_evaluate} and Table
+the \ac{spp} model, we compare test set accuracies and distance metrics between
+\ac{spp} and \ac{re} proxy model pairs. Figure \ref{fig:explain_evaluate} and Table
 \ref{tab:explain_evaluate_performance} provide both a visualization and tabular
 summary of all the aforementioned comparisons respectively. Overall, we can
-observe three general trends. Firstly, we observe that \ac{sopa}++ and \ac{re} proxy test
+observe three general trends. Firstly, we observe that \ac{spp} and \ac{re} proxy test
 accuracies tend to become converge towards one another as we increase the
 $\tau$-threshold. Next, we can observe that \ac{re} proxy accuracies tend to be lower
-than their \ac{sopa}++ counterparts during this convergence process; with a single
+than their \ac{spp} counterparts during this convergence process; with a single
 exception of the large model at $\tau=1.00$ where the \ac{re} proxy mean accuracy
-exceeds that of \ac{sopa}++. Finally, we observe the general trend that both
+exceeds that of \ac{spp}. Finally, we observe the general trend that both
 $\overline{\delta_{\sigma}}$ and $\overline{\delta_b}$ become closer to zero as
 we increase the $\tau$-threshold. This trend is consistently observed for
 $\overline{\delta_b}$ but is not always the case for
@@ -142,21 +142,22 @@ $\overline{\delta_{\sigma}}$; which is minimized at $\tau$-threshold values of
   \label{fig:neuron_weights}
 \end{figure}
 
-Following our methologies to find interesting and relevant explanations on the
-\ac{fmtod} data set, we start off by selecting a particular \ac{re} proxy model and
-analyzing the relative linear weights applied to each \ac{tauste} neuron. For
-simplicity and to minimize the number of \ac{tauste} neurons to visualize, we select
-the best performing small \ac{re} proxy model with 40 \ac{tauste} neurons and a test set
+Following our methodologies to find interesting and relevant explanations on the
+\ac{fmtod} data set, we select a particular \ac{re} proxy model and analyze the
+relative linear weights applied to each \ac{tauste} neuron. For simplicity and
+to minimize the number of \ac{tauste} neurons to visualize, we select the best
+performing small \ac{re} proxy model with 40 \ac{tauste} neurons and a test set
 accuracy of 97.4$\%$. Figure \ref{fig:neuron_weights} visualizes the relative
-linear weights applied to each \ac{tauste} neuron in this \ac{re} proxy model. We can
-observe that the relative linear weights are generally smoothly and evenly
-distributed for each \ac{tauste} neuron among all the 12 \ac{fmtod} classes. That being
-said, there exist salient \ac{tauste} neurons on which there are disproportionatey
-large relative weights placed for certain domains compared to others. Examples
-of these include neuron 19, 25 and 17 which place disproportionately large
-relative weights on the alarm, reminder and weather domains respectively.
+linear weights applied to each \ac{tauste} neuron in this \ac{re} proxy model.
+We can observe that the relative linear weights are generally smoothly and
+evenly distributed for each \ac{tauste} neuron among all the 12 \ac{fmtod}
+classes. That being said, there exist salient \ac{tauste} neurons on which there
+are disproportionately large relative weights placed for certain domains
+compared to others. Examples of these include neuron 19, 25 and 17 which place
+disproportionately large relative weights on the alarm, reminder and weather
+domains respectively.
 
-Next, we isolate the aforementioned salient \ac{tauste} neurons 19, 25 and 17 and we
+Next, we isolate the aforementioned salient \ac{tauste} neurons 19, 25 and 17 and
 sample ten "activating" regular expressions from the \ac{re} lookup layer
 corresponding to these three neurons. We visualize these regular expressions as
 strict linear-chain \ac{nfa} with $\omega$-transitions as shown in Figures
@@ -170,7 +171,7 @@ branching; which implies that these transitions were frequently utilized. While
 we only sampled ten regular expressions per neuron from the \ac{re} lookup layer, it
 should be noted that there exist many more regular expressions to explore.
 Therefore, the following regular expressions only function as samples to provide
-us with some notion of what kinds of regular expressions the \ac{sopa}++ and \ac{re} proxy
+us with some notion of what kinds of regular expressions the \ac{spp} and \ac{re} proxy
 models captured as important.
 
 \newpage
@@ -212,6 +213,8 @@ models captured as important.
 \end{figure}
 
 \clearpage
+
+% LocalWords:  hyperparameter accuracies hyperparameters TauSTE REs NFAs
 
 %%% Local Variables: 
 %%% mode: latex

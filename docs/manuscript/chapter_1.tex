@@ -18,16 +18,15 @@ Of these studies, \citet{arrieta2020explainable} provide an extensive overview
 of \ac{xai} and related concepts based on a thorough literature review of
 $\sim$400 \ac{xai} research contributions published to date. In particular,
 \citet{arrieta2020explainable} explore and classify a variety of
-machine-learning models into transparent and black-box categories depending on
+\ac{ml} models into transparent and black-box categories depending on
 their degrees of transparency. Furthermore, they explore taxonomies of post-hoc
 explainability techniques aimed at effectively explaining black-box models.
 Notable explainability techniques used in recent research include local
 explanations, feature relevance and explanations by simplification.
 
-Through our own survey of recent literature on explainability techniques used in
+Through our own survey of recent literature on explainability techniques in
 \ac{nlp}, we came across several interesting studies employing the three
-aforementioned post-hoc explainability techniques to better explain black-box
-models; particularly deep neural networks
+aforementioned post-hoc explainability techniques to better explain deep neural networks
 \citep{schwartz2018sopa,peng2018rational,suresh-etal-2019-distilling,wang2019state,jiang2020cold}.
 Of these studies, we draw inspiration from \citet{schwartz2018sopa} who
 developed the novel hybridized \ac{rnn}, \ac{cnn} and weighted finite-state
@@ -36,9 +35,9 @@ the \ac{sopa} model functions well, we find its explainability techniques to be
 localized and indirect despite its neural architecture being suited for the
 globalized and direct explanations by simplification explainability technique.
 The main objective of this thesis is to address these limitations and to propose
-a modified model, \textbf{\ac{sopa}++}, which could allow for effective explanations
+a modified model, \textbf{\ac{spp}}, which could allow for effective explanations
 by simplification. To facilitate this objective, we study both the performance and
-explanations by simplification of the modified \ac{sopa}++ model on the recently
+explanations by simplification of the modified \ac{spp} model on the recently
 released \ac{fmtod} data set from \citet{schuster-etal-2019-cross-lingual};
 focusing on the English-language intent classification task.
 
@@ -59,13 +58,13 @@ To guide us in addressing our objective, we aim to answer the following three
 research questions:
 
 \begin{enumerate}
-  \item Does \ac{sopa}++ provide competitive\footnote{We define
+  \item Does \ac{spp} provide competitive\footnote{We define
     competitive performance as the scenario where a mean performance metric on a
     certain task falls within the range obtained from other recent studies on
     the same task} performance on the \ac{fmtod} English language intent classification task?
-  \item To what extent does \ac{sopa}++ contribute to effective explanations by
+  \item To what extent does \ac{spp} contribute to effective explanations by
   simplification on the \ac{fmtod} English language intent classification task?
-  \item What interesting and relevant explanations can \ac{sopa}++ provide on the
+  \item What interesting and relevant explanations can \ac{spp} provide on the
   \ac{fmtod} English language intent classification task?
 \end{enumerate}
 
@@ -84,13 +83,15 @@ We now summarize the contents and structure of this thesis.
   methodologies.
   \item [Chapter \ref{chapter:discussion}:] Interpret the results and discuss their
   implications.
-  \item [Chapter \ref{chapter:conclusions}:] Summarize and conclude the findings
+  \item [Chapter \ref{chapter:conclusions}:] Summarize the findings
   of this thesis.
   \item [Chapter \ref{chapter:further_work}:] Describe future work to expand on
   our research questions.
 \end{description}
 
+% LocalWords:  explainability pre NLP
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "main"
-%%% End: 
+%%% End:

@@ -2,27 +2,26 @@
 
 \label{chapter:background}
 
-In this chapter, we describe the various background concepts which are necessary
-to support the methodologies pursued in this thesis. These background concepts
+In this chapter, we describe the various background concepts necessary to
+support the methodologies pursued in this thesis. These background concepts
 range from conceptualizations and definitions in \ac{xai}, variants of
-finite-state automata, straight-through estimators and finally the \ac{sopa} model
-framework. We start off by introducing the most important concepts related to
-\ac{xai}.
+finite-state automata, straight-through estimators and finally the \ac{sopa}
+model framework.
 
 \section{Explainable artificial intelligence}
 
 \label{section:xai}
 
 In this section, we lay out background concepts for \ac{xai} which have been
-largely adopted from \citet{arrieta2020explainable}. The study is particularly
+largely adapted from \citet{arrieta2020explainable}. The study is especially
 helpful for us since it summarizes the findings of $\sim$400 \ac{xai}
 contributions and presents these findings in the form of well-defined concepts
-and taxonomies. In addition, the study discusses the many possible future
+and taxonomies. In addition, this study discusses many possible future
 directions of \ac{xai} research.
 
 \subsection{Transparency}
 
-One of the key contributions of \citet{arrieta2020explainable} to the field of
+A key contribution of \citet{arrieta2020explainable} to the field of
 \ac{xai} is the introduction of the concept of transparency, as well as the
 classification of various \ac{ml} models into transparent and
 black-box categories. In this section, we provide an adapted definition of
@@ -33,7 +32,7 @@ transparency and list examples of transparent and black-box \ac{ml} models.
   A model is considered to be transparent if it is understandable on its own
   without any external techniques to assist its understandability. Since a model
   can provide different degrees of understandability, transparent models are
-  split into three possibly mutually-inclusive categories; specifically
+  split into three possibly overlapping categories; specifically
   simulatable models, decomposable models and algorithmically transparent
   models.
 \end{definition}
@@ -41,26 +40,26 @@ transparency and list examples of transparent and black-box \ac{ml} models.
 \begin{remark}
   \textit{Simulatability} refers to the ability of a model's inner-mechanisms
   being simulated strictly by a human. Therefore, model simplicity plays a major
-  role in this class.
+  role in this class \citep[Page 6, Section 2.5.1]{arrieta2020explainable}.
 \end{remark}
 
 \begin{remark}
   \textit{Decomposability} refers to the ability to clearly understand the
   individual parts of a model; such as its inputs, parameters and basic
-  computational mechanisms.
+  computational mechanisms \citep[Page 7, Section 2.5.1]{arrieta2020explainable}.
 \end{remark}
 
 \begin{remark}
   \textit{Algorithmic transparency} refers to the ability of a human to
   understand the algorithmic processes used in the model to produce any given
-  output from any given input.
+  output from any given input \citep[Page 7, Section 2.5.1]{arrieta2020explainable}.
 \end{remark}
 
 \begin{remark}
   A model is considered transparent if it falls into one or more of the
   aforementioned transparency categories. If a model cannot satisfy any of the
   requirements of being transparent, then it is classified as a
-  \textit{black-box} model.
+  \textit{black-box} model \citep[Page 7, Section 3]{arrieta2020explainable}.
 \end{remark}
 
 \begin{remark}
@@ -70,21 +69,21 @@ transparency and list examples of transparent and black-box \ac{ml} models.
   Therefore, we use these terms equivalently and interchangeably.
 \end{remark}
 
-Examples of well-known transparent \ac{ml} models are linear/logistic regressors,
-decision trees and rules-based learners. Similarly, common examples of black-box
-\ac{ml} models are tree ensembles and deep neural networks.
-\citet{arrieta2020explainable} provide extensive justifications using the
-aforementioned three criteria in conducting model classifications into the
-transparent and black-box categories. We would direct the reader to their study
-for a full analysis and justification of these classifications.
+Examples of well-known transparent \ac{ml} models are linear/logistic
+regressors, decision trees and rules-based learners. Similarly, common examples
+of black-box \ac{ml} models are tree ensembles and deep neural networks.
+\citet[Page 7, Section 3]{arrieta2020explainable} provide extensive
+justifications using the aforementioned three criteria in conducting model
+classifications into the transparent and black-box categories. We would direct
+the reader to their study for a full analysis and justification of these
+classifications.
 
 \subsection{Explainability and XAI}
 
 Another key contribution of \citet{arrieta2020explainable} is a unified
-conceptualization of explainability and \ac{xai} based on an extensive literature
-review. Drawing inspiration from their study, we provide adapted definitions of
-explainability and \ac{xai}, as well as comment on interesting aspects related to
-\ac{xai}.
+conceptualization of explainability and \ac{xai}. Drawing inspiration from their
+study, we provide adapted definitions of explainability and \ac{xai}, as well as
+comment on interesting aspects related to \ac{xai}.
 
 \begin{definition}[Explainability; \citealt{arrieta2020explainable}; Page 4,
   Section 2.1]
@@ -99,19 +98,19 @@ explainability and \ac{xai}, as well as comment on interesting aspects related t
   its functioning understandable to a given target audience.
 \end{definition}
 
-\citet{arrieta2020explainable} observe that black-box \ac{ml} models are
-increasingly being employed to make important predictions in critical contexts,
-citing high-risk areas such as precision medicine and autonomous vehicles. Of
-particular relevance to the field of \ac{nlp}, the
-study notes a myriad of issues related to inductive biases within training data
-sets and the ethical issues involved in using black-box models trained on such
-data sets. As a result, they describe an increased demand for transparency in
-black-box \ac{ml} models from the various stakeholders in Artificial
-Intelligence. In addition, \citet{arrieta2020explainable} emphasize the presence
-of a target audience for \ac{xai}; implying that different \ac{xai} techniques
-should be employed for different target audiences. In their study, they provide
-examples of target audiences such as domain experts, end-users and managers as
-shown in Figure \ref{fig:xai_target_audience}.
+\citet[Page 2, Section 1]{arrieta2020explainable} observe that black-box \ac{ml}
+models are increasingly being employed to make important predictions in critical
+contexts, citing high-risk areas such as precision medicine and autonomous
+vehicles. Of particular relevance to the field of \ac{nlp}, the study notes a
+myriad of issues related to inductive biases within training data sets and the
+ethical issues involved in using black-box models trained on such data sets. As
+a result, they describe an increased demand for explainability in black-box
+\ac{ml} models from the various stakeholders in Artificial Intelligence. In
+addition, \citet[Page 4, Section 2.2]{arrieta2020explainable} emphasize the
+presence of a target audience for \ac{xai}; implying that different \ac{xai}
+techniques should be employed for different target audiences. In their study,
+they provide examples of target audiences such as domain experts, end-users and
+managers as shown in Figure \ref{fig:xai_target_audience}.
 
 \begin{figure}[t]
   \centering \includegraphics[trim={0.1cm 0.1cm 0.1cm
@@ -125,17 +124,16 @@ shown in Figure \ref{fig:xai_target_audience}.
 
 \label{section:xai_terminology}
 
-Based on their extensive literature review, \citet{arrieta2020explainable}
-observe that many studies tend to misuse the terms interpretability and
-explainability by using them interchangeably. To address this, they provide
-clear conceptual differences between the terms. For example, \citet[Page 3,
-Section 2.1]{arrieta2020explainable} state that \textit{``interpretability
-  refers to a passive characteristic of a model referring to the level at which
-  a given model makes sense for a human observer.''} In contrast, \citet[Page 3,
-Section 2.1]{arrieta2020explainable} state that \textit{``explainability can be
-  viewed as an active characteristic of a model, denoting any action or
-  procedure taken by a model with the intent of clarifying or detailing its
-  internal functions.''}
+\citet{arrieta2020explainable} observe that many studies in XAI tend to misuse the
+terms interpretability and explainability by using them interchangeably. To
+address this, they provide clear conceptual differences between the terms. For
+example, \citet[Page 3, Section 2.1]{arrieta2020explainable} state that
+\textit{``interpretability refers to a passive characteristic of a model
+  referring to the level at which a given model makes sense for a human
+  observer.''} In contrast, \citet[Page 3, Section 2.1]{arrieta2020explainable}
+state that \textit{``explainability can be viewed as an active characteristic of
+  a model, denoting any action or procedure taken by a model with the intent of
+  clarifying or detailing its internal functions.''}
 
 In summary, we gather that interpretability (or transparency as per Remark
 \ref{rmk:equivalence}) refers to an inherent or passive feature of a model. On
@@ -175,7 +173,8 @@ provide adapted definitions below.
 
 \begin{remark}
   Local explanations are commonly used in \ac{xai} research and function by using
-  differentiating properties on model solution space subsets.
+  differentiating properties on model solution space subsets \citep[Page 7,
+  Section 2.5.2]{arrieta2020explainable}.
 \end{remark}
 
 \begin{remark}
@@ -195,7 +194,7 @@ provide adapted definitions below.
 \begin{remark}
   \label{rmk:feature_relevance_indirect}
   Feature relevance methods can be considered as indirect methods of explaining
-  a model.
+  a model \citep[Page 7, Section 2.5.2]{arrieta2020explainable}.
 \end{remark}
 
 \begin{remark}
@@ -209,7 +208,7 @@ provide adapted definitions below.
   \label{def:explain_simplify}
   Explanations by simplification refer to techniques where a simplified proxy
   model is built to approximate and explain a more complex model. The simplified
-  proxy model usually has to fulfil the the joint criteria of reducing its
+  proxy model usually has to fulfill the joint criteria of reducing its
   complexity compared to its antecedent model while maximizing its resemblance
   to its antecedent and keeping a similar performance score.
 \end{definition}
@@ -276,22 +275,24 @@ contains significant noise.
 \label{section:xai_metrics}
 
 Towards the end of their study, \citet{arrieta2020explainable} note two major
-limitations of the current state of \ac{xai} research. Firstly, they observe the lack
-of a unified conceptualization of explainability and transparency between
-various studies. To address this, they acknowledge that their study could
-provide a good unified starting point for other \ac{xai} studies to branch out from.
-Secondly, \citet{arrieta2020explainable} note the lack of a unified metric that
-denotes how explainable any given model is. They explain why developing
-such a metric has been a difficult process for many \ac{xai} studies; particularly
-because such a metric would entail incorporating psychological, sociological and
-cognitive elements to accommodate the goodness of fit of an explainability
-technique to a certain target audience. Furthermore, incorporating such elements
-might involve significant amounts of subjectivity in the desired metric.
+limitations of the current state of \ac{xai} research. Firstly, \citet[Page 19,
+Section 5.2]{arrieta2020explainable} observe the lack of a unified
+conceptualization of explainability and transparency between various studies. To
+address this, they acknowledge that their study could provide a good unified
+starting point for other \ac{xai} studies to branch out from. Secondly,
+\citet[Page 20, Section 5.3]{arrieta2020explainable} note the lack of a unified
+metric that denotes how explainable any given model is. They explain why
+developing such a metric has been a difficult process for many \ac{xai} studies;
+particularly because such a metric would entail incorporating psychological,
+sociological and cognitive elements to accommodate the goodness of fit of an
+explainability technique to a certain target audience. Furthermore,
+incorporating such elements might involve significant amounts of subjectivity in
+the desired metric.
 
-To reduce some of the aforementioned subjectivity involved, \citet{MILLER20191}
-and \citet{arrieta2020explainable} provide three guidelines of what could
-constitute a good explanation based on human psychology, sociology and cognitive
-sciences:
+To reduce some of the aforementioned subjectivity involved, \citet[Page 3,
+Section 1.2]{MILLER20191} and \citet[Page 20, Section
+5.3]{arrieta2020explainable} provide three guidelines of what could constitute a
+good explanation based on human psychology, sociology and cognitive sciences:
 
 \begin{enumerate}
   \item Firstly, they observe that explanations are better when
@@ -346,7 +347,7 @@ vanilla \ac{ste} is visualized in Figure \ref{fig:ste}.
 \begin{figure}[t]
   \centering
   \includegraphics[width=14cm]{pdfs/generated/ste_theoretical/main.pdf}
-  \caption{Visualization of the vanilla STE's forward and backward passes}
+  \caption{Vanilla STE's forward and backward passes}
   \label{fig:ste}
 \end{figure}
 
@@ -363,7 +364,7 @@ driven neural activation functions.
 \label{section:fa}
 
 As mentioned in Section \ref{section:xai_techniques}, our survey of
-explainability in \ac{nlp} yielded several studies employing a post-hoc
+explainability in \ac{nlp} yielded several studies employing post-hoc
 explainability techniques on deep neural networks. One common factor among
 several of these studies was the simplification of black-box models to
 \ac{fas}. As this will eventually become a key focus of this
@@ -452,15 +453,15 @@ definitions and descriptions for these mutually exclusive model categories.
   
 \end{definition}
 
-A string $\bm{x}$ is said to be \textit{accepted} by any \ac{fa} $\mathcal{M}$ if the
-current state after consuming string $\bm{x}$ is the accepting state. Similarly,
-a string $\bm{x}$ is said to be \textit{rejected} by any \ac{fa} $\mathcal{M}$ if the
-string $\bm{x}$ cannot be consumed or the current state after consuming $\bm{x}$
-is a non-accepting state. The key difference between deterministic \ac{fas} and
-non-deterministic \ac{fas} is present in
-their transition functions; specifically that the former guarantees that each
-state allows for a unique transition to another state given a non-empty input
-string. Contrastingly, \ac{nfas} allow for arbitrary transitions without necessarily
+A string $\bm{x}$ is said to be \textit{accepted} by any \ac{fa} $\mathcal{M}$
+if the current state after consuming string $\bm{x}$ is the accepting state.
+Similarly, a string $\bm{x}$ is said to be \textit{rejected} by any \ac{fa}
+$\mathcal{M}$ if the string $\bm{x}$ cannot be consumed or the current state
+after consuming $\bm{x}$ is a non-accepting state. The key difference between
+deterministic \ac{fas} and nondeterministic \ac{fas} is present in their
+transition functions; specifically that the former guarantees that each state
+allows for a unique transition to another state given a non-empty input token.
+Contrastingly, \ac{nfas} allow for arbitrary transitions without necessarily
 consuming an input token.
 
 \begin{figure}[t]
@@ -549,7 +550,7 @@ extensive definitions of a semiring, \ac{wfa}, path score and string score.
 
   \begin{remark}
     As with finite-state automata, it is also possible to construct (strict)
-    linear-chain weighted finite-state automata. Similarly, it is possible to
+    linear-chain \ac{wfas}. Similarly, it is possible to
     extract a \ac{fa} from a \ac{wfa} given a particular set of valid transitions.
   \end{remark}
  
@@ -606,14 +607,14 @@ extensive definitions of a semiring, \ac{wfa}, path score and string score.
   The Forward algorithm can be generalized to any semiring
   \citep{eisner2002parameter} and has a runtime of $O(|Q|^3 + |Q|^2|\bm{x}|)$
   \citep{schwartz2018sopa}; notably with a linear runtime with respect to the
-  length in tokens of the input string $\bm{x}$.
+  length in tokens of the string $\bm{x}$.
 \end{remark}
 
 \begin{remark}
   A special case of Forward is the Viterbi algorithm, where the addition
   $\oplus$ operation is constrained to the maximum operator
   \citep{viterbi1967error}. Viterbi therefore returns the highest scoring path
-  $\bm{\pi}$ that derives the input string $\bm{x}$.
+  $\bm{\pi}$ that derives the string $\bm{x}$.
 \end{remark}
 
 \section{SoPa}
@@ -621,7 +622,7 @@ extensive definitions of a semiring, \ac{wfa}, path score and string score.
 \label{section:sopa}
 
 As mentioned previously in Chapter \ref{chapter:introduction}, a key focus of
-this thesis is in improving the \ac{sopa} model
+this thesis is in modifying the \ac{sopa} model
 presented in \citet{schwartz2018sopa}. In this section, we describe important
 aspects of the \ac{sopa} model which ultimately become relevant for our
 methodologies. \citet{schwartz2018sopa} introduce \ac{sopa} as a novel and
@@ -640,12 +641,12 @@ With their results, they show that \ac{sopa} performed on par or better than all
 baselines on all tasks. Additionally, they show that \ac{sopa} outperformed all
 baselines significantly in low-data settings. Finally, the authors present
 workflows to explain the \ac{sopa} model using both the local explanations and
-feature relevance explainability techniques.
+feature relevance post-hoc explainability techniques.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=14cm]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
-  \caption{Visualization of a (non-strict) linear-chain NFA with
+  \caption{Linear-chain NFA with
     self-loop (blue), $\epsilon$ (red) and main-path (black) transitions; figure
     adapted from \citet{schwartz2018sopa}}
   \label{fig:fa}
@@ -656,7 +657,7 @@ feature relevance explainability techniques.
 \label{section:sopa_lc_wfa}
 
 In regards to the \ac{wfas} used in \ac{sopa}, \citet{schwartz2018sopa} utilize
-linear-chain \ac{wfas} where each linear-chain \ac{wfa} is alloted a sequence of
+linear-chain \ac{wfas} where each linear-chain \ac{wfa} is allotted a sequence of
 $|\mathcal{Q}|$ states. Each state $i$ in the linear-chain \ac{wfa} has three
 possible outgoing transitions; namely a \textbf{self-loop transition} which
 consumes a token but stays in the same state $i$, an
@@ -715,7 +716,7 @@ one accepting state and these are present at both extremes of the linear-chain
 
 The aforementioned constraints in the linear-chain \ac{wfa} structure result in the
 transition matrix $\bm{\Gamma}$ being reduced to a sparse diagonal matrix.
-Correspondingly, the runtime of the Forward algorithm under the linear-chain
+Correspondingly, the runtime of the Viterbi algorithm under the linear-chain
 \ac{wfas} gets reduced to $O(|Q||\bm{x}|)$ compared to the original runtime in
 Remark \ref{rmk:old_runtime}. Finally, it is worth noting that \citet[Page 3,
 Section 3.1]{schwartz2018sopa} refer to the linear-chain \ac{wfas} simply as
@@ -752,8 +753,8 @@ noting that without $\epsilon$-transitions and self-loops, a linear-chain
 \ac{wfa} with $|\mathcal{Q}|$ states should always consume $\mathcal{|Q|}-1$
 tokens. However, by allowing the aforementioned special transitions; it is
 possible for strings of variable lengths to be consumed since an
-$\epsilon$-transition can transition to the next state without consuming tokens
-while a self-loop can consume tokens without transitioning to the next state.
+$\epsilon$-transition can transition to the next state without consuming a token
+while a self-loop can consume a token without transitioning to the next state.
 This is indeed the case for Pattern 2 in Figure \ref{fig:sopa}, when a self-loop
 is encountered in the transition from the token \textit{``and''} to the token
 \textit{``most''}.
@@ -761,7 +762,7 @@ is encountered in the transition from the token \textit{``and''} to the token
 \begin{figure}[t]
   \centering
   \includegraphics[width=14cm]{pdfs/borrowed/sopa_computational_graph.pdf}
-  \caption{Visualization of the SoPa model framework with two constituent
+  \caption{SoPa's partial computational graph with two constituent
     WFAs highlighted in blue and red; figure taken from
     \citet{schwartz2018sopa}}
   \label{fig:sopa}
@@ -774,7 +775,7 @@ Commonly used hyperparameters include the learning rate, neuron dropout and word
 dropout probabilities. A special hyperparameter unique to the \ac{sopa} model is the
 patterns hyperparameter $P$ which contains information on the number of
 linear-chain \ac{wfas} and the number of states allotted to each of them. The
-hyperparameter $P$ is encoded as a string with the following syntax:
+hyperparameter $P$ is encoded with the following syntax:
 \texttt{Length$_{1}$-Count$_{1}$\_$\dots$\_Length$_{k}$-Count$_{k}$}. An example
 of this hyperparameter $P$ is \texttt{5-15\_4-10\_3-5}, which would signify 15
 patterns with 5 states each, 10 patterns with 4 states each and 5 patterns with
@@ -789,7 +790,7 @@ viewing \ac{ml} models from the lens of \ac{xai}, it would only make sense to ex
 same standards to the \ac{sopa} model. Based on the arguments made by
 \citet{arrieta2020explainable}, we can classify the \ac{sopa} model as a black-box
 model since it closely resembles \ac{rnn}s and \ac{cnn}s; and a strong case has already
-been made in their study regarding the black-box natures of both \ac{rnn}s and \ac{cnn}s.
+been made in \citet{arrieta2020explainable} regarding the black-box natures of both \ac{rnn}s and \ac{cnn}s.
 Naturally, this would imply that post-hoc explainability techniques are required to
 explain the \ac{sopa} model.
 
@@ -807,44 +808,52 @@ on each classification decision.
 
 Using the post-hoc explainability taxonomies described in Section
 \ref{section:xai_techniques}, we can correspondingly classify the explainability
-techniques presented in \citet{schwartz2018sopa} using terminology consistent with
-\ac{xai} research. The first explainability technique uses individual text samples to
-determine the highest scoring substrings in documents; as well as the patterns
-or \ac{wfas} corresponding to them. Since this analysis is conducted at an individual
-document level and is never synthesized to a more global context, we would
-classify this under the local explanations explainability technique. The next
-technique involves an occlusion or sensitivity analysis over all patterns and
-documents to determine which pattern had the greatest impact for each class.
-Since this involves systematic perturbation to determine the importance of
-pattern features, we would classify this technique as a feature relevance
-explainability technique. While the target audience(s) of these
-explainability techniques is not explicitly mentioned in their study, we infer that
-the target audience for these techniques is likely to be end-users since the
-outputs of these post-hoc explainability techniques are generally easy to understand.
+techniques presented in \citet{schwartz2018sopa} using terminology consistent
+with \ac{xai} research. The first explainability technique uses individual text
+samples to determine the highest scoring substrings in documents; as well as the
+patterns or \ac{wfas} corresponding to them. Since this analysis is conducted at
+an individual document level and is never synthesized to a more global context,
+we would classify this under the local explanations explainability technique.
+The next technique involves an occlusion or sensitivity analysis over all
+patterns and documents to determine which pattern had the greatest impact for
+each class. Since this involves systematic perturbation to determine the
+importance of pattern features, we would classify this technique as a feature
+relevance explainability technique. While the target audience of these
+explainability techniques is not explicitly mentioned in their study, we infer
+that the target audience for these techniques is likely to be average end-users
+since the outputs of these post-hoc explainability techniques are generally easy
+to understand.
 
 In order to objectively probe the quality of the post-hoc explainability
 techniques proposed by \citet{schwartz2018sopa}, we utilize the three guidelines
 provided in Section \ref{section:xai_metrics}; namely that a good explanation
 should be constrictive, causal and selective. For the constrictive quality, it
-is likely that the explainability techniques do not meet this criterion since they
-only highlight individual features that were important for \ac{sopa}, and do not
-necessarily go into detail regarding why these features superseded adjacent
-features. Next, the explainability techniques likely do not fulfill the criterion
-of providing causal links; since they generally provide explanations by
-aggregating probabilistic quantities inside \ac{sopa}. Finally and in
-contrast, the explainability techniques likely pass the criterion of being
-selective since they only provide the most important features for an
-explanation.
+is likely that the explainability techniques do not meet this criterion since
+they only highlight individual features that were important for \ac{sopa}, and
+do not necessarily go into detail regarding why these features superseded
+adjacent features. Next, the explainability techniques likely fulfill the
+criterion of providing causal links; since they can identify substrings causing
+the maximum perturbations in the MLP of \ac{sopa}. Finally, the explainability
+techniques likely fulfill the criterion of being selective since they only
+provide the most important features for an explanation.
 
 Overall, we gather three key limitations regarding the explainability techniques
-of \ac{sopa}. Firstly, we find them to be localized because the local explanations
-component of explainability was not synthesized to a global context. Next, we
-find them to be indirect because of a lack of causal links and high reliance on
-the feature relevance explainability technique which is known to be indirect as
-per Remark \ref{rmk:feature_relevance_indirect}. Finally, as per our evaluation
-of explainability using the three aforementioned guidelines; we find the
-explainability techniques to likely only meet one of the three guidelines for
-good explanations.
+of \ac{sopa}. Firstly, we find them to be localized because the local
+explanations component of explainability was not synthesized to a global
+context. Next, we find them to be indirect because of their reliance on the
+feature relevance explainability technique which is known to be indirect as per
+Remark \ref{rmk:feature_relevance_indirect}. Finally, as per our evaluation of
+explainability using the three aforementioned guidelines; we find the
+explainability techniques likely do not meet the constrictive criterion in the
+guidelines for good explanations.
+
+% LocalWords:  automata understandability simulatable decomposable regressors
+% LocalWords:  algorithmically Simulatability Decomposability interpretability
+% LocalWords:  Explainability XAI explainability subspaces Interpretable STE's
+% LocalWords:  Shapley tradeoff performant Quantized piecewise quantized NFA
+% LocalWords:  Contrastingly semiring tokenization Semirings semirings Kleene
+% LocalWords:  substring Viterbi WFAs parameterizing formalisms substrings
+% LocalWords:  hyperparameter hyperparameters
 
 %%% Local Variables: 
 %%% mode: latex

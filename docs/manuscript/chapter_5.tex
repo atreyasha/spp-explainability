@@ -11,56 +11,55 @@ motivate future research.
 
 \section{RQ1: Evaluating performance of SoPa++}
 
-To answer our first research question on whether \ac{sopa}++ can deliver competitive
+To answer our first research question on whether \ac{spp} can deliver competitive
 performance on the \ac{fmtod} English language intent classification task, we compare
-the mean performance metrics of our \ac{sopa}++ models against those from other
+the mean performance metrics of our \ac{spp} models against those from other
 recent studies as mentioned in Section \ref{section:fmtod_performance}.
 Referring to our accuracy ranges from Table \ref{tab:results_evaluation}, we
-observe that the \ac{sopa}++ models show an accuracy range from 97.6-98.3$\%$ for the
+observe that the \ac{spp} models show a mean accuracy range of 97.6-98.3$\%$ for the
 best performing models given their respective sizes. This falls into the general
 accuracy range of 96.6-99.5$\%$ observed in other studies as per Table
 \ref{tab:fmtod_examples}; albeit in the lower end of this spectrum. We can
-therefore conclude that \ac{sopa}++ offers competitive performance on the \ac{fmtod}'s
+therefore conclude that \ac{spp} offers competitive performance on the \ac{fmtod}'s
 English language intent classification task.
 
-While \ac{sopa}++'s performance range falling in the lower end of the aforementioned
+While \ac{spp}'s performance range falling in the lower end of the aforementioned
 spectrum can be seen as disadvantageous, it is worth noting that the models
-\ac{sopa}++ is being compared against are vastly different. For one, the \ac{bert}
+\ac{spp} is being compared against are vastly different. For one, the \ac{bert}
 models shown in Table \ref{tab:fmtod_results} had parameter counts ranging from
 $\sim$110-340 million parameters \citep{devlin-etal-2019-bert}; which are
-$\sim$100-300 times larger than our \ac{sopa}++ models. In addition, models from
+$\sim$100-300 times larger than our \ac{spp} models. In addition, models from
 \citet{zhang-etal-2020-intent} showed an exceptionally high accuracy of 99.5$\%$
 mainly because of pre-training on the external WikiHow data set for general
 intent classification tasks. Finally, many of the models described in Table
 \ref{tab:fmtod_results} were jointly trained on both \ac{fmtod} intent classification
 and slot filling tasks; which could have contributed to certain joint-task
-performance benefits. These significant differences between \ac{sopa}++ and the
-aforementioned models should be taken into account when comparing \ac{sopa}++'s
+performance benefits. These significant differences between \ac{spp} and the
+aforementioned models should be taken into account when comparing \ac{spp}'s
 performance with other studies. 
 
 \section{RQ2: Evaluating explanations by simplification}
 
-To answer our second research question on whether \ac{sopa}++ provides effective
-explanations by simplification, we summarize the minimum differences in \ac{sopa}++
-and \ac{re} proxy model-pair performance metrics; as well as the minimum distance
-metrics observed as per Table \ref{tab:explain_evaluate_performance}. Regarding
-performance metrics, we can observe that lowest accuracy score differences
-between \ac{sopa}++ and \ac{re} proxy model-pairs to be 7$\%$ for small-sized models, 2$\%$
-for medium-sized models and 1$\%$ for large-sized models. Regarding distance
-metrics, we observe the lowest $\overline{\delta_{\sigma}}$ and
-$\overline{\delta_{b}}$ to be 10.0$\%$ and 12.4$\%$ for small-sized models, 5.8
-$\%$ and 13.5$\%$ for medium-sized models and 4.3$\%$ and 14.2$\%$ for
-large-sized models respectively. These minimum performance metric differences
-and distance metrics are typically observed with larger $\tau$-thresholds
-ranging from 0.50-1.00. Unlike the case for RQ1, we do not have an objective
-range of competitive accuracy differences or distance metrics to compare against
-with other studies. As a result, our interpretation of the effectiveness of the
-explanations by simplification post-hoc explainability technique will be
+To answer our second research question on whether \ac{spp} provides effective
+explanations by simplification, we summarize the minimum differences in \ac{spp}
+and \ac{re} proxy model pair performance metrics; as well as the minimum
+distance metrics observed as per Table \ref{tab:explain_evaluate_performance}.
+Regarding performance metrics, we observe the lowest accuracy score differences
+to be 7$\%$ for small-sized models, 2$\%$ for medium-sized models and 1$\%$ for
+large-sized models. Regarding distance metrics, we observe the lowest
+$\overline{\delta_{\sigma}}$ and $\overline{\delta_{b}}$ to be 10.0$\%$ and
+12.4$\%$ for small-sized models, 5.8 $\%$ and 13.5$\%$ for medium-sized models
+and 4.3$\%$ and 14.2$\%$ for large-sized models respectively. These minimum
+performance metric differences and distance metrics are typically observed with
+larger $\tau$-thresholds ranging from 0.50-1.00. Unlike the case for RQ1, we do
+not have an objective range of competitive accuracy differences or distance
+metrics to compare against with other studies. As a result, our interpretation
+of the effectiveness of the explanations by simplification technique will be
 subjective. That being said, we still believe that accuracy differences as low
 as 1$\%$ and softmax distance norms as small as 4.3$\%$ provide significant
-evidence towards a high degree of resemblance between \ac{sopa}++ and \ac{re} proxy
+evidence towards a high degree of resemblance between \ac{spp} and \ac{re} proxy
 models. In summary, we find that the explanations by simplification post-hoc
-explainability technique in \ac{sopa}++ is effective, in particular for medium and
+explainability technique in \ac{spp} is effective, in particular for medium and
 large-sized models with $\tau$-thresholds ranging from 0.50-1.00.
 
 In the interest of objectivity, we would like to provide some perspectives in
@@ -83,43 +82,42 @@ With these arguments set aside, we now proceed to discuss some interesting
 observations in regards to our results for RQ2. Firstly, we can observe the
 performance-interpretability tradeoff from Section
 \ref{section:performance_interpretability_tradeoff} in Table
-\ref{tab:explain_evaluate_performance} with the more transparent \ac{re} proxy models
-consistently performing worse than their black-box \ac{sopa}++ counterparts; with the
-exception of the large-sized model-pair with $\tau$=1.00 where the \ac{re} proxy
-generally outperforms the \ac{sopa}++ antecedent model. Next, as per Table
-\ref{tab:explain_evaluate_performance}; we observe that \ac{re} proxy models tend to
-perform better as the $\tau$-threshold increases. We hypothesize that this
-occurs mainly because larger $\tau$-threshold forces the memorization of higher
-scoring paths which ultimately reduces the chances of the \ac{re} proxy model
-memorizing superfluous or unimportant regular expressions in the \ac{re} lookup
-layer. Finally as per Figure \ref{fig:explain_evaluate}, we
-observe that the $\overline{\delta_{b}}$ metric continues to decrease as the
-$\tau$-threshold increases, while the $\overline{\delta_{\sigma}}$ metric
-plateaus beforehand and then slighly increases. This could be seen as
-counter-intuitive, since more similar \ac{tauste} binary vectors should imply more
-similar softmax distributions. It would be interesting to further explore these
-trends with even higher $\tau$-thresholds.
+\ref{tab:explain_evaluate_performance} with the more transparent \ac{re} proxy
+models almost always performing worse than their black-box \ac{spp}
+counterparts. Next, as per Table \ref{tab:explain_evaluate_performance}; we
+observe that \ac{re} proxy models tend to perform better as the $\tau$-threshold
+increases. We hypothesize that this occurs mainly because larger
+$\tau$-threshold forces the memorization of higher scoring paths which
+ultimately reduces the chances of the \ac{re} proxy model memorizing superfluous
+or unimportant regular expressions in the \ac{re} lookup layer. Finally as per
+Figure \ref{fig:explain_evaluate}, we observe that the $\overline{\delta_{b}}$
+metric continues to decrease as the $\tau$-threshold increases, while the
+$\overline{\delta_{\sigma}}$ metric plateaus beforehand and then slightly
+increases. This could be seen as counter-intuitive, since more similar
+\ac{tauste} binary vectors should imply more similar softmax distributions. It
+would be interesting to further explore these trends with even higher
+$\tau$-thresholds.
 
 \section{RQ3: Interesting and relevant explanations}
 
 \label{section:discussion_regex}
 
 To answer our third research question on interesting and relevant explanations
-derived from \ac{sopa}++ on the \ac{fmtod} data set, we refer back to our results for this
+derived from \ac{spp} on the \ac{fmtod} data set, we refer back to our results for this
 research question and attempt to interpret them. Since this research question is
 more open-ended than the previous two, our approach to answer it will also be
 opinionated and subjective. One interesting observation is in the relative
 linear weights applied to the \ac{tauste} neurons in Figure \ref{fig:neuron_weights}.
-We can observe that weights are generally continously distributed across all
+We can observe that weights are generally continuously distributed across all
 neurons; with some exceptions such as neurons 19, 25 and 17 where the weights
 are more skewed towards the alarm, reminder and weather domains respectively.
-This implies that \ac{sopa}++ and \ac{re} proxy models still distribute feature
-importances across \ac{tauste} neurons in a highly connective sense; which also implies that
+This implies that \ac{spp} and \ac{re} proxy models still distribute feature
+importance across \ac{tauste} neurons in a highly connective sense; which also implies that
 each \ac{tauste} neuron has a non-negligible impact on all classification decisions.
 
 With the identification of the salient \ac{tauste} neurons 19, 25 and 17 specializing
 in the alarm, reminder and weather domains respectively; we draw out ten regular
-expression samples from \ac{re} lookup layer corresponding to each of these neurons
+expression samples from the \ac{re} lookup layer corresponding to each of these neurons
 as reflected in Figures \ref{fig:regex_example_neuron_alarm},
 \ref{fig:regex_example_neuron_reminder} and
 \ref{fig:regex_example_neuron_weather} respectively. To extract interesting and
@@ -146,12 +144,12 @@ expressions in Figures \ref{fig:regex_example_neuron_alarm} and
 the same position.
 
 Finally, the sampled regular expressions allow us to identify various inductive
-biases incorporated by \ac{sopa}++ and its \ac{re} proxy models from the training data.
+biases incorporated by \ac{spp} and its \ac{re} proxy models from the training data.
 Going back to the digital and location-based tokens mentioned in the previous
 paragraph, we can observe how the training data induces USA-centric biases
 pertaining to locations such as \textit{"atlanta"} and hard-coded Fahrenheit
 temperatures such as \textit{"70"}. As a result, we can extrapolate that the
-\ac{sopa}++ and \ac{re} proxy models will likely only perform well on unseen data based in
+\ac{spp} and \ac{re} proxy models will likely only perform well on unseen data based in
 USA-centric domains since they likely would not have encountered tokens from
 non-USA-centric domains. An advantageous aspect of the \ac{re} proxy model is that
 these inductive biases can be easily identified and also corrected. In the case
@@ -163,9 +161,12 @@ bias could be in the third regular expression from the top in Figure
 the pronoun \textit{"i"}. This inductive bias could be corrected in the \ac{re} proxy
 model by augmenting it with all other pronouns available in the English
 language. Finally, we can propagate these manual corrections in the \ac{re} proxy
-model back to \ac{sopa}++ by copying the word embeddings and transition matrix
+model back to \ac{spp} by copying the word embeddings and transition matrix
 diagonals of the biased word to now represent those of the manually added new
 words.
+
+% LocalWords:  pre WikiHow explainability softmax interpretability tradeoff
+% LocalWords:  fahrenheit omaha hawaii centric atlanta embeddings
 
 %%% Local Variables: 
 %%% mode: latex

@@ -12,26 +12,25 @@ interesting studies and drew particular inspiration from
 well, we found \ac{sopa}'s explainability techniques to be localized and indirect
 despite its neural architecture being suited for the globalized and direct
 explanations by simplification explainability technique. This inspired our main
-objective to propose a modified model \ac{sopa}++, which could allow for
-effective explanations by simplification. To guide us in addressing our
-objective, we listed our three research questions in Section \ref{section:rq}.
+objective to propose a modified model \ac{spp}, which could allow for
+effective explanations by simplification.
 
-The most significant changes from \ac{sopa} to \ac{sopa}++ include the utility of strict
+The most significant changes in \ac{spp} include the utility of strict
 linear-chain \ac{wfaws} over linear-chain \ac{wfas}, replacement of the \ac{mlp}
 in \ac{sopa} with quantized and transparent hidden layers and the introduction of a
-new globalized and direct explanations by simplification post-hoc explainability
-technique to simplify the black-box \ac{sopa}++ model into a transparent \ac{re}
+globalized and direct explanations by simplification post-hoc explainability
+technique to simplify the black-box \ac{spp} model into a transparent \ac{re}
 proxy model. With these changes, we proceeded to answer our three research
-questions.
+questions in Section \ref{section:rq}.
 
-Regarding our first research question, we observe that \ac{sopa}++'s best accuracy
+Regarding our first research question, we observe that \ac{spp}'s best accuracy
 range on the \ac{fmtod} data set of 97.6-98.3$\%$ falls into the competitive accuracy
 range of 96.6-99-5$\%$ based on other recent studies. In this respect, we
-conclude that \ac{sopa}++ offers competitive performance on the \ac{fmtod} English
+conclude that \ac{spp} offers competitive performance on the \ac{fmtod} English
 language intent classification task.
 
 Regarding our second research question, we compare the accuracy scores and
-distance metrics between \ac{sopa}++ and \ac{re} proxy model pairs and observe accuracy
+distance metrics between \ac{spp} and \ac{re} proxy model pairs and observe accuracy
 differences as low as $\sim$1$\%$ and softmax distance norms as small as $\sim$4$\%$ for
 medium and large-sized models with $\tau$-thresholds ranging from 0.50-1.00. We
 therefore conclude that the explanations by simplification post-hoc
@@ -51,11 +50,13 @@ data.
 \clearpage
 
 With these answers to our research questions, we addressed our objective of
-proposing a modified \ac{sopa}++ model that could allow for effective
+proposing a modified \ac{spp} model that allows for effective
 explanations by simplification. However, we did encounter several limitations to
-the \ac{sopa}++ model while answering our research questions. In the next
+the \ac{spp} model while answering our research questions. In the next
 chapter, we expound on these limitations and how they could be addressed in
 future research.
+
+% LocalWords:  explainability quantized softmax centric
 
 %%% Local Variables: 
 %%% mode: latex

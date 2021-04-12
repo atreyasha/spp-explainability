@@ -8,15 +8,15 @@ these limitations.
 
 \section{Efficiency}
 
-In this thesis, we showed the effectiveness of simplifying \ac{sopa}++ models into \ac{re}
-proxy models. While \ac{sopa}++ models ran very efficiently because of tensor-based
-parallelizations and \ac{gpu} hardware-acceleration derived from \texttt{PyTorch}'s
+In this thesis, we showed the effectiveness of simplifying \ac{spp} models into \ac{re}
+proxy models. While \ac{spp} models ran very efficiently because of tensor-based
+parallelization and \ac{gpu} hardware-acceleration derived from \texttt{PyTorch}'s
 mature computational ecosystem, we observed that the \ac{re} proxy models ran
 significantly slower with the main bottleneck being the slow lookup process in
 the \ac{re} lookup layer; as was mentioned in Section \ref{section:re_cg}. To
 overcome this low efficiency in \ac{re} proxy models, we could recommend three
 approaches. One approach could be to save the \ac{re} lookup layer as a data base and
-utilize indexed searches to make regular expression searches and lookups much
+utilize indexed searches to make regular expression searches much
 faster. Another approach could be to attempt multi-threading on the \ac{re}
 lookup process; which is likely to be a complex task and would require
 experimental tweaking to attain the best efficiencies. The final approach could
@@ -26,61 +26,63 @@ layer and its matching functionalities.
 
 \section{Generalization}
 
-Returning back to the last two paragraphs in Section
-\ref{section:discussion_regex}, we recall how certain transitions in the \ac{re}
-lookup layer tend to be populated with tokens which have similar lexical
-semantics. We specifically draw attention to the example of digital temperature
-tokens mentioned in the aforementioned paragraphs and how both \ac{sopa}++ and the \ac{re}
-proxy model tend to memorize specific digital tokens such as \textit{"44"},
+Returning to the last two paragraphs in Section \ref{section:discussion_regex},
+we recall how certain transitions in the \ac{re} lookup layer tend to be
+populated with tokens which have similar lexical semantics. We draw attention to
+the example of digital temperature tokens and how both \ac{spp} and the \ac{re}
+proxy model memorize specific digital tokens such as \textit{"44"},
 \textit{"70"} and \textit{"67"}. While it is clear that these tokens could be
-replaced by any other finite digital tokens, both \ac{sopa}++ and the \ac{re} proxy model
-overfit on these particular tokens. It would therefore be of interest to explore
-generalizations on these types of tokens. In the case of the aforementioned
-digital tokens, we could replace these transitions in the \ac{re} lookup layer with a
-generic Perl-compatible regular expression
+replaced by any other finite digital tokens, both \ac{spp} and the \ac{re} proxy
+model overfit on these particular tokens. It would therefore be of interest to
+explore generalizations on these types of tokens. In the case of the
+aforementioned digital tokens, we could replace these transitions in the \ac{re}
+lookup layer with a generic Perl-compatible regular expression
 \texttt{\textbackslash-?[\textbackslash d]+\textbackslash .?[\textbackslash d]*}
 which would match digital tokens with arbitrary lengths, period-separated
 decimal precision and a possible minus sign. As a result, this transition would
-now be able to accomodate various digital tokens with different formats and
+now be able to accommodate various digital tokens with different formats and
 scales. It would be interesting to explore similar generalizations on other
-branching transitions such as those for commmunicating time. Naturally, this
+branching transitions such as those for communicating time. Naturally, this
 process would be much more difficult for tokens that do not have consistent
-formatting; which could include synonyms and proper nouns.
+formatting such as synonyms and proper nouns.
 
 \section{Modeling}
 
-Currently, the \ac{sopa}++ model conducts classification decisions by max-pooling
-document scores from its constitutent strict-linear chain \ac{wfaws}. These
+Currently, the \ac{spp} model conducts classification decisions by max-pooling
+document scores from its constituent strict linear-chain \ac{wfaws}. These
 document scores correspondingly reflect substrings in the document but do not
 necessarily contain positional information regarding them, such as substring
 X occurring after substring Y. While this was not a shortcoming in the generally
-short-sequence \ac{fmtod} data set, it could become a hindrance when applying \ac{sopa}++
+short-sequence \ac{fmtod} data set, it could become a hindrance when applying \ac{spp}
 to longer documents. As a result, it would be interesting to incorporate
 positional information alongside the Viterbi algorithm to allow for
-classification on longer documents. Another possible extension could be to
-extend \ac{sopa}++'s weighted finite-state automata to finite-state transducers;
-which are highly similar but return scored seqeuences instead of scored paths.
-In this way, \ac{sopa}++ with finite-state transducers could even be used for
+classifications on longer documents. Another possible extension could be to
+extend \ac{spp}'s weighted finite-state automata to weighted finite-state transducers;
+which are highly similar but return scored sequences instead of scored paths.
+In this way, \ac{spp} with finite-state transducers could even be used for
 sequence-to-sequence tasks; making it viable for other applications in \ac{nlp} such
 as Machine Translation.
 
 \section{Explainability}
 
-In regards to explainability, we largely focused on the technical requirements
-for showing effective explanations by simplification for the \ac{sopa}++ model. To
-evaluate the quality of explanations of \ac{sopa} vs. \ac{sopa}++, we only used the three
+In regards to explainability, we largely focused on technical requirements
+for showing effective explanations by simplification for the \ac{spp} model. To
+evaluate the quality of explanations of \ac{sopa} vs. \ac{spp}, we only used the three
 guidelines for good explanations as per Section \ref{section:xai_metrics}. While
 useful, these are ultimately only guidelines and do not necessarily reflect the
-evaluation of explanations perceived by the target audiences of \ac{sopa} and \ac{sopa}++;
-which are average end-users and exper-users respectively. As a result, it would
+evaluation of explanations perceived by the target audiences of \ac{sopa} and \ac{spp};
+which are average and expert end-users respectively. As a result, it would
 be interesting to conduct a survey on how satisfactory the provided explanations
-from \ac{sopa} and \ac{sopa}++ were to these target audiences. This survey could, for
+from \ac{sopa} and \ac{spp} were to these target audiences. This survey could, for
 example, be done in a University's department-wide setting using one of the many
 well-developed web-based survey tools where participants provide a basic
 positive or negative rating on the provided explanations from their assigned
 models. Although subjective, this might help to provide a rating of the
-explainability techniques of \ac{sopa} and \ac{sopa}++ through their respective target
+explainability techniques of \ac{sopa} and \ac{spp} through their respective target
 audiences.
+
+% LocalWords:  parallelize overfit substrings substring Viterbi automata
+% LocalWords:  Explainability explainability
 
 %%% Local Variables: 
 %%% mode: latex
