@@ -92,6 +92,14 @@ headsepline, % Uncomment to get a line under the header
   \let\@fs@iftopcapt\iftrue}
 \makeatother
 
+% add link for citeyear
+\DeclareCiteCommand{\citeyear}
+{}
+{\bibhyperref{\printfield{year}}}
+{\multicitedelim}
+{}
+
+
 % list all acronyms
 \DeclareAcronym{re}{
   short = RE,
@@ -324,6 +332,7 @@ headsepline, % Uncomment to get a line under the header
 
   \include{declaration}
   \include{abstract}
+  \include{zusammenfassung}
 
   \addcontentsline{toc}{chapter}{List of Figures}
   \listoffigures % Prints the list of figures
