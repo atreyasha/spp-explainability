@@ -6,7 +6,7 @@ usage() {
   cat <<EOF
 Usage: compare_model_pairs_gpu.sh [-h|--help] model_log_directory
 
-Compare neural SoPa++ and regex model pairs on an evaluation data set
+Compare SoPa++ and regex model pairs on an evaluation data set
 on a GPU
 
 Optional arguments:
