@@ -859,7 +859,3 @@ bash scripts/visualize_regex_only_neurons.sh "/glob/to/regex/model/*/checkpoint(
 
 </p>
 </details>
-
-## Development :snail:
-
-Ongoing development of this repository is documented in this [log](./docs/develop.md).

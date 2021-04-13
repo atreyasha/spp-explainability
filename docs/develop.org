@@ -2,23 +2,6 @@
 #+OPTIONS: ^:nil
 #+OPTIONS: p:t
 
-** Tasks
-*** TODO Programming 
-**** Clean-code and documentation
-***** Source-code
-****** rename RegexSoftPatternClassifier class to RegexProxy if possible without breakages
-****** change light, medium and heavy to small, medium and large in all scripts, filenames and log variables consistently
-****** add a comment above each code chunk which explains inner mechanisms better
-***** Readme
-****** update readme and usages with finalized antecedent and proxy terminologies 
-****** update readme and usages with finalized STE/output neurons terminologies
-****** rename all mentions of regex to RE in readme other than usage
-****** add information on best model downloads and preparation -> add these to Google Drive later on
-****** update metadata eg. with comprehensive python/shell help scripts, comments describing functionality and readme descriptions for git hooks
-****** test out all shell-scripts and python code to make sure everything works the same after major renamings
-****** test download and all other scripts to ensure they work
-****** perform spell-check on readme 
-
 ** Notes
 *** Admin
 **** Timeline
@@ -26,8 +9,7 @@
 ***** +Topic proposal draft: *06.11.2020*+
 ***** +Topic proposal final: *15.11.2020*+
 ***** +Topic registration: *01.02.2021*+
-***** Offical manuscript submission: *12.04.2021*
-
+***** +Offical manuscript submission: *12.04.2021*+
 ** Legacy
 *** Interpretable RNN architectures
 **** State-regularized-RNNs (SR-RNNs)
@@ -45,19 +27,16 @@
 **** Finite-automation-RNNs (FA-RNNs)
 ***** source code likely released by November, but still requires initial REs which may not be present -> might not be the best fit
 ***** FA-RNNs involving REs and substitutions could be useful extensions as finite state transducers for interpretable neural machine translation
-
 *** Interpretable surrogate extraction
 ***** overall more costly and less chance of high performance       
 ***** FA/WFA extraction
 ****** spectral learning, clustering
 ****** less direct interpretability
 ****** more proof of performance needed -> need to show it is better than simple data learning
-
 *** Neuro-symbolic paradigms
 ***** research questions
 ****** can we train use a neuro-symbolic paradigm to attain high performance (similar to NNs) for NLP task(s)?
 ****** if so, can this paradigm provide us with greater explainability about the inner workings of the model?
-
 *** Neural decision trees
 ***** decision trees are the same as logic programs -> the objective should be to learn logic programs
 ***** hierarchies are constructed in weight-space which lends itself to non-sequential models very well -> but problematic for token-level hierarchies
@@ -65,7 +44,6 @@
 ****** can we achieve similar high performance using decision tree distillation techniques (by imitating NNs)?
 ****** can this decision tree improve interpretability/explainability?
 ****** can this decision tree distillation technique outperform simple decision tree learning from training data?
-
 *** Inductive logic on NLP search spaces
 ***** can potentially use existing IM models such as paraphrase detector for introspection purposes in thesis
 ***** n-gram power sets to explore for statistical artefacts -> ANNs can only access the search space of N-gram power sets -> solution to NLP tasks must be a statistical solution within the power sets which links back to symbolism

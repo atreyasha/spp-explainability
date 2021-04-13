@@ -1,6 +1,4 @@
 ## Table of Contents
--   [Tasks](#tasks)
-    -   [**TODO** Programming](#programming)
 -   [Notes](#notes)
     -   [Admin](#admin)
 -   [Legacy](#legacy)
@@ -12,48 +10,6 @@
     -   [Neural decision trees](#neural-decision-trees)
     -   [Inductive logic on NLP search
         spaces](#inductive-logic-on-nlp-search-spaces)
-
-## Tasks
-
-### **TODO**
-
-1.  Clean-code and documentation
-
-    1.  Source-code
-
-        1.  rename RegexSoftPatternClassifier class to RegexProxy if
-            possible without breakages
-
-        2.  change light, medium and heavy to small, medium and large in
-            all scripts, filenames and log variables consistently
-
-        3.  add a comment above each code chunk which explains inner
-            mechanisms better
-
-    2.  Readme
-
-        1.  update readme and usages with finalized antecedent and proxy
-            terminologies
-
-        2.  update readme and usages with finalized STE/output neurons
-            terminologies
-
-        3.  rename all mentions of regex to RE in readme other than
-            usage
-
-        4.  add information on best model downloads and preparation -\>
-            add these to Google Drive later on
-
-        5.  update metadata eg. with comprehensive python/shell help
-            scripts, comments describing functionality and readme
-            descriptions for git hooks
-
-        6.  test out all shell-scripts and python code to make sure
-            everything works the same after major renamings
-
-        7.  test download and all other scripts to ensure they work
-
-        8.  perform spell-check on readme
 
 ## Notes
 
@@ -69,7 +25,7 @@
 
     4.  ~~Topic registration: **01.02.2021**~~
 
-    5.  Offical manuscript submission: **12.04.2021**
+    5.  ~~Offical manuscript submission: **12.04.2021**~~
 
 ## Legacy
 
