@@ -130,10 +130,8 @@
     
     % setup output nodes
     \pgfmathsetseed{3}
-    \foreach \m [count=\y] in {1,2,3,v-missing-upper,4}{
-      \pgfmathparse{80*rnd}
-      \edef\tmp{\pgfmathresult}
-      \node [every neuron/.try, fill=red!\tmp, neuron \m/.try,
+    \foreach \m/\c [count=\y] in {1/10,2/30,3/20,v-missing-upper,4/80}{
+      \node [every neuron/.try, fill=red!\c, neuron \m/.try,
       scale=\upperscale] (output-\m)
       at (2.5/\compress,\uppery-\y/\granupper-0.1) {};
     }
