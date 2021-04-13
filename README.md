@@ -43,7 +43,7 @@ This repository documents M.Sc. thesis research titled *"SoPa++: Leveraging expl
 
 ## Repository initialization :fire:
 
-1. Download and prepare [GloVe-6B](https://nlp.stanford.edu/projects/glove/) word embeddings and the Facebook Multilingual Task Oriented Dialogue (FMTOD) [data set](https://research.fb.com/publications/cross-lingual-transfer-learning-for-multilingual-task-oriented-dialog/):
+1. Automatically download and prepare [GloVe-6B](https://nlp.stanford.edu/projects/glove/) word embeddings and the Facebook Multilingual Task Oriented Dialogue (FMTOD) [data set](https://research.fb.com/publications/cross-lingual-transfer-learning-for-multilingual-task-oriented-dialog/):
 
     ```shell
     bash scripts/prepare_data.sh
