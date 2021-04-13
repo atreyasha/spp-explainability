@@ -12,7 +12,7 @@ from .utils.logging_utils import stdout_root_logger
 from .utils.data_utils import read_docs, read_labels, Vocab
 from .arg_parser import (logging_arg_parser, hardware_arg_parser,
                          evaluate_arg_parser, tqdm_arg_parser)
-from .torch_module_regex import RegexSoftPatternClassifier
+from .torch_module_regex import RegexProxyClassifier
 from .train_spp import set_hardware
 import argparse
 import torch
@@ -42,7 +42,7 @@ def evaluate_inner(eval_text: List[str],
     linear.load_state_dict(model_checkpoint_loaded["linear_state_dict"])
 
     # create model and load respective parameters
-    model = RegexSoftPatternClassifier(
+    model = RegexProxyClassifier(
         model_checkpoint_loaded["pattern_specs"],
         model_checkpoint_loaded["activating_regex"], linear)
 

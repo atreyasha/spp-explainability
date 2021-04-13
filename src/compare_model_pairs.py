@@ -14,7 +14,7 @@ from .arg_parser import (logging_arg_parser, hardware_arg_parser,
 from .train_spp import (parse_configs_to_args, set_hardware, get_pattern_specs,
                         get_semiring)
 from .torch_module_spp import SoftPatternClassifier
-from .torch_module_regex import RegexSoftPatternClassifier
+from .torch_module_regex import RegexProxyClassifier
 import argparse
 import torch
 import json
@@ -51,7 +51,7 @@ def compare_inner(eval_data: List[Tuple[List[int], int]],
     linear.load_state_dict(regex_model_checkpoint_loaded["linear_state_dict"])
 
     # create model and load respective parameters
-    regex_model = RegexSoftPatternClassifier(
+    regex_model = RegexProxyClassifier(
         regex_model_checkpoint_loaded["pattern_specs"],
         regex_model_checkpoint_loaded["activating_regex"], linear)
 

@@ -8,14 +8,14 @@ import torch
 import re
 
 
-class RegexSoftPatternClassifier(Module):
+class RegexProxyClassifier(Module):
     def __init__(
             self,
             pattern_specs: 'OrderedDict[int, int]',
             activating_regex: Dict[int, List[str]],  # yapf: disable
             linear: Module) -> None:
         # initialize all class properties from torch.nn.Module
-        super(RegexSoftPatternClassifier, self).__init__()
+        super(RegexProxyClassifier, self).__init__()
         self.pattern_specs = pattern_specs
         self.activating_regex = {
             key: [re.compile(regex) for regex in activating_regex[key]]
