@@ -184,7 +184,7 @@ optional training arguments:
 optional grid-training arguments:
   --grid-config            <file_path>
                            Path to grid configuration file (default:
-                           ./src/resources/flat_grid_heavy_config.json)
+                           ./src/resources/flat_grid_large_config.json)
   --grid-training          Use grid-training instead of single-training
                            (default: False)
   --num-random-iterations  <int>
