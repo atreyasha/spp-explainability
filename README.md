@@ -49,7 +49,13 @@ This repository documents M.Sc. thesis research titled *"SoPa++: Leveraging expl
     bash scripts/prepare_data.sh
     ```
 
-2. **Optional:** Prepare git hooks to manage development workflows such as linting shell/R scripts, keeping python dependencies up-to-date and formatting the development log:
+2. **Optional:** Manually download our [pre-trained models](https://drive.google.com/file/d/1Q2cqL08_D8-UvZk8FXZMs59f6b7PUaI2/view?usp=sharing) and place the `models.tar.gz` tarball in the `models` directory (~5 GB download size). Next, execute the following to prepare all models:
+
+    ```shell
+    bash scripts/prepare_models.sh
+    ```
+
+3. **Optional:** Initialize git hooks to manage development workflows such as linting shell/R scripts, keeping python dependencies up-to-date and formatting the development log:
 
     ```shell
     bash scripts/prepare_git_hooks.sh
