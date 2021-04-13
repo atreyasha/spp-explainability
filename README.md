@@ -796,10 +796,10 @@ bash scripts/visualize_grid_evaluate.sh "/glob/to/model/log/*/director(ies)"
 </p>
 </details>
 
-<details><summary>v. RE samples and TauSTE neurons</summary>
+<details><summary>v. TauSTE neurons and RE samples</summary>
 <p>
 
-For visualizing RE samples and TauSTE neurons, we use `src/visualize_regex.py`:
+For visualizing TauSTE neurons and RE samples, we use `src/visualize_regex.py`:
 
 ```
 usage: visualize_regex.py [-h] --class-mapping-config <file_path>
@@ -845,7 +845,7 @@ optional progress-bar arguments:
                             diagnostics (default: 5)
 ```
 
-To visualize activating RE samples with corresponding TauSTE neurons, execute the following:
+To visualize TauSTE neurons and corresponding activating RE samples, execute the following:
 
 ```shell
 bash scripts/visualize_regex_with_neurons.sh "/glob/to/regex/model/*/checkpoint(s)" 
