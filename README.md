@@ -1,6 +1,6 @@
 # SoPa++
 
-This repository documents M.Sc. thesis research titled *"SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted finite-state neural architectures"*. This thesis builds upon the [Soft Patterns](https://github.com/Noahs-ARK/soft_patterns) (SoPa) model from Schwartz, Thomson and Smith (2018). The manuscript for this thesis can be found [here](./docs/manuscript/main.pdf).
+This repository documents M.Sc. thesis research titled *"SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted finite-state neural architectures"*. The manuscript for this thesis can be found [here](./docs/manuscript/main.pdf).
 
 ## Dependencies :neckbeard:
 
@@ -430,12 +430,12 @@ bash scripts/evaluate_spp_grid_gpu.sh "/glob/to/neural/model/*/checkpoints"
 </p>
 </details>
 
-### Regex proxy
+### RE proxy
 
 <details><summary>i. Explanations by simplification</summary>
 <p>
 
-For explaining SoPa++ model(s) by simplifying it into a regex proxy model, we use `src/explain_simplify_spp.py`:
+For explaining SoPa++ model(s) by simplifying it into a RE proxy model, we use `src/explain_simplify_spp.py`:
 
 ```
 usage: explain_simplify_spp.py [-h] --neural-model-checkpoint <glob_path>
@@ -517,7 +517,7 @@ bash scripts/explain_simplify_spp_gpu.sh "/glob/to/neural/model/*/checkpoint(s)"
 <details><summary>ii. Compression</summary>
 <p>
 
-For compressing regex proxy model(s), we use `src/explain_compress_regex.py`:
+For compressing RE proxy model(s), we use `src/explain_compress_regex.py`:
 
 ```
 usage: explain_compress_regex.py [-h] --regex-model-checkpoint <glob_path>
@@ -545,7 +545,7 @@ optional progress-bar arguments:
                             diagnostics (default: 5)
 ```
 
-To compress regex proxy model(s) using our defaults on the CPU, execute:
+To compress RE proxy model(s) using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/explain_compress_regex.sh "/glob/to/regex/model/*/checkpoint(s)"
@@ -557,7 +557,7 @@ bash scripts/explain_compress_regex.sh "/glob/to/regex/model/*/checkpoint(s)"
 <details><summary>iii. Evaluation</summary>
 <p>
 
-For evaluating regex proxy model(s), we use `src/evaluate_regex.py`:
+For evaluating RE proxy model(s), we use `src/evaluate_regex.py`:
 
 ```
 usage: evaluate_regex.py [-h] --eval-data <file_path> --eval-labels
@@ -611,13 +611,13 @@ optional progress-bar arguments:
                         (default: 5)
 ```
 
-To evaluate regex proxy model(s) using our defaults on the CPU, execute:
+To evaluate RE proxy model(s) using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/evaluate_regex.sh "/glob/to/regex/model/*/checkpoint(s)"
 ```
 
-To evaluate regex proxy model(s) using our defaults on a single GPU, execute:
+To evaluate RE proxy model(s) using our defaults on a single GPU, execute:
 
 ```shell
 bash scripts/evaluate_regex_gpu.sh "/glob/to/regex/model/*/checkpoint(s)"
@@ -631,7 +631,7 @@ bash scripts/evaluate_regex_gpu.sh "/glob/to/regex/model/*/checkpoint(s)"
 <details><summary>i. Model pair comparison</summary>
 <p>
 
-For comparing SoPa++ and regex proxy model pair(s), we use `src/compare_model_pairs.py`:
+For comparing SoPa++ and RE proxy model pair(s), we use `src/compare_model_pairs.py`:
 
 ```
 usage: compare_model_pairs.py [-h] --eval-data <file_path> --eval-labels
@@ -689,13 +689,13 @@ optional progress-bar arguments:
                          (default: 5)
 ```
 
-To compare SoPa++ and regex proxy model pair(s) using our defaults on the CPU, execute:
+To compare SoPa++ and RE proxy model pair(s) using our defaults on the CPU, execute:
 
 ```shell
 bash scripts/compare_model_pairs.sh "/glob/to/model/log/*/director(ies)"
 ```
 
-To compare SoPa++ and regex proxy model pair(s) using our defaults on a GPU, execute:
+To compare SoPa++ and RE proxy model pair(s) using our defaults on a GPU, execute:
 
 ```shell
 bash scripts/compare_model_pairs_gpu.sh "/glob/to/model/log/*/director(ies)"
@@ -766,8 +766,8 @@ For visualizing grid-based evaluation performance and model-pair distances, we a
 ```
 Usage: visualize_grid_evaluate.sh [-h|--help] model_log_directory
 
-Visualize grid evaluations for neural SoPa++ and regex
-model pairs, given that grid allows for the following varying arguments:
+Visualize grid evaluations for SoPa++ and regex model pairs, given
+the grid-search allows for the following varying arguments:
 patterns, tau_threshold, seed
 
 Optional arguments:
@@ -775,8 +775,8 @@ Optional arguments:
 
 Required arguments:
   model_log_directory <glob_path>  Model log directory/directories
-                                   containing neural SoPa++ and regex
-                                   models, as well as all evaluation json's
+                                   containing SoPa++ and regex models,
+                                   as well as all evaluation json's
 ```
 
 To produce a facet-based visualization of grid-based evaluation, simply execute:
@@ -790,10 +790,10 @@ bash scripts/visualize_grid_evaluate.sh "/glob/to/model/log/*/director(ies)"
 </p>
 </details>
 
-<details><summary>v. Regex samples and STE neurons</summary>
+<details><summary>v. RE samples and TauSTE neurons</summary>
 <p>
 
-For visualizing regex samples and STE neurons, we use `src/visualize_regex.py`:
+For visualizing RE samples and TauSTE neurons, we use `src/visualize_regex.py`:
 
 ```
 usage: visualize_regex.py [-h] --class-mapping-config <file_path>
@@ -817,8 +817,8 @@ required visualization arguments:
 
 optional visualization arguments:
   --max-num-regex           <int>
-                            Maximum number of regex's for each STE neuron
-                            (default: 5)
+                            Maximum number of regex's for each TauSTE neuron
+                            (default: 10)
   --max-transition-tokens   <int>
                             Maximum number of tokens to display per transition
                             (default: 5)
@@ -839,13 +839,13 @@ optional progress-bar arguments:
                             diagnostics (default: 5)
 ```
 
-To visualize activating regex samples with corresponding STE neurons, execute the following:
+To visualize activating RE samples with corresponding TauSTE neurons, execute the following:
 
 ```shell
 bash scripts/visualize_regex_with_neurons.sh "/glob/to/regex/model/*/checkpoint(s)" 
 ```
 
-To visualize only STE neurons, execute the following:
+To visualize only TauSTE neurons, execute the following:
 
 ```shell
 bash scripts/visualize_regex_only_neurons.sh "/glob/to/regex/model/*/checkpoint(s)" 
