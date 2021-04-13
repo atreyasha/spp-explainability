@@ -3,4 +3,5 @@ events*
 *.json
 *.txt
 *.log
+*.tar.gz
 exit_code
