@@ -3,6 +3,18 @@
 #+OPTIONS: p:t
 
 ** Notes
+*** Tasks
+**** Slides (aim to write two per day)
+***** TODO Introduction (1 slide) 
+***** TODO Background concepts (4 slides)
+***** Data set and methodologies (6 slides)
+***** Results (3 slides)
+***** Discussion (3 slides)
+***** Conclusions (1 slide)
+***** Future work (2 slide)
+**** Do timed practice to hit 20 minutes
+**** Prepare for counter-questions for additional 30 minutes
+
 *** Admin
 **** Timeline
 ***** +Initial thesis document: *15.09.2020*+
@@ -10,6 +22,8 @@
 ***** +Topic proposal final: *15.11.2020*+
 ***** +Topic registration: *01.02.2021*+
 ***** +Offical manuscript submission: *12.04.2021*+
+***** Thesis defense: *08.07.2021*
+
 ** Legacy
 *** Interpretable RNN architectures
 **** State-regularized-RNNs (SR-RNNs)

@@ -1,5 +1,6 @@
 ## Table of Contents
 -   [Notes](#notes)
+    -   [Tasks](#tasks)
     -   [Admin](#admin)
 -   [Legacy](#legacy)
     -   [Interpretable RNN
@@ -12,6 +13,28 @@
         spaces](#inductive-logic-on-nlp-search-spaces)
 
 ## Notes
+
+### Tasks
+
+1.  Slides (aim to write two per day)
+
+    1.  **TODO** Introduction (1 slide)
+
+    2.  **TODO** Background concepts (4 slides)
+
+    3.  Data set and methodologies (6 slides)
+
+    4.  Results (3 slides)
+
+    5.  Discussion (3 slides)
+
+    6.  Conclusions (1 slide)
+
+    7.  Future work (2 slide)
+
+2.  Do timed practice to hit 20 minutes
+
+3.  Prepare for counter-questions for additional 30 minutes
 
 ### Admin
 
@@ -26,6 +49,8 @@
     4.  ~~Topic registration: **01.02.2021**~~
 
     5.  ~~Offical manuscript submission: **12.04.2021**~~
+
+    6.  Thesis defense: **08.07.2021**
 
 ## Legacy
 
