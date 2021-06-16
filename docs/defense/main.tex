@@ -1,0 +1,146 @@
+% import packages
+\documentclass[8pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hhline}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage[export]{adjustbox}
+\usepackage[justification=centering]{caption}
+\usepackage[backend=bibtex,style=authoryear-comp,dashed=false,natbib=true]{biblatex}
+
+% set beamer parameters
+\setbeamerfont{footnote}{size=\Tiny}
+\setbeamertemplate{page number in head/foot}{}
+\setbeamertemplate{bibliography item}{}
+\setbeamertemplate{caption}[numbered]
+\setbeamercovered{transparent}
+\setbeamerfont{institute}{size=\small}
+\usetheme{Frankfurt}
+\usecolortheme{default}
+\addtobeamertemplate{navigation symbols}{}{%
+  \usebeamerfont{footline}%
+  \usebeamercolor[fg]{footline}%
+  \hspace{2em}%
+  \raisebox{1.7pt}[0pt][0pt]{\insertframenumber/\inserttotalframenumber}
+}
+
+% macro for showing TOC on each new section
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Overview}
+    \setbeamertemplate{section in toc}[square]
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\newcommand<>{\uncovergraphics}[2][{}]{
+  % Taken from: <https://tex.stackexchange.com/a/354033/95423>
+  \begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] (B) at (4,0)
+    {\includegraphics[#1]{#2}}; \alt#3{}{%
+      \fill [draw=none, fill=white, fill opacity=0.7] (B.north west) -- (B.north
+      east) -- (B.south east) -- (B.south west) -- (B.north west) -- cycle; }
+  \end{tikzpicture}
+}
+
+% set caption parameters
+\DeclareCaptionFormat{myformat}{\fontsize{6}{6}\selectfont#1#2#3}
+\captionsetup{format=myformat}
+\captionsetup[figure]{labelfont={bf},name={Figure}}
+\captionsetup[table]{labelfont={bf},name={Table}}
+
+% set bibliography parameters
+\renewcommand\refname{Bibliography}
+\addbibresource{../bibtex.bib}
+\setlength\bibitemsep{1.5\itemsep}
+\let\oldcitep=\citep
+\renewcommand\citep[1]{{\textcolor{blue}{\oldcitep{#1}}}}
+\let\oldcitet=\citet
+\renewcommand\citet[1]{{\textcolor{blue}{\oldcitet{#1}}}}
+
+% miscellaneous settings
+\settowidth{\leftmargini}{\usebeamertemplate{itemize item}}
+\addtolength{\leftmargini}{\labelsep}
+\renewcommand{\arraystretch}{1.3}
+\graphicspath{{../visuals/}}
+
+% set admin details
+\title{SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted
+  finite-state neural architectures}
+\subtitle{M.Sc. Thesis Defense}
+\author{Atreya Shankar (799227), \texttt{shankar.atreya@gmail.com} \\ Cognitive Systems:
+  Language, Learning, and Reasoning (M.Sc.) \\ 1\textsuperscript{st} Supervisor: Dr. Sharid
+  Loáiciga, University of Potsdam \\ 2\textsuperscript{nd}
+  Supervisor: Mathias Müller, M.A., University of Zurich}
+\institute{Foundations of Computational Linguistics \\ Department of Linguistics \\ University of Potsdam, SoSe 2021}
+\date{July 8, 2021}
+
+% start presentation
+\begin{document}
+\begin{frame}
+  \maketitle
+\end{frame}
+
+\begin{frame}
+  \frametitle{Overview}
+  \setbeamertemplate{section in toc}[square]
+  \tableofcontents
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+  \frametitle{Motivation}
+
+  \begin{columns}[T]
+    \begin{column}{.40\textwidth}
+      \begin{itemize}
+        \setlength\itemsep{1em}
+        \uncover<1>{
+          \item Trend of increasingly complex deep learning models achieving
+          SOTA performance on ML and NLP tasks, as per Figure
+          \ref{fig:nlp_progress}
+          \item To address emerging concerns such as security risks and
+          inductive biases, several studies make argument for research into XAI
+          \citep{danilevsky2020survey,arrieta2020explainable}
+        }
+        \uncover<2>{
+          \item \citet{schwartz2018sopa} approach XAI in NLP by proposing
+          an explainable hybridized RNN, CNN and WFA neural architecture called
+          \textbf{So}ft \textbf{Pa}tterns (SoPa)
+          \item SoPa provides localized and indirect explainability despite being suited for
+          \textbf{globalized and direct} explanations by simplification
+        } 
+      \end{itemize}
+    \end{column}
+    \hfill
+    \begin{column}{.60\textwidth}
+        \centering
+        \uncovergraphics<1>[width=6cm, valign=t]{pdfs/borrowed/nlp_sota_model_size_progress.pdf}
+        \uncover<1>{\captionof{figure}{Parameter counts of recently released pre-trained language
+            models; figure taken from \citet{sanh2019distilbert}}}
+        \label{fig:nlp_progress}
+        \vspace{5pt}
+        \uncovergraphics<2>[width=6cm, valign=t]{pdfs/borrowed/sopa_computational_graph.pdf}
+        \uncover<2>{\captionof{figure}{SoPa's partial computational graph; figure taken from
+            \citet{schwartz2018sopa}}}
+        \label{fig:sopa}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\section{Background concepts}
+\section{Data and methodologies}
+\section{Results}
+\section{Discussion}
+\section{Conclusions}
+\section{Future work}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Bibliography} \printbibliography[title = {Bibliography}]
+\end{frame}
+
+\end{document}
