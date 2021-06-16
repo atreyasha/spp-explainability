@@ -18,23 +18,25 @@
 
 1.  Slides (aim to write two per day)
 
-    1.  **TODO** Introduction (1 slide)
+    1.  **TODO** Introduction (\~2 slides)
 
-    2.  **TODO** Background concepts (4 slides)
+    2.  Background concepts (\~4 slides)
 
-    3.  Data set and methodologies (6 slides)
+    3.  Data set and methodologies (\~6 slides)
 
-    4.  Results (3 slides)
+    4.  Results (\~3 slides)
 
-    5.  Discussion (3 slides)
+    5.  Discussion (\~3 slides)
 
-    6.  Conclusions (1 slide)
+    6.  Conclusions (\~1 slide)
 
-    7.  Future work (2 slide)
+    7.  Future work (\~2 slide)
 
-2.  Do timed practice to hit 20 minutes
+2.  Do spell-check of all slides
 
-3.  Prepare for counter-questions for additional 30 minutes
+3.  Do timed practice to hit 20 minutes
+
+4.  Prepare for counter-questions for additional 30 minutes
 
 ### Admin
 
