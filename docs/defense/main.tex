@@ -26,16 +26,6 @@
   \raisebox{1.7pt}[0pt][0pt]{\insertframenumber/\inserttotalframenumber}
 }
 
-% macro for showing TOC on each new section
-\AtBeginSection[]
-{
-  \begin{frame}
-    \frametitle{Overview}
-    \setbeamertemplate{section in toc}[square]
-    \tableofcontents[currentsection]
-  \end{frame}
-}
-
 % special command to uncover graphics
 % source: https://tex.stackexchange.com/a/415335
 \newcommand<>{\uncovergraphics}[2][{}]{
@@ -133,6 +123,16 @@
     \end{column}
   \end{columns}
 \end{frame}
+
+% macro for showing TOC on each new section
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Overview}
+    \setbeamertemplate{section in toc}[square]
+    \tableofcontents[currentsection]
+  \end{frame}
+}
 
 \section{Background concepts}
 \section{Data and methodologies}
