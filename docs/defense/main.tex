@@ -8,23 +8,25 @@
 \usepackage{tikz}
 \usepackage[export]{adjustbox}
 \usepackage[justification=centering]{caption}
-\usepackage[backend=bibtex,style=authoryear-comp,dashed=false,natbib=true]{biblatex}
+\usepackage[backend=bibtex,style=authoryear,maxcitenames=2,natbib=true,maxbibnames=99]{biblatex}
 
 % set beamer parameters
+\usetheme{Frankfurt}
+\usecolortheme{default}
 \setbeamerfont{footnote}{size=\Tiny}
 \setbeamertemplate{page number in head/foot}{}
 \setbeamertemplate{bibliography item}{}
 \setbeamertemplate{caption}[numbered]
 \setbeamercovered{transparent}
 \setbeamerfont{institute}{size=\small}
-\usetheme{Frankfurt}
-\usecolortheme{default}
 \addtobeamertemplate{navigation symbols}{}{%
   \usebeamerfont{footline}%
   \usebeamercolor[fg]{footline}%
   \hspace{2em}%
   \raisebox{1.7pt}[0pt][0pt]{\insertframenumber/\inserttotalframenumber}
 }
+\setbeamertemplate{enumerate items}[square]
+\setbeamertemplate{section in toc}[square]
 
 % special command to uncover graphics
 % source: https://tex.stackexchange.com/a/415335
@@ -78,7 +80,6 @@
 
 \begin{frame}
   \frametitle{Overview}
-  \setbeamertemplate{section in toc}[square]
   \tableofcontents
 \end{frame}
 
@@ -93,12 +94,10 @@
         \setlength\itemsep{1em}
         \uncover<1>{
           \item Trend of increasingly complex deep learning models achieving
-          SOTA performance on ML and NLP tasks, as per Figure
-          \ref{fig:nlp_progress}
-          \item To address emerging concerns such as security risks and
-          inductive biases, several studies make argument for research into XAI
-          \citep{danilevsky2020survey,arrieta2020explainable}
-        }
+          SOTA performance on ML and NLP tasks (Figure \ref{fig:nlp_progress})
+          \item To address emerging concerns such as inductive biases, several
+          studies make argument for research into XAI
+          \citep{danilevsky2020survey,arrieta2020explainable}}
         \uncover<2>{
           \item \citet{schwartz2018sopa} approach XAI in NLP by proposing
           an explainable hybridized RNN, CNN and WFA neural architecture called
@@ -124,12 +123,46 @@
   \end{columns}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Objective and research questions}
+
+  \uncover<1->{ Objective: \setlength{\leftmargini}{0.5cm}
+    \begin{itemize}
+      \item Address limitations of SoPa by proposing \textbf{SoPa++}, which
+      could allow for effective explanations by simplification.
+    \end{itemize}
+  }
+  
+  \vspace{10pt}
+
+  \uncover<2->{ Process:
+    \begin{itemize}
+      \item We study the performance and explanations by simplification of
+      SoPa++ on the \textbf{FMTOD} data set from
+      \citet{schuster-etal-2019-cross-lingual}; focusing on the English-language
+      intent classification task.
+    \end{itemize}
+  }
+  
+  \vspace{10pt}
+
+  \uncover<3->{ Research questions:
+    \begin{enumerate}
+      \setlength\itemsep{1em}
+      \item Does SoPa++ provide \textbf{competitive} performance?
+      \item To what extent does SoPa++ contribute to \textbf{effective}
+      explanations by simplification?
+      \item What \textbf{interesting and relevant} explanations can SoPa++
+      provide?
+    \end{enumerate}
+  }
+\end{frame}
+
 % macro for showing TOC on each new section
 \AtBeginSection[]
 {
   \begin{frame}
     \frametitle{Overview}
-    \setbeamertemplate{section in toc}[square]
     \tableofcontents[currentsection]
   \end{frame}
 }
