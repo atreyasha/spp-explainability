@@ -1,6 +1,11 @@
 # SoPa++
 
-This repository documents M.Sc. thesis research titled *"SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted finite-state neural architectures"*. This research was inspired by and adapted from the original [SoPa](https://github.com/Noahs-ARK/soft_patterns) model in Schwartz, Thomson and Smith (2018). A manuscript for this thesis can be found [here](./docs/manuscript/main.pdf).
+This repository documents M.Sc. thesis research titled *"SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted finite-state neural architectures"*. This research was inspired by and adapted from the original [SoPa](https://github.com/Noahs-ARK/soft_patterns) model in Schwartz, Thomson and Smith (2018).
+
+For more details, check out the following documents:
+
+* [Manuscript](./docs/manuscript/main.pdf)
+* [Defense](./docs/defense/main.pdf)
 
 ## Dependencies :neckbeard:
 
