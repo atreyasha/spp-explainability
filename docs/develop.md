@@ -18,19 +18,26 @@
 
 1.  Slides (aim to write two per day)
 
-    1.  **TODO** Introduction (\~2 slides)
+    1.  **TODO** Background concepts (\~4 slides)
 
-    2.  Background concepts (\~4 slides)
+        1.  Explainability concepts + broad techniques
 
-    3.  Data set and methodologies (\~6 slides)
+        2.  STE\'s and how they work
 
-    4.  Results (\~3 slides)
+        3.  WFA\'s and semirings
 
-    5.  Discussion (\~3 slides)
+        4.  SoPa and its explainability techniques -\> mention localized
+            and indirect
 
-    6.  Conclusions (\~1 slide)
+    2.  Data set and methodologies (\~6 slides)
 
-    7.  Future work (\~2 slide)
+    3.  Results (\~3 slides)
+
+    4.  Discussion (\~3 slides)
+
+    5.  Conclusions (\~1 slide)
+
+    6.  Future work (\~2 slide)
 
 2.  Do spell-check of all slides
 

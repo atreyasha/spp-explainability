@@ -5,8 +5,11 @@
 ** Notes
 *** Tasks
 **** Slides (aim to write two per day)
-***** TODO Introduction (~2 slides) 
-***** Background concepts (~4 slides)
+***** TODO Background concepts (~4 slides)
+****** Explainability concepts + broad techniques  
+****** STE's and how they work
+****** WFA's and semirings
+****** SoPa and its explainability techniques -> mention localized and indirect
 ***** Data set and methodologies (~6 slides)
 ***** Results (~3 slides)
 ***** Discussion (~3 slides)
