@@ -20,16 +20,16 @@
 
     1.  **TODO** Background concepts (\~4 slides)
 
-        1.  Explainability concepts + broad techniques
-
-        2.  STE\'s and how they work
-
-        3.  WFA\'s and semirings
-
-        4.  SoPa and its explainability techniques -\> mention localized
+        1.  SoPa and its explainability techniques -\> mention localized
             and indirect
 
-    2.  Data set and methodologies (\~6 slides)
+            1.  talk about WFA\'s directly here
+
+    2.  **TODO** Data set and methodologies (\~6 slides)
+
+        1.  SoPa++
+
+            1.  talk about STE\'s directly here
 
     3.  Results (\~3 slides)
 
