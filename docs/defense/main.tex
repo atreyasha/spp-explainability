@@ -96,12 +96,12 @@
           \item Trend of increasingly complex deep learning models achieving
           SOTA performance on ML and NLP tasks (Figure \ref{fig:nlp_progress})
           \item To address emerging concerns such as inductive biases, several
-          studies make argument for research into XAI
-          \citep{danilevsky2020survey,arrieta2020explainable}}
+          studies make argument for research into XAI; for example
+          \citet{danilevsky2020survey} and \citet{arrieta2020explainable}}
         \uncover<2>{
           \item \citet{schwartz2018sopa} approach XAI in NLP by proposing
-          an explainable hybridized RNN, CNN and WFA neural architecture called
-          \textbf{So}ft \textbf{Pa}tterns (SoPa)
+          an explainable hybridized neural architecture called
+          \textbf{So}ft \textbf{Pa}tterns (SoPa; Figure \ref{fig:sopa})
           \item SoPa provides localized and indirect explainability despite being suited for
           \textbf{globalized and direct} explanations by simplification
         } 
@@ -162,12 +162,56 @@
 \AtBeginSection[]
 {
   \begin{frame}
-    \frametitle{Overview}
+    \frametitle{Progress}
     \tableofcontents[currentsection]
   \end{frame}
 }
 
 \section{Background concepts}
+
+\begin{frame}
+  \frametitle{Explainability}
+  \begin{columns}[T]
+    \begin{column}{.40\textwidth}
+      \begin{itemize}
+        \setlength\itemsep{1em}
+        \uncover<1>{
+          \item Transparency is a passive feature that a model exhibits
+          \item Explainability is an active feature that involves target
+          audiences (Figure \ref{fig:xai_target_audience})
+          \item \citet{arrieta2020explainable} explore a taxonomy of explainability techniques 
+        }
+        \uncover<2>{
+          \item Prominent explainability techniques include local explanations, feature
+          relevance and \textbf{explanations by simplification}
+          \item Explainability techniques can provide meaningful insights into
+          decision boundaries within black-box models (Figure \ref{fig:lime_husky})
+        } 
+      \end{itemize}
+    \end{column}
+    \hfill
+    \begin{column}{.60\textwidth}
+        \centering
+        \uncovergraphics<1>[width=6.2cm,trim={0.3cm 0.3cm 0.5cm
+          0.3cm},clip,valign=t]{pdfs/borrowed/xai_target_audience.pdf}
+        \uncover<1>{\captionof{figure}{Examples of various target audiences in XAI; figure taken from
+            \citet{arrieta2020explainable}}}
+        \label{fig:xai_target_audience}
+        \vspace{5pt}
+        \uncovergraphics<2>[width=6cm,trim={0.1cm 0.1cm 0.1cm
+          0.1cm},clip,valign=t]{pdfs/borrowed/lime_husky.pdf}
+        \uncover<2>{\captionof{figure}{Local explanation for ``Wolf''
+            classification decision, figure taken from \citet{lime}}}
+        \label{fig:lime_husky}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Soft Patterns (SoPa)}
+
+\end{frame}
+
 \section{Data and methodologies}
 \section{Results}
 \section{Discussion}
