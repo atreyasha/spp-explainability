@@ -8,6 +8,7 @@
 ***** TODO Background concepts (~4 slides)
 ****** SoPa and its explainability techniques -> mention localized and indirect
 ******* talk about WFA's directly here 
+******* think of using different figure than SoPa computational graph in first figure 
 ***** TODO Data set and methodologies (~6 slides)
 ****** SoPa++
 ******* talk about STE's directly here
@@ -16,6 +17,7 @@
 ***** Conclusions (~1 slide)
 ***** Future work (~2 slide)
 **** Do spell-check of all slides 
+**** Complete animations of slides
 **** Do timed practice to hit 20 minutes
 **** Prepare for counter-questions for additional 30 minutes
 

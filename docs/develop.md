@@ -25,6 +25,9 @@
 
             1.  talk about WFA\'s directly here
 
+            2.  think of using different figure than SoPa computational
+                graph in first figure
+
     2.  **TODO** Data set and methodologies (\~6 slides)
 
         1.  SoPa++
@@ -41,9 +44,11 @@
 
 2.  Do spell-check of all slides
 
-3.  Do timed practice to hit 20 minutes
+3.  Complete animations of slides
 
-4.  Prepare for counter-questions for additional 30 minutes
+4.  Do timed practice to hit 20 minutes
+
+5.  Prepare for counter-questions for additional 30 minutes
 
 ### Admin
 
