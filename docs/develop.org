@@ -6,12 +6,11 @@
 *** Tasks
 **** Slides (aim to write two per day)
 ***** TODO Background concepts (~4 slides)
-****** SoPa and its explainability techniques -> mention localized and indirect
-******* talk about WFA's directly here 
-******* think of using different figure than SoPa computational graph in first figure 
-***** TODO Data set and methodologies (~6 slides)
-****** SoPa++
-******* talk about STE's directly here
+****** mention SoPa explainability techniques with cropped figures
+***** Data set and methodologies (~6 slides)
+****** FMTOD data set general information 
+****** SoPa++ + talk about STE's directly here
+****** Also how research questions were answered
 ***** Results (~3 slides)
 ***** Discussion (~3 slides)
 ***** Conclusions (~1 slide)

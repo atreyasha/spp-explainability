@@ -20,19 +20,15 @@
 
     1.  **TODO** Background concepts (\~4 slides)
 
-        1.  SoPa and its explainability techniques -\> mention localized
-            and indirect
+        1.  mention SoPa explainability techniques with cropped figures
 
-            1.  talk about WFA\'s directly here
+    2.  Data set and methodologies (\~6 slides)
 
-            2.  think of using different figure than SoPa computational
-                graph in first figure
+        1.  FMTOD data set general information
 
-    2.  **TODO** Data set and methodologies (\~6 slides)
+        2.  SoPa++ + talk about STE\'s directly here
 
-        1.  SoPa++
-
-            1.  talk about STE\'s directly here
+        3.  Also how research questions were answered
 
     3.  Results (\~3 slides)
 
