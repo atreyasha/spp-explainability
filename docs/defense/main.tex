@@ -5,7 +5,9 @@
 \usepackage{hhline}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage{tikz}
+\usepackage{bm}
 \usepackage[export]{adjustbox}
 \usepackage[justification=centering]{caption}
 \usepackage[backend=bibtex,style=authoryear,maxcitenames=2,natbib=true,maxbibnames=99]{biblatex}
@@ -27,6 +29,7 @@
 }
 \setbeamertemplate{enumerate items}[square]
 \setbeamertemplate{section in toc}[square]
+\setbeamertemplate{theorems}[numbered]
 
 % special command to uncover graphics
 % source: https://tex.stackexchange.com/a/415335
@@ -114,11 +117,10 @@
         \uncover<1>{\captionof{figure}{Parameter counts of recently released pre-trained language
             models; figure taken from \citet{sanh2019distilbert}}}
         \label{fig:nlp_progress}
-        \vspace{5pt}
-        \uncovergraphics<2>[width=6cm, valign=t]{pdfs/borrowed/sopa_computational_graph.pdf}
-        \uncover<2>{\captionof{figure}{SoPa's partial computational graph; figure taken from
-            \citet{schwartz2018sopa}}}
-        \label{fig:sopa}
+        \vspace{10pt}
+        \uncover<2>{\fbox{\uncovergraphics<2>[width=6cm, valign=t]{pdfs/borrowed/sopa_crop.pdf}}}
+        \uncover<2>{\captionof{figure}{Excerpt from \citet{schwartz2018sopa}}}
+        \label{fig:performance_interpretability_tradeoff}
     \end{column}
   \end{columns}
 \end{frame}
@@ -162,7 +164,7 @@
 \AtBeginSection[]
 {
   \begin{frame}
-    \frametitle{Progress}
+    \frametitle{Overview}
     \tableofcontents[currentsection]
   \end{frame}
 }
@@ -208,9 +210,64 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{SoPa}
+  \frametitle{Soft Patterns (SoPa)}
+  \centering
+  \captionsetup{width=9cm}
+  \uncovergraphics<1>[width=8cm, valign=t]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
+  \uncover<1>{\captionof{figure}{Linear-chain NFA with
+      self-loop (blue), $\epsilon$ (red) and main-path (black) transitions; figure
+      adapted from \citet{schwartz2018sopa}}}
+  \label{fig:fa}
+  \vspace{10pt}
+  \uncovergraphics<2>[width=8cm, valign=t]{pdfs/borrowed/sopa_computational_graph.pdf}
+  \uncover<2>{\captionof{figure}{SoPa's partial computational graph; figure taken from
+      \citet{schwartz2018sopa}}}
+  \label{fig:sopa}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SoPa: Weighted Finite-State Automaton (WFA)}
+  \uncover<1>{\begin{definition}[Semiring; \citealt{kuich1986linear}]
+      \label{def:semiring}
+      A semiring is a set $\mathbb{K}$ along with two binary associative operations
+      $\oplus$ (addition) and $\otimes$ (multiplication) and two identity elements:
+      $\bar{0}$ for addition and $\bar{1}$ for multiplication. Semirings require
+      that addition is commutative, multiplication distributes over addition, and
+      that multiplication by $\bar{0}$ annihilates, i.e., $\bar{0} \otimes a = a
+      \otimes \bar{0} = \bar{0}$.
+
+      \begin{itemize}
+        \item Semirings follow the following generic notation: $\langle \mathbb{K}, \oplus,
+        \otimes, \bar{0}, \bar{1} \rangle$.
+        \item \textbf{Max-sum} semiring: $\langle \mathbb{R} \cup \{-\infty\}, \text{max},
+        +, -\infty, 0 \rangle$
+        \item \textbf{Max-product} semiring: $\langle \mathbb{R}_{>0} \cup \{-\infty\},
+        \text{max}, \times, -\infty, 1 \rangle$
+      \end{itemize} 
+    \end{definition}}
+
+  \uncover<2>{\begin{definition}[Weighted finite-state automaton; \citealt{peng2018rational}]
+      \label{def:wfa}
+      A weighted finite-state automaton over a semiring $\mathbb{K}$ is a 5-tuple
+      $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \bm{\Gamma}, \bm{\lambda}, \bm{\rho} \rangle$,
+      with:
+
+      \begin{itemize}
+        \itemsep0em
+        \item[--] a finite input alphabet $\Sigma$;
+        \item[--] a finite state set $\mathcal{Q}$;
+        \item[--] transition matrix $\bm{\Gamma}: \mathcal{Q} \times \mathcal{Q} \times
+        (\Sigma \cup \{\epsilon\}) \rightarrow \mathbb{K}$;
+        \item[--] initial vector $\bm{\lambda}: \mathcal{Q} \rightarrow \mathbb{K}$;
+        \item[--] and final vector $\bm{\rho}: \mathcal{Q} \rightarrow \mathbb{K}$.
+      \end{itemize}
+    \end{definition}}
 
 \end{frame}
+
+% two more slides on SoPa:
+% 1. WFA's -> how they score with math -> what affects it
+% 2. Explainability techniques offered
 
 \section{Data and methodologies}
 \section{Results}
