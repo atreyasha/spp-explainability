@@ -18,11 +18,7 @@
 
 1.  Slides (aim to write two per day)
 
-    1.  **TODO** Background concepts (\~4 slides)
-
-        1.  mention SoPa explainability techniques with cropped figures
-
-    2.  Data set and methodologies (\~6 slides)
+    1.  **TODO** Data set and methodologies (\~6 slides)
 
         1.  FMTOD data set general information
 
@@ -30,13 +26,13 @@
 
         3.  Also how research questions were answered
 
-    3.  Results (\~3 slides)
+    2.  Results (\~3 slides)
 
-    4.  Discussion (\~3 slides)
+    3.  Discussion (\~3 slides)
 
-    5.  Conclusions (\~1 slide)
+    4.  Conclusions (\~1 slide)
 
-    6.  Future work (\~2 slide)
+    5.  Future work (\~2 slide)
 
 2.  Do spell-check of all slides
 

@@ -5,9 +5,7 @@
 ** Notes
 *** Tasks
 **** Slides (aim to write two per day)
-***** TODO Background concepts (~4 slides)
-****** mention SoPa explainability techniques with cropped figures
-***** Data set and methodologies (~6 slides)
+***** TODO Data set and methodologies (~6 slides)
 ****** FMTOD data set general information 
 ****** SoPa++ + talk about STE's directly here
 ****** Also how research questions were answered
