@@ -20,11 +20,7 @@
 
     1.  **TODO** Data set and methodologies (\~6 slides)
 
-        1.  FMTOD data set general information
-
-        2.  SoPa++ + talk about STE\'s directly here
-
-        3.  Also how research questions were answered
+        1.  Detail how research questions were answered (3 slides)
 
     2.  Results (\~3 slides)
 
@@ -32,15 +28,19 @@
 
     4.  Conclusions (\~1 slide)
 
-    5.  Future work (\~2 slide)
+    5.  Future work (\~2 slides)
 
-2.  Do spell-check of all slides
+    6.  Do spell-check of all slides
 
-3.  Complete animations of slides
+        **DEADLINE:** *\<2021-07-04 Sun>*
 
-4.  Do timed practice to hit 20 minutes
+2.  Do timed practice to hit 20 minutes
 
-5.  Prepare for counter-questions for additional 30 minutes
+    1.  complete animations of slides -\> use tikz rectangles for CGs
+
+    2.  practice will help fine-tuning slides
+
+    3.  prepare for counter-questions for additional 30 minutes
 
 ### Admin
 

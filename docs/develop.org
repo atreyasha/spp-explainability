@@ -6,17 +6,18 @@
 *** Tasks
 **** Slides (aim to write two per day)
 ***** TODO Data set and methodologies (~6 slides)
-****** FMTOD data set general information 
-****** SoPa++ + talk about STE's directly here
-****** Also how research questions were answered
+****** Detail how research questions were answered (3 slides)
 ***** Results (~3 slides)
 ***** Discussion (~3 slides)
 ***** Conclusions (~1 slide)
-***** Future work (~2 slide)
-**** Do spell-check of all slides 
-**** Complete animations of slides
+***** Future work (~2 slides)
+***** Do spell-check of all slides
+     DEADLINE: <2021-07-04 Sun>
+
 **** Do timed practice to hit 20 minutes
-**** Prepare for counter-questions for additional 30 minutes
+***** complete animations of slides -> use tikz rectangles for CGs
+***** practice will help fine-tuning slides
+***** prepare for counter-questions for additional 30 minutes
 
 *** Admin
 **** Timeline
