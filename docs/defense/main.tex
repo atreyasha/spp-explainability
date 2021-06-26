@@ -1,6 +1,9 @@
 % import packages
-\documentclass[8pt,handout]{beamer}
+\documentclass[8pt,handout,table=xcolor]{beamer}
 \usepackage[utf8]{inputenc}
+\usepackage{colortbl}
+\usepackage{booktabs}
+\usepackage{threeparttable}
 \usepackage{graphicx}
 \usepackage{hhline}
 \usepackage{amsmath}
@@ -141,7 +144,7 @@
   \uncover<2->{ Process:
     \begin{itemize}
       \item We study the performance and explanations by simplification of
-      SoPa++ on the \textbf{FMTOD} data set from
+      SoPa++ on the Facebook Multilingual Task Oriented Dialog (\textbf{FMTOD}) data set from
       \citet{schuster-etal-2019-cross-lingual}; focusing on the English-language
       intent classification task.
     \end{itemize}
@@ -259,7 +262,7 @@
   \centering
   \captionsetup{width=9cm}
   \uncovergraphics<1>[width=8cm, valign=t]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
-  \uncover<1>{\captionof{figure}{Linear-chain NFA with
+  \uncover<1>{\captionof{figure}{WFA slice: linear-chain NFA with
       self-loop (blue), $\epsilon$ (red) and main-path (black) transitions; figure
       adapted from \citet{schwartz2018sopa}}}
   \label{fig:fa}
@@ -311,6 +314,120 @@
 \end{frame}
 
 \section{Data and methodologies}
+
+\begin{frame}
+  \frametitle{FMTOD: Summary statistics}
+  \begin{table}
+    \small
+    \centering
+    \begin{threeparttable}
+      \begin{tabular}{llll}
+        \toprule
+        Class and description & Frequency & Utterance length$^{\dagger}$ & Example$^{\ddagger}$ \\
+        \midrule
+        0: \texttt{alarm/cancel\_alarm} & \cellcolor{red!5}1791 & 5.6 $\pm$ 1.9 & cancel weekly alarm \\
+        1: \texttt{alarm/modify\_alarm} & \cellcolor{red!2}566 & 7.1 $\pm$ 2.5 & change alarm time \\
+        2: \texttt{alarm/set\_alarm} & \cellcolor{red!17}5416 & 7.5 $\pm$ 2.5 & please set the new alarm \\
+        3: \texttt{alarm/show\_alarms} & \cellcolor{red!3}914 & 6.9 $\pm$ 2.2 & check my alarms. \\
+        4: \texttt{alarm/snooze\_alarm} & \cellcolor{red!1}366 & 6.1 $\pm$ 2.1 & pause alarm please \\
+        5: \texttt{alarm/time\_left\_on\_alarm} & \cellcolor{red!1}344 & 8.6 $\pm$ 2.1  & minutes left on my alarm \\
+        6: \texttt{reminder/cancel\_reminder} & \cellcolor{red!3}1060 & 6.6 $\pm$ 2.2 & clear all reminders. \\
+        7: \texttt{reminder/set\_reminder} & \cellcolor{red!17}5549 & 8.9 $\pm$ 2.5 & birthday reminders \\
+        8: \texttt{reminder/show\_reminders} & \cellcolor{red!2}773 & 6.8 $\pm$ 2.2 & list all reminders \\
+        9: \texttt{weather/check\_sunrise} & \cellcolor{red!1}101 & 6.7 $\pm$ 1.7 & when is sunrise \\
+        10: \texttt{weather/check\_sunset} &\cellcolor{red!1}136 & 6.7 $\pm$ 1.7 & when is dusk \\
+        11: \texttt{weather/find} & \cellcolor{red!45}14338 & 7.8 $\pm$ 2.3 & jacket needed? \\
+        \hline \hline \\[-10pt]
+        $\Sigma/\mu$ & 31354 & 7.7 $\pm$ 2.5 & \textemdash \\
+        \bottomrule
+      \end{tabular}
+      \begin{tablenotes}[flushleft]
+        \footnotesize
+        \item $^{\dagger}$Summary statistics follow the mean $\pm$
+        standard-deviation format
+        \item $^{\ddagger}$Short and simple examples were chosen for brevity and
+        formatting purposes
+      \end{tablenotes}
+    \end{threeparttable}
+    \caption{Summary statistics and examples for the preprocessed
+      FMTOD data set}
+    \label{tab:fmtod_examples}
+  \end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SoPa++: WFA-$\omega$ and TauSTE}
+  \centering
+  \captionsetup{width=8cm}
+  \uncovergraphics<1>[width=7cm,valign=t]{pdfs/generated/w_nfa_linear_chain/main.pdf}
+  \uncover<1>{\captionof{figure}{WFA-$\omega$ slice: strict linear-chain NFA with
+    $\omega$ (blue) and main-path (black) transitions}}
+  \label{fig:omega_fa}
+  
+  \vspace{10pt}
+
+  \begin{columns}[T]
+    \begin{column}{.30\textwidth}
+      \uncover<2>{\begin{equation*}
+        \footnotesize
+        \label{eq:tau_ste_forward}
+        \text{TauSTE}(x)=
+        \begin{cases}
+          1 & x \in (\tau, +\infty) \\
+          0 & x \in (-\infty, \tau]
+        \end{cases}
+      \end{equation*}
+
+      \begin{equation*}
+        \footnotesize
+        \label{eq:tau_ste_backward}
+        \text{TauSTE}'(x)=
+        \begin{cases}
+          1 & x \in  (1, +\infty) \\
+          x & x \in [-1, 1] \\
+          -1 & x \in (-\infty, -1) \\
+        \end{cases}
+      \end{equation*}
+      \begin{itemize}
+        \small
+        \item $\text{TauSTE}'(x)$ implies the backward pass and \textbf{not} the gradient
+        in this context
+        \item Flavours of STEs are being extensively researched, such as in \citet{yin2019understanding}
+      \end{itemize}
+    }
+    \end{column}
+    \hfill
+    \begin{column}{.70\textwidth}
+      \centering 
+      \uncovergraphics<2>[width=6.7cm,valign=t]{pdfs/generated/tau_ste_applied/main.pdf}
+      \uncover<2>{\captionof{figure}{TauSTE's forward and backward passes}}
+      \label{fig:tau_ste}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SoPa++: Computational graph}
+  \begin{figure}
+    \centering
+    \includegraphics[width=8.5cm]{pdfs/generated/spp_computational_graph/main.pdf}
+    \caption{SoPa++ computational graph; flow of graph is
+      from bottom to top and left to right}
+    \label{fig:spp_computational_graph}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SoPa++: Regular Expression (RE) proxy}
+  \begin{figure}
+    \centering
+    \includegraphics[width=8cm]{pdfs/generated/regex_computational_graph/main.pdf}
+    \caption{RE proxy computational graph; flow of graph is
+      from bottom to top and left to right}
+    \label{fig:regex_computational_graph}
+  \end{figure}
+\end{frame}
+
 \section{Results}
 \section{Discussion}
 \section{Conclusions}
