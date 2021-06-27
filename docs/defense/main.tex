@@ -2,6 +2,7 @@
 \documentclass[8pt,handout,table=xcolor]{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage{colortbl}
+\usepackage{ragged2e}
 \usepackage{booktabs}
 \usepackage{threeparttable}
 \usepackage{graphicx}
@@ -66,6 +67,7 @@
 \addtolength{\leftmargini}{\labelsep}
 \renewcommand{\arraystretch}{1.3}
 \graphicspath{{../visuals/}}
+\newcolumntype{L}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
 
 % set admin details
 \title{SoPa++: Leveraging explainability from hybridized RNN, CNN and weighted
@@ -188,11 +190,12 @@
           \item \citet{arrieta2020explainable} explore a taxonomy of post-hoc
           explainability techniques}
         \uncover<2>{
+          \item Explainability techniques can provide meaningful insights into
+          decision boundaries within black-box models (Figure
+          \ref{fig:lime_husky})
           \item Prominent explainability techniques include local
           explanations, feature relevance and \textbf{explanations by
             simplification}
-          \item Explainability techniques can provide meaningful insights into
-          decision boundaries within black-box models (Figure \ref{fig:lime_husky})
         } 
       \end{itemize}
     \end{column}
@@ -262,7 +265,7 @@
   \centering
   \captionsetup{width=9cm}
   \uncovergraphics<1>[width=8cm, valign=t]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
-  \uncover<1>{\captionof{figure}{WFA slice: linear-chain NFA with
+  \uncover<1>{\captionof{figure}{WFA slice: linear-chain FA with
       self-loop (blue), $\epsilon$ (red) and main-path (black) transitions; figure
       adapted from \citet{schwartz2018sopa}}}
   \label{fig:fa}
@@ -360,14 +363,14 @@
   \centering
   \captionsetup{width=8cm}
   \uncovergraphics<1>[width=7cm,valign=t]{pdfs/generated/w_nfa_linear_chain/main.pdf}
-  \uncover<1>{\captionof{figure}{WFA-$\omega$ slice: strict linear-chain NFA with
+  \uncover<1>{\captionof{figure}{WFA-$\omega$ slice: strict linear-chain FA with
     $\omega$ (blue) and main-path (black) transitions}}
   \label{fig:omega_fa}
   
   \vspace{10pt}
 
   \begin{columns}[T]
-    \begin{column}{.30\textwidth}
+    \begin{column}{.37\textwidth}
       \uncover<2>{\begin{equation*}
         \footnotesize
         \label{eq:tau_ste_forward}
@@ -396,8 +399,7 @@
       \end{itemize}
     }
     \end{column}
-    \hfill
-    \begin{column}{.70\textwidth}
+    \begin{column}{.63\textwidth}
       \centering 
       \uncovergraphics<2>[width=6.7cm,valign=t]{pdfs/generated/tau_ste_applied/main.pdf}
       \uncover<2>{\captionof{figure}{TauSTE's forward and backward passes}}
@@ -426,6 +428,92 @@
       from bottom to top and left to right}
     \label{fig:regex_computational_graph}
   \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SoPa vs. SoPa++}
+  \begin{table}[t!]
+    \centering \def\arraystretch{1.5}
+    \begin{tabular}{L{0.275\linewidth} L{0.3\linewidth} L{0.3\linewidth}}
+      \toprule
+      Characteristic & SoPa & SoPa++ \\
+      \midrule
+      Text casing & True-cased & Lower-cased \\ 
+      Token embeddings & GloVe 840B 300-dimensions & GloVe 6B 300-dimensions \\
+      \textbf{WFAs} & Linear-chain WFA's with $\epsilon$, self-loop and main-path transitions & Strict linear-chain WFA-$\omega$'s with $\omega$ and main-path transitions \\
+      \textbf{Hidden layers} & Multi-layer perceptron after max-pooling & Layer normalization, TauSTE and linear transformation after max-pooling \\
+      \textbf{Post-hoc explainability technique(s)} & Local explanations, feature relevance & Explanations by simplification \\
+      \bottomrule
+    \end{tabular}
+    \caption{Summarized differences for SoPa vs. SoPa++}
+    \label{tab:sopa_spp_comparison}
+  \end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Research Question 1: Performance}
+  \uncover<2>{\begin{table}[t!]
+    \centering
+    \begin{tabular}{lll}
+      \toprule
+      Model size & Patterns hyperparameter $P$ & Parameter count \\
+      \midrule
+      Small & \texttt{6-10\_5-10\_4-10\_3-10} & 1,260,292 \\
+      Medium & \texttt{6-25\_5-25\_4-25\_3-25} & 1,351,612  \\
+      Large & \texttt{6-50\_5-50\_4-50\_3-50} & 1,503,812 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Three different SoPa++ model sizes used during training}
+    \label{tab:model_types}
+  \end{table}}
+  \begin{itemize}
+    \setlength\itemsep{1em}
+    \uncover<1>{\item RQ 1: Does SoPa++ provide \textbf{competitive} performance?
+    \item Competitive accuracy range: \textbf{96.6-99.5\%}
+    \citep{schuster-etal-2019-cross-lingual,zhang2019joint,zhang-etal-2020-intent}}
+    \uncover<2>{\item Upsampling minority classes to mitigate data imbalance
+    \item Grid-search with three model sizes, varying $\tau$-thresholds: $\{0.00, 0.25, 0.50,
+    0.75, 1.00\}$ and 10 random seed iterations
+    \item $3 \times 5 \times 10 = 150$ model runs
+    \item Evaluation and comparison on the test set}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Research Question 2: Explanations}
+  \begin{itemize}  
+    \setlength\itemsep{1em}
+    \uncover<1>{\item RQ 2: To what extent does SoPa++ contribute to \textbf{effective}
+    explanations by simplification?
+    \item Effective explanations by simplification requires \textbf{simpler model},
+    \textbf{similar performance} and \textbf{maximizing resemblance} to
+    antecedent
+    \item Similar performance $\Rightarrow$ compare test set evaluations
+    \item Maximum resemblance $\Rightarrow$ minimum distances}
+    \uncover<2>{\item Softmax distance norm:
+    \begin{equation*}
+      \delta_{\sigma}(\bm{y}) = \left\Vert \bm{\sigma_{\mathcal{S}}}(\bm{y}) - \bm{\sigma_{\mathcal{R}}}(\bm{y}) \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i}(\bm{y}) - \sigma_{\mathcal{R}_i}(\bm{y}))^2} 
+    \end{equation*}
+    \item Binary misalignment rate:
+    \begin{equation*}
+      \delta_b(\bm{y}) = \dfrac{\left\Vert \bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}) \right\Vert_{1}}{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i}(\bm{y}) - b_{\mathcal{R}_i}(\bm{y})|}{{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))}}
+    \end{equation*}}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Research Question 3: Relevance}
+  \begin{itemize}
+    \setlength\itemsep{2em}
+    \uncover<1>{\item RQ 3: What \textbf{interesting and relevant} explanations can SoPa++
+    provide?
+    \item Open-ended question, can answer in different ways}
+    \uncover<2>{\item Capitalize on the new linear layer $\Rightarrow$ allows for direct
+    analysis of relative linear weights
+    \item Sample REs from RE lookup layer corresponding to salient TauSTE
+    neurons
+    \item Analyze REs for interesting linguistic features and inductive biases}
+  \end{itemize}
 \end{frame}
 
 \section{Results}
