@@ -16,31 +16,36 @@
 
 ### Tasks
 
-1.  Slides (aim to write two per day)
+1.  Slides
 
-    1.  **TODO** Data set and methodologies (\~6 slides)
+    1.  **TODO** Results (\~3 slides)
 
-        1.  Detail how research questions were answered (3 slides)
+    2.  Discussion (\~3 slides)
 
-    2.  Results (\~3 slides)
+    3.  Conclusions (\~1 slide)
 
-    3.  Discussion (\~3 slides)
+    4.  Future work (\~2 slides)
 
-    4.  Conclusions (\~1 slide)
-
-    5.  Future work (\~2 slides)
-
-    6.  Do spell-check of all slides
+    5.  Do spell-check of all slides
 
         **DEADLINE:** *\<2021-07-04 Sun>*
 
 2.  Do timed practice to hit 20 minutes
 
-    1.  complete animations of slides -\> use tikz rectangles for CGs
+    1.  complete animations of slides
+
+        1.  consider using stepwise tikz rectangles for CGs
 
     2.  practice will help fine-tuning slides
 
     3.  prepare for counter-questions for additional 30 minutes
+
+    4.  prepare extra slides which could help answer counter-questions
+
+        1.  eg. comparison table of SoPa vs. SoPa++
+
+        2.  perhaps information on target audiences and explainability
+            evaluation
 
 ### Admin
 
