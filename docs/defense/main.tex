@@ -451,7 +451,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Research Question 1: Performance}
+  \frametitle{Research Question 1: Competitive performance}
   \uncover<2>{\begin{table}[t!]
     \centering
     \begin{tabular}{lll}
@@ -480,16 +480,16 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Research Question 2: Explanations}
+  \frametitle{Research Question 2: Effective explanations}
   \begin{itemize}  
     \setlength\itemsep{1em}
     \uncover<1>{\item RQ 2: To what extent does SoPa++ contribute to \textbf{effective}
     explanations by simplification?
-    \item Effective explanations by simplification requires \textbf{simpler model},
+    \item Effective explanations by simplification require \textbf{simpler model},
     \textbf{similar performance} and \textbf{maximizing resemblance} to
     antecedent
     \item Similar performance $\Rightarrow$ compare test set evaluations
-    \item Maximum resemblance $\Rightarrow$ minimum distances}
+    \item Maximum resemblance $\Rightarrow$ minimum distances over test set}
     \uncover<2>{\item Softmax distance norm:
     \begin{equation*}
       \delta_{\sigma}(\bm{y}) = \left\Vert \bm{\sigma_{\mathcal{S}}}(\bm{y}) - \bm{\sigma_{\mathcal{R}}}(\bm{y}) \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i}(\bm{y}) - \sigma_{\mathcal{R}_i}(\bm{y}))^2} 
@@ -502,7 +502,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Research Question 3: Relevance}
+  \frametitle{Research Question 3: Relevant explanations}
   \begin{itemize}
     \setlength\itemsep{2em}
     \uncover<1>{\item RQ 3: What \textbf{interesting and relevant} explanations can SoPa++
@@ -517,6 +517,72 @@
 \end{frame}
 
 \section{Results}
+
+\begin{frame}
+  \frametitle{Research Question 1: Competitive performance}
+  \centering
+  \uncovergraphics<1>[width=9cm,valign=t]{pdfs/generated/train_spp_grid_1624885671.pdf}
+  \captionof{figure}{Validation accuracies of SoPa++ models against training updates}
+  \label{fig:results_training}
+
+  \uncover<2>{\begin{table}
+    \centering \def\arraystretch{1.3}
+    \tiny
+    \begin{tabular}{lllllll}
+      \toprule
+      && \multicolumn{5}{c}{Accuracy in $\%$ with mean $\pm$ standard-deviation} \\[2pt]
+      \cline{3-7} \\[-7pt]
+      Size & Parameters & $\tau$=0.00 & $\tau$=0.25 & $\tau$=0.50 & $\tau$=0.75 & $\tau$=1.00 \\
+      \midrule
+      Small & 1,260,292 & \bm{$97.6 \pm 0.2$} & 97.6 $\pm$ 0.2 & 97.3 $\pm$ 0.2 & 97.0 $\pm$ 0.3 & 96.9 $\pm$ 0.3 \\
+      Medium & 1,351,612 & \bm{$98.3 \pm 0.2$} & 98.1 $\pm$ 0.1 & 98.0 $\pm$ 0.2 & 97.9 $\pm$ 0.1 & 97.7 $\pm$ 0.1  \\
+      Large & 1,503,812 & \bm{$98.3 \pm 0.2$} & 98.3 $\pm$ 0.2 & 98.2 $\pm$ 0.2 & 98.1 $\pm$ 0.2 & 98.0 $\pm$ 0.2 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Test accuracies of SoPa++ models}
+    \label{tab:results_evaluation}
+  \end{table}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Research Question 2: Effective explanations}
+  \begin{figure}
+    \centering
+    \includegraphics[width=10.5cm]{pdfs/generated/evaluate_spp_grid_1618059389.pdf}
+    \caption{Visualization of model-pair accuracies and distance metrics}
+    \label{fig:explain_evaluate}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Research Question 3: Relevant explanations}
+  \begin{figure}
+    \centering
+    \includegraphics[width=10cm]{pdfs/generated/neurons_1618067685.pdf}
+    \vspace{5pt}
+    \caption{Relative linear layer weights applied to TauSTE neurons for the best
+      performing small RE proxy model with a test accuracy of 97.4$\%$}
+    \label{fig:neuron_weights}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Research Question 3: Relevant explanations}
+  \begin{figure}
+    \centering
+    \includegraphics[trim={1.1cm 20.5cm 1.1cm
+      1.1cm},clip,height=4.9cm,valign=t]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf}
+    \hfill
+    \includegraphics[trim={1.1cm 1.1cm 1.1cm
+      24.5cm},clip,height=4.9cm,valign=t]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf} 
+    \vspace{5pt}
+    \caption{Ten sampled regular expressions from the RE lookup layer
+      corresponding to TauSTE neuron 17 for the best performing small RE proxy
+      model}
+    \label{fig:regex_example_neuron_weather}
+  \end{figure}
+\end{frame}
+
 \section{Discussion}
 \section{Conclusions}
 \section{Future work}
