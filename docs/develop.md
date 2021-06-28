@@ -18,15 +18,19 @@
 
 1.  Slides
 
-    1.  **TODO** Results (\~3 slides)
+    1.  **TODO** Discussion (\~3 slides)
 
-    2.  Discussion (\~3 slides)
+        1.  check if we can find stronger inductive biases to discuss,
+            such as pronouns or gender
 
-    3.  Conclusions (\~1 slide)
+        2.  we can also go into USA centric pronouns and digital
+            formatting
 
-    4.  Future work (\~2 slides)
+    2.  Conclusions (\~1 slide)
 
-    5.  Do spell-check of all slides
+    3.  Future work (\~2 slides)
+
+    4.  Do spell-check of all slides
 
         **DEADLINE:** *\<2021-07-04 Sun>*
 

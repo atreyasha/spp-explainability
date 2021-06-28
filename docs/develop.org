@@ -5,8 +5,9 @@
 ** Notes
 *** Tasks
 **** Slides
-***** TODO Results (~3 slides)
-***** Discussion (~3 slides)
+***** TODO Discussion (~3 slides)
+****** check if we can find stronger inductive biases to discuss, such as pronouns or gender
+****** we can also go into USA centric pronouns and digital formatting
 ***** Conclusions (~1 slide)
 ***** Future work (~2 slides)
 ***** Do spell-check of all slides
