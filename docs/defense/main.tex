@@ -264,9 +264,9 @@
   \frametitle{SoPa: Computational graph}
   \centering
   \captionsetup{width=9cm}
-  \uncovergraphics<1>[width=8cm, valign=t]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
-  \uncover<1>{\captionof{figure}{WFA slice: linear-chain FA with
-      self-loop (blue), $\epsilon$ (red) and main-path (black) transitions; figure
+  \uncovergraphics<1->[width=8cm, valign=t]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
+  \uncover<1->{\captionof{figure}{WFA slice: linear-chain FA with
+      self-loop (blu-e), $\epsilon$ (red) and main-path (black) transitions; figure
       adapted from \citet{schwartz2018sopa}}}
   \label{fig:fa}
   \vspace{10pt}
@@ -282,7 +282,7 @@
     \begin{column}{.40\textwidth}
       \begin{itemize}
         \setlength\itemsep{1.4em}
-        \uncover<1>{
+        \uncover<1->{
           \item SoPa provides two post-hoc explainability techniques; namely
           \textbf{local explanations} and \textbf{feature relevance}
           \item Local explanations gather highest scoring phrases across the
@@ -302,8 +302,8 @@
     \hfill
     \begin{column}{.60\textwidth}
       \centering
-      \uncovergraphics<1>[width=6cm,valign=t]{pdfs/borrowed/sopa_local_explanations.pdf}
-      \uncover<1>{\captionof{figure}{Ranked local explanations from SoPa;
+      \uncovergraphics<1->[width=6cm,valign=t]{pdfs/borrowed/sopa_local_explanations.pdf}
+      \uncover<1->{\captionof{figure}{Ranked local explanations from SoPa;
           table taken from \citet{schwartz2018sopa}}}
       \label{fig:sopa_local_explanations}
       \vspace{5pt}
@@ -494,7 +494,7 @@
     \begin{equation*}
       \delta_{\sigma}(\bm{y}) = \left\Vert \bm{\sigma_{\mathcal{S}}}(\bm{y}) - \bm{\sigma_{\mathcal{R}}}(\bm{y}) \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i}(\bm{y}) - \sigma_{\mathcal{R}_i}(\bm{y}))^2} 
     \end{equation*}
-    \item Binary misalignment rate:
+    \item Binary -misalignment rate:
     \begin{equation*}
       \delta_b(\bm{y}) = \dfrac{\left\Vert \bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}) \right\Vert_{1}}{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i}(\bm{y}) - b_{\mathcal{R}_i}(\bm{y})|}{{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))}}
     \end{equation*}}
@@ -587,7 +587,7 @@
 
 \begin{frame}
   \frametitle{Research Question 1: Competitive performance}
-  \uncover<1>{Overview: \setlength{\leftmargini}{0.5cm}
+  \uncover<1->{Overview: \setlength{\leftmargini}{0.5cm}
     \begin{itemize}
       \setlength\itemsep{1em}
       \item RQ 1: Does SoPa++ provide \textbf{competitive} performance?
@@ -612,7 +612,7 @@
 
 \begin{frame}
   \frametitle{Research Question 2: Effective explanations}
-  \uncover<1>{Overview: \setlength{\leftmargini}{0.5cm}
+  \uncover<1->{Overview: \setlength{\leftmargini}{0.5cm}
     \begin{itemize}
       \setlength\itemsep{1em}
       \item RQ 2: To what extent does SoPa++ contribute to \textbf{effective}
@@ -638,16 +638,34 @@
 
 \begin{frame}
   \frametitle{Research Question 3: Relevant explanations}
-  \uncover<1>{Overview: \setlength{\leftmargini}{0.5cm}
-    \begin{itemize}
-      \setlength\itemsep{1em}
-      \item RQ 3: What \textbf{interesting and relevant} explanations can SoPa++
-      provide?
-    \end{itemize}}
-\end{frame}
+  \uncover<1->{Overview: \setlength{\leftmargini}{0.5cm}
+  \begin{itemize}
+    \setlength\itemsep{1em}
+    \item RQ 3: What \textbf{interesting and relevant} explanations can SoPa++
+    provide?
+    \item Lexical semantics in branches
+    \item USA-centric inductive biases
+    \item Pronoun-level inductive biases
+  \end{itemize}}
 
-% TODO: we can also go into USA centric pronouns and digital formatting
-% TODO: check if we can find stronger inductive biases to discuss, such as pronouns or gender
+  \vspace{15pt}
+  
+  \uncover<2->{Discussion:}
+  \begin{figure}
+    \centering 
+    \uncovergraphics<2>[trim={1.1cm 28.5cm 1.1cm
+      9cm},clip,width=5cm]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf}
+    \raisebox{0.37cm}{\uncovergraphics<3>[trim={1.1cm 9cm 1.1cm
+      32cm},clip,width=5cm]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf}}
+    \vspace{5pt}
+    \uncovergraphics<4>[trim={1.1cm 1.1cm 1.1cm
+      40cm},clip,width=5cm]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf} 
+    \uncover<2->{\caption{Sampled regular expressions from the RE lookup layer
+      corresponding to TauSTE neuron 17 for the best performing small RE proxy
+      model}}
+    \label{fig:regex_more_examples}
+  \end{figure}
+\end{frame}
 
 \section{Conclusions}
 \section{Future work}
