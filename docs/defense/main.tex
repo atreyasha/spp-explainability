@@ -469,7 +469,7 @@
   \begin{itemize}
     \setlength\itemsep{1em}
     \uncover<1>{\item RQ 1: Does SoPa++ provide \textbf{competitive} performance?
-    \item Competitive accuracy range: \textbf{96.6-99.5\%}
+    \item Competitive accuracy range: \bm{$96.6-99.5\%$}
     \citep{schuster-etal-2019-cross-lingual,zhang2019joint,zhang-etal-2020-intent}}
     \uncover<2>{\item Upsampling minority classes to mitigate data imbalance
     \item Grid-search with three model sizes, varying $\tau$-thresholds: $\{0.00, 0.25, 0.50,
@@ -584,6 +584,71 @@
 \end{frame}
 
 \section{Discussion}
+
+\begin{frame}
+  \frametitle{Research Question 1: Competitive performance}
+  \uncover<1>{Overview: \setlength{\leftmargini}{0.5cm}
+    \begin{itemize}
+      \setlength\itemsep{1em}
+      \item RQ 1: Does SoPa++ provide \textbf{competitive} performance?
+      \item Competitive accuracy range: $96.6-99.5\%$
+      \citep{schuster-etal-2019-cross-lingual,zhang2019joint,zhang-etal-2020-intent} 
+      \item Observed best accuracy range for $\tau=0.00$: \bm{$97.6-98.3\%$}
+      \item SoPa++ offers \textbf{competitive} performance on FMTOD's English language
+      intent detection task
+    \end{itemize}}
+
+  \vspace{15pt}
+  
+  \uncover<2>{Discussion: \setlength{\leftmargini}{0.5cm}
+    \begin{itemize}
+      \setlength\itemsep{1em}
+      \item Other studies worked with true-cased text 
+      \item Observed performance is in the middle of competitive range
+      \item Worth noting the sizes of competitive BERT-derived models with
+      external data
+    \end{itemize}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Research Question 2: Effective explanations}
+  \uncover<1>{Overview: \setlength{\leftmargini}{0.5cm}
+    \begin{itemize}
+      \setlength\itemsep{1em}
+      \item RQ 2: To what extent does SoPa++ contribute to \textbf{effective}
+      explanations by simplification?
+      \item Effective explanations by simplification require simpler model,
+      similar performance and maximizing resemblance to antecedent
+      \item \textbf{Effective} to the extent of: lowest accuracy differences ranging
+      from \bm{$0.1-0.7\%$} and softmax distance norms ranging from \bm{$4.3-10.0\%$}
+      \item Most effective for medium-large sized models with $\tau \in [0.50, 1.00]$
+    \end{itemize}}
+
+  \vspace{15pt}
+  
+  \uncover<2>{Discussion: \setlength{\leftmargini}{0.5cm}
+    \begin{itemize}
+      \setlength\itemsep{1em}
+      \item No standard for effective explanations by simplification
+      \item RE proxy may not necessarily always be transparent given size of RE
+      lookup layer
+      \item Target audience was omitted in this analysis
+    \end{itemize}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Research Question 3: Relevant explanations}
+  \uncover<1>{Overview: \setlength{\leftmargini}{0.5cm}
+    \begin{itemize}
+      \setlength\itemsep{1em}
+      \item RQ 3: What \textbf{interesting and relevant} explanations can SoPa++
+      provide?
+    \end{itemize}}
+\end{frame}
+
+% TODO: we can also go into USA centric pronouns and digital formatting
+% TODO: check if we can find stronger inductive biases to discuss, such as pronouns or gender
+
 \section{Conclusions}
 \section{Future work}
 
