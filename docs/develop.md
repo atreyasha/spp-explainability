@@ -18,38 +18,35 @@
 
 1.  Slides
 
-    1.  **TODO** Discussion (\~3 slides)
+    1.  **TODO** Conclusions (\~1 slide)
 
-        1.  check if we can find stronger inductive biases to discuss,
-            such as pronouns or gender
+    2.  **TODO** Future work (\~2 slides)
 
-        2.  we can also go into USA centric pronouns and digital
-            formatting
-
-    2.  Conclusions (\~1 slide)
-
-    3.  Future work (\~2 slides)
-
-    4.  Do spell-check of all slides
+    3.  Do spell-check of all slides
 
         **DEADLINE:** *\<2021-07-04 Sun>*
 
 2.  Do timed practice to hit 20 minutes
 
-    1.  complete animations of slides
+    1.  Complete animations of slides
 
         1.  consider using stepwise tikz rectangles for CGs
 
-    2.  practice will help fine-tuning slides
+        2.  consider whether to use partial uncover or uncover all
 
-    3.  prepare for counter-questions for additional 30 minutes
+        3.  consider using red rectangles to highlight certain areas of
+            figures
 
-    4.  prepare extra slides which could help answer counter-questions
+    2.  20 minute timed practice will help fine-tuning slides
 
-        1.  eg. comparison table of SoPa vs. SoPa++
+    3.  Prepare extra slides which could help answer counter-questions
+        in additional 30 minuts
 
-        2.  perhaps information on target audiences and explainability
-            evaluation
+        1.  bring up mistake on percentages in the defense
+
+        2.  prepare counter opinions/slides on three guidelines for
+            evaluation, usefulness, explainability survey and target
+            audiences
 
 ### Admin
 
