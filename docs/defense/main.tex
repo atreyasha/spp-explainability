@@ -1,5 +1,5 @@
 % import packages
-\documentclass[8pt,handout,table=xcolor,usenames,dvipsnames]{beamer}
+\documentclass[8pt,table=xcolor,usenames,dvipsnames]{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage{colortbl}
 \usepackage{ragged2e}
@@ -413,7 +413,15 @@
   \frametitle{SoPa++: Computational graph}
   \begin{figure}
     \centering
-    \includegraphics[width=8.5cm]{pdfs/generated/spp_computational_graph/main.pdf}
+    \begin{tikzpicture}
+      \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[width=8.5cm]{pdfs/generated/spp_computational_graph/main.pdf}};
+      \path<1>[fill=white, fill opacity=0.7] (0,3.75) rectangle (7,7.3);
+      \path<2>[fill=white, fill opacity=0.7] (3.125,4.1) rectangle (7,7.3);
+      \path<3>[fill=white, fill opacity=0.7] (4,4.1) rectangle (7,7.3);
+      \path<4>[fill=white, fill opacity=0.7] (0.1,0.1) rectangle (0.1,0.1);
+      \path<5>[fill=white, fill opacity=0.7] (0,4.3) rectangle (3.125,7.3);
+      \path<5>[fill=white, fill opacity=0.7] (3.85,4.3) rectangle (7,7.3);
+    \end{tikzpicture}
     \caption{SoPa++ computational graph; flow of graph is
       from bottom to top and left to right}
     \label{fig:spp_computational_graph}
@@ -424,7 +432,13 @@
   \frametitle{SoPa++: Regular Expression (RE) proxy}
   \begin{figure}
     \centering
-    \includegraphics[width=8cm]{pdfs/generated/regex_computational_graph/main.pdf}
+    \begin{tikzpicture}
+      \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[width=8cm]{pdfs/generated/regex_computational_graph/main.pdf}};
+      \path<1>[fill=white, fill opacity=0.7] (0,2.7) rectangle (8,7.2);
+      \path<2>[fill=white, fill opacity=0.7] (0,3.525) rectangle (8,7.2);
+      \path<3>[fill=white, fill opacity=0.7] (2,4.3) rectangle (8,7.2);
+      \path<4>[fill=white, fill opacity=0.7] (0.1,0.1) rectangle (0.1,0.1);
+    \end{tikzpicture}
     \caption{RE proxy computational graph; flow of graph is
       from bottom to top and left to right}
     \label{fig:regex_computational_graph}
@@ -559,7 +573,10 @@
   \frametitle{Research Question 3: Relevant explanations}
   \begin{figure}
     \centering
-    \includegraphics[width=10cm]{pdfs/generated/neurons_1618067685.pdf}
+    \begin{tikzpicture}
+      \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[width=10cm]{pdfs/generated/neurons_1618067685.pdf}};
+      \draw<2>[red] (7,3.2) rectangle (8,4.45);
+    \end{tikzpicture}
     \vspace{5pt}
     \caption{Relative linear layer weights applied to TauSTE neurons for the best
       performing small RE proxy model with a test accuracy of 97.4$\%$}
@@ -757,8 +774,9 @@
 
 \begin{frame}{}
   \frametitle{\null}
-  \centering \Huge \emph{Thank you for your time and attention
-    \ensuremath\heartsuit}
+  \centering
+  \Huge
+  \textit{Thank you for your time and attention} \ensuremath\heartsuit
 \end{frame}
 
 \begin{frame}[allowframebreaks]
