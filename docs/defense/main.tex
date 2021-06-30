@@ -1,10 +1,11 @@
 % import packages
-\documentclass[8pt,handout,table=xcolor]{beamer}
+\documentclass[8pt,handout,table=xcolor,usenames,dvipsnames]{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage{colortbl}
 \usepackage{ragged2e}
 \usepackage{booktabs}
 \usepackage{threeparttable}
+\usepackage{pifont}
 \usepackage{graphicx}
 \usepackage{hhline}
 \usepackage{amsmath}
@@ -137,7 +138,7 @@
   \uncover<1->{ Objective: \setlength{\leftmargini}{0.5cm}
     \begin{itemize}
       \item Address limitations of SoPa by proposing \textbf{SoPa++}, which
-      could allow for effective explanations by simplification.
+      could allow for effective explanations by simplification
     \end{itemize}
   }
   
@@ -266,7 +267,7 @@
   \captionsetup{width=9cm}
   \uncovergraphics<1->[width=8cm, valign=t]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
   \uncover<1->{\captionof{figure}{WFA slice: linear-chain FA with
-      self-loop (blu-e), $\epsilon$ (red) and main-path (black) transitions; figure
+      self-loop (blue), $\epsilon$ (red) and main-path (black) transitions; figure
       adapted from \citet{schwartz2018sopa}}}
   \label{fig:fa}
   \vspace{10pt}
@@ -395,7 +396,7 @@
         \small
         \item $\text{TauSTE}'(x)$ implies the backward pass and \textbf{not} the gradient
         in this context
-        \item Flavours of STEs are being extensively researched, such as in \citet{yin2019understanding}
+        \item Flavors of STEs are being extensively researched, such as in \citet{yin2019understanding}
       \end{itemize}
     }
     \end{column}
@@ -521,7 +522,7 @@
 \begin{frame}
   \frametitle{Research Question 1: Competitive performance}
   \centering
-  \uncovergraphics<1>[width=9cm,valign=t]{pdfs/generated/train_spp_grid_1624885671.pdf}
+  \uncovergraphics<1->[width=9cm,valign=t]{pdfs/generated/train_spp_grid_1624885671.pdf}
   \captionof{figure}{Validation accuracies of SoPa++ models against training updates}
   \label{fig:results_training}
 
@@ -569,12 +570,10 @@
 \begin{frame}
   \frametitle{Research Question 3: Relevant explanations}
   \begin{figure}
-    \centering
-    \includegraphics[trim={1.1cm 20.5cm 1.1cm
+    \centering \includegraphics[trim={1.1cm 20.5cm 1.1cm
       1.1cm},clip,height=4.9cm,valign=t]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf}
-    \hfill
-    \includegraphics[trim={1.1cm 1.1cm 1.1cm
-      24.5cm},clip,height=4.9cm,valign=t]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf} 
+    \hfill \includegraphics[trim={1.1cm 1.1cm 1.1cm
+      24.5cm},clip,height=4.9cm,valign=t]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf}
     \vspace{5pt}
     \caption{Ten sampled regular expressions from the RE lookup layer
       corresponding to TauSTE neuron 17 for the best performing small RE proxy
@@ -629,7 +628,7 @@
   \uncover<2>{Discussion: \setlength{\leftmargini}{0.5cm}
     \begin{itemize}
       \setlength\itemsep{1em}
-      \item No standard for effective explanations by simplification
+      \item No benchmark for effective explanations by simplification
       \item RE proxy may not necessarily always be transparent given size of RE
       lookup layer
       \item Target audience was omitted in this analysis
@@ -643,12 +642,12 @@
     \setlength\itemsep{1em}
     \item RQ 3: What \textbf{interesting and relevant} explanations can SoPa++
     provide?
-    \item Lexical semantics in branches
+    \item Similar lexical properties in branches
     \item USA-centric inductive biases
     \item Pronoun-level inductive biases
   \end{itemize}}
 
-  \vspace{15pt}
+  \vspace{10pt}
   
   \uncover<2->{Discussion:}
   \begin{figure}
@@ -668,10 +667,108 @@
 \end{frame}
 
 \section{Conclusions}
-\section{Future work}
+\begin{frame}
+  \frametitle{Conclusions}
+  Objective: \setlength{\leftmargini}{0.5cm}
+  \begin{itemize}
+    \item Address limitations of SoPa by proposing \textbf{SoPa++}, which could
+    allow for effective explanations by simplification
+    \uncover<2->{\large\color{ForestGreen}\checkmark}
+  \end{itemize}
+  
+  \vspace{15pt}
+
+  Research questions:
+  \begin{enumerate}
+    \setlength\itemsep{1.5em}
+    \item Does SoPa++ provide \textbf{competitive} performance? \uncover<3->{
+      \begin{itemize}
+        \item Best accuracy range: \bm{$97.6-98.3\%$}
+        \large\color{ForestGreen}\checkmark
+      \end{itemize}}
+    \item To what extent does SoPa++ contribute to \textbf{effective}
+    explanations by simplification?
+    \begin{itemize}
+      \setlength\itemsep{0.5em} \uncover<4->{
+        \item Lowest accuracy differences ranging from \bm{$0.1-0.7\%$} and
+        softmax distance norms ranging from \bm{$4.3-10.0\%$}
+        {\large\color{ForestGreen}\checkmark}} \uncover<5->{
+        \item Target audience analysis omitted {\large\color{orange}\ding{55}}}
+    \end{itemize}
+    \item What \textbf{interesting and relevant} explanations can SoPa++
+    provide?
+    \begin{itemize}
+      \setlength\itemsep{0.5em} \uncover<6->{\item Regular expression samples
+        from salient TauSTE neurons analyzed
+        {\large\color{ForestGreen}\checkmark}
+        \item Linguistic features and inductive biases
+        {\large\color{ForestGreen}\checkmark}} \uncover<7->{\item Small sample
+        size {\large\color{orange}\ding{55}}}
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+  
+\section{Further work}
+
+\begin{frame}
+  \frametitle{Further work}
+  \uncover<1>{ Explainability: \setlength{\leftmargini}{0.5cm}
+    \begin{itemize}
+      \setlength\itemsep{0.5em}
+      \item Are SoPa++'s explanations \textbf{useful} for its target audience?
+    \end{itemize}
+  }
+
+  \vspace{10pt}
+  
+  \uncover<2>{ Bias correction:
+    \begin{itemize}
+      \setlength\itemsep{0.5em}
+      \item Manual bias corrections through large-scale analysis of RE lookup layer
+      \item Mitigate \textbf{ethical} issues of using black-box models?
+    \end{itemize}
+  }
+  
+  \vspace{10pt}
+
+  \uncover<3>{ Generalization:
+    \begin{itemize}
+      \setlength\itemsep{0.5em}
+      \item Possible to generalize branches with broad categories like
+      locations and numbers
+      \item For example, replace digital tokens with
+      \texttt{\textbackslash-?[\textbackslash d]+\textbackslash
+        .?[\textbackslash d]*}
+      \item \textbf{Robustness} on unseen data?
+    \end{itemize}
+  }
+
+  \vspace{10pt}
+  
+  \uncover<4>{ Efficiency:
+    \begin{itemize}
+      \setlength\itemsep{0.5em}
+      \item \textbf{Parallelize} RE lookup layer
+      \item Utilize GPU-based regular expression matching algorithms
+      \citep{wang2011gregex,zu2012gpu,yu2013gpui}
+    \end{itemize}
+  } 
+\end{frame}
+
+\begin{frame}{}
+  \frametitle{\null}
+  \centering \Huge \emph{Thank you for your time and attention
+    \ensuremath\heartsuit}
+\end{frame}
 
 \begin{frame}[allowframebreaks]
   \frametitle{Bibliography} \printbibliography[title = {Bibliography}]
 \end{frame}
 
 \end{document}
+
+% LocalWords:  explainability Atreya Shankar Sharid Loáiciga nd Müller SoSe NLP% LocalWords:  WFA
+% LocalWords:  Semiring semiring Semirings SoPa's WFAs preprocessed TauSTE STEs
+% LocalWords:  TauSTE's embeddings GloVe WFA's perceptron hyperparameter RQ REs
+% LocalWords:  Upsampling Softmax accuracies FMTOD's softmax centric
+% LocalWords:  Parallelize
