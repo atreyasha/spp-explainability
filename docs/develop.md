@@ -16,37 +16,37 @@
 
 ### Tasks
 
-1.  Slides
+1.  **TODO** Do timed practice to hit 20 minutes
 
-    1.  **TODO** Conclusions (\~1 slide)
+    **DEADLINE:** *\<2021-07-01 Thu>*
 
-    2.  **TODO** Future work (\~2 slides)
+    1.  use this to fine-tune content in slides
 
-    3.  Do spell-check of all slides
+    2.  might need to modify mathematical slide
 
-        **DEADLINE:** *\<2021-07-04 Sun>*
+    3.  consider whether to use partial uncover or uncover all
 
-2.  Do timed practice to hit 20 minutes
+2.  Prepare points for 30 minute questions
 
-    1.  Complete animations of slides
+    **DEADLINE:** *\<2021-07-02 Fri>*
 
-        1.  consider using stepwise tikz rectangles for CGs
+    1.  prepare general responses on paper
 
-        2.  consider whether to use partial uncover or uncover all
+    2.  prepare counter slides on three guidelines for evaluation,
+        usefulness, explainability survey and target audiences
 
-        3.  consider using red rectangles to highlight certain areas of
-            figures
+    3.  or perhaps add more content to presentation slides which could
+        already address points
 
-    2.  20 minute timed practice will help fine-tuning slides
+3.  Final practice to hit 20 minutes
 
-    3.  Prepare extra slides which could help answer counter-questions
-        in additional 30 minuts
+    **DEADLINE:** *\<2021-07-07 Wed>*
 
-        1.  bring up mistake on percentages in the defense
+    1.  get feedback from live session
 
-        2.  prepare counter opinions/slides on three guidelines for
-            evaluation, usefulness, explainability survey and target
-            audiences
+    2.  bring up mistake on percentages in the defense
+
+    3.  do spell-check of all slides
 
 ### Admin
 
