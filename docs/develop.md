@@ -16,19 +16,30 @@
 
 ### Tasks
 
-1.  **TODO** Do timed practice to hit 20 minutes
+1.  Practice to fine-tune content
 
-    **DEADLINE:** *\<2021-07-01 Thu>*
+    1.  **TODO** figure out rough timing and flow
 
-    1.  use this to fine-tune content in slides
+        **DEADLINE:** *\<2021-07-02 Fri>*
 
-    2.  might need to modify mathematical slide
+2.  Final practice to hit 20 minutes
 
-    3.  consider whether to use partial uncover or uncover all
+    **DEADLINE:** *\<2021-07-07 Wed>*
 
-2.  Prepare points for 30 minute questions
+    1.  get feedback from live session
 
-    **DEADLINE:** *\<2021-07-02 Fri>*
+    2.  consider adding red boxes to RE sample slides
+
+    3.  think of which slides to reduce emphasis on or remove for later
+        timed practice
+
+    4.  bring up mistake on percentages in the defense
+
+    5.  do spell-check of all slides
+
+3.  Prepare points for 30 minute questions
+
+    **DEADLINE:** *\<2021-07-08 Thu>*
 
     1.  prepare general responses on paper
 
@@ -37,16 +48,6 @@
 
     3.  or perhaps add more content to presentation slides which could
         already address points
-
-3.  Final practice to hit 20 minutes
-
-    **DEADLINE:** *\<2021-07-07 Wed>*
-
-    1.  get feedback from live session
-
-    2.  bring up mistake on percentages in the defense
-
-    3.  do spell-check of all slides
 
 ### Admin
 

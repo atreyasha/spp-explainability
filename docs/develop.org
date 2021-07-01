@@ -4,23 +4,22 @@
 
 ** Notes
 *** Tasks
-**** TODO Do timed practice to hit 20 minutes
-     DEADLINE: <2021-07-01 Thu>
-***** use this to fine-tune content in slides
-***** might need to modify mathematical slide
-***** consider whether to use partial uncover or uncover all
-
-**** Prepare points for 30 minute questions
+**** Practice to fine-tune content
+***** TODO figure out rough timing and flow
      DEADLINE: <2021-07-02 Fri>
-***** prepare general responses on paper
-***** prepare counter slides on three guidelines for evaluation, usefulness, explainability survey and target audiences
-***** or perhaps add more content to presentation slides which could already address points
 
 **** Final practice to hit 20 minutes
      DEADLINE: <2021-07-07 Wed>
 ***** get feedback from live session
+***** consider adding red boxes to RE sample slides 
+***** think of which slides to reduce emphasis on or remove for later timed practice 
 ***** bring up mistake on percentages in the defense
 ***** do spell-check of all slides
+**** Prepare points for 30 minute questions
+     DEADLINE: <2021-07-08 Thu>
+***** prepare general responses on paper
+***** prepare counter slides on three guidelines for evaluation, usefulness, explainability survey and target audiences
+***** or perhaps add more content to presentation slides which could already address points
 
 *** Admin
 **** Timeline
