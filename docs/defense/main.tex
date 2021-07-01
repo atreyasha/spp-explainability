@@ -495,7 +495,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Research Question 2: Effective explanations}
+  \frametitle{Research Question 2: Effective explanations by simplification}
   \begin{itemize}  
     \setlength\itemsep{1em}
     \uncover<1>{\item RQ 2: To what extent does SoPa++ contribute to \textbf{effective}
@@ -517,7 +517,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Research Question 3: Relevant explanations}
+  \frametitle{Research Question 3: Interesting and relevant explanations}
   \begin{itemize}
     \setlength\itemsep{2em}
     \uncover<1>{\item RQ 3: What \textbf{interesting and relevant} explanations can SoPa++
@@ -560,7 +560,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Research Question 2: Effective explanations}
+  \frametitle{Research Question 2: Effective explanations by simplification}
   \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -576,12 +576,13 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Research Question 3: Relevant explanations}
+  \frametitle{Research Question 3: Interesting and relevant explanations}
   \begin{figure}
     \centering
     \begin{tikzpicture}
       \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[width=10cm]{pdfs/generated/neurons_1618067685.pdf}};
-      \draw<2>[red] (7,3.2) rectangle (8,4.45);
+      \path<1>[fill=white, fill opacity=0.7] (0,0.7) rectangle (10,5.65);
+      \draw<3>[red] (7,3.2) rectangle (8,4.45);
     \end{tikzpicture}
     \vspace{5pt}
     \caption{Relative linear layer weights applied to TauSTE neurons for the best
@@ -591,7 +592,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Research Question 3: Relevant explanations}
+  \frametitle{Research Question 3: Interesting and relevant explanations}
   \begin{figure}
     \centering \includegraphics[trim={1.1cm 20.5cm 1.1cm
       1.1cm},clip,height=4.9cm,valign=t]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf}
@@ -633,7 +634,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Research Question 2: Effective explanations}
+  \frametitle{Research Question 2: Effective explanations by simplification}
   \uncover<1->{Overview: \setlength{\leftmargini}{0.5cm}
     \begin{itemize}
       \setlength\itemsep{1em}
@@ -659,7 +660,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Research Question 3: Relevant explanations}
+  \frametitle{Research Question 3: Interesting and relevant explanations}
   \uncover<1->{Overview: \setlength{\leftmargini}{0.5cm}
     \begin{itemize}
       \setlength\itemsep{1em}
@@ -794,5 +795,5 @@
 % LocalWords:  explainability Atreya Shankar Sharid Loáiciga nd Müller SoSe NLP% LocalWords:  WFA
 % LocalWords:  Semiring semiring Semirings SoPa's WFAs preprocessed TauSTE STEs
 % LocalWords:  TauSTE's embeddings GloVe WFA's perceptron hyperparameter RQ REs
-% LocalWords:  Upsampling Softmax accuracies FMTOD's softmax centric
-% LocalWords:  Parallelize
+% LocalWords:  Upsampling Softmax accuracies FMTOD's softmax centric SOTA NLP
+% LocalWords:  Parallelize XAI FMTOD TOC
