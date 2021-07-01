@@ -327,30 +327,30 @@
     \begin{threeparttable}
       \begin{tabular}{llll}
         \toprule
-        Class and description & Frequency & Utterance length$^{\dagger}$ & Example$^{\ddagger}$ \\
+        Class and description & \uncover<3>{Frequency} & \uncover<2->{Utterance length$^{\dagger}$ & Example$^{\ddagger}$}\\
         \midrule
-        0: \texttt{alarm/cancel\_alarm} & \cellcolor{red!5}1791 & 5.6 $\pm$ 1.9 & cancel weekly alarm \\
-        1: \texttt{alarm/modify\_alarm} & \cellcolor{red!2}566 & 7.1 $\pm$ 2.5 & change alarm time \\
-        2: \texttt{alarm/set\_alarm} & \cellcolor{red!17}5416 & 7.5 $\pm$ 2.5 & please set the new alarm \\
-        3: \texttt{alarm/show\_alarms} & \cellcolor{red!3}914 & 6.9 $\pm$ 2.2 & check my alarms. \\
-        4: \texttt{alarm/snooze\_alarm} & \cellcolor{red!1}366 & 6.1 $\pm$ 2.1 & pause alarm please \\
-        5: \texttt{alarm/time\_left\_on\_alarm} & \cellcolor{red!1}344 & 8.6 $\pm$ 2.1  & minutes left on my alarm \\
-        6: \texttt{reminder/cancel\_reminder} & \cellcolor{red!3}1060 & 6.6 $\pm$ 2.2 & clear all reminders. \\
-        7: \texttt{reminder/set\_reminder} & \cellcolor{red!17}5549 & 8.9 $\pm$ 2.5 & birthday reminders \\
-        8: \texttt{reminder/show\_reminders} & \cellcolor{red!2}773 & 6.8 $\pm$ 2.2 & list all reminders \\
-        9: \texttt{weather/check\_sunrise} & \cellcolor{red!1}101 & 6.7 $\pm$ 1.7 & when is sunrise \\
-        10: \texttt{weather/check\_sunset} &\cellcolor{red!1}136 & 6.7 $\pm$ 1.7 & when is dusk \\
-        11: \texttt{weather/find} & \cellcolor{red!45}14338 & 7.8 $\pm$ 2.3 & jacket needed? \\
+        0: \texttt{alarm/cancel\_alarm} & \uncover<3>{\cellcolor{red!5}1791} & \uncover<2->{5.6 $\pm$ 1.9 & cancel weekly alarm} \\
+        1: \texttt{alarm/modify\_alarm} & \uncover<3>{\cellcolor{red!2}566} & \uncover<2->{7.1 $\pm$ 2.5 & change alarm time} \\
+        2: \texttt{alarm/set\_alarm} & \uncover<3>{\cellcolor{red!17}5416} & \uncover<2->{7.5 $\pm$ 2.5 & please set the new alarm} \\
+        3: \texttt{alarm/show\_alarms} & \uncover<3>{\cellcolor{red!3}914} & \uncover<2->{6.9 $\pm$ 2.2 & check my alarms.} \\
+        4: \texttt{alarm/snooze\_alarm} & \uncover<3>{\cellcolor{red!1}366} & \uncover<2->{6.1 $\pm$ 2.1 & pause alarm please} \\
+        5: \texttt{alarm/time\_left\_on\_alarm} & \uncover<3>{\cellcolor{red!1}344} & \uncover<2->{8.6 $\pm$ 2.1  & minutes left on my alarm} \\
+        6: \texttt{reminder/cancel\_reminder} & \uncover<3>{\cellcolor{red!3}1060} & \uncover<2->{6.6 $\pm$ 2.2 & clear all reminders.} \\
+        7: \texttt{reminder/set\_reminder} & \uncover<3>{\cellcolor{red!17}5549} & \uncover<2->{8.9 $\pm$ 2.5 & birthday reminders} \\
+        8: \texttt{reminder/show\_reminders} & \uncover<3>{\cellcolor{red!2}773} & \uncover<2->{6.8 $\pm$ 2.2 & list all reminders} \\
+        9: \texttt{weather/check\_sunrise} & \uncover<3>{\cellcolor{red!1}101} & \uncover<2->{6.7 $\pm$ 1.7 & when is sunrise} \\
+        10: \texttt{weather/check\_sunset} & \uncover<3>{\cellcolor{red!1}136} & \uncover<2->{6.7 $\pm$ 1.7 & when is dusk} \\
+        11: \texttt{weather/find} & \uncover<3>{\cellcolor{red!45}14338} & \uncover<2->{7.8 $\pm$ 2.3 & jacket needed?} \\
         \hline \hline \\[-10pt]
-        $\Sigma/\mu$ & 31354 & 7.7 $\pm$ 2.5 & \textemdash \\
+        $\Sigma/\mu$ & \uncover<3>{31354} & \uncover<2->{7.7 $\pm$ 2.5 & \textemdash} \\
         \bottomrule
       \end{tabular}
       \begin{tablenotes}[flushleft]
         \footnotesize
-        \item $^{\dagger}$Summary statistics follow the mean $\pm$
+        \uncover<2->{\item $^{\dagger}$Summary statistics follow the mean $\pm$
         standard-deviation format
         \item $^{\ddagger}$Short and simple examples were chosen for brevity and
-        formatting purposes
+        formatting purposes}
       \end{tablenotes}
     \end{threeparttable}
     \caption{Summary statistics and examples for the preprocessed
@@ -455,9 +455,9 @@
       \midrule
       Text casing & True-cased & Lower-cased \\ 
       Token embeddings & GloVe 840B 300-dimensions & GloVe 6B 300-dimensions \\
-      \textbf{WFAs} & Linear-chain WFA's with $\epsilon$, self-loop and main-path transitions & Strict linear-chain WFA-$\omega$'s with $\omega$ and main-path transitions \\
-      \textbf{Hidden layers} & Multi-layer perceptron after max-pooling & Layer normalization, TauSTE and linear transformation after max-pooling \\
-      \textbf{Post-hoc explainability technique(s)} & Local explanations, feature relevance & Explanations by simplification \\
+      \uncover<2->{\textbf{WFAs} & Linear-chain WFA's with $\epsilon$, self-loop and main-path transitions & Strict linear-chain WFA-$\omega$'s with $\omega$ and main-path transitions} \\
+      \uncover<3->{\textbf{Hidden layers} & Multi-layer perceptron after max-pooling & Layer normalization, TauSTE and linear transformation after max-pooling} \\
+      \uncover<4> {\textbf{Post-hoc explainability technique(s)} & Local explanations, feature relevance & Explanations by simplification} \\
       \bottomrule
     \end{tabular}
     \caption{Summarized differences for SoPa vs. SoPa++}
@@ -507,11 +507,11 @@
       \item Maximum resemblance $\Rightarrow$ minimum distances over test set}
     \uncover<2>{\item Softmax distance norm:
       \begin{equation*}
-        \delta_{\sigma}(\bm{y}) = \left\Vert \bm{\sigma_{\mathcal{S}}}(\bm{y}) - \bm{\sigma_{\mathcal{R}}}(\bm{y}) \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i}(\bm{y}) - \sigma_{\mathcal{R}_i}(\bm{y}))^2} 
+        \delta_{\sigma}(\bm{y}) = \left\Vert \bm{\sigma_{\mathcal{S}}} - \bm{\sigma_{\mathcal{R}}} \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i} - \sigma_{\mathcal{R}_i})^2} 
       \end{equation*}
       \item Binary-misalignment rate:
       \begin{equation*}
-        \delta_b(\bm{y}) = \dfrac{\left\Vert \bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}) \right\Vert_{1}}{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i}(\bm{y}) - b_{\mathcal{R}_i}(\bm{y})|}{{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))}}
+        \delta_b(\bm{y}) = \dfrac{\left\Vert \bm{b_{\mathcal{S}}} - \bm{b_{\mathcal{R}}} \right\Vert_{1}}{dim(\bm{b_{\mathcal{S}}} - \bm{b_{\mathcal{R}}})} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i} - b_{\mathcal{R}_i}|}{{dim(\bm{b_{\mathcal{S}}} - \bm{b_{\mathcal{R}}})}}
       \end{equation*}}
   \end{itemize}
 \end{frame}
@@ -563,7 +563,13 @@
   \frametitle{Research Question 2: Effective explanations}
   \begin{figure}
     \centering
-    \includegraphics[width=10.5cm]{pdfs/generated/evaluate_spp_grid_1618059389.pdf}
+    \begin{tikzpicture}
+      \node[anchor=south west,inner sep=0] at (0,0)
+      {\includegraphics[width=10.5cm]{pdfs/generated/evaluate_spp_grid_1618059389.pdf}
+      };
+      \path<1>[fill=white, fill opacity=0.7] (0.4,1) rectangle (10.5,3.9);
+      \path<2>[fill=white, fill opacity=0.7] (0.4,3.9) rectangle (10.5,7);
+    \end{tikzpicture}
     \caption{Visualization of model-pair accuracies and distance metrics}
     \label{fig:explain_evaluate}
   \end{figure}
