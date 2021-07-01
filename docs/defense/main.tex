@@ -113,21 +113,21 @@
           \textbf{Pa}tterns (SoPa; Figure \ref{fig:sopa_crop})
           \item SoPa provides \textbf{localized} and \textbf{indirect} explainability despite
           being suited for globalized and direct \textbf{explanations by
-          simplification}
+            simplification}
         }
       \end{itemize}
     \end{column}
     \hfill
     \begin{column}{.60\textwidth}
-        \centering
-        \uncovergraphics<1>[width=6cm, valign=t]{pdfs/borrowed/nlp_sota_model_size_progress.pdf}
-        \uncover<1>{\captionof{figure}{Parameter counts of recently released pre-trained language
-            models; figure taken from \citet{sanh2019distilbert}}}
-        \label{fig:nlp_progress}
-        \vspace{10pt}
-        \uncover<2>{\fbox{\uncovergraphics<2>[width=6cm, valign=t]{pdfs/borrowed/sopa_crop.pdf}}}
-        \uncover<2>{\captionof{figure}{Excerpt from \citet{schwartz2018sopa}}}
-        \label{fig:sopa_crop}
+      \centering
+      \uncovergraphics<1>[width=6cm, valign=t]{pdfs/borrowed/nlp_sota_model_size_progress.pdf}
+      \uncover<1>{\captionof{figure}{Parameter counts of recently released pre-trained language
+          models; figure taken from \citet{sanh2019distilbert}}}
+      \label{fig:nlp_progress}
+      \vspace{10pt}
+      \uncover<2>{\fbox{\uncovergraphics<2>[width=6cm, valign=t]{pdfs/borrowed/sopa_crop.pdf}}}
+      \uncover<2>{\captionof{figure}{Excerpt from \citet{schwartz2018sopa}}}
+      \label{fig:sopa_crop}
     \end{column}
   \end{columns}
 \end{frame}
@@ -202,18 +202,18 @@
     \end{column}
     \hfill
     \begin{column}{.60\textwidth}
-        \centering
-        \uncovergraphics<1>[width=6.2cm,trim={0.3cm 0.3cm 0.5cm
-          0.3cm},clip,valign=t]{pdfs/borrowed/xai_target_audience.pdf}
-        \uncover<1>{\captionof{figure}{Examples of various target audiences in XAI; figure taken from
-            \citet{arrieta2020explainable}}}
-        \label{fig:xai_target_audience}
-        \vspace{5pt}
-        \uncovergraphics<2>[width=6cm,trim={0.1cm 0.1cm 0.1cm
-          0.1cm},clip,valign=t]{pdfs/borrowed/lime_husky.pdf}
-        \uncover<2>{\captionof{figure}{Local explanation for ``Wolf''
-            classification decision, figure taken from \citet{lime}}}
-        \label{fig:lime_husky}
+      \centering
+      \uncovergraphics<1>[width=6.2cm,trim={0.3cm 0.3cm 0.5cm
+        0.3cm},clip,valign=t]{pdfs/borrowed/xai_target_audience.pdf}
+      \uncover<1>{\captionof{figure}{Examples of various target audiences in XAI; figure taken from
+          \citet{arrieta2020explainable}}}
+      \label{fig:xai_target_audience}
+      \vspace{5pt}
+      \uncovergraphics<2>[width=6cm,trim={0.1cm 0.1cm 0.1cm
+        0.1cm},clip,valign=t]{pdfs/borrowed/lime_husky.pdf}
+      \uncover<2>{\captionof{figure}{Local explanation for ``Wolf''
+          classification decision, figure taken from \citet{lime}}}
+      \label{fig:lime_husky}
     \end{column}
   \end{columns}
 \end{frame}
@@ -279,7 +279,7 @@
 
 \begin{frame}
   \frametitle{SoPa: Post-hoc explainability techniques}
-    \begin{columns}[T]
+  \begin{columns}[T]
     \begin{column}{.40\textwidth}
       \begin{itemize}
         \setlength\itemsep{1.4em}
@@ -288,7 +288,7 @@
           \textbf{local explanations} and \textbf{feature relevance}
           \item Local explanations gather highest scoring phrases across the
           training data (Figure \ref{fig:sopa_local_explanations})
-          }
+        }
         \uncover<2>{
           \item Feature relevance perturbs inputs using an occlusion technique
           to determine the highest impact phrases for a classification decision
@@ -365,7 +365,7 @@
   \captionsetup{width=8cm}
   \uncovergraphics<1>[width=7cm,valign=t]{pdfs/generated/w_nfa_linear_chain/main.pdf}
   \uncover<1>{\captionof{figure}{WFA-$\omega$ slice: strict linear-chain FA with
-    $\omega$ (blue) and main-path (black) transitions}}
+      $\omega$ (blue) and main-path (black) transitions}}
   \label{fig:omega_fa}
   
   \vspace{10pt}
@@ -373,32 +373,32 @@
   \begin{columns}[T]
     \begin{column}{.37\textwidth}
       \uncover<2>{\begin{equation*}
-        \footnotesize
-        \label{eq:tau_ste_forward}
-        \text{TauSTE}(x)=
-        \begin{cases}
-          1 & x \in (\tau, +\infty) \\
-          0 & x \in (-\infty, \tau]
-        \end{cases}
-      \end{equation*}
+          \footnotesize
+          \label{eq:tau_ste_forward}
+          \text{TauSTE}(x)=
+          \begin{cases}
+            1 & x \in (\tau, +\infty) \\
+            0 & x \in (-\infty, \tau]
+          \end{cases}
+        \end{equation*}
 
-      \begin{equation*}
-        \footnotesize
-        \label{eq:tau_ste_backward}
-        \text{TauSTE}'(x)=
-        \begin{cases}
-          1 & x \in  (1, +\infty) \\
-          x & x \in [-1, 1] \\
-          -1 & x \in (-\infty, -1) \\
-        \end{cases}
-      \end{equation*}
-      \begin{itemize}
-        \small
-        \item $\text{TauSTE}'(x)$ implies the backward pass and \textbf{not} the gradient
-        in this context
-        \item Flavors of STEs are being extensively researched, such as in \citet{yin2019understanding}
-      \end{itemize}
-    }
+        \begin{equation*}
+          \footnotesize
+          \label{eq:tau_ste_backward}
+          \text{TauSTE}'(x)=
+          \begin{cases}
+            1 & x \in  (1, +\infty) \\
+            x & x \in [-1, 1] \\
+            -1 & x \in (-\infty, -1) \\
+          \end{cases}
+        \end{equation*}
+        \begin{itemize}
+          \small
+          \item $\text{TauSTE}'(x)$ implies the backward pass and \textbf{not} the gradient
+          in this context
+          \item Flavors of STEs are being extensively researched, such as in \citet{yin2019understanding}
+        \end{itemize}
+      }
     \end{column}
     \begin{column}{.63\textwidth}
       \centering 
@@ -468,29 +468,29 @@
 \begin{frame}
   \frametitle{Research Question 1: Competitive performance}
   \uncover<2>{\begin{table}[t!]
-    \centering
-    \begin{tabular}{lll}
-      \toprule
-      Model size & Patterns hyperparameter $P$ & Parameter count \\
-      \midrule
-      Small & \texttt{6-10\_5-10\_4-10\_3-10} & 1,260,292 \\
-      Medium & \texttt{6-25\_5-25\_4-25\_3-25} & 1,351,612  \\
-      Large & \texttt{6-50\_5-50\_4-50\_3-50} & 1,503,812 \\
-      \bottomrule
-    \end{tabular}
-    \caption{Three different SoPa++ model sizes used during training}
-    \label{tab:model_types}
-  \end{table}}
+      \centering
+      \begin{tabular}{lll}
+        \toprule
+        Model size & Patterns hyperparameter $P$ & Parameter count \\
+        \midrule
+        Small & \texttt{6-10\_5-10\_4-10\_3-10} & 1,260,292 \\
+        Medium & \texttt{6-25\_5-25\_4-25\_3-25} & 1,351,612  \\
+        Large & \texttt{6-50\_5-50\_4-50\_3-50} & 1,503,812 \\
+        \bottomrule
+      \end{tabular}
+      \caption{Three different SoPa++ model sizes used during training}
+      \label{tab:model_types}
+    \end{table}}
   \begin{itemize}
     \setlength\itemsep{1em}
     \uncover<1>{\item RQ 1: Does SoPa++ provide \textbf{competitive} performance?
-    \item Competitive accuracy range: \bm{$96.6-99.5\%$}
-    \citep{schuster-etal-2019-cross-lingual,zhang2019joint,zhang-etal-2020-intent}}
+      \item Competitive accuracy range: \bm{$96.6-99.5\%$}
+      \citep{schuster-etal-2019-cross-lingual,zhang2019joint,zhang-etal-2020-intent}}
     \uncover<2>{\item Upsampling minority classes to mitigate data imbalance
-    \item Grid-search with three model sizes, varying $\tau$-thresholds: $\{0.00, 0.25, 0.50,
-    0.75, 1.00\}$ and 10 random seed iterations
-    \item $3 \times 5 \times 10 = 150$ model runs
-    \item Evaluation and comparison on the test set}
+      \item Grid-search with three model sizes, varying $\tau$-thresholds: $\{0.00, 0.25, 0.50,
+      0.75, 1.00\}$ and 10 random seed iterations
+      \item $3 \times 5 \times 10 = 150$ model runs
+      \item Evaluation and comparison on the test set}
   \end{itemize}
 \end{frame}
 
@@ -499,20 +499,20 @@
   \begin{itemize}  
     \setlength\itemsep{1em}
     \uncover<1>{\item RQ 2: To what extent does SoPa++ contribute to \textbf{effective}
-    explanations by simplification?
-    \item Effective explanations by simplification require \textbf{simpler model},
-    \textbf{similar performance} and \textbf{maximizing resemblance} to
-    antecedent
-    \item Similar performance $\Rightarrow$ compare test set evaluations
-    \item Maximum resemblance $\Rightarrow$ minimum distances over test set}
+      explanations by simplification?
+      \item Effective explanations by simplification require \textbf{simpler model},
+      \textbf{similar performance} and \textbf{maximizing resemblance} to
+      antecedent
+      \item Similar performance $\Rightarrow$ compare test set evaluations
+      \item Maximum resemblance $\Rightarrow$ minimum distances over test set}
     \uncover<2>{\item Softmax distance norm:
-    \begin{equation*}
-      \delta_{\sigma}(\bm{y}) = \left\Vert \bm{\sigma_{\mathcal{S}}}(\bm{y}) - \bm{\sigma_{\mathcal{R}}}(\bm{y}) \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i}(\bm{y}) - \sigma_{\mathcal{R}_i}(\bm{y}))^2} 
-    \end{equation*}
-    \item Binary-misalignment rate:
-    \begin{equation*}
-      \delta_b(\bm{y}) = \dfrac{\left\Vert \bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}) \right\Vert_{1}}{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i}(\bm{y}) - b_{\mathcal{R}_i}(\bm{y})|}{{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))}}
-    \end{equation*}}
+      \begin{equation*}
+        \delta_{\sigma}(\bm{y}) = \left\Vert \bm{\sigma_{\mathcal{S}}}(\bm{y}) - \bm{\sigma_{\mathcal{R}}}(\bm{y}) \right\Vert_{2} = \sqrt{\sum^n_{i=1} (\sigma_{\mathcal{S}_i}(\bm{y}) - \sigma_{\mathcal{R}_i}(\bm{y}))^2} 
+      \end{equation*}
+      \item Binary-misalignment rate:
+      \begin{equation*}
+        \delta_b(\bm{y}) = \dfrac{\left\Vert \bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}) \right\Vert_{1}}{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))} = \dfrac{\sum^n_{i=1} |b_{\mathcal{S}_i}(\bm{y}) - b_{\mathcal{R}_i}(\bm{y})|}{{dim(\bm{b_{\mathcal{S}}}(\bm{y}) - \bm{b_{\mathcal{R}}}(\bm{y}))}}
+      \end{equation*}}
   \end{itemize}
 \end{frame}
 
@@ -521,13 +521,13 @@
   \begin{itemize}
     \setlength\itemsep{2em}
     \uncover<1>{\item RQ 3: What \textbf{interesting and relevant} explanations can SoPa++
-    provide?
-    \item Open-ended question, can answer in different ways}
+      provide?
+      \item Open-ended question, can answer in different ways}
     \uncover<2>{\item Capitalize on the new linear layer $\Rightarrow$ allows for direct
-    analysis of relative linear weights
-    \item Sample REs from RE lookup layer corresponding to salient TauSTE
-    neurons
-    \item Analyze REs for interesting linguistic features and inductive biases}
+      analysis of relative linear weights
+      \item Sample REs from RE lookup layer corresponding to salient TauSTE
+      neurons
+      \item Analyze REs for interesting linguistic features and inductive biases}
   \end{itemize}
 \end{frame}
 
@@ -541,22 +541,22 @@
   \label{fig:results_training}
 
   \uncover<2>{\begin{table}
-    \centering \def\arraystretch{1.3}
-    \tiny
-    \begin{tabular}{lllllll}
-      \toprule
-      && \multicolumn{5}{c}{Accuracy in $\%$ with mean $\pm$ standard-deviation} \\[2pt]
-      \cline{3-7} \\[-7pt]
-      Size & Parameters & $\tau$=0.00 & $\tau$=0.25 & $\tau$=0.50 & $\tau$=0.75 & $\tau$=1.00 \\
-      \midrule
-      Small & 1,260,292 & \bm{$97.6 \pm 0.2$} & 97.6 $\pm$ 0.2 & 97.3 $\pm$ 0.2 & 97.0 $\pm$ 0.3 & 96.9 $\pm$ 0.3 \\
-      Medium & 1,351,612 & \bm{$98.3 \pm 0.2$} & 98.1 $\pm$ 0.1 & 98.0 $\pm$ 0.2 & 97.9 $\pm$ 0.1 & 97.7 $\pm$ 0.1  \\
-      Large & 1,503,812 & \bm{$98.3 \pm 0.2$} & 98.3 $\pm$ 0.2 & 98.2 $\pm$ 0.2 & 98.1 $\pm$ 0.2 & 98.0 $\pm$ 0.2 \\
-      \bottomrule
-    \end{tabular}
-    \caption{Test accuracies of SoPa++ models}
-    \label{tab:results_evaluation}
-  \end{table}}
+      \centering \def\arraystretch{1.3}
+      \tiny
+      \begin{tabular}{lllllll}
+        \toprule
+        && \multicolumn{5}{c}{Accuracy in $\%$ with mean $\pm$ standard-deviation} \\[2pt]
+        \cline{3-7} \\[-7pt]
+        Size & Parameters & $\tau$=0.00 & $\tau$=0.25 & $\tau$=0.50 & $\tau$=0.75 & $\tau$=1.00 \\
+        \midrule
+        Small & 1,260,292 & \bm{$97.6 \pm 0.2$} & 97.6 $\pm$ 0.2 & 97.3 $\pm$ 0.2 & 97.0 $\pm$ 0.3 & 96.9 $\pm$ 0.3 \\
+        Medium & 1,351,612 & \bm{$98.3 \pm 0.2$} & 98.1 $\pm$ 0.1 & 98.0 $\pm$ 0.2 & 97.9 $\pm$ 0.1 & 97.7 $\pm$ 0.1  \\
+        Large & 1,503,812 & \bm{$98.3 \pm 0.2$} & 98.3 $\pm$ 0.2 & 98.2 $\pm$ 0.2 & 98.1 $\pm$ 0.2 & 98.0 $\pm$ 0.2 \\
+        \bottomrule
+      \end{tabular}
+      \caption{Test accuracies of SoPa++ models}
+      \label{tab:results_evaluation}
+    \end{table}}
 \end{frame}
 
 \begin{frame}
@@ -655,14 +655,14 @@
 \begin{frame}
   \frametitle{Research Question 3: Relevant explanations}
   \uncover<1->{Overview: \setlength{\leftmargini}{0.5cm}
-  \begin{itemize}
-    \setlength\itemsep{1em}
-    \item RQ 3: What \textbf{interesting and relevant} explanations can SoPa++
-    provide?
-    \item Similar lexical properties in branches
-    \item USA-centric inductive biases
-    \item Pronoun-level inductive biases
-  \end{itemize}}
+    \begin{itemize}
+      \setlength\itemsep{1em}
+      \item RQ 3: What \textbf{interesting and relevant} explanations can SoPa++
+      provide?
+      \item Similar lexical properties in branches
+      \item USA-centric inductive biases
+      \item Pronoun-level inductive biases
+    \end{itemize}}
 
   \vspace{10pt}
   
@@ -672,13 +672,13 @@
     \uncovergraphics<2>[trim={1.1cm 28.5cm 1.1cm
       9cm},clip,width=5cm]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf}
     \raisebox{0.37cm}{\uncovergraphics<3>[trim={1.1cm 9cm 1.1cm
-      32cm},clip,width=5cm]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf}}
+        32cm},clip,width=5cm]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf}}
     \vspace{5pt}
     \uncovergraphics<4>[trim={1.1cm 1.1cm 1.1cm
       40cm},clip,width=5cm]{pdfs/generated/neurons_regex_1618067722/activating_regex_sample_17.pdf} 
     \uncover<2->{\caption{Sampled regular expressions from the RE lookup layer
-      corresponding to TauSTE neuron 17 for the best performing small RE proxy
-      model}}
+        corresponding to TauSTE neuron 17 for the best performing small RE proxy
+        model}}
     \label{fig:regex_more_examples}
   \end{figure}
 \end{frame}
@@ -724,7 +724,7 @@
     \end{itemize}
   \end{enumerate}
 \end{frame}
-  
+
 \section{Further work}
 
 \begin{frame}
