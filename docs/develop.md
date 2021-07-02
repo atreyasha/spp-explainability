@@ -16,38 +16,22 @@
 
 ### Tasks
 
-1.  Practice to fine-tune content
+1.  Final practice to hit 20 minutes
 
-    1.  **TODO** figure out rough timing and flow
+    1.  make screen recordings of each chapter to fine-tune everything
 
-        **DEADLINE:** *\<2021-07-02 Fri>*
+        1.  reduce words in slides so that they function as guides
 
-2.  Final practice to hit 20 minutes
+        2.  do one final run in one-go to ensure everything works
 
-    **DEADLINE:** *\<2021-07-07 Wed>*
+        3.  get feedback from live session
 
-    1.  get feedback from live session
+    2.  do spell-check of all slides
 
-    2.  consider adding red boxes to RE sample slides
+    3.  think again about adding more appendix slides for other counter
+        points
 
-    3.  think of which slides to reduce emphasis on or remove for later
-        timed practice
-
-    4.  bring up mistake on percentages in the defense
-
-    5.  do spell-check of all slides
-
-3.  Prepare points for 30 minute questions
-
-    **DEADLINE:** *\<2021-07-08 Thu>*
-
-    1.  prepare general responses on paper
-
-    2.  prepare counter slides on three guidelines for evaluation,
-        usefulness, explainability survey and target audiences
-
-    3.  or perhaps add more content to presentation slides which could
-        already address points
+        **DEADLINE:** *\<2021-07-07 Wed>*
 
 ### Admin
 
