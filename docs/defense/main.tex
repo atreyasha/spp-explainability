@@ -13,9 +13,18 @@
 \usepackage{amsthm}
 \usepackage{tikz}
 \usepackage{bm}
+\usepackage{etoolbox}
 \usepackage[export]{adjustbox}
 \usepackage[justification=centering]{caption}
 \usepackage[backend=bibtex,style=authoryear,maxcitenames=2,natbib=true,maxbibnames=99]{biblatex}
+
+% patch circles for framebreaks
+% source: https://tex.stackexchange.com/a/132312
+\makeatletter
+\patchcmd{\slideentry}{\ifnum#2>0}{\ifnum2>0}{}{}
+\patchcmd{\slideentry}{\c@subsectionslide}{\c@framenumber}{}{}
+\patchcmd{\beamer@writeslidentry}{\c@subsectionslide}{\c@framenumber}{}{}
+\makeatother
 
 % set beamer parameters
 \usetheme{Frankfurt}
@@ -100,18 +109,17 @@
   \begin{columns}[T]
     \begin{column}{.40\textwidth}
       \begin{itemize}
-        \setlength\itemsep{1em}
+        \setlength\itemsep{1.5em}
         \uncover<1>{
-          \item Trend of increasingly complex deep learning models achieving
+          \item Increasingly complex deep learning models achieving
           SOTA performance on ML and NLP tasks (Figure \ref{fig:nlp_progress})
-          \item To address emerging concerns such as inductive biases, several
-          studies make arguments for research into XAI; for example
-          \citet{danilevsky2020survey} and \citet{arrieta2020explainable}}
+          \item Emerging concerns ranging from adversarial samples to unknown
+          inductive biases \citep{danilevsky2020survey,arrieta2020explainable}}
         \uncover<2>{
-          \item \citet{schwartz2018sopa} approach XAI in NLP by proposing an
+          \item \citet{schwartz2018sopa} propose an
           explainable hybridized neural architecture called \textbf{So}ft
           \textbf{Pa}tterns (SoPa; Figure \ref{fig:sopa_crop})
-          \item SoPa provides \textbf{localized} and \textbf{indirect} explainability despite
+          \item SoPa limited to \textbf{localized} and \textbf{indirect} explainability despite
           being suited for globalized and direct \textbf{explanations by
             simplification}
         }
@@ -146,10 +154,10 @@
 
   \uncover<2->{ Process:
     \begin{itemize}
-      \item We study the performance and explanations by simplification of
-      SoPa++ on the Facebook Multilingual Task Oriented Dialog (\textbf{FMTOD}) data set from
+      \item We study the performance and explainability of SoPa++ on the
+      Facebook Multilingual Task Oriented Dialog (\textbf{FMTOD}) data set from
       \citet{schuster-etal-2019-cross-lingual}; focusing on the English-language
-      intent classification task.
+      intent classification task
     \end{itemize}
   }
   
@@ -183,33 +191,26 @@
   \begin{columns}[T]
     \begin{column}{.40\textwidth}
       \begin{itemize}
-        \setlength\itemsep{1em}
-        \uncover<1>{
-          \item Transparency is a passive feature that a model exhibits
+        \setlength\itemsep{1.5em} \uncover<1>{
+          \item \citet{arrieta2020explainable} conduct literature review from
+          $\sim$400 XAI publications
+          \item Transparency is a passive feature
           \item Explainability is an active feature that involves target
-          audiences (Figure \ref{fig:xai_target_audience})
-          \item \citet{arrieta2020explainable} explore a taxonomy of post-hoc
-          explainability techniques}
-        \uncover<2>{
-          \item Explainability techniques can provide meaningful insights into
-          decision boundaries within black-box models (Figure
-          \ref{fig:lime_husky})
-          \item Prominent explainability techniques include local
-          explanations, feature relevance and \textbf{explanations by
-            simplification}
-        } 
+          audiences (Figure \ref{fig:xai_target_audience})} \uncover<2>{
+          \item Explainability techniques provide meaningful insights into
+          decision boundaries (Figure \ref{fig:lime_husky})
+          \item Explainability techniques include local explanations, feature
+          relevance and \textbf{explanations by simplification} }
       \end{itemize}
     \end{column}
     \hfill
     \begin{column}{.60\textwidth}
-      \centering
-      \uncovergraphics<1>[width=6.2cm,trim={0.3cm 0.3cm 0.5cm
+      \centering \uncovergraphics<1>[width=6.2cm,trim={0.3cm 0.3cm 0.5cm
         0.3cm},clip,valign=t]{pdfs/borrowed/xai_target_audience.pdf}
-      \uncover<1>{\captionof{figure}{Examples of various target audiences in XAI; figure taken from
-          \citet{arrieta2020explainable}}}
+      \uncover<1>{\captionof{figure}{Examples of various target audiences in
+          XAI; figure taken from \citet{arrieta2020explainable}}}
       \label{fig:xai_target_audience}
-      \vspace{5pt}
-      \uncovergraphics<2>[width=6cm,trim={0.1cm 0.1cm 0.1cm
+      \vspace{5pt} \uncovergraphics<2>[width=6cm,trim={0.1cm 0.1cm 0.1cm
         0.1cm},clip,valign=t]{pdfs/borrowed/lime_husky.pdf}
       \uncover<2>{\captionof{figure}{Local explanation for ``Wolf''
           classification decision, figure taken from \citet{lime}}}
@@ -219,61 +220,17 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{SoPa: Weighted Finite-State Automaton (WFA)}
-  \uncover<1>{\begin{definition}[Semiring; \citealt{kuich1986linear}]
-      \label{def:semiring}
-      A semiring is a set $\mathbb{K}$ along with two binary associative
-      operations $\oplus$ (addition) and $\otimes$ (multiplication) and two
-      identity elements: $\bar{0}$ for addition and $\bar{1}$ for
-      multiplication. Semirings require that addition is commutative,
-      multiplication distributes over addition, and that multiplication by
-      $\bar{0}$ annihilates, i.e., $\bar{0} \otimes a = a \otimes \bar{0} =
-      \bar{0}$.
-
-      \begin{itemize}
-        \item Semirings follow the following generic notation: $\langle
-        \mathbb{K}, \oplus, \otimes, \bar{0}, \bar{1} \rangle$.
-        \item \textbf{Max-sum} semiring: $\langle \mathbb{R} \cup \{-\infty\},
-        \text{max}, +, -\infty, 0 \rangle$
-        \item \textbf{Max-product} semiring: $\langle \mathbb{R}_{>0} \cup
-        \{-\infty\}, \text{max}, \times, -\infty, 1 \rangle$
-      \end{itemize}
-    \end{definition}}
-
-  \uncover<2>{\begin{definition}[Weighted finite-state automaton;
-      \citealt{peng2018rational}]
-      \label{def:wfa}
-      A weighted finite-state automaton over a semiring $\mathbb{K}$ is a
-      5-tuple $\mathcal{A} = \langle \Sigma, \mathcal{Q}, \bm{\Gamma},
-      \bm{\lambda}, \bm{\rho} \rangle$, with:
-
-      \begin{itemize}
-        \itemsep0em
-        \item[--] a finite input alphabet $\Sigma$;
-        \item[--] a finite state set $\mathcal{Q}$;
-        \item[--] transition matrix $\bm{\Gamma}: \mathcal{Q} \times \mathcal{Q}
-        \times (\Sigma \cup \{\epsilon\}) \rightarrow \mathbb{K}$;
-        \item[--] initial vector $\bm{\lambda}: \mathcal{Q} \rightarrow
-        \mathbb{K}$;
-        \item[--] and final vector $\bm{\rho}: \mathcal{Q} \rightarrow
-        \mathbb{K}$.
-      \end{itemize}
-    \end{definition}}
-\end{frame}
-
-\begin{frame}
   \frametitle{SoPa: Computational graph}
-  \centering
-  \captionsetup{width=9cm}
-  \uncovergraphics<1->[width=8cm, valign=t]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
-  \uncover<1->{\captionof{figure}{WFA slice: linear-chain FA with
-      self-loop (blue), $\epsilon$ (red) and main-path (black) transitions; figure
-      adapted from \citet{schwartz2018sopa}}}
+  \centering \captionsetup{width=9cm} \uncovergraphics<1->[width=8cm,
+  valign=t]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
+  \uncover<1->{\captionof{figure}{WFA slice: linear-chain FA with self-loop
+      (blue), $\epsilon$ (red) and main-path (black) transitions; figure adapted
+      from \citet{schwartz2018sopa}}}
   \label{fig:fa}
-  \vspace{10pt}
-  \uncovergraphics<2>[width=8cm, valign=t]{pdfs/borrowed/sopa_computational_graph.pdf}
-  \uncover<2>{\captionof{figure}{SoPa's partial computational graph; figure taken from
-      \citet{schwartz2018sopa}}}
+  \vspace{10pt} \uncovergraphics<2>[width=8cm,
+  valign=t]{pdfs/borrowed/sopa_computational_graph.pdf}
+  \uncover<2>{\captionof{figure}{SoPa's partial computational graph; figure
+      taken from \citet{schwartz2018sopa}}}
   \label{fig:sopa}
 \end{frame}
 
@@ -282,21 +239,19 @@
   \begin{columns}[T]
     \begin{column}{.40\textwidth}
       \begin{itemize}
-        \setlength\itemsep{1.4em}
+        \setlength\itemsep{1.7em}
         \uncover<1->{
-          \item SoPa provides two post-hoc explainability techniques; namely
-          \textbf{local explanations} and \textbf{feature relevance}
-          \item Local explanations gather highest scoring phrases across the
-          training data (Figure \ref{fig:sopa_local_explanations})
-        }
+          \item Two post-hoc explainability techniques; namely \textbf{local
+            explanations} and \textbf{feature relevance}
+          \item Local explanations find highest scoring phrases (Figure
+          \ref{fig:sopa_local_explanations})}
         \uncover<2>{
-          \item Feature relevance perturbs inputs using an occlusion technique
-          to determine the highest impact phrases for a classification decision
-          (Figure \ref{fig:sopa_feature_relevance})
-          \item Overall, both techniques are \textbf{localized} and
+          \item Feature relevance perturbs inputs to determine the highest
+          impact phrases (Figure \ref{fig:sopa_feature_relevance})
+          \item Both techniques are \textbf{localized} and
           \textbf{indirect}
           \item WFAs have a rich theoretical background which can be exploited
-          for more direct and globalized explanations
+          for direct and globalized explanations
         }
       \end{itemize}
     \end{column}
@@ -348,9 +303,9 @@
       \begin{tablenotes}[flushleft]
         \footnotesize
         \uncover<2->{\item $^{\dagger}$Summary statistics follow the mean $\pm$
-        standard-deviation format
-        \item $^{\ddagger}$Short and simple examples were chosen for brevity and
-        formatting purposes}
+          standard-deviation format
+          \item $^{\ddagger}$Short and simple examples were chosen for brevity and
+          formatting purposes}
       \end{tablenotes}
     \end{threeparttable}
     \caption{Summary statistics and examples for the preprocessed
@@ -786,8 +741,85 @@
   \textit{Thank you for your time and attention} \ensuremath\heartsuit
 \end{frame}
 
+\section*{Bibliography}
+
 \begin{frame}[allowframebreaks]
-  \frametitle{Bibliography} \printbibliography[title = {Bibliography}]
+  \frametitle{Bibliography}
+  \printbibliography[title = {Bibliography}, heading=none]
+\end{frame}
+
+\section*{Appendix}
+
+\begin{frame}
+  \frametitle{Weighted Finite-State Automaton (WFA)}
+  \begin{definition}[Semiring; \citealt{kuich1986linear}]
+    \label{def:semiring} A semiring is a set $\mathbb{K}$ along with two
+    binary associative operations $\oplus$ (addition) and $\otimes$
+    (multiplication) and two identity elements: $\bar{0}$ for addition and
+    $\bar{1}$ for multiplication. Semirings require that addition is
+    commutative, multiplication distributes over addition, and that
+    multiplication by $\bar{0}$ annihilates, i.e., $\bar{0} \otimes a = a
+    \otimes \bar{0} = \bar{0}$.
+
+    \begin{itemize}
+      \item Semirings follow the following generic notation: $\langle
+      \mathbb{K}, \oplus, \otimes, \bar{0}, \bar{1} \rangle$.
+      \item \textbf{Max-sum} semiring: $\langle \mathbb{R} \cup \{-\infty\},
+      \text{max}, +, -\infty, 0 \rangle$
+      \item \textbf{Max-product} semiring: $\langle \mathbb{R}_{>0} \cup
+      \{-\infty\}, \text{max}, \times, -\infty, 1 \rangle$
+    \end{itemize}
+  \end{definition}
+
+  \begin{definition}[Weighted finite-state automaton;
+    \citealt{peng2018rational}]
+    \label{def:wfa} A weighted finite-state automaton over a semiring
+    $\mathbb{K}$ is a 5-tuple $\mathcal{A} = \langle \Sigma, \mathcal{Q},
+    \bm{\Gamma}, \bm{\lambda}, \bm{\rho} \rangle$, with:
+
+    \begin{itemize} \itemsep0em
+      \item[--] a finite input alphabet $\Sigma$;
+      \item[--] a finite state set $\mathcal{Q}$;
+      \item[--] transition matrix $\bm{\Gamma}: \mathcal{Q} \times
+      \mathcal{Q} \times (\Sigma \cup \{\epsilon\}) \rightarrow \mathbb{K}$;
+      \item[--] initial vector $\bm{\lambda}: \mathcal{Q} \rightarrow
+      \mathbb{K}$;
+      \item[--] and final vector $\bm{\rho}: \mathcal{Q} \rightarrow
+      \mathbb{K}$.
+    \end{itemize}
+  \end{definition}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Explainability evaluation guidelines}
+  How do we estimate quality of explanations? \setlength{\leftmargini}{0.5cm}
+  \begin{itemize}
+    \item Notoriously difficult to evaluate due to subjectivity
+    \item Involves cognitive sciences, sociology and human psychology
+    \item Or at the simplest, a survey of target audience
+  \end{itemize}
+
+  \vspace{15pt}
+
+  \citet{arrieta2020explainable} and \citet{MILLER20191} provide three
+  guidelines for this:
+  \begin{enumerate}
+    \setlength\itemsep{1em}
+    \item Constrictive
+    \begin{itemize}
+      \item Why is decision X $>$ decision Y?
+    \end{itemize}
+    \item Causal
+    \begin{itemize}
+      \item What caused the model to choose decision X?
+      \item Discrete causes over probabilities
+    \end{itemize}
+    \item Selective
+    \begin{itemize}
+      \item Rank possible explanations
+      \item Provide the most salient explanation
+    \end{itemize}
+  \end{enumerate}
 \end{frame}
 
 \end{document}
