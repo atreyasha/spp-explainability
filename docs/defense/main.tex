@@ -113,7 +113,7 @@
         \uncover<1>{
           \item Increasingly complex deep learning models achieving
           SOTA performance on ML and NLP tasks (Figure \ref{fig:nlp_progress})
-          \item Emerging concerns ranging from adversarial samples to unknown
+          \item Emerging concerns ranging from adversarial samples to unforeseen
           inductive biases \citep{danilevsky2020survey,arrieta2020explainable}}
         \uncover<2>{
           \item \citet{schwartz2018sopa} propose an
@@ -194,13 +194,14 @@
         \setlength\itemsep{1.5em} \uncover<1>{
           \item \citet{arrieta2020explainable} conduct literature review from
           $\sim$400 XAI publications
-          \item Transparency is a passive feature
+          \item Transparency is a passive feature $\Rightarrow$ transparent
+          and black-box models
           \item Explainability is an active feature that involves target
           audiences (Figure \ref{fig:xai_target_audience})} \uncover<2>{
-          \item Explainability techniques provide meaningful insights into
-          decision boundaries (Figure \ref{fig:lime_husky})
           \item Explainability techniques include local explanations, feature
-          relevance and \textbf{explanations by simplification} }
+          relevance and \textbf{explanations by simplification}
+          \item Explainability techniques provide meaningful insights into
+          decision boundaries (Figure \ref{fig:lime_husky})}
       \end{itemize}
     \end{column}
     \hfill
@@ -223,7 +224,7 @@
   \frametitle{SoPa: Computational graph}
   \centering \captionsetup{width=9cm} \uncovergraphics<1->[width=8cm,
   valign=t]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
-  \uncover<1->{\captionof{figure}{WFA slice: linear-chain FA with self-loop
+  \uncover<1->{\captionof{figure}{Weighted finite-state automaton (WFA) slice: linear-chain FA with self-loop
       (blue), $\epsilon$ (red) and main-path (black) transitions; figure adapted
       from \citet{schwartz2018sopa}}}
   \label{fig:fa}
@@ -235,13 +236,13 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{SoPa: Post-hoc explainability techniques}
+  \frametitle{SoPa: Explainability techniques}
   \begin{columns}[T]
     \begin{column}{.40\textwidth}
       \begin{itemize}
         \setlength\itemsep{1.7em}
         \uncover<1->{
-          \item Two post-hoc explainability techniques; namely \textbf{local
+          \item Two explainability techniques; namely \textbf{local
             explanations} and \textbf{feature relevance}
           \item Local explanations find highest scoring phrases (Figure
           \ref{fig:sopa_local_explanations})}
@@ -412,7 +413,7 @@
       Token embeddings & GloVe 840B 300-dimensions & GloVe 6B 300-dimensions \\
       \uncover<2->{\textbf{WFAs} & Linear-chain WFA's with $\epsilon$, self-loop and main-path transitions & Strict linear-chain WFA-$\omega$'s with $\omega$ and main-path transitions} \\
       \uncover<3->{\textbf{Hidden layers} & Multi-layer perceptron after max-pooling & Layer normalization, TauSTE and linear transformation after max-pooling} \\
-      \uncover<4> {\textbf{Post-hoc explainability technique(s)} & Local explanations, feature relevance & Explanations by simplification} \\
+      \uncover<4> {\textbf{Explainability \qquad technique(s)} & Local explanations, feature relevance & Explanations by simplification} \\
       \bottomrule
     \end{tabular}
     \caption{Summarized differences for SoPa vs. SoPa++}
@@ -441,7 +442,8 @@
     \uncover<1>{\item RQ 1: Does SoPa++ provide \textbf{competitive} performance?
       \item Competitive accuracy range: \bm{$96.6-99.5\%$}
       \citep{schuster-etal-2019-cross-lingual,zhang2019joint,zhang-etal-2020-intent}}
-    \uncover<2>{\item Upsampling minority classes to mitigate data imbalance
+    \uncover<2>{
+      \item Upsampling minority classes to mitigate data imbalance
       \item Grid-search with three model sizes, varying $\tau$-thresholds: $\{0.00, 0.25, 0.50,
       0.75, 1.00\}$ and 10 random seed iterations
       \item $3 \times 5 \times 10 = 150$ model runs
@@ -456,8 +458,7 @@
     \uncover<1>{\item RQ 2: To what extent does SoPa++ contribute to \textbf{effective}
       explanations by simplification?
       \item Effective explanations by simplification require \textbf{simpler model},
-      \textbf{similar performance} and \textbf{maximizing resemblance} to
-      antecedent
+      \textbf{similar performance} and \textbf{maximizing resemblance} \citep{arrieta2020explainable}
       \item Similar performance $\Rightarrow$ compare test set evaluations
       \item Maximum resemblance $\Rightarrow$ minimum distances over test set}
     \uncover<2>{\item Softmax distance norm:
@@ -522,7 +523,7 @@
       \node[anchor=south west,inner sep=0] at (0,0)
       {\includegraphics[width=10.5cm]{pdfs/generated/evaluate_spp_grid_1618059389.pdf}
       };
-      \path<1>[fill=white, fill opacity=0.7] (0.4,1) rectangle (10.5,3.9);
+      \path<1>[fill=white, fill opacity=0.7] (0.4,1.325) rectangle (10.5,3.9);
       \path<2>[fill=white, fill opacity=0.7] (0.4,3.9) rectangle (10.5,7);
     \end{tikzpicture}
     \caption{Visualization of model-pair accuracies and distance metrics}
@@ -571,7 +572,7 @@
       \item RQ 1: Does SoPa++ provide \textbf{competitive} performance?
       \item Competitive accuracy range: $96.6-99.5\%$
       \citep{schuster-etal-2019-cross-lingual,zhang2019joint,zhang-etal-2020-intent} 
-      \item Observed best accuracy range for $\tau=0.00$: \bm{$97.6-98.3\%$}
+      \item Observed best accuracy range: \bm{$97.6-98.3\%$}
       \item SoPa++ offers \textbf{competitive} performance on FMTOD's English language
       intent detection task
     \end{itemize}}
@@ -596,7 +597,7 @@
       \item RQ 2: To what extent does SoPa++ contribute to \textbf{effective}
       explanations by simplification?
       \item Effective explanations by simplification require simpler model,
-      similar performance and maximizing resemblance to antecedent
+      similar performance and maximizing resemblance
       \item \textbf{Effective} to the extent of: lowest accuracy differences ranging
       from \bm{$0.1-0.7\%$} and softmax distance norms ranging from \bm{$4.3-10.0\%$}
       \item Most effective for medium-large sized models with $\tau \in [0.50, 1.00]$
@@ -794,7 +795,7 @@
   \frametitle{Explainability evaluation guidelines}
   How do we estimate quality of explanations? \setlength{\leftmargini}{0.5cm}
   \begin{itemize}
-    \item Notoriously difficult to evaluate due to subjectivity
+    \item Difficult to evaluate due to subjectivity
     \item Involves cognitive sciences, sociology and human psychology
     \item Or at the simplest, a survey of target audience
   \end{itemize}
