@@ -4,14 +4,8 @@
 
 ** Notes
 *** Tasks
-**** Final practice to hit 20 minutes
-***** make screen recordings of each chapter to fine-tune everything 
-****** reduce words in slides so that they function as guides 
-****** do one final run in one-go to ensure everything works
-****** get feedback from live session
-***** do spell-check of all slides
-***** think again about adding more appendix slides for other counter points
-     DEADLINE: <2021-07-07 Wed>
+**** TODO Do final runs to hit 20 minutes with good flow
+      DEADLINE: <2021-07-08 Thu>
 
 *** Admin
 **** Timeline

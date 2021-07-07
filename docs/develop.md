@@ -16,22 +16,9 @@
 
 ### Tasks
 
-1.  Final practice to hit 20 minutes
+1.  **TODO** Do final runs to hit 20 minutes with good flow
 
-    1.  make screen recordings of each chapter to fine-tune everything
-
-        1.  reduce words in slides so that they function as guides
-
-        2.  do one final run in one-go to ensure everything works
-
-        3.  get feedback from live session
-
-    2.  do spell-check of all slides
-
-    3.  think again about adding more appendix slides for other counter
-        points
-
-        **DEADLINE:** *\<2021-07-07 Wed>*
+    **DEADLINE:** *\<2021-07-08 Thu>*
 
 ### Admin
 
