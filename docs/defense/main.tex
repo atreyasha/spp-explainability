@@ -224,7 +224,7 @@
   \frametitle{SoPa: Computational graph}
   \centering \captionsetup{width=9cm} \uncovergraphics<1->[width=8cm,
   valign=t]{pdfs/generated/generic_nfa_linear_chain/main.pdf}
-  \uncover<1->{\captionof{figure}{Weighted finite-state automaton (WFA) slice: linear-chain FA with self-loop
+  \uncover<1->{\captionof{figure}{Weighted finite-state automaton (WFA) slice: FA with self-loop
       (blue), $\epsilon$ (red) and main-path (black) transitions; figure adapted
       from \citet{schwartz2018sopa}}}
   \label{fig:fa}
@@ -320,7 +320,7 @@
   \centering
   \captionsetup{width=8cm}
   \uncovergraphics<1>[width=7cm,valign=t]{pdfs/generated/w_nfa_linear_chain/main.pdf}
-  \uncover<1>{\captionof{figure}{WFA-$\omega$ slice: strict linear-chain FA with
+  \uncover<1>{\captionof{figure}{WFA-$\omega$ slice: FA with
       $\omega$ (blue) and main-path (black) transitions}}
   \label{fig:omega_fa}
   
@@ -411,7 +411,7 @@
       \midrule
       Text casing & True-cased & Lower-cased \\ 
       Token embeddings & GloVe 840B 300-dimensions & GloVe 6B 300-dimensions \\
-      \uncover<2->{\textbf{WFAs} & Linear-chain WFA's with $\epsilon$, self-loop and main-path transitions & Strict linear-chain WFA-$\omega$'s with $\omega$ and main-path transitions} \\
+      \uncover<2->{\textbf{WFAs} & WFAs with $\epsilon$, self-loop and main-path transitions & WFA-$\omega$'s with $\omega$ and main-path transitions} \\
       \uncover<3->{\textbf{Hidden layers} & Multi-layer perceptron after max-pooling & Layer normalization, TauSTE and linear transformation after max-pooling} \\
       \uncover<4> {\textbf{Explainability \qquad technique(s)} & Local explanations, feature relevance & Explanations by simplification} \\
       \bottomrule
