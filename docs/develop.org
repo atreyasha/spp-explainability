@@ -3,10 +3,6 @@
 #+OPTIONS: p:t
 
 ** Notes
-*** Tasks
-**** TODO Do final runs to hit 20 minutes with good flow
-      DEADLINE: <2021-07-08 Thu>
-
 *** Admin
 **** Timeline
 ***** +Initial thesis document: *15.09.2020*+
@@ -14,7 +10,7 @@
 ***** +Topic proposal final: *15.11.2020*+
 ***** +Topic registration: *01.02.2021*+
 ***** +Offical manuscript submission: *12.04.2021*+
-***** Thesis defense: *08.07.2021*
+***** +Thesis defense: *08.07.2021*+
 
 ** Legacy
 *** Interpretable RNN architectures

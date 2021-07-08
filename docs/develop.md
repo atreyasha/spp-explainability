@@ -1,6 +1,5 @@
 ## Table of Contents
 -   [Notes](#notes)
-    -   [Tasks](#tasks)
     -   [Admin](#admin)
 -   [Legacy](#legacy)
     -   [Interpretable RNN
@@ -13,12 +12,6 @@
         spaces](#inductive-logic-on-nlp-search-spaces)
 
 ## Notes
-
-### Tasks
-
-1.  **TODO** Do final runs to hit 20 minutes with good flow
-
-    **DEADLINE:** *\<2021-07-08 Thu>*
 
 ### Admin
 
@@ -34,7 +27,7 @@
 
     5.  ~~Offical manuscript submission: **12.04.2021**~~
 
-    6.  Thesis defense: **08.07.2021**
+    6.  ~~Thesis defense: **08.07.2021**~~
 
 ## Legacy
 
