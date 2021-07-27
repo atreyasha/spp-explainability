@@ -125,8 +125,6 @@ def simplify_inner(explain_data: List[Tuple[List[int], int]],
     model_filename = os.path.join(
         model_log_directory,
         "regex_" + os.path.basename(neural_model_checkpoint))
-    LOGGER.info("Saving regular expression ensemble to disk: %s" %
-                model_filename)
 
     # save regular expression ensemble
     LOGGER.info("Saving regular expression ensemble to disk: %s" %
