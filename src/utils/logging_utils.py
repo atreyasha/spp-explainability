@@ -45,8 +45,7 @@ def remove_all_file_handlers(logger: logging.Logger) -> None:
             logger.removeHandler(handler)
 
 
-def add_file_handler(logger: logging.Logger,
-                     filename: str) -> None:
+def add_file_handler(logger: logging.Logger, filename: str) -> None:
     # create formatter
     formatter = logging.Formatter(FORMAT)
 

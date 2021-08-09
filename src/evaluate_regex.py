@@ -42,9 +42,9 @@ def evaluate_inner(eval_text: List[str],
     linear.load_state_dict(model_checkpoint_loaded["linear_state_dict"])
 
     # create model and load respective parameters
-    model = RegexProxyClassifier(
-        model_checkpoint_loaded["pattern_specs"],
-        model_checkpoint_loaded["activating_regex"], linear)
+    model = RegexProxyClassifier(model_checkpoint_loaded["pattern_specs"],
+                                 model_checkpoint_loaded["activating_regex"],
+                                 linear)
 
     # log model information
     LOGGER.info("Model: %s" % model)
